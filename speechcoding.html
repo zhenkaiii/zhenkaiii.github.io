@@ -1,0 +1,154 @@
+<!-- You will not be able to see this text. --> 
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<!--<meta http-equiv="Refresh" content="0; url=http://saige.sice.indiana.edu/neural-audio-coding" />-->
+<style>
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 30%;
+}
+
+td, th {
+  border: 2px solid #dddddd;
+  text-align: center;
+  padding: 10px;
+}
+
+
+
+tr:nth-child(even) {
+  background-color: #7d110c;
+  opacity: 1;
+}
+ 
+tr:nth-child(3) {
+  background-color: #f8f3d2;
+  opacity: 1;
+}
+
+tr:nth-child(5) {
+  background-color: #f8f3d2;
+  opacity: 1;
+}
+
+</style>
+</head>
+<body>
+
+<h2>SPEECH CODING SAMPLES FOR CROSS-MODULE RESIDUAL LEARNING (CMRL) <br/> AND COLLABORATIVE QUANTIZATION (CQ)</h2>
+<h3>Speech codecs learn compact representations of
+speech signals to facilitate data transmission. Many recent deep neural network (DNN) based end-to-end speech codecs achieve low bitrates and high perceptual
+quality at the cost of model complexity. We previously proposed
+a cross-module residual learning (CMRL) pipeline as a module carrier with each autoencoder
+reconstructing the residual from its preceding modules. By using linear predictive coding (LPC) as a pre-processor, CMRL showed comparable speech quality with the state-of-the-art codecs at ~24 kbps. But the performance is less competitive at lower bitrates. </h3>
+
+<h3> We now propose a collaborative quantization (CQ) scheme to jointly
+learn the codebook of LPC coefficients and the corresponding residuals.
+CQ does not simply shoehorn LPC to a neural network, but
+bridges the computational capacity of advanced neural network
+models and traditional, yet efficient and domain-specific digital signal
+processing methods in an integrated manner. This helps CQ achieve much higher quality than its predecessor at 9 kbps
+with even lower model complexity. </h3>
+
+
+
+
+<table>
+  <tr>
+    <th>Bitrate</th>
+    <th>Reference</th>
+    <th>AMR-WB</th>
+    <th>Opus</th>
+    <th>LPC-CMRL (previous version)</th>
+    <th>CQ (newly proposed)</th>
+  </tr>
+
+  <tr>
+    <td><font color="white">~9 kbps</font></td>
+    <td><audio controls style="width: 245px;">
+  <source src="speech_coding/ref/DR2-FJWB0-SX95.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 245px;">
+  <source src="speech_coding/mode_1/DR2-FJWB0-SX95.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 245px;">
+  <source src="speech_coding/opus 9/DR2-FJWB0-SX95.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 245px;">
+  <source src="speech_coding/lpc 9/DR2-FJWB0-SX95.wav" type="audio/mpeg">
+</audio></td>
+
+<td><audio controls style="width: 245px;">
+  <source src="speech_coding/cq 9/DR2-FJWB0-SX95.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+    <tr>
+    <td>~9 kbps</font></td>
+    <td><audio controls style="width: 245px;">
+  <source src="speech_coding/ref/DR5-MRWS1-SX410.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 245px;">
+  <source src="speech_coding/mode_1/DR5-MRWS1-SX410.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 245px;">
+  <source src="speech_coding/opus 9/DR5-MRWS1-SX410.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 245px;">
+  <source src="speech_coding/lpc 9/DR5-MRWS1-SX410.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 245px;">
+  <source src="speech_coding/cq 9/DR5-MRWS1-SX410.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+
+  <tr>
+    <td><font color="white">~24 kbps</td>
+    <td><audio controls style="width: 245px;">
+  <source src="speech_coding/ref/DR7-MRJM4-SI859.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 245px;">
+  <source src="speech_coding/mode_8/DR7-MRJM4-SI859.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 245px;">
+  <source src="speech_coding/opus 24/DR7-MRJM4-SI859.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 245px;">
+  <source src="speech_coding/lpc 24/DR7-MRJM4-SI859.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 245px;">
+  <source src="speech_coding/cq 24/DR7-MRJM4-SI859.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+<tr>
+    <td>~24 kbps</td>
+    <td><audio controls style="width: 245px;">
+  <source src="speech_coding/ref/DR7-FTLH0-SA2.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 245px;">
+  <source src="speech_coding/mode_8/DR7-FTLH0-SA2.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 245px;">
+  <source src="speech_coding/opus 24/DR7-FTLH0-SA2.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 245px;">
+  <source src="speech_coding/lpc 24/DR7-FTLH0-SA2.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 245px;">
+  <source src="speech_coding/cq 24/DR7-FTLH0-SA2.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+</table>
+
+</body>
+</html>
