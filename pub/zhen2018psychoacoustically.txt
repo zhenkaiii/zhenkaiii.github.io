@@ -1,0 +1,6 @@
+@article{zhen2018psychoacoustically,
+  title={On psychoacoustically weighted cost functions towards resource-efficient deep neural networks for speech denoising},
+  author={Zhen, Kai and Sivaraman, Aswin and Sung, Jongmo and Kim, Minje},
+  journal={arXiv preprint arXiv:1801.09774},
+  year={2018}
+}
