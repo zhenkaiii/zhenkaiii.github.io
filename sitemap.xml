@@ -1,47 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
-
-
-<url>
-  <loc>http://www.kaizhen.us/</loc>
-  <lastmod>2019-10-25T16:36:17+00:00</lastmod>
-  <priority>1.00</priority>
-</url>
-<url>
-  <loc>http://www.kaizhen.us/cv.pdf</loc>
-  <lastmod>2019-10-25T16:36:17+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>http://www.kaizhen.us/speechcoding.html</loc>
-  <lastmod>2019-10-25T16:36:18+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>http://www.kaizhen.us/speechenhancement.html</loc>
-  <lastmod>2019-10-25T16:36:18+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>http://www.kaizhen.us/pub/zhen2019cascaded.txt</loc>
-  <lastmod>2019-10-25T16:36:18+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>http://www.kaizhen.us/pub/zhen2018psychoacoustically.txt</loc>
-  <lastmod>2019-10-25T16:36:18+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>http://www.kaizhen.us/pub/egocentric_topic_abstract.pdf</loc>
-  <lastmod>2019-10-25T16:36:17+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-
-
+<?xml version="1.0" encoding="utf-8"?>
+<!--Created using XmlSitemapGenerator.org - Free HTML, RSS and XML sitemap generator-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+    <url>
+        <loc>http://www.kaizhen.us/</loc>
+    </url>
+    <url>
+        <loc>http://www.kaizhen.us/pub/egocentric_topic_abstract.pdf</loc>
+    </url>
+    <url>
+        <loc>http://www.kaizhen.us/speechcoding.html</loc>
+    </url>
+    <url>
+        <loc>http://www.kaizhen.us/pub/zhen2019cascaded.txt</loc>
+    </url>
+    <url>
+        <loc>http://www.kaizhen.us/pub/zhen2018psychoacoustically.txt</loc>
+    </url>
+    <url>
+        <loc>http://www.kaizhen.us/cv.pdf</loc>
+    </url>
+    <url>
+        <loc>http://www.kaizhen.us/speechenhancement.html</loc>
+    </url>
 </urlset>
+<!--<guid value="0240b5d0-ca99-45e7-a650-19d08ef3b7d6" />-->
+<!--Created using XmlSitemapGenerator.org - Free HTML, RSS and XML sitemap generator-->
