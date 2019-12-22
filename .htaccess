@@ -1,4 +1,4 @@
 # Redirect to www
-RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
-RewriteCond %{HTTPS}s ^on(s)|
-RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^kaizhen.us
+RewriteRule ^(.*)$ http://www.kaizhen.us/$1 [L,R=301]
