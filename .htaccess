@@ -1,4 +1,4 @@
 # Redirect to www
 RewriteEngine On
-RewriteCond %{HTTP_HOST} ^kaizhen.us
+RewriteCond %{HTTP_HOST} ^kaizhen\.us
 RewriteRule ^(.*)$ http://www.kaizhen.us/$1 [L,R=301]
