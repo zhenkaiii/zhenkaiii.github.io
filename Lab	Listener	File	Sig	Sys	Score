@@ -1,0 +1,561 @@
+Lab	Listener	File	Sig	Sys	Score
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	john_L	./ref/0021-00001-RMD.wav	Signal_1	HR	100
+ETRI	john_L	./ref/0616-00001-GXD.wav	Signal_10	HR	100
+ETRI	john_L	./ref/0585-00002-EMO.wav	Signal_11	HR	100
+ETRI	john_L	./ref/0516-00001-SMD.wav	Signal_12	HR	100
+ETRI	john_L	./ref/0446-00002-KMD.wav	Signal_13	HR	100
+ETRI	john_L	./ref/0444-00001-TMD.wav	Signal_14	HR	100
+ETRI	john_L	./ref/2009-00003-BMD.wav	Signal_2	HR	100
+ETRI	john_L	./ref/1920-00003-LFD.wav	Signal_3	HR	100
+ETRI	john_L	./ref/1684-00001-AMD.wav	Signal_4	HR	100
+ETRI	john_L	./ref/1656-00003-HMD.wav	Signal_5	HR	100
+ETRI	john_L	./ref/1110-00001-JNO.wav	Signal_6	HR	100
+ETRI	john_L	./ref/0753-00001-PMO.wav	Signal_7	HR	100
+ETRI	john_L	./ref/fenghuang_bj_02.wav	Signal_8	HR	100
+ETRI	john_L	./ref/0646-00001-CFD.wav	Signal_9	HR	100
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	LYJ_L	./ref/0021-00001-RMD.wav	Signal_1	HR	100
+ETRI	LYJ_L	./ref/0616-00001-GXD.wav	Signal_10	HR	100
+ETRI	LYJ_L	./ref/0585-00002-EMO.wav	Signal_11	HR	100
+ETRI	LYJ_L	./ref/0516-00001-SMD.wav	Signal_12	HR	100
+ETRI	LYJ_L	./ref/0446-00002-KMD.wav	Signal_13	HR	100
+ETRI	LYJ_L	./ref/0444-00001-TMD.wav	Signal_14	HR	100
+ETRI	LYJ_L	./ref/2009-00003-BMD.wav	Signal_2	HR	100
+ETRI	LYJ_L	./ref/1920-00003-LFD.wav	Signal_3	HR	100
+ETRI	LYJ_L	./ref/1684-00001-AMD.wav	Signal_4	HR	100
+ETRI	LYJ_L	./ref/1656-00003-HMD.wav	Signal_5	HR	100
+ETRI	LYJ_L	./ref/1110-00001-JNO.wav	Signal_6	HR	100
+ETRI	LYJ_L	./ref/0753-00001-PMO.wav	Signal_7	HR	100
+ETRI	LYJ_L	./ref/fenghuang_bj_02.wav	Signal_8	HR	100
+ETRI	LYJ_L	./ref/0646-00001-CFD.wav	Signal_9	HR	100
+ETRI	WOOTAEK_L	./ref/0021-00001-RMD.wav	Signal_1	HR	100
+ETRI	WOOTAEK_L	./ref/0616-00001-GXD.wav	Signal_10	HR	100
+ETRI	WOOTAEK_L	./ref/0585-00002-EMO.wav	Signal_11	HR	100
+ETRI	WOOTAEK_L	./ref/0516-00001-SMD.wav	Signal_12	HR	100
+ETRI	WOOTAEK_L	./ref/0446-00002-KMD.wav	Signal_13	HR	100
+ETRI	WOOTAEK_L	./ref/0444-00001-TMD.wav	Signal_14	HR	100
+ETRI	WOOTAEK_L	./ref/2009-00003-BMD.wav	Signal_2	HR	100
+ETRI	WOOTAEK_L	./ref/1920-00003-LFD.wav	Signal_3	HR	100
+ETRI	WOOTAEK_L	./ref/1684-00001-AMD.wav	Signal_4	HR	100
+ETRI	WOOTAEK_L	./ref/1656-00003-HMD.wav	Signal_5	HR	100
+ETRI	WOOTAEK_L	./ref/1110-00001-JNO.wav	Signal_6	HR	100
+ETRI	WOOTAEK_L	./ref/0753-00001-PMO.wav	Signal_7	HR	100
+ETRI	WOOTAEK_L	./ref/fenghuang_bj_02.wav	Signal_8	HR	100
+ETRI	WOOTAEK_L	./ref/0646-00001-CFD.wav	Signal_9	HR	100
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	john_L	./lp-3.5-c2/0021-00001-RMD.wav	Signal_1	LP35	20
+ETRI	john_L	./lp-3.5-c2/0616-00001-GXD.wav	Signal_10	LP35	20
+ETRI	john_L	./lp-3.5-c2/0585-00002-EMO.wav	Signal_11	LP35	10
+ETRI	john_L	./lp-3.5-c2/0516-00001-SMD.wav	Signal_12	LP35	10
+ETRI	john_L	./lp-3.5-c2/0446-00002-KMD.wav	Signal_13	LP35	20
+ETRI	john_L	./lp-3.5-c2/0444-00001-TMD.wav	Signal_14	LP35	30
+ETRI	john_L	./lp-3.5-c2/2009-00003-BMD.wav	Signal_2	LP35	20
+ETRI	john_L	./lp-3.5-c2/1920-00003-LFD.wav	Signal_3	LP35	30
+ETRI	john_L	./lp-3.5-c2/1684-00001-AMD.wav	Signal_4	LP35	20
+ETRI	john_L	./lp-3.5-c2/1656-00003-HMD.wav	Signal_5	LP35	20
+ETRI	john_L	./lp-3.5-c2/1110-00001-JNO.wav	Signal_6	LP35	30
+ETRI	john_L	./lp-3.5-c2/0753-00001-PMO.wav	Signal_7	LP35	20
+ETRI	john_L	./lp-3.5-c2/fenghuang_bj_02.wav	Signal_8	LP35	30
+ETRI	john_L	./lp-3.5-c2/0646-00001-CFD.wav	Signal_9	LP35	30
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	LYJ_L	./lp-3.5-c2/0021-00001-RMD.wav	Signal_1	LP35	30
+ETRI	LYJ_L	./lp-3.5-c2/0616-00001-GXD.wav	Signal_10	LP35	30
+ETRI	LYJ_L	./lp-3.5-c2/0585-00002-EMO.wav	Signal_11	LP35	30
+ETRI	LYJ_L	./lp-3.5-c2/0516-00001-SMD.wav	Signal_12	LP35	30
+ETRI	LYJ_L	./lp-3.5-c2/0446-00002-KMD.wav	Signal_13	LP35	30
+ETRI	LYJ_L	./lp-3.5-c2/0444-00001-TMD.wav	Signal_14	LP35	30
+ETRI	LYJ_L	./lp-3.5-c2/2009-00003-BMD.wav	Signal_2	LP35	30
+ETRI	LYJ_L	./lp-3.5-c2/1920-00003-LFD.wav	Signal_3	LP35	30
+ETRI	LYJ_L	./lp-3.5-c2/1684-00001-AMD.wav	Signal_4	LP35	30
+ETRI	LYJ_L	./lp-3.5-c2/1656-00003-HMD.wav	Signal_5	LP35	30
+ETRI	LYJ_L	./lp-3.5-c2/1110-00001-JNO.wav	Signal_6	LP35	30
+ETRI	LYJ_L	./lp-3.5-c2/0753-00001-PMO.wav	Signal_7	LP35	30
+ETRI	LYJ_L	./lp-3.5-c2/fenghuang_bj_02.wav	Signal_8	LP35	30
+ETRI	LYJ_L	./lp-3.5-c2/0646-00001-CFD.wav	Signal_9	LP35	30
+ETRI	WOOTAEK_L	./lp-3.5-c2/0021-00001-RMD.wav	Signal_1	LP35	20
+ETRI	WOOTAEK_L	./lp-3.5-c2/0616-00001-GXD.wav	Signal_10	LP35	20
+ETRI	WOOTAEK_L	./lp-3.5-c2/0585-00002-EMO.wav	Signal_11	LP35	20
+ETRI	WOOTAEK_L	./lp-3.5-c2/0516-00001-SMD.wav	Signal_12	LP35	20
+ETRI	WOOTAEK_L	./lp-3.5-c2/0446-00002-KMD.wav	Signal_13	LP35	20
+ETRI	WOOTAEK_L	./lp-3.5-c2/0444-00001-TMD.wav	Signal_14	LP35	20
+ETRI	WOOTAEK_L	./lp-3.5-c2/2009-00003-BMD.wav	Signal_2	LP35	20
+ETRI	WOOTAEK_L	./lp-3.5-c2/1920-00003-LFD.wav	Signal_3	LP35	20
+ETRI	WOOTAEK_L	./lp-3.5-c2/1684-00001-AMD.wav	Signal_4	LP35	20
+ETRI	WOOTAEK_L	./lp-3.5-c2/1656-00003-HMD.wav	Signal_5	LP35	20
+ETRI	WOOTAEK_L	./lp-3.5-c2/1110-00001-JNO.wav	Signal_6	LP35	30
+ETRI	WOOTAEK_L	./lp-3.5-c2/0753-00001-PMO.wav	Signal_7	LP35	20
+ETRI	WOOTAEK_L	./lp-3.5-c2/fenghuang_bj_02.wav	Signal_8	LP35	30
+ETRI	WOOTAEK_L	./lp-3.5-c2/0646-00001-CFD.wav	Signal_9	LP35	20
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	john_L	./mp3-64-c2/0021-00001-RMD.wav	Signal_1	MP3	90
+ETRI	john_L	./mp3-64-c2/0616-00001-GXD.wav	Signal_10	MP3	100
+ETRI	john_L	./mp3-64-c2/0585-00002-EMO.wav	Signal_11	MP3	100
+ETRI	john_L	./mp3-64-c2/0516-00001-SMD.wav	Signal_12	MP3	90
+ETRI	john_L	./mp3-64-c2/0446-00002-KMD.wav	Signal_13	MP3	100
+ETRI	john_L	./mp3-64-c2/0444-00001-TMD.wav	Signal_14	MP3	90
+ETRI	john_L	./mp3-64-c2/2009-00003-BMD.wav	Signal_2	MP3	60
+ETRI	john_L	./mp3-64-c2/1920-00003-LFD.wav	Signal_3	MP3	100
+ETRI	john_L	./mp3-64-c2/1684-00001-AMD.wav	Signal_4	MP3	90
+ETRI	john_L	./mp3-64-c2/1656-00003-HMD.wav	Signal_5	MP3	90
+ETRI	john_L	./mp3-64-c2/1110-00001-JNO.wav	Signal_6	MP3	90
+ETRI	john_L	./mp3-64-c2/0753-00001-PMO.wav	Signal_7	MP3	100
+ETRI	john_L	./mp3-64-c2/fenghuang_bj_02.wav	Signal_8	MP3	100
+ETRI	john_L	./mp3-64-c2/0646-00001-CFD.wav	Signal_9	MP3	100
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	LYJ_L	./mp3-64-c2/0021-00001-RMD.wav	Signal_1	MP3	90
+ETRI	LYJ_L	./mp3-64-c2/0616-00001-GXD.wav	Signal_10	MP3	85
+ETRI	LYJ_L	./mp3-64-c2/0585-00002-EMO.wav	Signal_11	MP3	95
+ETRI	LYJ_L	./mp3-64-c2/0516-00001-SMD.wav	Signal_12	MP3	97
+ETRI	LYJ_L	./mp3-64-c2/0446-00002-KMD.wav	Signal_13	MP3	95
+ETRI	LYJ_L	./mp3-64-c2/0444-00001-TMD.wav	Signal_14	MP3	97
+ETRI	LYJ_L	./mp3-64-c2/2009-00003-BMD.wav	Signal_2	MP3	95
+ETRI	LYJ_L	./mp3-64-c2/1920-00003-LFD.wav	Signal_3	MP3	90
+ETRI	LYJ_L	./mp3-64-c2/1684-00001-AMD.wav	Signal_4	MP3	97
+ETRI	LYJ_L	./mp3-64-c2/1656-00003-HMD.wav	Signal_5	MP3	95
+ETRI	LYJ_L	./mp3-64-c2/1110-00001-JNO.wav	Signal_6	MP3	85
+ETRI	LYJ_L	./mp3-64-c2/0753-00001-PMO.wav	Signal_7	MP3	97
+ETRI	LYJ_L	./mp3-64-c2/fenghuang_bj_02.wav	Signal_8	MP3	97
+ETRI	LYJ_L	./mp3-64-c2/0646-00001-CFD.wav	Signal_9	MP3	90
+ETRI	WOOTAEK_L	./mp3-64-c2/0021-00001-RMD.wav	Signal_1	MP3	70
+ETRI	WOOTAEK_L	./mp3-64-c2/0616-00001-GXD.wav	Signal_10	MP3	70
+ETRI	WOOTAEK_L	./mp3-64-c2/0585-00002-EMO.wav	Signal_11	MP3	70
+ETRI	WOOTAEK_L	./mp3-64-c2/0516-00001-SMD.wav	Signal_12	MP3	80
+ETRI	WOOTAEK_L	./mp3-64-c2/0446-00002-KMD.wav	Signal_13	MP3	72
+ETRI	WOOTAEK_L	./mp3-64-c2/0444-00001-TMD.wav	Signal_14	MP3	80
+ETRI	WOOTAEK_L	./mp3-64-c2/2009-00003-BMD.wav	Signal_2	MP3	86
+ETRI	WOOTAEK_L	./mp3-64-c2/1920-00003-LFD.wav	Signal_3	MP3	80
+ETRI	WOOTAEK_L	./mp3-64-c2/1684-00001-AMD.wav	Signal_4	MP3	75
+ETRI	WOOTAEK_L	./mp3-64-c2/1656-00003-HMD.wav	Signal_5	MP3	70
+ETRI	WOOTAEK_L	./mp3-64-c2/1110-00001-JNO.wav	Signal_6	MP3	76
+ETRI	WOOTAEK_L	./mp3-64-c2/0753-00001-PMO.wav	Signal_7	MP3	79
+ETRI	WOOTAEK_L	./mp3-64-c2/fenghuang_bj_02.wav	Signal_8	MP3	70
+ETRI	WOOTAEK_L	./mp3-64-c2/0646-00001-CFD.wav	Signal_9	MP3	60
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	john_L	./pam-1-v1/0021-00001-RMD.wav	Signal_1	SYS1	80
+ETRI	john_L	./pam-1-v1/0616-00001-GXD.wav	Signal_10	SYS1	86
+ETRI	john_L	./pam-1-v1/0585-00002-EMO.wav	Signal_11	SYS1	86
+ETRI	john_L	./pam-1-v1/0516-00001-SMD.wav	Signal_12	SYS1	80
+ETRI	john_L	./pam-1-v1/0446-00002-KMD.wav	Signal_13	SYS1	90
+ETRI	john_L	./pam-1-v1/0444-00001-TMD.wav	Signal_14	SYS1	80
+ETRI	john_L	./pam-1-v1/2009-00003-BMD.wav	Signal_2	SYS1	80
+ETRI	john_L	./pam-1-v1/1920-00003-LFD.wav	Signal_3	SYS1	80
+ETRI	john_L	./pam-1-v1/1684-00001-AMD.wav	Signal_4	SYS1	80
+ETRI	john_L	./pam-1-v1/1656-00003-HMD.wav	Signal_5	SYS1	90
+ETRI	john_L	./pam-1-v1/1110-00001-JNO.wav	Signal_6	SYS1	70
+ETRI	john_L	./pam-1-v1/0753-00001-PMO.wav	Signal_7	SYS1	86
+ETRI	john_L	./pam-1-v1/fenghuang_bj_02.wav	Signal_8	SYS1	80
+ETRI	john_L	./pam-1-v1/0646-00001-CFD.wav	Signal_9	SYS1	90
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	LYJ_L	./pam-1-v1/0021-00001-RMD.wav	Signal_1	SYS1	97
+ETRI	LYJ_L	./pam-1-v1/0616-00001-GXD.wav	Signal_10	SYS1	80
+ETRI	LYJ_L	./pam-1-v1/0585-00002-EMO.wav	Signal_11	SYS1	100
+ETRI	LYJ_L	./pam-1-v1/0516-00001-SMD.wav	Signal_12	SYS1	90
+ETRI	LYJ_L	./pam-1-v1/0446-00002-KMD.wav	Signal_13	SYS1	100
+ETRI	LYJ_L	./pam-1-v1/0444-00001-TMD.wav	Signal_14	SYS1	90
+ETRI	LYJ_L	./pam-1-v1/2009-00003-BMD.wav	Signal_2	SYS1	90
+ETRI	LYJ_L	./pam-1-v1/1920-00003-LFD.wav	Signal_3	SYS1	97
+ETRI	LYJ_L	./pam-1-v1/1684-00001-AMD.wav	Signal_4	SYS1	100
+ETRI	LYJ_L	./pam-1-v1/1656-00003-HMD.wav	Signal_5	SYS1	90
+ETRI	LYJ_L	./pam-1-v1/1110-00001-JNO.wav	Signal_6	SYS1	100
+ETRI	LYJ_L	./pam-1-v1/0753-00001-PMO.wav	Signal_7	SYS1	100
+ETRI	LYJ_L	./pam-1-v1/fenghuang_bj_02.wav	Signal_8	SYS1	95
+ETRI	LYJ_L	./pam-1-v1/0646-00001-CFD.wav	Signal_9	SYS1	80
+ETRI	WOOTAEK_L	./pam-1-v1/0021-00001-RMD.wav	Signal_1	SYS1	70
+ETRI	WOOTAEK_L	./pam-1-v1/0616-00001-GXD.wav	Signal_10	SYS1	90
+ETRI	WOOTAEK_L	./pam-1-v1/0585-00002-EMO.wav	Signal_11	SYS1	80
+ETRI	WOOTAEK_L	./pam-1-v1/0516-00001-SMD.wav	Signal_12	SYS1	78
+ETRI	WOOTAEK_L	./pam-1-v1/0446-00002-KMD.wav	Signal_13	SYS1	78
+ETRI	WOOTAEK_L	./pam-1-v1/0444-00001-TMD.wav	Signal_14	SYS1	73
+ETRI	WOOTAEK_L	./pam-1-v1/2009-00003-BMD.wav	Signal_2	SYS1	79
+ETRI	WOOTAEK_L	./pam-1-v1/1920-00003-LFD.wav	Signal_3	SYS1	60
+ETRI	WOOTAEK_L	./pam-1-v1/1684-00001-AMD.wav	Signal_4	SYS1	85
+ETRI	WOOTAEK_L	./pam-1-v1/1656-00003-HMD.wav	Signal_5	SYS1	88
+ETRI	WOOTAEK_L	./pam-1-v1/1110-00001-JNO.wav	Signal_6	SYS1	87
+ETRI	WOOTAEK_L	./pam-1-v1/0753-00001-PMO.wav	Signal_7	SYS1	75
+ETRI	WOOTAEK_L	./pam-1-v1/fenghuang_bj_02.wav	Signal_8	SYS1	80
+ETRI	WOOTAEK_L	./pam-1-v1/0646-00001-CFD.wav	Signal_9	SYS1	79
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	john_L	./pam-1-v2/0021-00001-RMD.wav	Signal_1	SYS2	100
+ETRI	john_L	./pam-1-v2/0616-00001-GXD.wav	Signal_10	SYS2	80
+ETRI	john_L	./pam-1-v2/0585-00002-EMO.wav	Signal_11	SYS2	90
+ETRI	john_L	./pam-1-v2/0516-00001-SMD.wav	Signal_12	SYS2	90
+ETRI	john_L	./pam-1-v2/0446-00002-KMD.wav	Signal_13	SYS2	100
+ETRI	john_L	./pam-1-v2/0444-00001-TMD.wav	Signal_14	SYS2	80
+ETRI	john_L	./pam-1-v2/2009-00003-BMD.wav	Signal_2	SYS2	70
+ETRI	john_L	./pam-1-v2/1920-00003-LFD.wav	Signal_3	SYS2	80
+ETRI	john_L	./pam-1-v2/1684-00001-AMD.wav	Signal_4	SYS2	70
+ETRI	john_L	./pam-1-v2/1656-00003-HMD.wav	Signal_5	SYS2	80
+ETRI	john_L	./pam-1-v2/1110-00001-JNO.wav	Signal_6	SYS2	80
+ETRI	john_L	./pam-1-v2/0753-00001-PMO.wav	Signal_7	SYS2	90
+ETRI	john_L	./pam-1-v2/fenghuang_bj_02.wav	Signal_8	SYS2	90
+ETRI	john_L	./pam-1-v2/0646-00001-CFD.wav	Signal_9	SYS2	90
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	LYJ_L	./pam-1-v2/0021-00001-RMD.wav	Signal_1	SYS2	100
+ETRI	LYJ_L	./pam-1-v2/0616-00001-GXD.wav	Signal_10	SYS2	100
+ETRI	LYJ_L	./pam-1-v2/0585-00002-EMO.wav	Signal_11	SYS2	97
+ETRI	LYJ_L	./pam-1-v2/0516-00001-SMD.wav	Signal_12	SYS2	90
+ETRI	LYJ_L	./pam-1-v2/0446-00002-KMD.wav	Signal_13	SYS2	97
+ETRI	LYJ_L	./pam-1-v2/0444-00001-TMD.wav	Signal_14	SYS2	90
+ETRI	LYJ_L	./pam-1-v2/2009-00003-BMD.wav	Signal_2	SYS2	90
+ETRI	LYJ_L	./pam-1-v2/1920-00003-LFD.wav	Signal_3	SYS2	90
+ETRI	LYJ_L	./pam-1-v2/1684-00001-AMD.wav	Signal_4	SYS2	75
+ETRI	LYJ_L	./pam-1-v2/1656-00003-HMD.wav	Signal_5	SYS2	100
+ETRI	LYJ_L	./pam-1-v2/1110-00001-JNO.wav	Signal_6	SYS2	100
+ETRI	LYJ_L	./pam-1-v2/0753-00001-PMO.wav	Signal_7	SYS2	90
+ETRI	LYJ_L	./pam-1-v2/fenghuang_bj_02.wav	Signal_8	SYS2	100
+ETRI	LYJ_L	./pam-1-v2/0646-00001-CFD.wav	Signal_9	SYS2	90
+ETRI	WOOTAEK_L	./pam-1-v2/0021-00001-RMD.wav	Signal_1	SYS2	90
+ETRI	WOOTAEK_L	./pam-1-v2/0616-00001-GXD.wav	Signal_10	SYS2	80
+ETRI	WOOTAEK_L	./pam-1-v2/0585-00002-EMO.wav	Signal_11	SYS2	90
+ETRI	WOOTAEK_L	./pam-1-v2/0516-00001-SMD.wav	Signal_12	SYS2	78
+ETRI	WOOTAEK_L	./pam-1-v2/0446-00002-KMD.wav	Signal_13	SYS2	86
+ETRI	WOOTAEK_L	./pam-1-v2/0444-00001-TMD.wav	Signal_14	SYS2	89
+ETRI	WOOTAEK_L	./pam-1-v2/2009-00003-BMD.wav	Signal_2	SYS2	73
+ETRI	WOOTAEK_L	./pam-1-v2/1920-00003-LFD.wav	Signal_3	SYS2	88
+ETRI	WOOTAEK_L	./pam-1-v2/1684-00001-AMD.wav	Signal_4	SYS2	80
+ETRI	WOOTAEK_L	./pam-1-v2/1656-00003-HMD.wav	Signal_5	SYS2	95
+ETRI	WOOTAEK_L	./pam-1-v2/1110-00001-JNO.wav	Signal_6	SYS2	91
+ETRI	WOOTAEK_L	./pam-1-v2/0753-00001-PMO.wav	Signal_7	SYS2	90
+ETRI	WOOTAEK_L	./pam-1-v2/fenghuang_bj_02.wav	Signal_8	SYS2	88
+ETRI	WOOTAEK_L	./pam-1-v2/0646-00001-CFD.wav	Signal_9	SYS2	90
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	john_L	./basic-1ae-64-c2/0021-00001-RMD.wav	Signal_1	SYS3	40
+ETRI	john_L	./basic-1ae-64-c2/0616-00001-GXD.wav	Signal_10	SYS3	50
+ETRI	john_L	./basic-1ae-64-c2/0585-00002-EMO.wav	Signal_11	SYS3	40
+ETRI	john_L	./basic-1ae-64-c2/0516-00001-SMD.wav	Signal_12	SYS3	29
+ETRI	john_L	./basic-1ae-64-c2/0446-00002-KMD.wav	Signal_13	SYS3	50
+ETRI	john_L	./basic-1ae-64-c2/0444-00001-TMD.wav	Signal_14	SYS3	40
+ETRI	john_L	./basic-1ae-64-c2/2009-00003-BMD.wav	Signal_2	SYS3	32
+ETRI	john_L	./basic-1ae-64-c2/1920-00003-LFD.wav	Signal_3	SYS3	60
+ETRI	john_L	./basic-1ae-64-c2/1684-00001-AMD.wav	Signal_4	SYS3	30
+ETRI	john_L	./basic-1ae-64-c2/1656-00003-HMD.wav	Signal_5	SYS3	30
+ETRI	john_L	./basic-1ae-64-c2/1110-00001-JNO.wav	Signal_6	SYS3	40
+ETRI	john_L	./basic-1ae-64-c2/0753-00001-PMO.wav	Signal_7	SYS3	50
+ETRI	john_L	./basic-1ae-64-c2/fenghuang_bj_02.wav	Signal_8	SYS3	50
+ETRI	john_L	./basic-1ae-64-c2/0646-00001-CFD.wav	Signal_9	SYS3	35
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	LYJ_L	./basic-1ae-64-c2/0021-00001-RMD.wav	Signal_1	SYS3	60
+ETRI	LYJ_L	./basic-1ae-64-c2/0616-00001-GXD.wav	Signal_10	SYS3	40
+ETRI	LYJ_L	./basic-1ae-64-c2/0585-00002-EMO.wav	Signal_11	SYS3	40
+ETRI	LYJ_L	./basic-1ae-64-c2/0516-00001-SMD.wav	Signal_12	SYS3	50
+ETRI	LYJ_L	./basic-1ae-64-c2/0446-00002-KMD.wav	Signal_13	SYS3	70
+ETRI	LYJ_L	./basic-1ae-64-c2/0444-00001-TMD.wav	Signal_14	SYS3	60
+ETRI	LYJ_L	./basic-1ae-64-c2/2009-00003-BMD.wav	Signal_2	SYS3	40
+ETRI	LYJ_L	./basic-1ae-64-c2/1920-00003-LFD.wav	Signal_3	SYS3	50
+ETRI	LYJ_L	./basic-1ae-64-c2/1684-00001-AMD.wav	Signal_4	SYS3	70
+ETRI	LYJ_L	./basic-1ae-64-c2/1656-00003-HMD.wav	Signal_5	SYS3	40
+ETRI	LYJ_L	./basic-1ae-64-c2/1110-00001-JNO.wav	Signal_6	SYS3	40
+ETRI	LYJ_L	./basic-1ae-64-c2/0753-00001-PMO.wav	Signal_7	SYS3	60
+ETRI	LYJ_L	./basic-1ae-64-c2/fenghuang_bj_02.wav	Signal_8	SYS3	60
+ETRI	LYJ_L	./basic-1ae-64-c2/0646-00001-CFD.wav	Signal_9	SYS3	40
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/0021-00001-RMD.wav	Signal_1	SYS3	50
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/0616-00001-GXD.wav	Signal_10	SYS3	50
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/0585-00002-EMO.wav	Signal_11	SYS3	50
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/0516-00001-SMD.wav	Signal_12	SYS3	50
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/0446-00002-KMD.wav	Signal_13	SYS3	50
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/0444-00001-TMD.wav	Signal_14	SYS3	50
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/2009-00003-BMD.wav	Signal_2	SYS3	50
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/1920-00003-LFD.wav	Signal_3	SYS3	50
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/1684-00001-AMD.wav	Signal_4	SYS3	50
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/1656-00003-HMD.wav	Signal_5	SYS3	50
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/1110-00001-JNO.wav	Signal_6	SYS3	50
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/0753-00001-PMO.wav	Signal_7	SYS3	50
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/fenghuang_bj_02.wav	Signal_8	SYS3	50
+ETRI	WOOTAEK_L	./basic-1ae-64-c2/0646-00001-CFD.wav	Signal_9	SYS3	50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	john_L	./basic-2ae-79-c2/0021-00001-RMD.wav	Signal_1	SYS4	70
+ETRI	john_L	./basic-2ae-79-c2/0616-00001-GXD.wav	Signal_10	SYS4	80
+ETRI	john_L	./basic-2ae-79-c2/0585-00002-EMO.wav	Signal_11	SYS4	80
+ETRI	john_L	./basic-2ae-79-c2/0516-00001-SMD.wav	Signal_12	SYS4	90
+ETRI	john_L	./basic-2ae-79-c2/0446-00002-KMD.wav	Signal_13	SYS4	80
+ETRI	john_L	./basic-2ae-79-c2/0444-00001-TMD.wav	Signal_14	SYS4	60
+ETRI	john_L	./basic-2ae-79-c2/2009-00003-BMD.wav	Signal_2	SYS4	70
+ETRI	john_L	./basic-2ae-79-c2/1920-00003-LFD.wav	Signal_3	SYS4	70
+ETRI	john_L	./basic-2ae-79-c2/1684-00001-AMD.wav	Signal_4	SYS4	50
+ETRI	john_L	./basic-2ae-79-c2/1656-00003-HMD.wav	Signal_5	SYS4	60
+ETRI	john_L	./basic-2ae-79-c2/1110-00001-JNO.wav	Signal_6	SYS4	70
+ETRI	john_L	./basic-2ae-79-c2/0753-00001-PMO.wav	Signal_7	SYS4	90
+ETRI	john_L	./basic-2ae-79-c2/fenghuang_bj_02.wav	Signal_8	SYS4	70
+ETRI	john_L	./basic-2ae-79-c2/0646-00001-CFD.wav	Signal_9	SYS4	70
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	LYJ_L	./basic-2ae-79-c2/0021-00001-RMD.wav	Signal_1	SYS4	80
+ETRI	LYJ_L	./basic-2ae-79-c2/0616-00001-GXD.wav	Signal_10	SYS4	80
+ETRI	LYJ_L	./basic-2ae-79-c2/0585-00002-EMO.wav	Signal_11	SYS4	90
+ETRI	LYJ_L	./basic-2ae-79-c2/0516-00001-SMD.wav	Signal_12	SYS4	90
+ETRI	LYJ_L	./basic-2ae-79-c2/0446-00002-KMD.wav	Signal_13	SYS4	100
+ETRI	LYJ_L	./basic-2ae-79-c2/0444-00001-TMD.wav	Signal_14	SYS4	90
+ETRI	LYJ_L	./basic-2ae-79-c2/2009-00003-BMD.wav	Signal_2	SYS4	85
+ETRI	LYJ_L	./basic-2ae-79-c2/1920-00003-LFD.wav	Signal_3	SYS4	90
+ETRI	LYJ_L	./basic-2ae-79-c2/1684-00001-AMD.wav	Signal_4	SYS4	60
+ETRI	LYJ_L	./basic-2ae-79-c2/1656-00003-HMD.wav	Signal_5	SYS4	90
+ETRI	LYJ_L	./basic-2ae-79-c2/1110-00001-JNO.wav	Signal_6	SYS4	100
+ETRI	LYJ_L	./basic-2ae-79-c2/0753-00001-PMO.wav	Signal_7	SYS4	100
+ETRI	LYJ_L	./basic-2ae-79-c2/fenghuang_bj_02.wav	Signal_8	SYS4	100
+ETRI	LYJ_L	./basic-2ae-79-c2/0646-00001-CFD.wav	Signal_9	SYS4	95
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/0021-00001-RMD.wav	Signal_1	SYS4	82
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/0616-00001-GXD.wav	Signal_10	SYS4	76
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/0585-00002-EMO.wav	Signal_11	SYS4	75
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/0516-00001-SMD.wav	Signal_12	SYS4	80
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/0446-00002-KMD.wav	Signal_13	SYS4	60
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/0444-00001-TMD.wav	Signal_14	SYS4	80
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/2009-00003-BMD.wav	Signal_2	SYS4	82
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/1920-00003-LFD.wav	Signal_3	SYS4	70
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/1684-00001-AMD.wav	Signal_4	SYS4	70
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/1656-00003-HMD.wav	Signal_5	SYS4	78
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/1110-00001-JNO.wav	Signal_6	SYS4	62
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/0753-00001-PMO.wav	Signal_7	SYS4	86
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/fenghuang_bj_02.wav	Signal_8	SYS4	90
+ETRI	WOOTAEK_L	./basic-2ae-79-c2/0646-00001-CFD.wav	Signal_9	SYS4	87
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	john_L	./mel-2ae-79-c2/0021-00001-RMD.wav	Signal_1	SYS5	80
+ETRI	john_L	./mel-2ae-79-c2/0616-00001-GXD.wav	Signal_10	SYS5	90
+ETRI	john_L	./mel-2ae-79-c2/0585-00002-EMO.wav	Signal_11	SYS5	85
+ETRI	john_L	./mel-2ae-79-c2/0516-00001-SMD.wav	Signal_12	SYS5	70
+ETRI	john_L	./mel-2ae-79-c2/0446-00002-KMD.wav	Signal_13	SYS5	90
+ETRI	john_L	./mel-2ae-79-c2/0444-00001-TMD.wav	Signal_14	SYS5	80
+ETRI	john_L	./mel-2ae-79-c2/2009-00003-BMD.wav	Signal_2	SYS5	70
+ETRI	john_L	./mel-2ae-79-c2/1920-00003-LFD.wav	Signal_3	SYS5	100
+ETRI	john_L	./mel-2ae-79-c2/1684-00001-AMD.wav	Signal_4	SYS5	60
+ETRI	john_L	./mel-2ae-79-c2/1656-00003-HMD.wav	Signal_5	SYS5	80
+ETRI	john_L	./mel-2ae-79-c2/1110-00001-JNO.wav	Signal_6	SYS5	90
+ETRI	john_L	./mel-2ae-79-c2/0753-00001-PMO.wav	Signal_7	SYS5	90
+ETRI	john_L	./mel-2ae-79-c2/fenghuang_bj_02.wav	Signal_8	SYS5	90
+ETRI	john_L	./mel-2ae-79-c2/0646-00001-CFD.wav	Signal_9	SYS5	90
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ETRI	LYJ_L	./mel-2ae-79-c2/0021-00001-RMD.wav	Signal_1	SYS5	97
+ETRI	LYJ_L	./mel-2ae-79-c2/0616-00001-GXD.wav	Signal_10	SYS5	60
+ETRI	LYJ_L	./mel-2ae-79-c2/0585-00002-EMO.wav	Signal_11	SYS5	90
+ETRI	LYJ_L	./mel-2ae-79-c2/0516-00001-SMD.wav	Signal_12	SYS5	85
+ETRI	LYJ_L	./mel-2ae-79-c2/0446-00002-KMD.wav	Signal_13	SYS5	95
+ETRI	LYJ_L	./mel-2ae-79-c2/0444-00001-TMD.wav	Signal_14	SYS5	95
+ETRI	LYJ_L	./mel-2ae-79-c2/2009-00003-BMD.wav	Signal_2	SYS5	97
+ETRI	LYJ_L	./mel-2ae-79-c2/1920-00003-LFD.wav	Signal_3	SYS5	95
+ETRI	LYJ_L	./mel-2ae-79-c2/1684-00001-AMD.wav	Signal_4	SYS5	100
+ETRI	LYJ_L	./mel-2ae-79-c2/1656-00003-HMD.wav	Signal_5	SYS5	100
+ETRI	LYJ_L	./mel-2ae-79-c2/1110-00001-JNO.wav	Signal_6	SYS5	90
+ETRI	LYJ_L	./mel-2ae-79-c2/0753-00001-PMO.wav	Signal_7	SYS5	95
+ETRI	LYJ_L	./mel-2ae-79-c2/fenghuang_bj_02.wav	Signal_8	SYS5	85
+ETRI	LYJ_L	./mel-2ae-79-c2/0646-00001-CFD.wav	Signal_9	SYS5	70
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/0021-00001-RMD.wav	Signal_1	SYS5	78
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/0616-00001-GXD.wav	Signal_10	SYS5	83
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/0585-00002-EMO.wav	Signal_11	SYS5	80
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/0516-00001-SMD.wav	Signal_12	SYS5	90
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/0446-00002-KMD.wav	Signal_13	SYS5	80
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/0444-00001-TMD.wav	Signal_14	SYS5	87
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/2009-00003-BMD.wav	Signal_2	SYS5	68
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/1920-00003-LFD.wav	Signal_3	SYS5	75
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/1684-00001-AMD.wav	Signal_4	SYS5	85
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/1656-00003-HMD.wav	Signal_5	SYS5	87
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/1110-00001-JNO.wav	Signal_6	SYS5	80
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/0753-00001-PMO.wav	Signal_7	SYS5	72
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/fenghuang_bj_02.wav	Signal_8	SYS5	85
+ETRI	WOOTAEK_L	./mel-2ae-79-c2/0646-00001-CFD.wav	Signal_9	SYS5	71
