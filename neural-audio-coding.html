@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="assets/css/fibonacci.css">
+	<link rel="stylesheet"
+	      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+</head>
+<body>
+
+<header class="header">
+	<a href="index.html" class="logo">
+		back
+	</a>
+</header>
+
+	<style>
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 1px;
+}
+
+
+
+tr:nth-child(even) {
+  background-color: #1E1E1E;
+  opacity: 1;
+}
+ 
+
+</style>
+
+<main class="main post-detail">
+	<article>
+		<header>
+			<div class="author">
+				<img src="images/head.jpg" width="80"/>
+				<span>Kai Zhen</span>
+				<span class="role">is watching you...</span>
+			</div>
+
+			<h2>Efficient Neural Audio Coding  with  Psychoacoustical Calibration</h2>
+			
+			<h1></h1>
+			<div class="post-meta">
+				<div class="tagged-in">
+					<span class="icon tag"></span>
+					<ul>
+						<li>
+							<a href="#">#audio coding</a>
+						</li>
+						<li>
+							<a href="#">#neural network</a>
+						</li>
+						<li>
+							<a href="#">#psychoacoustics</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div>
+		</header>
+
+		<blockquote>
+			Conventional digital audio compression techniques
+are based on the leverage of human perception of sound (psychoacoustics).
+Deep neural networks, while pervasively employed
+in signal processing systems, feature a notorious issue of the
+high model complexity, which limits the potential in various ondevice
+applications, particularly audio coding. In this work, we
+present a psychoacoustical calibration scheme for efficient neural
+audio coding. This differs from the usage of a psychoacoustic
+model in the encoder of MPEG-1 Audio Layer III in that
+it is incorporated in the objective function to optimize both
+encoder and decoder during model training. Concretely, we
+propose a weighting scheme derived from the global masking
+threshold to prioritize the loss minimization procedure; we also
+conduct noise modulation to ensure that the artifact is almost
+inaudible. Experimental results validate the effectiveness of the
+proposed training scheme in terms of both bit allocation efficiency
+and model complexity. In both high and low bitrate settings,
+our model outperforms baseline neural codec with 100% more
+parameters and over 20% higher bitrate. The performance is
+comparable with MPEG-1 Audio Layer III in 112 kbps and 44.1
+kHz setting.
+		</blockquote>
+
+
+		<h2>Decoded Samples</h2>
+		<h3>High Bitrates, 44.1 kHz</h3>
+		<ul>
+			<li>Fraunhofer MP3, 112 kbps</li>
+			<li>Basic Neural Codec, 131 kbps</li>
+			<li>Proposed, 112 kbps</li>			
+		</ul>
+<table>
+  <tr>
+    
+    <th>Reference</th>
+    <th>Fraunhofer MP3 </th>
+   <th>Basic Neural Codec</th>
+    <th>Proposed</th>
+  </tr>
+
+    <tr>
+    <td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_H_FINAL/ref-c2/2009-00003-BMD.wav" type="audio/wav">
+</audio></td>
+    <td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_H_FINAL/mp3-112-wav-c2/2009-00003-BMD.wav" type="audio/mp3">
+</audio></td>
+<td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_H_FINAL/basic-neural-131-c2/2009-00003-BMD.wav" type="audio/wav">
+</audio></td>
+<td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_H_FINAL/neural-pam-112-c2/2009-00003-BMD.wav" type="audio/wav">
+</audio></td>
+  </tr>
+
+      <td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_H_FINAL/ref-c2/1110-00001-JNO.wav" type="audio/wav">
+</audio></td>
+    <td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_H_FINAL/mp3-112-wav-c2/1110-00001-JNO.wav" type="audio/mp3">
+</audio></td>
+<td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_H_FINAL/basic-neural-131-c2/1110-00001-JNO.wav" type="audio/wav">
+</audio></td>
+<td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_H_FINAL/neural-pam-112-c2/1110-00001-JNO.wav" type="audio/wav">
+</audio></td>
+  </tr>
+
+  
+      <td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_H_FINAL/ref-c2/0646-00001-CFD.wav" type="audio/wav">
+</audio></td>
+    <td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_H_FINAL/mp3-112-wav-c2/0646-00001-CFD.wav" type="audio/mp3">
+</audio></td>
+<td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_H_FINAL/basic-neural-131-c2/0646-00001-CFD.wav" type="audio/wav">
+</audio></td>
+<td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_H_FINAL/neural-pam-112-c2/0646-00001-CFD.wav" type="audio/wav">
+</audio></td>
+  </tr>
+
+</table>
+
+<h3>Low Bitrates, 32 kHz</h3>
+		<ul>
+			<li>Fraunhofer MP3, 64 kbps</li>
+			<li>Basic Neural Codec, 79 kbps</li>
+			<li>Proposed, 64 kbps</li>			
+		</ul>
+<table>
+  <tr>
+    
+    <th>Reference</th>
+    <th>Fraunhofer MP3 </th>
+   <th>Basic Neural Codec</th>
+    <th>Proposed</th>
+  </tr>
+
+
+    <tr>
+    <td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_L_FINAL/ref/1684-00001-AMD.wav" type="audio/wav">
+</audio></td>
+    <td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_L_FINAL/mp3-64-c2/1684-00001-AMD.wav" type="audio/mp3">
+</audio></td>
+<td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_L_FINAL/basic-2ae-79-c2/1684-00001-AMD.wav" type="audio/wav">
+</audio></td>
+<td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_L_FINAL/pam-1-v2/1684-00001-AMD.wav" type="audio/wav">
+</audio></td>
+  </tr>
+
+      <td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_L_FINAL/ref/0585-00002-EMO.wav" type="audio/wav">
+</audio></td>
+    <td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_L_FINAL/mp3-64-c2/0585-00002-EMO.wav" type="audio/mp3">
+</audio></td>
+<td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_L_FINAL/basic-2ae-79-c2/0585-00002-EMO.wav" type="audio/wav">
+</audio></td>
+<td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_L_FINAL/pam-1-v2/0585-00002-EMO.wav" type="audio/wav">
+</audio></td>
+  </tr>
+
+
+      <td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_L_FINAL/ref/1656-00003-HMD.wav" type="audio/wav">
+</audio></td>
+    <td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_L_FINAL/mp3-64-c2/1656-00003-HMD.wav" type="audio/mp3">
+</audio></td>
+<td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_L_FINAL/basic-2ae-79-c2/1656-00003-HMD.wav" type="audio/wav">
+</audio></td>
+<td><audio controls style="width: 185px;">
+  <source src="AUDIO_MUSHRA_L_FINAL/pam-1-v2/1656-00003-HMD.wav" type="audio/wav">
+</audio></td>
+  </tr>
+
+
+
+  </table>
+
+
+<h2>Details to be released...</h2>		
+<figure>
+	<img src="assets/nac.png"/>
+	<figcaption>Fig 1. Our neural audio codec is of low model complexity with only 0.45M parameters, which features a trainable Softmax quantizer.</i>
+	</figcaption>
+</figure>
+<figure>
+	<img src="assets/pam.png"/>
+	<figcaption>Fig 2. A psychoacoustic model (PAM) detects tonal/non-tonal maskers, and calculates individual/global masking threshold.</i>
+	</figcaption>
+</figure>
+<figure>
+	<img src="assets/mnr.png"/>
+	<figcaption>Fig 3. Comparison before (left) and after (right) psychoaoustical calibration: with the noise fully masked, the decoded audio is with transparent quality.
+	</figcaption>
+</figure>
+
+
+<hr>
+<!--
+		<section class="related-posts">
+			<h3>Related Posts</h3>
+			<ul>
+				<li>
+					<a href="#">Lorem ipsum dolor sit amet</a>
+				</li>
+				<li>
+					<a href="#">Sed ut perspiciatis unde omnis iste</a>
+				</li>
+				<li>
+					<a href="#">At vero eos et accusamus</a>
+				</li>
+				<li>
+					<a href="#">Temporibus autem quibusdam</a>
+				</li>
+				<li>
+					<a href="#">Ut enim ad minima veniam</a>
+				</li>
+			</ul>
+		</section>
+
+		<section class="comments">
+			<h3>Comments</h3>
+
+			<h4>Post Comment</h4>
+
+			<form>
+				<div class="new-comment">
+					<div class="user">
+						<img src="assets/author_mini.png" width="50"/>
+						<span>You</span>
+					</div>
+					<div class="form-control">
+						<textarea placeholder="Write not more than 500 characters..."></textarea>
+					</div>
+				</div>
+			</form>
+
+			<h4>2 Comments</h4>
+
+			<ul class="comments-list">
+				<li>
+					<div class="comment">
+						<div class="user">
+							<img src="assets/martin.png" width="50"/>
+							<span>Martin</span>
+						</div>
+						<div class="comment-info">
+							<div class="commented-date">
+								just now
+							</div>
+							<div class="desc">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+							</div>
+							<div>
+								<button>Reply</button>
+							</div>
+						</div>
+					</div>
+				</li>
+
+				<li>
+					<div class="comment">
+						<div class="user">
+							<img src="assets/tanny.jpg" width="50"/>
+							<span>Tanny</span>
+						</div>
+						<div class="comment-info">
+							<div class="commented-date">
+								2 days ago
+							</div>
+							<div class="desc">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+							</div>
+							<div>
+								<button>Reply</button>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+
+
+
+		</section>
+
+	-->
+	</article>
+</main>
+
+<footer class="footer">
+	&copy; Tomorrow &middot; is another day.
+</footer>
+<script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>

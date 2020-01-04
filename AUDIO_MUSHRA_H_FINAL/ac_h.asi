@@ -1,0 +1,141 @@
+session=MUSHRA
+# Signal_1
+./ref-c2/0021-00001-RMD.wav
+./ref-c2/0021-00001-RMD.wav
+./mp3-112-wav-c2/0021-00001-RMD.wav
+./neural-pam-96-c2/0021-00001-RMD.wav
+./neural-pam-112-c2/0021-00001-RMD.wav
+./pam-2-96-1-ae/0021-00001-RMD.wav
+./basic-neural-131-c2/0021-00001-RMD.wav
+./lp-3.5-c2/0021-00001-RMD.wav
+./lp-7-c2/0021-00001-RMD.wav
+# Signal_2
+./ref-c2/0444-00001-TMD.wav
+./ref-c2/0444-00001-TMD.wav
+./mp3-112-wav-c2/0444-00001-TMD.wav
+./neural-pam-96-c2/0444-00001-TMD.wav
+./neural-pam-112-c2/0444-00001-TMD.wav
+./pam-2-96-1-ae/0444-00001-TMD.wav
+./basic-neural-131-c2/0444-00001-TMD.wav
+./lp-3.5-c2/0444-00001-TMD.wav
+./lp-7-c2/0444-00001-TMD.wav
+# Signal_3
+./ref-c2/0446-00002-KMD.wav
+./ref-c2/0446-00002-KMD.wav
+./mp3-112-wav-c2/0446-00002-KMD.wav
+./neural-pam-96-c2/0446-00002-KMD.wav
+./neural-pam-112-c2/0446-00002-KMD.wav
+./pam-2-96-1-ae/0446-00002-KMD.wav
+./basic-neural-131-c2/0446-00002-KMD.wav
+./lp-3.5-c2/0446-00002-KMD.wav
+./lp-7-c2/0446-00002-KMD.wav
+# Signal_4
+./ref-c2/0516-00001-SMD.wav
+./ref-c2/0516-00001-SMD.wav
+./mp3-112-wav-c2/0516-00001-SMD.wav
+./neural-pam-96-c2/0516-00001-SMD.wav
+./neural-pam-112-c2/0516-00001-SMD.wav
+./pam-2-96-1-ae/0516-00001-SMD.wav
+./basic-neural-131-c2/0516-00001-SMD.wav
+./lp-3.5-c2/0516-00001-SMD.wav
+./lp-7-c2/0516-00001-SMD.wav
+# Signal_5
+./ref-c2/0585-00002-EMO.wav
+./ref-c2/0585-00002-EMO.wav
+./mp3-112-wav-c2/0585-00002-EMO.wav
+./neural-pam-96-c2/0585-00002-EMO.wav
+./neural-pam-112-c2/0585-00002-EMO.wav
+./pam-2-96-1-ae/0585-00002-EMO.wav
+./basic-neural-131-c2/0585-00002-EMO.wav
+./lp-3.5-c2/0585-00002-EMO.wav
+./lp-7-c2/0585-00002-EMO.wav
+# Signal_6
+./ref-c2/0616-00001-GXD.wav
+./ref-c2/0616-00001-GXD.wav
+./mp3-112-wav-c2/0616-00001-GXD.wav
+./neural-pam-96-c2/0616-00001-GXD.wav
+./neural-pam-112-c2/0616-00001-GXD.wav
+./pam-2-96-1-ae/0616-00001-GXD.wav
+./basic-neural-131-c2/0616-00001-GXD.wav
+./lp-3.5-c2/0616-00001-GXD.wav
+./lp-7-c2/0616-00001-GXD.wav
+# Signal_7
+./ref-c2/0646-00001-CFD.wav
+./ref-c2/0646-00001-CFD.wav
+./mp3-112-wav-c2/0646-00001-CFD.wav
+./neural-pam-96-c2/0646-00001-CFD.wav
+./neural-pam-112-c2/0646-00001-CFD.wav
+./pam-2-96-1-ae/0646-00001-CFD.wav
+./basic-neural-131-c2/0646-00001-CFD.wav
+./lp-3.5-c2/0646-00001-CFD.wav
+./lp-7-c2/0646-00001-CFD.wav
+# Signal_8
+./ref-c2/0753-00001-PMO.wav
+./ref-c2/0753-00001-PMO.wav
+./mp3-112-wav-c2/0753-00001-PMO.wav
+./neural-pam-96-c2/0753-00001-PMO.wav
+./neural-pam-112-c2/0753-00001-PMO.wav
+./pam-2-96-1-ae/0753-00001-PMO.wav
+./basic-neural-131-c2/0753-00001-PMO.wav
+./lp-3.5-c2/0753-00001-PMO.wav
+./lp-7-c2/0753-00001-PMO.wav
+# Signal_9
+./ref-c2/1110-00001-JNO.wav
+./ref-c2/1110-00001-JNO.wav
+./mp3-112-wav-c2/1110-00001-JNO.wav
+./neural-pam-96-c2/1110-00001-JNO.wav
+./neural-pam-112-c2/1110-00001-JNO.wav
+./pam-2-96-1-ae/1110-00001-JNO.wav
+./basic-neural-131-c2/1110-00001-JNO.wav
+./lp-3.5-c2/1110-00001-JNO.wav
+./lp-7-c2/1110-00001-JNO.wav
+# Signal_10
+./ref-c2/1656-00003-HMD.wav
+./ref-c2/1656-00003-HMD.wav
+./mp3-112-wav-c2/1656-00003-HMD.wav
+./neural-pam-96-c2/1656-00003-HMD.wav
+./neural-pam-112-c2/1656-00003-HMD.wav
+./pam-2-96-1-ae/1656-00003-HMD.wav
+./basic-neural-131-c2/1656-00003-HMD.wav
+./lp-3.5-c2/1656-00003-HMD.wav
+./lp-7-c2/1656-00003-HMD.wav
+# Signal_11
+./ref-c2/1684-00001-AMD.wav
+./ref-c2/1684-00001-AMD.wav
+./mp3-112-wav-c2/1684-00001-AMD.wav
+./neural-pam-96-c2/1684-00001-AMD.wav
+./neural-pam-112-c2/1684-00001-AMD.wav
+./pam-2-96-1-ae/1684-00001-AMD.wav
+./basic-neural-131-c2/1684-00001-AMD.wav
+./lp-3.5-c2/1684-00001-AMD.wav
+./lp-7-c2/1684-00001-AMD.wav
+# Signal_12
+./ref-c2/1920-00003-LFD.wav
+./ref-c2/1920-00003-LFD.wav
+./mp3-112-wav-c2/1920-00003-LFD.wav
+./neural-pam-96-c2/1920-00003-LFD.wav
+./neural-pam-112-c2/1920-00003-LFD.wav
+./pam-2-96-1-ae/1920-00003-LFD.wav
+./basic-neural-131-c2/1920-00003-LFD.wav
+./lp-3.5-c2/1920-00003-LFD.wav
+./lp-7-c2/1920-00003-LFD.wav
+# Signal_13
+./ref-c2/2009-00003-BMD.wav
+./ref-c2/2009-00003-BMD.wav
+./mp3-112-wav-c2/2009-00003-BMD.wav
+./neural-pam-96-c2/2009-00003-BMD.wav
+./neural-pam-112-c2/2009-00003-BMD.wav
+./pam-2-96-1-ae/2009-00003-BMD.wav
+./basic-neural-131-c2/2009-00003-BMD.wav
+./lp-3.5-c2/2009-00003-BMD.wav
+./lp-7-c2/2009-00003-BMD.wav
+# Signal_14
+./ref-c2/fenghuang_bj_02.wav
+./ref-c2/fenghuang_bj_02.wav
+./mp3-112-wav-c2/fenghuang_bj_02.wav
+./neural-pam-96-c2/fenghuang_bj_02.wav
+./neural-pam-112-c2/fenghuang_bj_02.wav
+./pam-2-96-1-ae/fenghuang_bj_02.wav
+./basic-neural-131-c2/fenghuang_bj_02.wav
+./lp-3.5-c2/fenghuang_bj_02.wav
+./lp-7-c2/fenghuang_bj_02.wav

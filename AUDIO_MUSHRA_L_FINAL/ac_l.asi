@@ -1,0 +1,141 @@
+session=MUSHRA
+# Signal_1
+./ref/0021-00001-RMD.wav
+./ref/0021-00001-RMD.wav
+./mp3-64-c2/0021-00001-RMD.wav
+./pam-1-v1/0021-00001-RMD.wav
+./pam-1-v2/0021-00001-RMD.wav
+./basic-1ae-64-c2/0021-00001-RMD.wav
+./basic-2ae-79-c2/0021-00001-RMD.wav
+./lp-3.5-c2/0021-00001-RMD.wav
+./mel-2ae-79-c2/0021-00001-RMD.wav
+# Signal_2
+./ref/2009-00003-BMD.wav
+./ref/2009-00003-BMD.wav
+./mp3-64-c2/2009-00003-BMD.wav
+./pam-1-v1/2009-00003-BMD.wav
+./pam-1-v2/2009-00003-BMD.wav
+./basic-1ae-64-c2/2009-00003-BMD.wav
+./basic-2ae-79-c2/2009-00003-BMD.wav
+./lp-3.5-c2/2009-00003-BMD.wav
+./mel-2ae-79-c2/2009-00003-BMD.wav
+# Signal_3
+./ref/1920-00003-LFD.wav
+./ref/1920-00003-LFD.wav
+./mp3-64-c2/1920-00003-LFD.wav
+./pam-1-v1/1920-00003-LFD.wav
+./pam-1-v2/1920-00003-LFD.wav
+./basic-1ae-64-c2/1920-00003-LFD.wav
+./basic-2ae-79-c2/1920-00003-LFD.wav
+./lp-3.5-c2/1920-00003-LFD.wav
+./mel-2ae-79-c2/1920-00003-LFD.wav
+# Signal_4
+./ref/1684-00001-AMD.wav
+./ref/1684-00001-AMD.wav
+./mp3-64-c2/1684-00001-AMD.wav
+./pam-1-v1/1684-00001-AMD.wav
+./pam-1-v2/1684-00001-AMD.wav
+./basic-1ae-64-c2/1684-00001-AMD.wav
+./basic-2ae-79-c2/1684-00001-AMD.wav
+./lp-3.5-c2/1684-00001-AMD.wav
+./mel-2ae-79-c2/1684-00001-AMD.wav
+# Signal_5
+./ref/1656-00003-HMD.wav
+./ref/1656-00003-HMD.wav
+./mp3-64-c2/1656-00003-HMD.wav
+./pam-1-v1/1656-00003-HMD.wav
+./pam-1-v2/1656-00003-HMD.wav
+./basic-1ae-64-c2/1656-00003-HMD.wav
+./basic-2ae-79-c2/1656-00003-HMD.wav
+./lp-3.5-c2/1656-00003-HMD.wav
+./mel-2ae-79-c2/1656-00003-HMD.wav
+# Signal_6
+./ref/1110-00001-JNO.wav
+./ref/1110-00001-JNO.wav
+./mp3-64-c2/1110-00001-JNO.wav
+./pam-1-v1/1110-00001-JNO.wav
+./pam-1-v2/1110-00001-JNO.wav
+./basic-1ae-64-c2/1110-00001-JNO.wav
+./basic-2ae-79-c2/1110-00001-JNO.wav
+./lp-3.5-c2/1110-00001-JNO.wav
+./mel-2ae-79-c2/1110-00001-JNO.wav
+# Signal_7
+./ref/0753-00001-PMO.wav
+./ref/0753-00001-PMO.wav
+./mp3-64-c2/0753-00001-PMO.wav
+./pam-1-v1/0753-00001-PMO.wav
+./pam-1-v2/0753-00001-PMO.wav
+./basic-1ae-64-c2/0753-00001-PMO.wav
+./basic-2ae-79-c2/0753-00001-PMO.wav
+./lp-3.5-c2/0753-00001-PMO.wav
+./mel-2ae-79-c2/0753-00001-PMO.wav
+# Signal_8
+./ref/fenghuang_bj_02.wav
+./ref/fenghuang_bj_02.wav
+./mp3-64-c2/fenghuang_bj_02.wav
+./pam-1-v1/fenghuang_bj_02.wav
+./pam-1-v2/fenghuang_bj_02.wav
+./basic-1ae-64-c2/fenghuang_bj_02.wav
+./basic-2ae-79-c2/fenghuang_bj_02.wav
+./lp-3.5-c2/fenghuang_bj_02.wav
+./mel-2ae-79-c2/fenghuang_bj_02.wav
+# Signal_9
+./ref/0646-00001-CFD.wav
+./ref/0646-00001-CFD.wav
+./mp3-64-c2/0646-00001-CFD.wav
+./pam-1-v1/0646-00001-CFD.wav
+./pam-1-v2/0646-00001-CFD.wav
+./basic-1ae-64-c2/0646-00001-CFD.wav
+./basic-2ae-79-c2/0646-00001-CFD.wav
+./lp-3.5-c2/0646-00001-CFD.wav
+./mel-2ae-79-c2/0646-00001-CFD.wav
+# Signal_10
+./ref/0616-00001-GXD.wav
+./ref/0616-00001-GXD.wav
+./mp3-64-c2/0616-00001-GXD.wav
+./pam-1-v1/0616-00001-GXD.wav
+./pam-1-v2/0616-00001-GXD.wav
+./basic-1ae-64-c2/0616-00001-GXD.wav
+./basic-2ae-79-c2/0616-00001-GXD.wav
+./lp-3.5-c2/0616-00001-GXD.wav
+./mel-2ae-79-c2/0616-00001-GXD.wav
+# Signal_11
+./ref/0585-00002-EMO.wav
+./ref/0585-00002-EMO.wav
+./mp3-64-c2/0585-00002-EMO.wav
+./pam-1-v1/0585-00002-EMO.wav
+./pam-1-v2/0585-00002-EMO.wav
+./basic-1ae-64-c2/0585-00002-EMO.wav
+./basic-2ae-79-c2/0585-00002-EMO.wav
+./lp-3.5-c2/0585-00002-EMO.wav
+./mel-2ae-79-c2/0585-00002-EMO.wav
+# Signal_12
+./ref/0516-00001-SMD.wav
+./ref/0516-00001-SMD.wav
+./mp3-64-c2/0516-00001-SMD.wav
+./pam-1-v1/0516-00001-SMD.wav
+./pam-1-v2/0516-00001-SMD.wav
+./basic-1ae-64-c2/0516-00001-SMD.wav
+./basic-2ae-79-c2/0516-00001-SMD.wav
+./lp-3.5-c2/0516-00001-SMD.wav
+./mel-2ae-79-c2/0516-00001-SMD.wav
+# Signal_13
+./ref/0446-00002-KMD.wav
+./ref/0446-00002-KMD.wav
+./mp3-64-c2/0446-00002-KMD.wav
+./pam-1-v1/0446-00002-KMD.wav
+./pam-1-v2/0446-00002-KMD.wav
+./basic-1ae-64-c2/0446-00002-KMD.wav
+./basic-2ae-79-c2/0446-00002-KMD.wav
+./lp-3.5-c2/0446-00002-KMD.wav
+./mel-2ae-79-c2/0446-00002-KMD.wav
+# Signal_14
+./ref/0444-00001-TMD.wav
+./ref/0444-00001-TMD.wav
+./mp3-64-c2/0444-00001-TMD.wav
+./pam-1-v1/0444-00001-TMD.wav
+./pam-1-v2/0444-00001-TMD.wav
+./basic-1ae-64-c2/0444-00001-TMD.wav
+./basic-2ae-79-c2/0444-00001-TMD.wav
+./lp-3.5-c2/0444-00001-TMD.wav
+./mel-2ae-79-c2/0444-00001-TMD.wav

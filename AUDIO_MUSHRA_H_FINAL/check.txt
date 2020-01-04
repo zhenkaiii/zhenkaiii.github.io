@@ -1,0 +1,42 @@
+                                File       Size Diff
+                                           (samples)
+              ./ref-c2/0021-00001-RMD.wav        0   
+              ./ref-c2/0021-00001-RMD.wav        0   
+      ./mp3-112-wav-c2/0021-00001-RMD.wav     2611   
+    ./neural-pam-96-c2/0021-00001-RMD.wav     -237   
+   ./neural-pam-112-c2/0021-00001-RMD.wav     -237   
+       ./pam-2-96-1-ae/0021-00001-RMD.wav     -237   
+ ./basic-neural-131-c2/0021-00001-RMD.wav     -237   
+
+              ./ref-c2/0444-00001-TMD.wav        0   
+              ./ref-c2/0444-00001-TMD.wav        0   
+      ./mp3-112-wav-c2/0444-00001-TMD.wav     2304   
+    ./neural-pam-96-c2/0444-00001-TMD.wav     -160   
+   ./neural-pam-112-c2/0444-00001-TMD.wav     -160   
+       ./pam-2-96-1-ae/0444-00001-TMD.wav     -160   
+ ./basic-neural-131-c2/0444-00001-TMD.wav     -160   
+
+              ./ref-c2/0446-00002-KMD.wav        0   
+              ./ref-c2/0446-00002-KMD.wav        0   
+      ./mp3-112-wav-c2/0446-00002-KMD.wav     2304   
+    ./neural-pam-96-c2/0446-00002-KMD.wav      -64   
+   ./neural-pam-112-c2/0446-00002-KMD.wav      -64   
+       ./pam-2-96-1-ae/0446-00002-KMD.wav      -64   
+ ./basic-neural-131-c2/0446-00002-KMD.wav      -64   
+
+              ./ref-c2/0516-00001-SMD.wav        0   
+              ./ref-c2/0516-00001-SMD.wav        0   
+      ./mp3-112-wav-c2/0516-00001-SMD.wav     2336   
+    ./neural-pam-96-c2/0516-00001-SMD.wav      -32   
+   ./neural-pam-112-c2/0516-00001-SMD.wav      -32   
+       ./pam-2-96-1-ae/0516-00001-SMD.wav      -32   
+ ./basic-neural-131-c2/0516-00001-SMD.wav      -32   
+
+              ./ref-c2/1110-00001-JNO.wav        0   
+              ./ref-c2/1110-00001-JNO.wav        0   
+      ./mp3-112-wav-c2/1110-00001-JNO.wav     3200   
+    ./neural-pam-96-c2/1110-00001-JNO.wav     -320   
+   ./neural-pam-112-c2/1110-00001-JNO.wav     -320   
+       ./pam-2-96-1-ae/1110-00001-JNO.wav     -320   
+ ./basic-neural-131-c2/1110-00001-JNO.wav     -320   
+

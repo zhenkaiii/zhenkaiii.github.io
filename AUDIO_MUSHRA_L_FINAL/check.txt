@@ -1,0 +1,142 @@
+                             File       Size Diff   Delay
+                                        (samples) (samples)
+              ./ref/0021-00001-RMD.wav        0        0 
+              ./ref/0021-00001-RMD.wav        0        0 
+        ./mp3-64-c2/0021-00001-RMD.wav     2987      672 
+         ./pam-1-v1/0021-00001-RMD.wav     -437        0 
+         ./pam-1-v2/0021-00001-RMD.wav     -437        0 
+  ./basic-1ae-64-c2/0021-00001-RMD.wav     -437        0 
+  ./basic-2ae-79-c2/0021-00001-RMD.wav     -437        0 
+        ./lp-3.5-c2/0021-00001-RMD.wav      -85        0 
+    ./mel-2ae-79-c2/0021-00001-RMD.wav     -437        0 
+
+              ./ref/2009-00003-BMD.wav        0        0 
+              ./ref/2009-00003-BMD.wav        0        0 
+        ./mp3-64-c2/2009-00003-BMD.wav     2481      672 
+         ./pam-1-v1/2009-00003-BMD.wav     -463        0 
+         ./pam-1-v2/2009-00003-BMD.wav     -463        0 
+  ./basic-1ae-64-c2/2009-00003-BMD.wav     -463        0 
+  ./basic-2ae-79-c2/2009-00003-BMD.wav     -463        0 
+        ./lp-3.5-c2/2009-00003-BMD.wav      -79        0 
+    ./mel-2ae-79-c2/2009-00003-BMD.wav     -463        0 
+
+              ./ref/1920-00003-LFD.wav        0        0 
+              ./ref/1920-00003-LFD.wav        0        0 
+        ./mp3-64-c2/1920-00003-LFD.wav     2361      672 
+         ./pam-1-v1/1920-00003-LFD.wav       -7        0 
+         ./pam-1-v2/1920-00003-LFD.wav       -7        0 
+  ./basic-1ae-64-c2/1920-00003-LFD.wav       -7        0 
+  ./basic-2ae-79-c2/1920-00003-LFD.wav       -7        0 
+        ./lp-3.5-c2/1920-00003-LFD.wav      -71        0 
+    ./mel-2ae-79-c2/1920-00003-LFD.wav       -7        0 
+
+              ./ref/1684-00001-AMD.wav        0        0 
+              ./ref/1684-00001-AMD.wav        0        0 
+        ./mp3-64-c2/1684-00001-AMD.wav     3233      672 
+         ./pam-1-v1/1684-00001-AMD.wav     -191        0 
+         ./pam-1-v2/1684-00001-AMD.wav     -191        0 
+  ./basic-1ae-64-c2/1684-00001-AMD.wav     -191        0 
+  ./basic-2ae-79-c2/1684-00001-AMD.wav     -191        0 
+        ./lp-3.5-c2/1684-00001-AMD.wav      -95        0 
+    ./mel-2ae-79-c2/1684-00001-AMD.wav     -191        0 
+
+              ./ref/1656-00003-HMD.wav        0        0 
+              ./ref/1656-00003-HMD.wav        0        0 
+        ./mp3-64-c2/1656-00003-HMD.wav     2446      672 
+         ./pam-1-v1/1656-00003-HMD.wav     -306        0 
+         ./pam-1-v2/1656-00003-HMD.wav     -306        0 
+  ./basic-1ae-64-c2/1656-00003-HMD.wav     -306        0 
+  ./basic-2ae-79-c2/1656-00003-HMD.wav     -306        0 
+        ./lp-3.5-c2/1656-00003-HMD.wav     -114        0 
+    ./mel-2ae-79-c2/1656-00003-HMD.wav     -306        0 
+
+              ./ref/1110-00001-JNO.wav        0        0 
+              ./ref/1110-00001-JNO.wav        0        0 
+        ./mp3-64-c2/1110-00001-JNO.wav     3273      672 
+         ./pam-1-v1/1110-00001-JNO.wav     -343        0 
+         ./pam-1-v2/1110-00001-JNO.wav     -343        0 
+  ./basic-1ae-64-c2/1110-00001-JNO.wav     -343        0 
+  ./basic-2ae-79-c2/1110-00001-JNO.wav     -343        0 
+        ./lp-3.5-c2/1110-00001-JNO.wav      -55        0 
+    ./mel-2ae-79-c2/1110-00001-JNO.wav     -343        0 
+
+              ./ref/0753-00001-PMO.wav        0        0 
+              ./ref/0753-00001-PMO.wav        0        0 
+        ./mp3-64-c2/0753-00001-PMO.wav     3204      672 
+         ./pam-1-v1/0753-00001-PMO.wav      -28        0 
+         ./pam-1-v2/0753-00001-PMO.wav      -28        0 
+  ./basic-1ae-64-c2/0753-00001-PMO.wav      -28        0 
+  ./basic-2ae-79-c2/0753-00001-PMO.wav      -28        0 
+        ./lp-3.5-c2/0753-00001-PMO.wav     -124        0 
+    ./mel-2ae-79-c2/0753-00001-PMO.wav      -28        0 
+
+             ./ref/fenghuang_bj_02.wav        0        0 
+             ./ref/fenghuang_bj_02.wav        0        0 
+       ./mp3-64-c2/fenghuang_bj_02.wav     2738      672 
+        ./pam-1-v1/fenghuang_bj_02.wav     -206        0 
+        ./pam-1-v2/fenghuang_bj_02.wav     -206        0 
+ ./basic-1ae-64-c2/fenghuang_bj_02.wav     -206        0 
+ ./basic-2ae-79-c2/fenghuang_bj_02.wav     -206        0 
+       ./lp-3.5-c2/fenghuang_bj_02.wav      -78        0 
+   ./mel-2ae-79-c2/fenghuang_bj_02.wav     -206        0 
+
+              ./ref/0646-00001-CFD.wav        0        0 
+              ./ref/0646-00001-CFD.wav        0        0 
+        ./mp3-64-c2/0646-00001-CFD.wav     2314      672 
+         ./pam-1-v1/0646-00001-CFD.wav     -342        0 
+         ./pam-1-v2/0646-00001-CFD.wav     -342        0 
+  ./basic-1ae-64-c2/0646-00001-CFD.wav     -342        0 
+  ./basic-2ae-79-c2/0646-00001-CFD.wav     -342        0 
+        ./lp-3.5-c2/0646-00001-CFD.wav     -118        0 
+    ./mel-2ae-79-c2/0646-00001-CFD.wav     -342        0 
+
+              ./ref/0616-00001-GXD.wav        0        0 
+              ./ref/0616-00001-GXD.wav        0        0 
+        ./mp3-64-c2/0616-00001-GXD.wav     2940      672 
+         ./pam-1-v1/0616-00001-GXD.wav     -292        0 
+         ./pam-1-v2/0616-00001-GXD.wav     -292        0 
+  ./basic-1ae-64-c2/0616-00001-GXD.wav     -292        0 
+  ./basic-2ae-79-c2/0616-00001-GXD.wav     -292        0 
+        ./lp-3.5-c2/0616-00001-GXD.wav       -4        0 
+    ./mel-2ae-79-c2/0616-00001-GXD.wav     -292        0 
+
+              ./ref/0585-00002-EMO.wav        0        0 
+              ./ref/0585-00002-EMO.wav        0        0 
+        ./mp3-64-c2/0585-00002-EMO.wav     2605      672 
+         ./pam-1-v1/0585-00002-EMO.wav     -435        0 
+         ./pam-1-v2/0585-00002-EMO.wav     -435        0 
+  ./basic-1ae-64-c2/0585-00002-EMO.wav     -435        0 
+  ./basic-2ae-79-c2/0585-00002-EMO.wav     -435        0 
+        ./lp-3.5-c2/0585-00002-EMO.wav      -83        0 
+    ./mel-2ae-79-c2/0585-00002-EMO.wav     -435        0 
+
+              ./ref/0516-00001-SMD.wav        0        0 
+              ./ref/0516-00001-SMD.wav        0        0 
+        ./mp3-64-c2/0516-00001-SMD.wav     2625      672 
+         ./pam-1-v1/0516-00001-SMD.wav     -415        0 
+         ./pam-1-v2/0516-00001-SMD.wav     -415        0 
+  ./basic-1ae-64-c2/0516-00001-SMD.wav     -415        0 
+  ./basic-2ae-79-c2/0516-00001-SMD.wav     -415        0 
+        ./lp-3.5-c2/0516-00001-SMD.wav      -63        0 
+    ./mel-2ae-79-c2/0516-00001-SMD.wav     -415        0 
+
+              ./ref/0446-00002-KMD.wav        0        0 
+              ./ref/0446-00002-KMD.wav        0        0 
+        ./mp3-64-c2/0446-00002-KMD.wav     2602      672 
+         ./pam-1-v1/0446-00002-KMD.wav     -438        0 
+         ./pam-1-v2/0446-00002-KMD.wav     -438        0 
+  ./basic-1ae-64-c2/0446-00002-KMD.wav     -438        0 
+  ./basic-2ae-79-c2/0446-00002-KMD.wav     -438        0 
+        ./lp-3.5-c2/0446-00002-KMD.wav      -86        0 
+    ./mel-2ae-79-c2/0446-00002-KMD.wav     -438        0 
+
+              ./ref/0444-00001-TMD.wav        0        0 
+              ./ref/0444-00001-TMD.wav        0        0 
+        ./mp3-64-c2/0444-00001-TMD.wav     2322      672 
+         ./pam-1-v1/0444-00001-TMD.wav     -334        0 
+         ./pam-1-v2/0444-00001-TMD.wav     -334        0 
+  ./basic-1ae-64-c2/0444-00001-TMD.wav     -334        0 
+  ./basic-2ae-79-c2/0444-00001-TMD.wav     -334        0 
+        ./lp-3.5-c2/0444-00001-TMD.wav     -110        0 
+    ./mel-2ae-79-c2/0444-00001-TMD.wav     -334        0 
+
