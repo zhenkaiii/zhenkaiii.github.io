@@ -46,7 +46,7 @@ tr:nth-child(even) {
 			<div class="author">
 				<img src="images/head.jpg" width="80"/>
 				<span>Kai Zhen</span>
-				<span class="role">is watching you...</span>
+				<span class="role"></span>
 			</div>
 
 			<h2>Efficient Neural Audio Coding  with  Psychoacoustical Calibration</h2>
@@ -91,17 +91,22 @@ proposed training scheme in terms of both bit allocation efficiency
 and model complexity. In both high and low bitrate settings,
 our model outperforms baseline neural codec with 100% more
 parameters and over 20% higher bitrate. The performance is
-comparable with MPEG-1 Audio Layer III in 112 kbps and 44.1
+comparable with MPEG-1 Audio Layer III in 112 Kbps and 44.1
 kHz setting.
 		</blockquote>
 
 
 		<h2>Decoded Samples</h2>
+		<p>
+			The bitrate for uncompressed waveforms is 1.411 Mbps, the same as CD's with the stereo setup.
+			For the mono setup in this work, the uncompressed bitrate is 705.6 Kbps.
+		</p>
+
 		<h3>High Bitrates, 44.1 kHz</h3>
 		<ul>
-			<li>Fraunhofer MP3, 112 kbps</li>
-			<li>Basic Neural Codec, 131 kbps</li>
-			<li>Proposed, 112 kbps</li>			
+			<li>Fraunhofer MP3, 112 Kbps</li>
+			<li>Basic Neural Codec, 131 Kbps</li>
+			<li>Proposed, 112 Kbps</li>			
 		</ul>
 <table>
   <tr>
@@ -160,9 +165,9 @@ kHz setting.
 
 <h3>Low Bitrates, 32 kHz</h3>
 		<ul>
-			<li>Fraunhofer MP3, 64 kbps</li>
-			<li>Basic Neural Codec, 79 kbps</li>
-			<li>Proposed, 64 kbps</li>			
+			<li>Fraunhofer MP3, 64 Kbps</li>
+			<li>Basic Neural Codec, 79 Kbps</li>
+			<li>Proposed, 64 Kbps</li>			
 		</ul>
 <table>
   <tr>
@@ -236,12 +241,12 @@ kHz setting.
 </figure>
 <figure>
 	<img src="assets/mnr.png"/>
-	<figcaption>Fig 3. Comparison before (left) and after (right) psychoaoustical calibration: with the noise fully masked, the decoded audio is with transparent quality.
+	<figcaption>Fig 3. Comparison before (left) and after (right) psychoaoustical calibration: with the noise fully masked, the decoded audio achieves near transparent quality.
 	</figcaption>
 </figure>
 
 
-<hr>
+
 <!--
 		<section class="related-posts">
 			<h3>Related Posts</h3>
@@ -330,6 +335,23 @@ kHz setting.
 		</section>
 
 	-->
+
+
+		<section class="related-posts">
+			<h3>References</h3>
+			<ul>
+				<li>
+					<a href="https://www.isca-speech.org/archive/Interspeech_2019/abstracts/1816.html">[1]. Kai Zhen, Jongmo Sung, Mi Suk Lee, Seungkwon Beack, and Minje Kim, "Cascaded Cross-Module Residual Learning towards Lightweight End-to-End Speech Coding," In Proceedings of the Annual Conference of the International Speech Communication Association (Interspeech), Graz, Austria, September 15-19, 2019</a>
+				</li>
+				<li>
+					<a href="https://ieeexplore.ieee.org/document/8461487">[2]. Srihari Kankanahalli, "End-to-end optimized speech coding with deep neural networks." 2018 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 2018</a>
+				</li>
+				<li>
+					<a href="https://arxiv.org/abs/1801.09774">[3]. Kai Zhen, Aswin Sivaraman, Jongmo Sung, Minje Kim, "On Psychoacoustically Weighted Cost Functions Towards Resource-Efficient Deep Neural Networks for Speech Denoising," https://arxiv.org/abs/1801.09774</a>
+				</li>
+			</ul>
+		</section>
+<hr>
 	</article>
 </main>
 
