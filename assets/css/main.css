@@ -2145,7 +2145,7 @@ input, select, textarea {
 
 	#copyright {
 		color: #666;
-		font-size: 1em;
+		font-size: 0.5em;
 		line-height: 1em;
 		list-style: none;
 		padding-left: 0;
@@ -2424,7 +2424,7 @@ input, select, textarea {
 				}
 
 			#contact footer {
-				margin: 5em;
+				margin: 5.1em;
 			}
 
 		/* Copyright */
