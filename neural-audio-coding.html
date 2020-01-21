@@ -72,27 +72,25 @@ tr:nth-child(even) {
 		</header>
 
 		<blockquote>
-			Conventional digital audio compression techniques
-are based on the leverage of human perception of sound (psychoacoustics).
-Deep neural networks, while pervasively employed
-in signal processing systems, feature a notorious issue of the
-high model complexity, which limits the potential in various ondevice
-applications, particularly audio coding. In this work, we
-present a psychoacoustical calibration scheme for efficient neural
-audio coding. This differs from the usage of a psychoacoustic
-model in the encoder of MPEG-1 Audio Layer III in that
-it is incorporated in the objective function to optimize both
-encoder and decoder during model training. Concretely, we
-propose a weighting scheme derived from the global masking
-threshold to prioritize the loss minimization procedure; we also
-conduct noise modulation to ensure that the artifact is almost
-inaudible. Experimental results validate the effectiveness of the
-proposed training scheme in terms of both bit allocation efficiency
-and model complexity. In both high and low bitrate settings,
-our model outperforms baseline neural codec with 100% more
-parameters and over 20% higher bitrate. The performance is
-comparable with MPEG-1 Audio Layer III in 112 Kbps and 44.1
-kHz setting.
+			It is common to leverage human perception of sound,
+or psychoacoustics, in conventional audio coding technology, to
+reduce the bitrate while preserving the perceptual quality in
+the decoded audio signals. When it comes to using deep neural
+networks for this compression task, however, the objective nature
+of the loss function tends to lead to a suboptimal sound quality
+as well as a high run-time complexity due to the large model
+size. In this work, we present psychoacoustic calibration schemes
+to re-define the loss functions of neural audio coding systems,
+so that the decoded signals are perceptually more similar to
+the original. Moreover, the proposed psychoacoustic optimization
+can also result in a more streamlined system. To this end, we
+derive novel loss functions from the empirically found global
+masking threshold. Experimental results show that the proposed
+psychoacoustic loss functions yield better performances than an
+ordinary autoencoding-based baseline codec, which has up to
+100% more parameters and consumes 36.5% more bits per
+second. The performance is comparable with the commercial
+MPEG-1 Audio Layer III codec in 112 kbps.
 		</blockquote>
 
 
@@ -105,8 +103,8 @@ kHz setting.
 		<h3>High Bitrates, 44.1 kHz</h3>
 		<ul>
 			<li>Fraunhofer MP3, 112 Kbps</li>
-			<li>Basic Neural Codec, 131 Kbps</li>
-			<li>Proposed, 112 Kbps</li>			
+			<li>Basic Neural Codec, 131 Kbps, 0.9 million parameters</li>
+			<li>Proposed, 112 Kbps, 0.9 million parameters</li>			
 		</ul>
 <table>
   <tr>
@@ -166,8 +164,8 @@ kHz setting.
 <h3>Low Bitrates, 32 kHz</h3>
 		<ul>
 			<li>Fraunhofer MP3, 64 Kbps</li>
-			<li>Basic Neural Codec, 79 Kbps</li>
-			<li>Proposed, 64 Kbps</li>			
+			<li>Basic Neural Codec, 79 Kbps, 0.9 million parameters</li>
+			<li>Proposed, 64 Kbps, 0.45 million parameters</li>			
 		</ul>
 <table>
   <tr>
@@ -227,7 +225,7 @@ kHz setting.
 
   </table>
 
-
+<!--
 <h2>Details to be released...</h2>		
 <figure>
 	<img src="assets/nac.png"/>
@@ -244,7 +242,7 @@ kHz setting.
 	<figcaption>Fig 3. Comparison before (left) and after (right) psychoaoustical calibration: with the noise fully masked, the decoded audio achieves near transparent quality.
 	</figcaption>
 </figure>
-
+-->
 
 
 <!--
@@ -341,13 +339,8 @@ kHz setting.
 			<h3>References</h3>
 			<ul>
 				<li>
-					<a href="https://www.isca-speech.org/archive/Interspeech_2019/abstracts/1816.html">[1]. Kai Zhen, Jongmo Sung, Mi Suk Lee, Seungkwon Beack, and Minje Kim, "Cascaded Cross-Module Residual Learning towards Lightweight End-to-End Speech Coding," In Proceedings of the Annual Conference of the International Speech Communication Association (Interspeech), Graz, Austria, September 15-19, 2019</a>
-				</li>
-				<li>
-					<a href="https://ieeexplore.ieee.org/document/8461487">[2]. Srihari Kankanahalli, "End-to-end optimized speech coding with deep neural networks." 2018 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 2018</a>
-				</li>
-				<li>
-					<a href="https://arxiv.org/abs/1801.09774">[3]. Kai Zhen, Aswin Sivaraman, Jongmo Sung, Minje Kim, "On Psychoacoustically Weighted Cost Functions Towards Resource-Efficient Deep Neural Networks for Speech Denoising," https://arxiv.org/abs/1801.09774</a>
+					<a href="http://kaizhen.us/neural-audio-coding.html">[1]. Kai Zhen, Mi Suk Lee, Jongmo Sung, and Minje Kim, "Psychoacoustic Calibration of Loss Functions for
+Efficient End-to-End Neural Audio Coding," submitted to IEEE Signal Processing Letters.</a>
 				</li>
 			</ul>
 		</section>
