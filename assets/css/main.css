@@ -1812,7 +1812,7 @@ input, select, textarea {
 					font-size: 26px;
 					height: 48px;
 					line-height: 48px;
-					text-align: center;
+					text-align: left;
 					outline: 0;
 					overflow: hidden;
 					text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.1);
@@ -2201,7 +2201,7 @@ input, select, textarea {
 
 			.wrapper {
 				padding: 5em 0 5em 0;
-				text-align: center;
+				text-align: left;
 			}
 
 				.wrapper.style4 .row-special {
@@ -2230,7 +2230,7 @@ input, select, textarea {
 		/* Articles */
 
 			#top {
-				text-align: center;
+				text-align: left;
 				padding: 5em 0;
 			}
 
@@ -2299,7 +2299,7 @@ input, select, textarea {
 			input[type="reset"],
 			button,
 			.button {
-				text-align: center;
+				text-align: left;
 				font-size: 1.2em;
 				width: 100%;
 				padding: 1em 0 1em 0;
@@ -2386,7 +2386,7 @@ input, select, textarea {
 
 			.wrapper {
 				padding: 3em 0;
-				text-align: center;
+				text-align: left;
 			}
 
 		/* Nav */
