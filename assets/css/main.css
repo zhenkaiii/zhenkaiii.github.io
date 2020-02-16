@@ -1596,7 +1596,7 @@ input, select, textarea {
 			}
 
 			table.default th {
-				text-align: left;
+				text-align: center;
 				padding: 0.5em 1em 0.5em 1em;
 				font-weight: 600;
 				margin: 0 0 1em 0;
@@ -2201,7 +2201,7 @@ input, select, textarea {
 
 			.wrapper {
 				padding: 5em 0 5em 0;
-				text-align: left;
+				text-align: center;
 			}
 
 				.wrapper.style4 .row-special {
@@ -2386,7 +2386,7 @@ input, select, textarea {
 
 			.wrapper {
 				padding: 3em 0;
-				text-align: left;
+				text-align: center;
 			}
 
 		/* Nav */
