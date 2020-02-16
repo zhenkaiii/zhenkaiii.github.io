@@ -1812,7 +1812,7 @@ input, select, textarea {
 					font-size: 26px;
 					height: 48px;
 					line-height: 48px;
-					text-align: left;
+					text-align: center;
 					outline: 0;
 					overflow: hidden;
 					text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.1);
@@ -2299,7 +2299,7 @@ input, select, textarea {
 			input[type="reset"],
 			button,
 			.button {
-				text-align: left;
+				text-align: center;
 				font-size: 1.2em;
 				width: 100%;
 				padding: 1em 0 1em 0;
