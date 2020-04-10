@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="assets/css/fibonacci.css">
+	<link rel="stylesheet"
+	      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+</head>
+<body>
+
+<header class="header">
+	<a href="index.html" class="logo">
+		back
+	</a>
+</header>
+
+	<style>
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 1px;
+}
+
+
+
+tr:nth-child(even) {
+  background-color: #1E1E1E;
+  opacity: 1;
+}
+ 
+
+</style>
+
+<main class="main post-detail">
+	<article>
+		<header>
+			<!--
+			<div class="author">
+				<img src="images/head.jpg" width="80"/>
+				<span>Kai Zhen</span>
+				<span class="role"></span>
+			</div>
+		-->
+
+			<h2>Neural Waveform Coding with Collaborative Quantization</h2>
+			
+			<h1></h1>
+			<div class="post-meta">
+				<div class="tagged-in">
+					<span class="icon tag"></span>
+					<ul>
+						<li>
+							<a href="#">#speech coding</a>
+						</li>
+						<li>
+							<a href="#">#neural network</a>
+						</li>
+						<li>
+							<a href="#">#linear predictive coding</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div>
+		</header>
+
+		<blockquote>
+			Data-driven approaches these days tend to get rid of the feature engineering step at the cost of model complexity.
+			In speech coding, they are usually termed as "end-to-end" neural codecs which models the speech production process from scratch in the time domain. <br><br>
+			However, model complexity matters as much as the performance as these codecs operate on low-power devices! I don't want to drain the battery of my smart agent after it decodes a verse of killing me softly...			<br><br>
+			
+			One trick is to outsource the response of the vocal tract to linear predictive coding (LPC), a conventional but efficient DSP technique to estimate the spectral envelope of the speech signal.
+			That said, the DNN is only used to quantize the LPC residual. This, of course, is not the end of the story as the residual is rather soft and noisy comparing to the raw waveform, and consequently very hard to be coded with a lightweight network.<br><br>
+
+			Collaborative quantization addresses this issue by making the LPC analyzer a trainable module which can be optimized along with the other deep neural networks. 
+			Long story short, it finds a better pivot to allocate bits to digitalize LPC coefficients and quantize the corresponding LPC residuals.
+		</blockquote>
+
+		
+
+
+		
+		<figure>
+			<center>
+			<img src="assets/soft-to-hard.png" style="width:60%;">
+			</center>
+			<figcaption>Fig 1. A trainable soft-to-hard quantization scheme used in the digitalization of LPC coefficients and residuals.
+			</figcaption>
+		</figure>
+
+		<figure>
+			<img src="assets/cq.png">
+			<figcaption>Fig 2. The trainable LPC analyzer (left) and the overview of the CQ system (right). Blocks in the orange color are TensorFlow compatiable. 
+			</figcaption>
+		</figure>
+		
+
+		
+
+
+		<h3>Decoded Samples</h3>
+		<p>
+			The bitrate for the uncompressed reference signal is 256 kbps.
+		</p>
+
+		
+		
+
+<table>
+  <tr>
+    <th>Bitrate</th>
+    <th>Reference</th>
+    <th>AMR-WB</th>
+    <th>Opus</th>
+    <th>LPC-CMRL (previous version)</th>
+    <th>CQ (newly proposed)</th>
+  </tr>
+
+  <tr>
+    <td><font color="white">~9 kbps</font></td>
+    <td><audio controls style="width: 140px;">
+  <source src="speech_coding/ref/DR2-FJWB0-SX95.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 140px;">
+  <source src="speech_coding/mode_1/DR2-FJWB0-SX95.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 140px;">
+  <source src="speech_coding/opus 9/DR2-FJWB0-SX95.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 140px;">
+  <source src="speech_coding/lpc 9/DR2-FJWB0-SX95.wav" type="audio/mpeg">
+</audio></td>
+
+<td><audio controls style="width: 140px;">
+  <source src="speech_coding/cq 9/DR2-FJWB0-SX95.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+    <tr>
+    <td>~9 kbps</font></td>
+    <td><audio controls style="width: 140px;">
+  <source src="speech_coding/ref/DR5-MRWS1-SX410.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 140px;">
+  <source src="speech_coding/mode_1/DR5-MRWS1-SX410.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 140px;">
+  <source src="speech_coding/opus 9/DR5-MRWS1-SX410.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 140px;">
+  <source src="speech_coding/lpc 9/DR5-MRWS1-SX410.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 140px;">
+  <source src="speech_coding/cq 9/DR5-MRWS1-SX410.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+
+  <tr>
+    <td><font color="white">~24 kbps</td>
+    <td><audio controls style="width: 140px;">
+  <source src="speech_coding/ref/DR7-MRJM4-SI859.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 140px;">
+  <source src="speech_coding/mode_8/DR7-MRJM4-SI859.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 140px;">
+  <source src="speech_coding/opus 24/DR7-MRJM4-SI859.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 140px;">
+  <source src="speech_coding/lpc 24/DR7-MRJM4-SI859.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 140px;">
+  <source src="speech_coding/cq 24/DR7-MRJM4-SI859.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+<tr>
+    <td>~24 kbps</td>
+    <td><audio controls style="width: 140px;">
+  <source src="speech_coding/ref/DR7-FTLH0-SA2.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 140px;">
+  <source src="speech_coding/mode_8/DR7-FTLH0-SA2.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 140px;">
+  <source src="speech_coding/opus 24/DR7-FTLH0-SA2.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 140px;">
+  <source src="speech_coding/lpc 24/DR7-FTLH0-SA2.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 140px;">
+  <source src="speech_coding/cq 24/DR7-FTLH0-SA2.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+</table>
+
+
+<h2>Quick QAs</h2>
+		<ul>
+			<li>Q: Is it similar to LPCNet? <br>
+				A: Both LPCNet and CQ are the combination of LPC and DNN. LPCNet is a vocoder operating at even lower bitrates, while CQ is a waveform codec covering a wider range of bitrates and can scale up to transparent quality.</li><br>
+			<li>Q: Wait... Do you have to drag every problem down to DNN? <br>
+				A: I know it's less inspiring these days, and that conventional codecs function just fine. But many of those codecs are protected by patents which means you don't have the ownership of the intellectual property if your product is built on top of them. Besides, they are deterministic DSP models, not able to be optimized with other downstream applications such as speech enhancement and recognition, etc. Neural codecs can be placed in the line of products to facilitate those applications when optimized integratedly.</li>			<br>
+			<li>Q: What's the limit of CQ? <br>
+				A: The decoder is still much more complicated than the conventional DSP based codec.</li>			
+		</ul>
+
+<!--
+<h2>Details to be released...</h2>		
+<figure>
+	<img src="assets/nac.png"/>
+	<figcaption>Fig 1. Our neural audio codec is of low model complexity with only 0.45M parameters, which features a trainable Softmax quantizer.</i>
+	</figcaption>
+</figure>
+<figure>
+	<img src="assets/pam.png"/>
+	<figcaption>Fig 2. A psychoacoustic model (PAM) detects tonal/non-tonal maskers, and calculates individual/global masking threshold.</i>
+	</figcaption>
+</figure>
+<figure>
+	<img src="assets/mnr.png"/>
+	<figcaption>Fig 3. Comparison before (left) and after (right) psychoaoustical calibration: with the noise fully masked, the decoded audio achieves near transparent quality.
+	</figcaption>
+</figure>
+-->
+
+
+<!--
+		<section class="related-posts">
+			<h3>Related Posts</h3>
+			<ul>
+				<li>
+					<a href="#">Lorem ipsum dolor sit amet</a>
+				</li>
+				<li>
+					<a href="#">Sed ut perspiciatis unde omnis iste</a>
+				</li>
+				<li>
+					<a href="#">At vero eos et accusamus</a>
+				</li>
+				<li>
+					<a href="#">Temporibus autem quibusdam</a>
+				</li>
+				<li>
+					<a href="#">Ut enim ad minima veniam</a>
+				</li>
+			</ul>
+		</section>
+
+		<section class="comments">
+			<h3>Comments</h3>
+
+			<h4>Post Comment</h4>
+
+			<form>
+				<div class="new-comment">
+					<div class="user">
+						<img src="assets/author_mini.png" width="50"/>
+						<span>You</span>
+					</div>
+					<div class="form-control">
+						<textarea placeholder="Write not more than 500 characters..."></textarea>
+					</div>
+				</div>
+			</form>
+
+			<h4>2 Comments</h4>
+
+			<ul class="comments-list">
+				<li>
+					<div class="comment">
+						<div class="user">
+							<img src="assets/martin.png" width="50"/>
+							<span>Martin</span>
+						</div>
+						<div class="comment-info">
+							<div class="commented-date">
+								just now
+							</div>
+							<div class="desc">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+							</div>
+							<div>
+								<button>Reply</button>
+							</div>
+						</div>
+					</div>
+				</li>
+
+				<li>
+					<div class="comment">
+						<div class="user">
+							<img src="assets/tanny.jpg" width="50"/>
+							<span>Tanny</span>
+						</div>
+						<div class="comment-info">
+							<div class="commented-date">
+								2 days ago
+							</div>
+							<div class="desc">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+							</div>
+							<div>
+								<button>Reply</button>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+
+
+
+		</section>
+
+	-->
+
+
+		<section class="related-posts">
+			<h3>References</h3>
+			<ul>
+				<li>
+					<a href="http://kaizhen.us/neural-audio-coding.html"><b>Kai Zhen</b>, Mi Suk Lee, Jongmo Sung, Seungkwon Beack, and Minje Kim, "<u>Efficient And Scalable Neural Residual Waveform Coding with Collaborative Quantization</u>," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i>, Barcelona, Spain, May 4-8, 2020. <br><a href="http://kaizhen.us/pub/zhenk2020cq.pdf">[pdf]</a><a href="http://kaizhen.us/pub/cq.txt">[bib]</a>
+				</li>
+			</ul>
+		</section>
+<hr>
+	</article>
+</main>
+
+<footer class="footer">
+	&copy; Tomorrow &middot; is another day.
+</footer>
+<script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>
