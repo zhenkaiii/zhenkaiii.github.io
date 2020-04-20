@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="assets/css/fibonacci.css">
+	<link rel="stylesheet"
+	      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+</head>
+<body>
+
+<header class="header">
+	<a href="index.html" class="logo">
+		back
+	</a>
+</header>
+
+	<style>
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 1px;
+}
+
+
+
+tr:nth-child(even) {
+  background-color: #1E1E1E;
+  opacity: 1;
+}
+ 
+
+</style>
+
+<main class="main post-detail">
+	<article>
+		<header>
+			<!--
+			<div class="author">
+				<img src="images/head.jpg" width="80"/>
+				<span>Kai Zhen</span>
+				<span class="role"></span>
+			</div>
+		
+
+			<h2>End-to-End Monaural Speech Enhancement with Dual-Staged Context Aggregation</h2>-->
+			<h2>Dual-Staged Context Aggregation for Efficient End-to-End Monaural Speech Enhancement </h2>
+			
+			<h1></h1>
+			<div class="post-meta">
+				<div class="tagged-in">
+					<span class="icon tag"></span>
+					<ul>
+						<li>
+							<a href="#">#speech enhancement</a>
+						</li>
+						<li>
+							<a href="#">#neural network</a>
+						</li>
+						<li>
+							<a href="#">#end-to-end</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div>
+		</header>
+
+		<blockquote>
+			In speech enhancement, an end-to-end deep neural network converts a noisy speech signal to a clean speech directly in the time
+domain without time-frequency transformation or mask estimation.
+However, aggregating contextual information from a high-resolution
+time domain signal with an affordable model complexity still remains challenging. 
+In this paper, we propose a densely connected
+convolutional and recurrent network (DCCRN), a hybrid architecture, to enable dual-staged temporal context aggregation. With the
+dense connectivity and cross-component identical shortcut, DCCRN
+consistently outperforms competing convolutional baselines with an
+average STOI improvement of 0.23 and PESQ of 1.38 at three SNR
+levels. The proposed method is computationally efficient with only
+1.38 million parameters. 
+The generalizability performance on the
+unseen noise types is less competitive comparing to Wave-U-Net with 7.25
+times more parameters.
+		</blockquote>
+
+		
+
+
+		
+		<figure>
+			<center>
+			<img src="assets/dccrn.png" style="width:100%;">
+			</center>
+			<figcaption>Fig 1. A trainable soft-to-hard quantization scheme used in the digitalization of LPC coefficients and residuals.
+			</figcaption>
+		</figure>
+
+		
+
+		
+
+
+		<h3>Denoised Samples</h3>
+
+		
+
+
+		<ul><h4><li>Machine guns</li></h4></ul>
+<table>
+  <tr>
+    <th>Models</th>
+    <th>-5 dB</th>
+    <th>0 dB</th>
+    <th>+5 dB</th>
+  </tr>
+
+<tr>
+    <td><font color="white">Unprocessed</font></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/frng0-sx2753_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/frng0-sx2753_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/frng0-sx2753_5.wav" type="audio/mpeg">
+</audio></td>
+</tr>
+
+<tr>
+    <td>Gated ResNet</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/frng0-sx2753_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/frng0-sx2753_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/frng0-sx2753_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+
+  <tr>
+    <td><font color="white">DenseNet</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/frng0-sx2753_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/frng0-sx2753_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/frng0-sx2753_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+  <tr>
+    <td>Dilated DenseNet</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/frng0-sx2753_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/frng0-sx2753_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/frng0-sx2753_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  
+  <tr>
+    <td><font color="white">DenseNet+GRU</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/frng0-sx2753_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/frng0-sx2753_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/frng0-sx2753_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  <tr>
+    <td>Ours</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/frng0-sx2753_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/frng0-sx2753_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/frng0-sx2753_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+<tr>
+    <td><font color="white">Clean speech</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_ref/frng0-sx275_ref.wav" type="audio/mpeg">
+</audio></td>
+
+</tr>
+</table>
+
+
+
+
+<ul><h4><li>Cicadas</li></h4></ul>
+<table>
+  <tr>
+    <th>Models</th>
+    <th>-5 dB</th>
+    <th>0 dB</th>
+    <th>+5 dB</th>
+  </tr>
+
+<tr>
+    <td><font color="white">Unprocessed</font></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/mdab0-si16691_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/mdab0-si16691_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/mdab0-si16691_5.wav" type="audio/mpeg">
+</audio></td>
+</tr>
+
+<tr>
+    <td>Gated ResNet</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/mdab0-si16691_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/mdab0-si16691_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/mdab0-si16691_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+
+  <tr>
+    <td><font color="white">DenseNet</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/mdab0-si16691_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/mdab0-si16691_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/mdab0-si16691_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+  <tr>
+    <td>Dilated DenseNet</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/mdab0-si16691_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/mdab0-si16691_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/mdab0-si16691_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  
+  <tr>
+    <td><font color="white">DenseNet+GRU</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/mdab0-si16691_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/mdab0-si16691_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/mdab0-si16691_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  <tr>
+    <td>Ours</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/mdab0-si16691_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/mdab0-si16691_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/mdab0-si16691_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+<tr>
+    <td><font color="white">Clean speech</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_ref/mdab0-si1669_ref.wav" type="audio/mpeg">
+</audio></td>
+
+</tr>
+</table>
+
+
+
+<ul><h4><li>Motorcycles</li></h4></ul>
+<table>
+  <tr>
+    <th>Models</th>
+    <th>-5 dB</th>
+    <th>0 dB</th>
+    <th>+5 dB</th>
+  </tr>
+
+<tr>
+    <td><font color="white">Unprocessed</font></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/fcal1-sx3234_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/fcal1-sx3234_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/fcal1-sx3234_5.wav" type="audio/mpeg">
+</audio></td>
+</tr>
+
+<tr>
+    <td>Gated ResNet</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/fcal1-sx3234_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/fcal1-sx3234_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/fcal1-sx3234_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+
+  <tr>
+    <td><font color="white">DenseNet</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/fcal1-sx3234_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/fcal1-sx3234_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/fcal1-sx3234_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+  <tr>
+    <td>Dilated DenseNet</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/fcal1-sx3234_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/fcal1-sx3234_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/fcal1-sx3234_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  
+  <tr>
+    <td><font color="white">DenseNet+GRU</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/fcal1-sx3234_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/fcal1-sx3234_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/fcal1-sx3234_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  <tr>
+    <td>Ours</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/fcal1-sx3234_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/fcal1-sx3234_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/fcal1-sx3234_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+<tr>
+    <td><font color="white">Clean speech</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_ref/fcal1-sx323_ref.wav" type="audio/mpeg">
+</audio></td>
+
+</tr>
+</table>
+
+
+<ul><h4><li>Humming birds</li></h4></ul>
+<table>
+  <tr>
+    <th>Models</th>
+    <th>-5 dB</th>
+    <th>0 dB</th>
+    <th>+5 dB</th>
+  </tr>
+
+<tr>
+    <td><font color="white">Unprocessed</font></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/mpcs0-sx90_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/mpcs0-sx90_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/mpcs0-sx90_5.wav" type="audio/mpeg">
+</audio></td>
+</tr>
+
+<tr>
+    <td>Gated ResNet</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/mpcs0-sx90_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/mpcs0-sx90_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/mpcs0-sx90_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+
+  <tr>
+    <td><font color="white">DenseNet</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/mpcs0-sx90_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/mpcs0-sx90_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/mpcs0-sx90_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+  <tr>
+    <td>Dilated DenseNet</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/mpcs0-sx90_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/mpcs0-sx90_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/mpcs0-sx90_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  
+  <tr>
+    <td><font color="white">DenseNet+GRU</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/mpcs0-sx90_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/mpcs0-sx90_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/mpcs0-sx90_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  <tr>
+    <td>Ours</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/mpcs0-sx90_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/mpcs0-sx90_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/mpcs0-sx90_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+<tr>
+    <td><font color="white">Clean speech</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_ref/mpcs0-sx9_ref.wav" type="audio/mpeg">
+</audio></td>
+
+</tr>
+</table>
+
+
+<ul><h4><li>Computer keyboard clicking</li></h4></ul>
+<table>
+  <tr>
+    <th>Models</th>
+    <th>-5 dB</th>
+    <th>0 dB</th>
+    <th>+5 dB</th>
+  </tr>
+
+<tr>
+    <td><font color="white">Unprocessed</font></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/frng0-sx1852_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/frng0-sx1852_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_mix/frng0-sx1852_5.wav" type="audio/mpeg">
+</audio></td>
+</tr>
+
+<tr>
+    <td>Gated ResNet</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/frng0-sx1852_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/frng0-sx1852_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/gated-resnet/frng0-sx1852_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+
+  <tr>
+    <td><font color="white">DenseNet</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/frng0-sx1852_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/frng0-sx1852_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet/frng0-sx1852_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+  <tr>
+    <td>Dilated DenseNet</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/frng0-sx1852_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/frng0-sx1852_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dilated-densenet/frng0-sx1852_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  
+  <tr>
+    <td><font color="white">DenseNet+GRU</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/frng0-sx1852_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/frng0-sx1852_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/densenet-gru/frng0-sx1852_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  <tr>
+    <td>Ours</td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/frng0-sx1852_-5.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/frng0-sx1852_0.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/dccrn/frng0-sx1852_5.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+<tr>
+    <td><font color="white">Clean speech</td></font>
+    <td><audio controls style="width: 240px;">
+  <source src="mss_samples_dccrn/just_ref/frng0-sx185_ref.wav" type="audio/mpeg">
+</audio></td>
+
+</tr>
+</table>
+
+
+
+
+		<section class="related-posts">
+			<h3>References</h3>
+			<ul>
+				<li>
+					<a href="http://kaizhen.us/neural-audio-coding.html"><b>Kai Zhen</b>, Mi Suk Lee, and Minje Kim, "<u>A Dual-Staged Context Aggregation Method
+Towards Efficient End-to-End Speech Enhancement</u>," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i>, Barcelona, Spain, May 4-8, 2020. <br><a href="http://kaizhen.us/pub/zhenk2020dccrn.pdf">[pdf]</a><a href="http://kaizhen.us/pub/dccrn.txt">[bib]</a>
+				</li>
+			</ul>
+		</section>
+<hr>
+	</article>
+</main>
+
+<footer class="footer">
+	&copy; Tomorrow &middot; is another day.
+</footer>
+<script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>

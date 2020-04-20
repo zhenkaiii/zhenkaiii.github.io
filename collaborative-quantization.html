@@ -127,39 +127,39 @@ tr:nth-child(even) {
 
   <tr>
     <td><font color="white">~9 kbps</font></td>
-    <td><audio controls style="width: 140px;">
+    <td><audio controls style="width: 200px;">
   <source src="speech_coding/ref/DR2-FJWB0-SX95.wav" type="audio/mpeg">
 </audio></td>
-    <td><audio controls style="width: 140px;">
+    <td><audio controls style="width: 200px;">
   <source src="speech_coding/mode_1/DR2-FJWB0-SX95.wav" type="audio/mpeg">
 </audio></td>
-<td><audio controls style="width: 140px;">
+<td><audio controls style="width: 200px;">
   <source src="speech_coding/opus 9/DR2-FJWB0-SX95.wav" type="audio/mpeg">
 </audio></td>
-<td><audio controls style="width: 140px;">
+<td><audio controls style="width: 200px;">
   <source src="speech_coding/lpc 9/DR2-FJWB0-SX95.wav" type="audio/mpeg">
 </audio></td>
 
-<td><audio controls style="width: 140px;">
+<td><audio controls style="width: 200px;">
   <source src="speech_coding/cq 9/DR2-FJWB0-SX95.wav" type="audio/mpeg">
 </audio></td>
   </tr>
 
     <tr>
     <td>~9 kbps</font></td>
-    <td><audio controls style="width: 140px;">
+    <td><audio controls style="width: 200px;">
   <source src="speech_coding/ref/DR5-MRWS1-SX410.wav" type="audio/mpeg">
 </audio></td>
-    <td><audio controls style="width: 140px;">
+    <td><audio controls style="width: 200px;">
   <source src="speech_coding/mode_1/DR5-MRWS1-SX410.wav" type="audio/mpeg">
 </audio></td>
-<td><audio controls style="width: 140px;">
+<td><audio controls style="width: 200px;">
   <source src="speech_coding/opus 9/DR5-MRWS1-SX410.wav" type="audio/mpeg">
 </audio></td>
-<td><audio controls style="width: 140px;">
+<td><audio controls style="width: 200px;">
   <source src="speech_coding/lpc 9/DR5-MRWS1-SX410.wav" type="audio/mpeg">
 </audio></td>
-<td><audio controls style="width: 140px;">
+<td><audio controls style="width: 200px;">
   <source src="speech_coding/cq 9/DR5-MRWS1-SX410.wav" type="audio/mpeg">
 </audio></td>
   </tr>
@@ -168,166 +168,57 @@ tr:nth-child(even) {
 
   <tr>
     <td><font color="white">~24 kbps</td>
-    <td><audio controls style="width: 140px;">
+    <td><audio controls style="width: 200px;">
   <source src="speech_coding/ref/DR7-MRJM4-SI859.wav" type="audio/mpeg">
 </audio></td>
-    <td><audio controls style="width: 140px;">
+    <td><audio controls style="width: 200px;">
   <source src="speech_coding/mode_8/DR7-MRJM4-SI859.wav" type="audio/mpeg">
 </audio></td>
-<td><audio controls style="width: 140px;">
+<td><audio controls style="width: 200px;">
   <source src="speech_coding/opus 24/DR7-MRJM4-SI859.wav" type="audio/mpeg">
 </audio></td>
-<td><audio controls style="width: 140px;">
+<td><audio controls style="width: 200px;">
   <source src="speech_coding/lpc 24/DR7-MRJM4-SI859.wav" type="audio/mpeg">
 </audio></td>
-<td><audio controls style="width: 140px;">
+<td><audio controls style="width: 200px;">
   <source src="speech_coding/cq 24/DR7-MRJM4-SI859.wav" type="audio/mpeg">
 </audio></td>
   </tr>
 
 <tr>
     <td>~24 kbps</td>
-    <td><audio controls style="width: 140px;">
+    <td><audio controls style="width: 200px;">
   <source src="speech_coding/ref/DR7-FTLH0-SA2.wav" type="audio/mpeg">
 </audio></td>
-    <td><audio controls style="width: 140px;">
+    <td><audio controls style="width: 200px;">
   <source src="speech_coding/mode_8/DR7-FTLH0-SA2.wav" type="audio/mpeg">
 </audio></td>
-<td><audio controls style="width: 140px;">
+<td><audio controls style="width: 200px;">
   <source src="speech_coding/opus 24/DR7-FTLH0-SA2.wav" type="audio/mpeg">
 </audio></td>
-<td><audio controls style="width: 140px;">
+<td><audio controls style="width: 200px;">
   <source src="speech_coding/lpc 24/DR7-FTLH0-SA2.wav" type="audio/mpeg">
 </audio></td>
-<td><audio controls style="width: 140px;">
+<td><audio controls style="width: 200px;">
   <source src="speech_coding/cq 24/DR7-FTLH0-SA2.wav" type="audio/mpeg">
 </audio></td>
   </tr>
 
 </table>
 
-
+<section class="related-posts">
 <h3>Quick QAs</h3>
-		<ul>
-			<li>Q: Is it similar to LPCNet? <br>
-				A: Both LPCNet and CQ are the combination of LPC and DNN. LPCNet is a vocoder operating at even lower bitrates, while CQ is a waveform codec covering a wider range of bitrates and can scale up to transparent quality.</li><br>
-			<li>Q: Wait... Do you have to drag every problem down to DNN? <br>
-				A: I know it's less inspiring these days, and that conventional codecs function just fine. But many of those codecs are protected by patents which means you don't have the ownership of the intellectual property if your product is built on top of them. Besides, they are deterministic DSP models, not able to be optimized with other downstream applications such as speech enhancement and recognition, etc. Neural codecs can be placed in the line of products to facilitate those applications when optimized integratedly.</li>			<br>
-			<li>Q: What's the limit of CQ? <br>
-				A: The decoder is still much more complicated than the conventional DSP based codec.</li>			
-		</ul>
-
-<!--
-<h2>Details to be released...</h2>		
-<figure>
-	<img src="assets/nac.png"/>
-	<figcaption>Fig 1. Our neural audio codec is of low model complexity with only 0.45M parameters, which features a trainable Softmax quantizer.</i>
-	</figcaption>
-</figure>
-<figure>
-	<img src="assets/pam.png"/>
-	<figcaption>Fig 2. A psychoacoustic model (PAM) detects tonal/non-tonal maskers, and calculates individual/global masking threshold.</i>
-	</figcaption>
-</figure>
-<figure>
-	<img src="assets/mnr.png"/>
-	<figcaption>Fig 3. Comparison before (left) and after (right) psychoaoustical calibration: with the noise fully masked, the decoded audio achieves near transparent quality.
-	</figcaption>
-</figure>
--->
+<ul>
+	<li>Q: Is it similar to LPCNet? <br>
+		A: Both LPCNet and CQ are the combination of LPC and DNN. LPCNet is a vocoder operating at even lower bitrates, while CQ is a waveform codec covering a wider range of bitrates and can scale up to transparent quality.</li><br>
+	<li>Q: Wait... Do you have to drag every problem down to DNN? <br>
+		A: I know it's less inspiring these days, and that conventional codecs function just fine. But many of those codecs are protected by patents which means you don't have the ownership of the intellectual property if your product is built on top of them. Besides, they are deterministic DSP models, not able to be optimized with other downstream applications such as speech enhancement and recognition, etc. Neural codecs can be placed in the line of products to facilitate those applications when optimized integratedly.</li>			<br>
+	<li>Q: What's the limit of CQ? <br>
+		A: The decoder is still much more complicated than the conventional DSP based codec.</li>			
+</ul>
 
 
-<!--
-		<section class="related-posts">
-			<h3>Related Posts</h3>
-			<ul>
-				<li>
-					<a href="#">Lorem ipsum dolor sit amet</a>
-				</li>
-				<li>
-					<a href="#">Sed ut perspiciatis unde omnis iste</a>
-				</li>
-				<li>
-					<a href="#">At vero eos et accusamus</a>
-				</li>
-				<li>
-					<a href="#">Temporibus autem quibusdam</a>
-				</li>
-				<li>
-					<a href="#">Ut enim ad minima veniam</a>
-				</li>
-			</ul>
-		</section>
-
-		<section class="comments">
-			<h3>Comments</h3>
-
-			<h4>Post Comment</h4>
-
-			<form>
-				<div class="new-comment">
-					<div class="user">
-						<img src="assets/author_mini.png" width="50"/>
-						<span>You</span>
-					</div>
-					<div class="form-control">
-						<textarea placeholder="Write not more than 500 characters..."></textarea>
-					</div>
-				</div>
-			</form>
-
-			<h4>2 Comments</h4>
-
-			<ul class="comments-list">
-				<li>
-					<div class="comment">
-						<div class="user">
-							<img src="assets/martin.png" width="50"/>
-							<span>Martin</span>
-						</div>
-						<div class="comment-info">
-							<div class="commented-date">
-								just now
-							</div>
-							<div class="desc">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-							</div>
-							<div>
-								<button>Reply</button>
-							</div>
-						</div>
-					</div>
-				</li>
-
-				<li>
-					<div class="comment">
-						<div class="user">
-							<img src="assets/tanny.jpg" width="50"/>
-							<span>Tanny</span>
-						</div>
-						<div class="comment-info">
-							<div class="commented-date">
-								2 days ago
-							</div>
-							<div class="desc">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-							</div>
-							<div>
-								<button>Reply</button>
-							</div>
-						</div>
-					</div>
-				</li>
-			</ul>
-
-
-
-		</section>
-
-	-->
-
-
-		<section class="related-posts">
+		
 			<h3>References</h3>
 			<ul>
 				<li>
