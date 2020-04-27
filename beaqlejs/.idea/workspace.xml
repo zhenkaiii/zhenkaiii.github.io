@@ -25,8 +25,8 @@
       <file leaf-file-name="audio_mushra_high.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/config/audio_mushra_high.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="14" column="36" lean-forward="false" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="36" />
+            <state relative-caret-position="57">
+              <caret line="3" column="19" lean-forward="true" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -35,7 +35,7 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="214">
+            <state relative-caret-position="1919">
               <caret line="101" column="111" lean-forward="true" selection-start-line="101" selection-start-column="111" selection-end-line="101" selection-end-column="111" />
               <folding />
             </state>
@@ -48,8 +48,8 @@
     <findStrings>
       <find>sub</find>
       <find>su</find>
-      <find>downl</find>
       <find>succ</find>
+      <find>downl</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -187,14 +187,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="101" column="111" lean-forward="true" selection-start-line="101" selection-start-column="111" selection-end-line="101" selection-end-column="111" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/beaqle.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="104">
@@ -203,10 +195,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1919">
+          <caret line="101" column="111" lean-forward="true" selection-start-line="101" selection-start-column="111" selection-end-line="101" selection-end-column="111" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/config/audio_mushra_high.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="14" column="36" lean-forward="false" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="36" />
+        <state relative-caret-position="57">
+          <caret line="3" column="19" lean-forward="true" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
           <folding />
         </state>
       </provider>
