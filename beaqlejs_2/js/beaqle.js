@@ -487,7 +487,7 @@ $.extend({ alert: function (message, title) {
         $('#BtnDownloadData').button({ icons: { primary: 'ui-icon-arrowthickstop-1-s' }});
                 
 
-        // install handler to warn user when test is running and he tries to leave the page
+        // install handler to warn user when test is running and they try to leave the page
         var testHandle = this.TestState
         window.onbeforeunload = function (e) {
             if (testHandle.TestIsRunning==true) {
@@ -557,6 +557,7 @@ $.extend({ alert: function (message, title) {
         }
 
         this.TestState.Ratings = Array(this.TestConfig.Testsets.length);
+        this.TestState.MusicalityRatings = Array(this.TestConfig.Testsets.length);
         this.TestState.Runtime = new Uint32Array(this.TestConfig.Testsets.length);
 //        this.TestState.Runtime.forEach(function(element, index, array){array[index] = 0});
         this.TestState.startTime = 0;
@@ -683,6 +684,7 @@ $.extend({ alert: function (message, title) {
             
         // load and apply already existing ratings
         if (typeof this.TestState.Ratings[TestIdx] !== 'undefined') this.readRatings(TestIdx);
+        if (typeof this.TestState.MusicalityRatings[TestIdx] !== 'undefined') this.readRatings(TestIdx);
 
         this.TestState.startTime = new Date().getTime();
             
@@ -1008,7 +1010,7 @@ MushraTest.prototype.createFileMapping = function (TestIdx) {
 MushraTest.prototype.readRatings = function (TestIdx) {
     
     if ((TestIdx in this.TestState.Ratings)==false) return false;
-    
+
     var testObject = this;
     $(".rateSlider").each( function() {
         var pos = $(this).attr('id').lastIndexOf('slider');
@@ -1270,9 +1272,9 @@ AbxTest.prototype.createTestDOM = function (TestIdx) {
         // randomly preselect one radio button
         if (typeof this.TestState.Ratings[TestIdx] == 'undefined') {
             /*if (Math.random() > 0.5) {
-               $("#selectB").prop("checked", true);
+               $("#accuracySelectB").prop("checked", true);
             } else {
-               $("#selectA").prop("checked", true);
+               $("#accuracySelectA").prop("checked", true);
             }*/
         }
 }
@@ -1281,18 +1283,17 @@ AbxTest.prototype.createTestDOM = function (TestIdx) {
 AbxTest.prototype.readRatings = function (TestIdx) {
 
     if (this.TestState.Ratings[TestIdx] === "A") {
-        $("#selectA").prop("checked", true);
+        $("#accuracySelectA").prop("checked", true);
     } else if (this.TestState.Ratings[TestIdx] === "B") {
-        $("#selectB").prop("checked", true);
+        $("#accuracySelectB").prop("checked", true);
     }
-
 }
 
 AbxTest.prototype.saveRatings = function (TestIdx) {
 
-    if ($("#selectA").prop("checked")) {
+    if ($("#accuracySelectA").prop("checked")) {
         this.TestState.Ratings[TestIdx] = "A";
-    } else if ($("#selectB").prop("checked")) {
+    } else if ($("#accuracySelectB").prop("checked")) {
         this.TestState.Ratings[TestIdx] = "B";
     }
 }
@@ -1401,19 +1402,29 @@ PrefTest.prototype.createTestDOM = function (TestIdx) {
  
         row[1]  = tab.insertRow(-1);
         cell[0] = row[1].insertCell(-1);
-        cell[0].innerHTML = "<input type='radio' name='ItemSelection' id='selectA'/>";
+        cell[0].innerHTML = "<input type='radio' name='ItemSelectionAccuracy' id='accuracySelectA'/>";
         cell[1] = row[1].insertCell(-1);
-        cell[1].innerHTML = "<input type='radio' name='ItemSelection' id='selectB'/>";  
+        cell[1].innerHTML = "<input type='radio' name='ItemSelectionAccuracy' id='accuracySelectB'/>";
         cell[2] = row[1].insertCell(-1);
         cell[3] = row[1].insertCell(-1);
-        cell[3].innerHTML = "Please select the item which you prefer!";
+        cell[3].innerHTML = "Please select the version that you find more accurate!";
+
+        row[2] = tab.insertRow(-1);
+        cell[0] = row[2].insertCell(-1);
+        cell[0].innerHTML = "<input type='radio' name='ItemSelectionMusicality' id='musicalitySelectA'/>";
+        cell[1] = row[2].insertCell(-1);
+        cell[1].innerHTML = "<input type='radio' name='ItemSelectionMusicality' id='musicalitySelectB'/>";
+        cell[2] = row[2].insertCell(-1);
+        cell[3] = row[2].insertCell(-1);
+        cell[3].innerHTML = "Please select the version that you find more musical!";
+
        
         // add spacing
         row = tab.insertRow(-1);
         row.setAttribute("height","5");  
 
         // append the created table to the DOM
-        $('#TableContainer').append(tab);	
+        $('#TableContainer').append(tab);
 
         // randomly preselect one radio button
         if (typeof this.TestState.Ratings[TestIdx] == 'undefined') {
@@ -1429,19 +1440,29 @@ PrefTest.prototype.createTestDOM = function (TestIdx) {
 PrefTest.prototype.readRatings = function (TestIdx) {
 
     if (this.TestState.Ratings[TestIdx] === "A") {
-        $("#selectA").prop("checked", true);
+        $("#accuracySelectA").prop("checked", true);
     } else if (this.TestState.Ratings[TestIdx] === "B") {
-        $("#selectB").prop("checked", true);
+        $("#accuracySelectB").prop("checked", true);
+    }
+    if (this.TestState.MusicalityRatings[TestIdx] === "A") {
+        $("#musicalitySelectA").prop("checked", true);
+    } else if (this.TestState.MusicalityRatings[TestIdx] === "B") {
+        $("#musicalitySelectB").prop("checked", true);
     }
 
 }
 
 PrefTest.prototype.saveRatings = function (TestIdx) {
 
-    if ($("#selectA").prop("checked")) {
+    if ($("#accuracySelectA").prop("checked")) {
         this.TestState.Ratings[TestIdx] = "A";
-    } else if ($("#selectB").prop("checked")) {
+    } else if ($("#accuracySelectB").prop("checked")) {
         this.TestState.Ratings[TestIdx] = "B";
+    }
+    if ($("#musicalitySelectA").prop("checked")) {
+        this.TestState.MusicalityRatings[TestIdx] = "A";
+    } else if ($("#musicalitySelectB").prop("checked")) {
+        this.TestState.MusicalityRatings[TestIdx] = "B";
     }
 }
 
@@ -1454,10 +1475,8 @@ PrefTest.prototype.formatResults = function () {
     var cell = row.insertCell(-1); cell.innerHTML = "Test Name and ID";
     cell = row.insertCell(-1);     cell.innerHTML = "presented order";
     cell = row.insertCell(-1);     cell.innerHTML = "time in ms";
-    cell = row.insertCell(-1);     cell.innerHTML = "chosen preference";
-
-    var numCorrect = 0;
-    var numWrong   = 0;
+    cell = row.insertCell(-1);     cell.innerHTML = "accuracy preference";
+    cell = row.insertCell(-1);     cell.innerHTML = "musicality preference";
 
     // evaluate single tests
     for (var i = 0; i < this.TestConfig.Testsets.length; i++) {
@@ -1476,6 +1495,9 @@ PrefTest.prototype.formatResults = function () {
             cell = row.insertCell(-1);
             this.TestState.EvalResults[i].Preference = this.TestState.Ratings[i];
             cell.innerHTML = this.TestState.EvalResults[i].Preference;
+            cell = row.insertCell(-1);
+            this.TestState.EvalResults[i].MusicalityPreference = this.TestState.MusicalityRatings[i];
+            cell.innerHTML = this.TestState.EvalResults[i].MusicalityPreference;
         }
     }
     resultstring += tab.outerHTML;

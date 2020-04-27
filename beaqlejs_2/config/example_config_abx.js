@@ -5,18 +5,18 @@ var TestConfig = {
   "ShowFileIDs": false,
   "ShowResults": false,
   "EnableABLoop": true,
-  "EnableOnlineSubmission": false,
-  "BeaqleServiceURL": "/web_service/beaqleJS_Service.php",
-  "SupervisorContact": "",
-  "AudioRoot": "",
+  "EnableOnlineSubmission": true,
+  "BeaqleServiceURL": "web_service/beaqleJS_Service.php",
+  "SupervisorContact": "scwager@indiana.edu",
+  "AudioRoot": "audio/",
   "Testsets": [
     //    
     {
       "Name": "Schubert",
       "TestID": "id1",
       "Files": {
-        "A": "audio/schubert_ref.wav",
-        "B": "audio/schubert_2.wav",
+        "A": "0.wav",
+        "B": "1.wav",
       }
     },
     //    
@@ -24,8 +24,8 @@ var TestConfig = {
       "Name": "Castanets",
       "TestID": "id2",
       "Files": {
-        "A": "audio/castanets_ref.wav",
-        "B": "audio/castanets_2.wav",
+        "A": "3.wav",
+        "B": "4.wav",
       }
     },
   ]

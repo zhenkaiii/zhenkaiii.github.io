@@ -14,7 +14,7 @@
     <title>BeaqleJS</title>
     
     <!-- load the test config file -->
-        <script src="config/audio_mushra_high.js" type="text/javascript"></script>
+        <script src="config/example_config_preference.js" type="text/javascript"></script>
     <!---->
     
     <link type="text/css" href="css/smoothness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />
@@ -32,8 +32,9 @@
 
             // Uncomment one of the following lines to choose the desired test class
 
-            testHandle = new MushraTest(TestConfig);    // <-- MUSHRA test class
+            //testHandle = new MushraTest(TestConfig);    // <-- MUSHRA test class
             //testHandle = new AbxTest(TestConfig);     // <-- ABX test class
+            testHandle = new PrefTest(TestConfig);     // <-- Preference test class
 
             $('#Footer').prepend(testHandle.browserFeatureString() + '<br/>');
         };
@@ -61,19 +62,66 @@
     <!-- introduction before the test starts -->
     <div id="TestIntroduction" class="commonBox">
         
-        <!-- edit here if you want to change the welcome message  and instructions -->
+        <!-- edit here if you want to change the welcome message and instructions -->
 
         <div style="text-align:left">
-            Thanks for your interest in participating in the listening test. The overall test will roughly take 15 minutes. Please take the time and carefully rate every item.
+            Thanks for your interest in participating. The goal of this test is to evaluate the performance of an automatic pitch
+            correction algorithm. Before proceeding, please read the following instructions carefully.
+            <h1>Test format</h1>
+            In this test, you will listen to 10 pairs of 12-second audio clips, randomly selected from a total of 288 pairs.
+            The total duration of the test should be 10 minutes or less.
+            However, to enter more results (on different samples) you can take the test up to 3 times.
             <br />
             <br />
-            Instructions:
+            The pairs consist of two versions of the same performance: The only difference between them
+            is shifted pitch. You will be prompted to make subjective judgements about their relative pitch accuracy and musicality
+            by answering 2 questions.
             <ul>
-                <li>Most important: use high quality studio headphones and a good soundcard!</li>
-                <li>Listen through all test files and test sets before you do any ratings to get used to the material.</li>
-                <li>Rate the quality of the test items only compared to the reference on top.</li>
-                <li>Try to rate the overall impression of a test item and don't concentrate on single aspects. </li>
+                <li>"Select the version that you find more accurate." Accuracy, here, refers to good musical intonation, or harmonic
+                    alignment between the singing voice and the backing track.</li>
+                <li>"Select the version that you consider more musical." Musicality, here, refers to the clip being artistically
+                    successful, expressive, coherent, enjoyable to listen to, interesting,
+                    provoking an emotional response, etc...</li>
             </ul>
+            Accuracy and musicality are not necessarily correlated. A performance with more errors might sound more
+            musical to the listener.
+            <br />
+            <br />
+            At the end of the test, you will have a chance to leave comments about the test. The results are anonymous.
+            If you wish, though, to get a summary of how your preferences compared to the overall results or to listen
+            to the clips again after the test, feel free to add your name and/or email when prompted. In this case,
+            your name will be added to the result file and I can send you the analysis after the test is over. Otherwise,
+            please leave the entries blank.
+            <br />
+            <br />
+            <h1>Considerations:</h1>
+            <ul>
+                <li>We recommend using Chrome if possible. There have been reports of audio glitches and inability to
+                    repeat audio tracks on Safari.</li>
+                <li>Please find a quiet place to take this test and make sure you can hear the examples properly</li>
+                <li>Participation is voluntary. Feel free to quit the test anytime. Note that no responses will be
+                    recorded unless you finish the test. If you wish to record a partial set of responses, you
+                    can press "Next" for remaining questions without answering them. </li>
+                <li>The interface at the bottom of each test page makes it possible to loop through audio and to set
+                    the start and end point of the listening.</li>
+            </ul>
+            <h1>Examples</h1>
+            Some decisions are easier to make than others. As an example, we show one pair where difference is
+            quite large, and another where it is subtle. Even if you don’t think you hear a difference,
+            please go with your intuition!
+            <figure>
+            <figcaption>Listen to the T-Rex:</figcaption>
+                <audio controls src="/media/examples/t-rex-roar.mp3"> Your browser does not support the <code>audio</code> element.
+            </audio>
+            </figure>
+            <figure>
+            <figcaption>Listen to the T-Rex:</figcaption>
+                <audio controls src="/media/examples/t-rex-roar.mp3"> Your browser does not support the <code>audio</code> element.
+            </audio>
+            </figure>
+
+
+
         </div>
         <br />
         <br />
@@ -116,7 +164,7 @@
             <button id="BtnDownloadData" class="submitDownload" onclick="testHandle.DownloadTestResults();">Download</button>
             <p class="submitEmail error">
                 <!-- edit here if you want to change the information about email submission, e.g. add privacy policy information -->
-                Results should be send to <span class="supervisorEmail"></span>
+                Please download the result file and email it to <span class="supervisorEmail"></span>
             </p>
         </div>
         
