@@ -17,8 +17,8 @@ from os import listdir
 from os.path import isfile, join
 
 
-mypath = '/Users/Kai/Documents/cs_phd/minje/audio_coding/audio_coding/AUDIO_MUSHRA/AUDIO_MUSHRA_H_FINAL/'
-system_name = 'ref-c2/'
+mypath = '/Users/Kai/Documents/cs_phd/minje/audio_coding/audio_coding/AUDIO_MUSHRA/SPL-V3-L/'
+system_name = 'mp3-64/'
 system_name_framed = system_name[:-1] + '_framed/'
 
 # frame a 12 second audio clip
@@ -42,6 +42,7 @@ else:
 mypath += system_name
 onlyfiles = [mypath + f for f in listdir(mypath) if isfile(join(mypath, f)) and f.endswith('.wav')]
 for i in onlyfiles:
+	print i
 	process_frame_down_to_k_sec(i)
 
 

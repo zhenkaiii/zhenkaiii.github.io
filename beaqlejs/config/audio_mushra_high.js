@@ -5,7 +5,7 @@ var TestConfig = {
   "RateScaleBgPng": "img/scale_abs_background.png",
   "RateMinValue": 0,
   "RateMaxValue": 100,
-  "RateDefaultValue":0,
+  "RateDefaultValue":100,
   "ShowFileIDs": false,
   "ShowResults": false,
   "LoopByDefault": true,
@@ -14,19 +14,142 @@ var TestConfig = {
   "BeaqleServiceURL": "beaqleJS_Service.php",
   "SupervisorContact": "zhenk@iu.edu",
   "RandomizeTestOrder": true,
-  "MaxTestsPerRun": 3,
+  "MaxTestsPerRun": 13,
   "RequireMaxRating": false,
-  "AudioRoot": "",
+  "AudioRoot": "audio/SPL-V3-L/",
   "Testsets": [
     //
     {
-      "Name": "Schubert 1",
-      "TestID": "id1_1",
-      "Files": {
-            "Reference": "audio/ref-c2/0516-00001-SMD.wav",
-            "1": "audio/MODEL_C_96/0516-00001-SMD.wav",
-            "2": "audio/MODEL_C_160/0516-00001-SMD.wav",
-        }
-    },
+  "Name": "Schubert 1",
+  "TestID": "id1_1",
+  "Files": {
+        "Reference": "/ref_framed/0444-00001-TMD.wav",
+        "1": "model_c_64_framed/0444-00001-TMD.wav",
+        "2": "model_d_64_1_framed/0444-00001-TMD.wav",
+        "3": "model_d_64_2_framed/0444-00001-TMD.wav",
+        "4": "mp3_64_framed/0444-00001-TMD.wav",
+    }
+},
+{
+  "Name": "Schubert 1",
+  "TestID": "id1_1",
+  "Files": {
+        "Reference": "/ref_framed/1684-00001-AMD.wav",
+        "1": "model_c_64_framed/1684-00001-AMD.wav",
+        "2": "model_d_64_1_framed/1684-00001-AMD.wav",
+        "3": "model_d_64_2_framed/1684-00001-AMD.wav",
+        "4": "mp3_64_framed/1684-00001-AMD.wav",
+    }
+},{
+  "Name": "Schubert 1",
+  "TestID": "id1_1",
+  "Files": {
+        "Reference": "/ref_framed/0753-00001-PMO.wav",
+        "1": "model_c_64_framed/0753-00001-PMO.wav",
+        "2": "model_d_64_1_framed/0753-00001-PMO.wav",
+        "3": "model_d_64_2_framed/0753-00001-PMO.wav",
+        "4": "mp3_64_framed/0753-00001-PMO.wav",
+    }
+},{
+  "Name": "Schubert 1",
+  "TestID": "id1_1",
+  "Files": {
+        "Reference": "/ref_framed/0021-00001-RMD.wav",
+        "1": "model_c_64_framed/0021-00001-RMD.wav",
+        "2": "model_d_64_1_framed/0021-00001-RMD.wav",
+        "3": "model_d_64_2_framed/0021-00001-RMD.wav",
+        "4": "mp3_64_framed/0021-00001-RMD.wav",
+    }
+},{
+  "Name": "Schubert 1",
+  "TestID": "id1_1",
+  "Files": {
+        "Reference": "/ref_framed/1656-00003-HMD.wav",
+        "1": "model_c_64_framed/1656-00003-HMD.wav",
+        "2": "model_d_64_1_framed/1656-00003-HMD.wav",
+        "3": "model_d_64_2_framed/1656-00003-HMD.wav",
+        "4": "mp3_64_framed/1656-00003-HMD.wav",
+    }
+},{
+  "Name": "Schubert 1",
+  "TestID": "id1_1",
+  "Files": {
+        "Reference": "/ref_framed/0585-00002-EMO.wav",
+        "1": "model_c_64_framed/0585-00002-EMO.wav",
+        "2": "model_d_64_1_framed/0585-00002-EMO.wav",
+        "3": "model_d_64_2_framed/0585-00002-EMO.wav",
+        "4": "mp3_64_framed/0585-00002-EMO.wav",
+    }
+},{
+  "Name": "Schubert 1",
+  "TestID": "id1_1",
+  "Files": {
+        "Reference": "/ref_framed/0646-00001-CFD.wav",
+        "1": "model_c_64_framed/0646-00001-CFD.wav",
+        "2": "model_d_64_1_framed/0646-00001-CFD.wav",
+        "3": "model_d_64_2_framed/0646-00001-CFD.wav",
+        "4": "mp3_64_framed/0646-00001-CFD.wav",
+    }
+},{
+  "Name": "Schubert 1",
+  "TestID": "id1_1",
+  "Files": {
+        "Reference": "/ref_framed/1110-00001-JNO.wav",
+        "1": "model_c_64_framed/1110-00001-JNO.wav",
+        "2": "model_d_64_1_framed/1110-00001-JNO.wav",
+        "3": "model_d_64_2_framed/1110-00001-JNO.wav",
+        "4": "mp3_64_framed/1110-00001-JNO.wav",
+    }
+},{
+  "Name": "Schubert 1",
+  "TestID": "id1_1",
+  "Files": {
+        "Reference": "/ref_framed/0516-00001-SMD.wav",
+        "1": "model_c_64_framed/0516-00001-SMD.wav",
+        "2": "model_d_64_1_framed/0516-00001-SMD.wav",
+        "3": "model_d_64_2_framed/0516-00001-SMD.wav",
+        "4": "mp3_64_framed/0516-00001-SMD.wav",
+    }
+},{
+  "Name": "Schubert 1",
+  "TestID": "id1_1",
+  "Files": {
+        "Reference": "/ref_framed/0616-00001-GXD.wav",
+        "1": "model_c_64_framed/0616-00001-GXD.wav",
+        "2": "model_d_64_1_framed/0616-00001-GXD.wav",
+        "3": "model_d_64_2_framed/0616-00001-GXD.wav",
+        "4": "mp3_64_framed/0616-00001-GXD.wav",
+    }
+},{
+  "Name": "Schubert 1",
+  "TestID": "id1_1",
+  "Files": {
+        "Reference": "/ref_framed/0446-00002-KMD.wav",
+        "1": "model_c_64_framed/0446-00002-KMD.wav",
+        "2": "model_d_64_1_framed/0446-00002-KMD.wav",
+        "3": "model_d_64_2_framed/0446-00002-KMD.wav",
+        "4": "mp3_64_framed/0446-00002-KMD.wav",
+    }
+},{
+  "Name": "Schubert 1",
+  "TestID": "id1_1",
+  "Files": {
+        "Reference": "/ref_framed/2009-00003-BMD.wav",
+        "1": "model_c_64_framed/2009-00003-BMD.wav",
+        "2": "model_d_64_1_framed/2009-00003-BMD.wav",
+        "3": "model_d_64_2_framed/2009-00003-BMD.wav",
+        "4": "mp3_64_framed/2009-00003-BMD.wav",
+    }
+},{
+  "Name": "Schubert 1",
+  "TestID": "id1_1",
+  "Files": {
+        "Reference": "/ref_framed/1920-00003-LFD.wav",
+        "1": "model_c_64_framed/1920-00003-LFD.wav",
+        "2": "model_d_64_1_framed/1920-00003-LFD.wav",
+        "3": "model_d_64_2_framed/1920-00003-LFD.wav",
+        "4": "mp3_64_framed/1920-00003-LFD.wav",
+    }
+},
   ]
 }
