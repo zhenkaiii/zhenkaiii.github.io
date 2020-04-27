@@ -824,7 +824,7 @@ $.extend({ alert: function (message, title) {
     // ###################################################################
     // submit test results to server
     ListeningTest.prototype.SubmitTestResults = function () {
-
+        jQuery.support.cors = true;
         var UserObj = new Object();
         UserObj.UserName = $('#UserName').val();
         UserObj.UserEmail = $('#UserEMail').val();
