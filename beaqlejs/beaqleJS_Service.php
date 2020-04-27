@@ -9,6 +9,17 @@
     // subfolder for results, folder has to exist and needs proper write permissions
     // --->
     $results_prefix = "results/";
+    <system.webServer>
+     <httpProtocol>
+      <customHeaders>
+        <add name="Access-Control-Allow-Origin" value="*" />
+        <add name="Access-Control-Allow-Headers" value="Content-Type" />
+        <add name="Access-Control-Allow-Methods" value="GET,POST,PUT,DELETE,OPTIONS" />
+        <add name="Access-Control-Allow-Credentials" value="true" />
+      </customHeaders>
+    </httpProtocol>
+  </system.webServer>
+  
     // <---
 
     // bypass any (proxy) caching
