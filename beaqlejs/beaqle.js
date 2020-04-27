@@ -509,8 +509,8 @@ $.extend({ alert: function (message, title) {
           "AutoReturnByDefault": true,
           "EnableABLoop": true,
           "EnableOnlineSubmission": false,
-          "BeaqleServiceURL": "",
-          "SupervisorContact": "",
+          "BeaqleServiceURL": "web_service/beaqleJS_Service.php",
+          "SupervisorContact": "zhenk@iu.edu",
           "RandomizeTestOrder": false,
           "MaxTestsPerRun": -1,
           "AudioRoot": ""

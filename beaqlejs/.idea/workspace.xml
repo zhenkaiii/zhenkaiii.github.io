@@ -12,11 +12,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="beaqle.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="beaqle.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/beaqle.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="402">
-              <caret line="511" column="63" lean-forward="false" selection-start-line="511" selection-start-column="63" selection-end-line="511" selection-end-column="63" />
+            <state relative-caret-position="202">
+              <caret line="511" column="35" lean-forward="false" selection-start-line="511" selection-start-column="31" selection-end-line="511" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -25,18 +25,28 @@
       <file leaf-file-name="audio_mushra_high.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/audio_mushra_high.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="13" column="55" lean-forward="true" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="55" />
+            <state relative-caret-position="304">
+              <caret line="16" column="22" lean-forward="true" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="beaqleJS_Service.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web_service/beaqleJS_Service.php">
+      <file leaf-file-name="example_config_mushra.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config/example_config_mushra.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="10" column="30" lean-forward="false" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="30" />
+            <state relative-caret-position="-773">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="example_config_preference.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config/example_config_preference.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -45,8 +55,8 @@
       <file leaf-file-name="eval_mushra.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tools/Python/eval_mushra.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="13" column="42" lean-forward="true" selection-start-line="13" selection-start-column="42" selection-end-line="13" selection-end-column="42" />
+            <state relative-caret-position="544">
+              <caret line="31" column="35" lean-forward="true" selection-start-line="31" selection-start-column="35" selection-end-line="31" selection-end-column="35" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -57,8 +67,28 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="328">
-              <caret line="111" column="103" lean-forward="false" selection-start-line="111" selection-start-column="84" selection-end-line="111" selection-end-column="103" />
+            <state relative-caret-position="202">
+              <caret line="119" column="57" lean-forward="false" selection-start-line="119" selection-start-column="57" selection-end-line="119" selection-end-column="57" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="beaqleJS_Service.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/beaqleJS_Service.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="14" column="59" lean-forward="true" selection-start-line="14" selection-start-column="59" selection-end-line="14" selection-end-column="59" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="beaqle.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/beaqle.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="297">
+              <caret line="906" column="40" lean-forward="false" selection-start-line="906" selection-start-column="40" selection-end-line="906" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -78,18 +108,24 @@
       <find>DownloadTestResults</find>
       <find>result</find>
       <find>save</find>
-      <find>ResultsFolder</find>
       <find>resultsBeaqleServiceURL</find>
       <find>BeaqleServiceURL</find>
+      <find>SubmitTestResults</find>
+      <find>web</find>
+      <find>beaqleJS_Service</find>
+      <find>web_</find>
+      <find>ResultsFolder</find>
+      <find>crossOrigin</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/config/audio_mushra_high.js" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/web_service/beaqleJS_Service.php" />
         <option value="$PROJECT_DIR$/js/beaqle.js" />
+        <option value="$PROJECT_DIR$/config/audio_mushra_high.js" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/beaqle.js" />
       </list>
     </option>
   </component>
@@ -124,20 +160,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="beaqlejs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="beaqlejs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="beaqlejs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="web_service" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -333,24 +355,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="111" column="103" lean-forward="false" selection-start-line="111" selection-start-column="84" selection-end-line="111" selection-end-column="103" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tools/Python/eval_mushra.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="42" lean-forward="true" selection-start-line="13" selection-start-column="42" selection-end-line="13" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/web_service/beaqleJS_Service.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
@@ -359,18 +363,68 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/config/example_config_mushra.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-773">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/example_config_preference.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/config/audio_mushra_high.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="55" lean-forward="true" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="55" />
+        <state relative-caret-position="304">
+          <caret line="16" column="22" lean-forward="true" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/beaqle.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
-          <caret line="511" column="63" lean-forward="false" selection-start-line="511" selection-start-column="63" selection-end-line="511" selection-end-column="63" />
+        <state relative-caret-position="202">
+          <caret line="511" column="35" lean-forward="false" selection-start-line="511" selection-start-column="31" selection-end-line="511" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tools/Python/eval_mushra.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="31" column="35" lean-forward="true" selection-start-line="31" selection-start-column="35" selection-end-line="31" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/beaqle.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="906" column="40" lean-forward="false" selection-start-line="906" selection-start-column="40" selection-end-line="906" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="119" column="57" lean-forward="false" selection-start-line="119" selection-start-column="57" selection-end-line="119" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/beaqleJS_Service.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="14" column="59" lean-forward="true" selection-start-line="14" selection-start-column="59" selection-end-line="14" selection-end-column="59" />
           <folding />
         </state>
       </provider>
