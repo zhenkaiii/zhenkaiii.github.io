@@ -18,9 +18,9 @@ from os.path import isfile, join
 
 
 mypath = '/Users/Kai/Documents/cs_phd/minje/audio_coding/audio_coding/AUDIO_MUSHRA/SPL-V3-L/'
-system_name = 'mp3-64/'
+system_name = 'd_relu_60_5_5_5/'
 system_name_framed = system_name[:-1] + '_framed/'
-
+print(system_name_framed)
 # frame a 12 second audio clip
 second = 12
 def process_frame_down_to_k_sec(filename):
