@@ -25,7 +25,7 @@ var TestConfig = {
   "Files": {
         "Reference": "/ref_framed/0444-00001-TMD.wav",
         "1": "model_a_168_framed/0444-00001-TMD.wav",
-        "2": "model_c_96_framed/0444-00001-TMD.wav",
+
         "3": "model_c_112_framed/0444-00001-TMD.wav",
         "4": "model_d_96_framed/0444-00001-TMD.wav",
         "5": "model_d_112_framed/0444-00001-TMD.wav",
@@ -40,7 +40,7 @@ var TestConfig = {
   "Files": {
         "Reference": "/ref_framed/1684-00001-AMD.wav",
         "1": "model_a_168_framed/1684-00001-AMD.wav",
-        "2": "model_c_96_framed/1684-00001-AMD.wav",
+
         "3": "model_c_112_framed/1684-00001-AMD.wav",
         "4": "model_d_96_framed/1684-00001-AMD.wav",
         "5": "model_d_112_framed/1684-00001-AMD.wav",
@@ -54,7 +54,7 @@ var TestConfig = {
   "Files": {
         "Reference": "/ref_framed/0753-00001-PMO.wav",
         "1": "model_a_168_framed/0753-00001-PMO.wav",
-        "2": "model_c_96_framed/0753-00001-PMO.wav",
+
         "3": "model_c_112_framed/0753-00001-PMO.wav",
         "4": "model_d_96_framed/0753-00001-PMO.wav",
         "5": "model_d_112_framed/0753-00001-PMO.wav",
@@ -68,7 +68,7 @@ var TestConfig = {
   "Files": {
         "Reference": "/ref_framed/0021-00001-RMD.wav",
         "1": "model_a_168_framed/0021-00001-RMD.wav",
-        "2": "model_c_96_framed/0021-00001-RMD.wav",
+
         "3": "model_c_112_framed/0021-00001-RMD.wav",
         "4": "model_d_96_framed/0021-00001-RMD.wav",
         "5": "model_d_112_framed/0021-00001-RMD.wav",
@@ -82,7 +82,7 @@ var TestConfig = {
   "Files": {
         "Reference": "/ref_framed/1656-00003-HMD.wav",
         "1": "model_a_168_framed/1656-00003-HMD.wav",
-        "2": "model_c_96_framed/1656-00003-HMD.wav",
+
         "3": "model_c_112_framed/1656-00003-HMD.wav",
         "4": "model_d_96_framed/1656-00003-HMD.wav",
         "5": "model_d_112_framed/1656-00003-HMD.wav",
@@ -96,7 +96,7 @@ var TestConfig = {
   "Files": {
         "Reference": "/ref_framed/0585-00002-EMO.wav",
         "1": "model_a_168_framed/0585-00002-EMO.wav",
-        "2": "model_c_96_framed/0585-00002-EMO.wav",
+
         "3": "model_c_112_framed/0585-00002-EMO.wav",
         "4": "model_d_96_framed/0585-00002-EMO.wav",
         "5": "model_d_112_framed/0585-00002-EMO.wav",
@@ -110,7 +110,7 @@ var TestConfig = {
   "Files": {
         "Reference": "/ref_framed/0646-00001-CFD.wav",
         "1": "model_a_168_framed/0646-00001-CFD.wav",
-        "2": "model_c_96_framed/0646-00001-CFD.wav",
+
         "3": "model_c_112_framed/0646-00001-CFD.wav",
         "4": "model_d_96_framed/0646-00001-CFD.wav",
         "5": "model_d_112_framed/0646-00001-CFD.wav",
@@ -124,7 +124,7 @@ var TestConfig = {
   "Files": {
         "Reference": "/ref_framed/1110-00001-JNO.wav",
         "1": "model_a_168_framed/1110-00001-JNO.wav",
-        "2": "model_c_96_framed/1110-00001-JNO.wav",
+
         "3": "model_c_112_framed/1110-00001-JNO.wav",
         "4": "model_d_96_framed/1110-00001-JNO.wav",
         "5": "model_d_112_framed/1110-00001-JNO.wav",
@@ -138,7 +138,7 @@ var TestConfig = {
   "Files": {
         "Reference": "/ref_framed/0516-00001-SMD.wav",
         "1": "model_a_168_framed/0516-00001-SMD.wav",
-        "2": "model_c_96_framed/0516-00001-SMD.wav",
+
         "3": "model_c_112_framed/0516-00001-SMD.wav",
         "4": "model_d_96_framed/0516-00001-SMD.wav",
         "5": "model_d_112_framed/0516-00001-SMD.wav",
@@ -152,7 +152,7 @@ var TestConfig = {
   "Files": {
         "Reference": "/ref_framed/0616-00001-GXD.wav",
         "1": "model_a_168_framed/0616-00001-GXD.wav",
-        "2": "model_c_96_framed/0616-00001-GXD.wav",
+
         "3": "model_c_112_framed/0616-00001-GXD.wav",
         "4": "model_d_96_framed/0616-00001-GXD.wav",
         "5": "model_d_112_framed/0616-00001-GXD.wav",
@@ -166,7 +166,7 @@ var TestConfig = {
   "Files": {
         "Reference": "/ref_framed/0446-00002-KMD.wav",
         "1": "model_a_168_framed/0446-00002-KMD.wav",
-        "2": "model_c_96_framed/0446-00002-KMD.wav",
+
         "3": "model_c_112_framed/0446-00002-KMD.wav",
         "4": "model_d_96_framed/0446-00002-KMD.wav",
         "5": "model_d_112_framed/0446-00002-KMD.wav",
@@ -180,7 +180,7 @@ var TestConfig = {
   "Files": {
         "Reference": "/ref_framed/2009-00003-BMD.wav",
         "1": "model_a_168_framed/2009-00003-BMD.wav",
-        "2": "model_c_96_framed/2009-00003-BMD.wav",
+
         "3": "model_c_112_framed/2009-00003-BMD.wav",
         "4": "model_d_96_framed/2009-00003-BMD.wav",
         "5": "model_d_112_framed/2009-00003-BMD.wav",
@@ -194,7 +194,7 @@ var TestConfig = {
   "Files": {
         "Reference": "/ref_framed/1920-00003-LFD.wav",
         "1": "model_a_168_framed/1920-00003-LFD.wav",
-        "2": "model_c_96_framed/1920-00003-LFD.wav",
+
         "3": "model_c_112_framed/1920-00003-LFD.wav",
         "4": "model_d_96_framed/1920-00003-LFD.wav",
         "5": "model_d_112_framed/1920-00003-LFD.wav",
