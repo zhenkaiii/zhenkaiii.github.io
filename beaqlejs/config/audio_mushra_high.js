@@ -13,7 +13,7 @@ var TestConfig = {
   "EnableOnlineSubmission": true,
   "BeaqleServiceURL": "beaqleJS_Service.php",
   "SupervisorContact": "zhenk@iu.edu",
-  "RandomizeTestOrder": true,
+  "RandomizeTestOrder": false,
   "MaxTestsPerRun": 13,
   "RequireMaxRating": false,
   "AudioRoot": "audio/SPL-V3-H/",
