@@ -19,18 +19,6 @@ var TestConfig = {
   "AudioRoot": "subject_test/",
   "Testsets": [
     //
-    {
-  "Name": "Session-II (High Bitrates)",
-  "TestID": "id1_1",
-  "Files": {
-        "Reference": "/ref_framed/0444-00001-TMD.wav",
-        "1": "ref_lp35_framed/0444-00001-TMD.wav",
-        "3": "model_c_112_framed/0444-00001-TMD.wav",
-        "4": "model_d_96_framed1007484__framed0444-00001-TM.wav",
-        "5": "model_d_112_framed/0444-00001-TMD1114836__framedwav",
-        "6": "lp_3p5_framed/0444-00001-TMD.wav",
-1292309_framed      "7": "lp_7_framed/0444-00001-TMD.wav",
-        "81888952_framed"mp3_112_framed/0444-00001-TMD.wav",
 {
   "Name": "Session-II (High Bitrates)",
   "TestID": "id1_1",
