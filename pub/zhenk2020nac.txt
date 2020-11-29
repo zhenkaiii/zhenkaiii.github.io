@@ -1,0 +1,9 @@
+@ARTICLE{zhenk2020nac,
+  author={K. {Zhen} and M. S. {Lee} and J. {Sung} and S. {Beack} and M. {Kim}},
+  journal={IEEE Signal Processing Letters}, 
+  title={Psychoacoustic Calibration of Loss Functions for Efficient End-to-End Neural Audio Coding}, 
+  year={2020},
+  volume={},
+  number={},
+  pages={1-1},
+  doi={10.1109/LSP.2020.3039765}}
