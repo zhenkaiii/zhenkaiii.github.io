@@ -12,16 +12,6 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="beaqle.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/beaqle.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="214">
-              <caret line="52" column="45" lean-forward="false" selection-start-line="52" selection-start-column="45" selection-end-line="52" selection-end-column="45" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="audio_mushra_high.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/audio_mushra_high.js">
           <provider selected="true" editor-type-id="text-editor">
@@ -45,18 +35,8 @@
       <file leaf-file-name="audio_mushra_low.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/audio_mushra_low.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2808">
+            <state relative-caret-position="2807">
               <caret line="155" column="0" lean-forward="false" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index_mid.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/index_mid.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -72,7 +52,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="taslp_mushra_mid.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="taslp_mushra_mid.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/taslp_mushra_mid.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="140">
@@ -82,11 +62,41 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/README.html">
+      <file leaf-file-name="taslp_mushra_high.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config/taslp_mushra_high.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-6326">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="171">
+              <caret line="9" column="23" lean-forward="true" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ablation_blending_weights.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ablation_blending_weights.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="17" column="49" lean-forward="false" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="49" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ablation_blending_weights.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/config/ablation_blending_weights.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2356">
+              <caret line="124" column="0" lean-forward="true" selection-start-line="124" selection-start-column="0" selection-end-line="124" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="session_high.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/session_high.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="380">
+              <caret line="20" column="23" lean-forward="false" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -106,7 +116,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>submit</find>
       <find>DownloadTestResults</find>
       <find>result</find>
       <find>save</find>
@@ -136,6 +145,7 @@
       <find>getAudioContext</find>
       <find>AudioContext</find>
       <find>TestConfig</find>
+      <find>name</find>
     </findStrings>
     <replaceStrings>
       <replace>1114836__framed</replace>
@@ -160,6 +170,10 @@
         <option value="$PROJECT_DIR$/config/audio_mushra_high_bcc.js" />
         <option value="$PROJECT_DIR$/index_mid.html" />
         <option value="$PROJECT_DIR$/config/taslp_mushra_mid.js" />
+        <option value="$PROJECT_DIR$/session_high.html" />
+        <option value="$PROJECT_DIR$/config/taslp_mushra_high.js" />
+        <option value="$PROJECT_DIR$/ablation_blending_weights.html" />
+        <option value="$PROJECT_DIR$/config/ablation_blending_weights.js" />
       </list>
     </option>
   </component>
@@ -285,8 +299,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/config" />
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -433,38 +447,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/index_high.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="17" column="45" lean-forward="false" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/audio_mushra_high_bcc.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2831">
-          <caret line="149" column="29" lean-forward="false" selection-start-line="149" selection-start-column="29" selection-end-line="149" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/beaqle.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25479">
-          <caret line="1341" column="0" lean-forward="false" selection-start-line="1341" selection-start-column="0" selection-end-line="1538" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index_low.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="17" column="40" lean-forward="false" selection-start-line="17" selection-start-column="40" selection-end-line="17" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/audio_mushra_preference.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2014">
@@ -773,14 +755,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/audio_mushra_low_bcc.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="22" column="26" lean-forward="false" selection-start-line="22" selection-start-column="26" selection-end-line="22" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/audio_mushra_high.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
@@ -805,18 +779,58 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/config/taslp_mushra_mid.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/session_high.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="20" column="23" lean-forward="false" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/audio_mushra_low_bcc.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="401">
+          <caret line="22" column="26" lean-forward="false" selection-start-line="22" selection-start-column="26" selection-end-line="22" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/config/audio_mushra_low.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2808">
+        <state relative-caret-position="2807">
           <caret line="155" column="0" lean-forward="false" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/taslp_mushra_mid.js">
+    <entry file="file://$PROJECT_DIR$/config/taslp_mushra_high.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+        <state relative-caret-position="171">
+          <caret line="9" column="23" lean-forward="true" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ablation_blending_weights.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="17" column="49" lean-forward="false" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/ablation_blending_weights.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2356">
+          <caret line="124" column="0" lean-forward="true" selection-start-line="124" selection-start-column="0" selection-end-line="124" selection-end-column="0" />
           <folding />
         </state>
       </provider>
