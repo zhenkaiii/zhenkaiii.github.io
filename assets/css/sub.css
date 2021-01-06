@@ -108,6 +108,7 @@ input, select, textarea {
 		font-weight: 500;
 		font-size: 12pt;
 		margin: 12pt;
+		text-align: justify;
 	}
 
 	a {
