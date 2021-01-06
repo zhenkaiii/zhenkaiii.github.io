@@ -41,6 +41,10 @@ blockquote, q {
 	quotes: none;
 }
 
+img {
+  opacity: 0.93;
+}
+
 	blockquote:before, blockquote:after, q:before, q:after {
 		content: '';
 		content: none;
@@ -2118,6 +2122,7 @@ input, select, textarea {
 			width: 20em;
 			height: 20em;
 			margin: 0;
+
 		}
 
 			#top .image img {
