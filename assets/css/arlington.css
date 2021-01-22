@@ -352,6 +352,7 @@ blockquote {
   border-color: #37bc9b;
 }
 
+
 /**
  * tooltip
  * --------------------------------------------------
@@ -681,74 +682,77 @@ blockquote {
   padding-left: 40px;
 }
 
-.has-success .help-block, .has-success .control-label, .has-success .radio, .has-success .checkbox, .has-success .radio-inline, .has-success .checkbox-inline {
+.has-conference .help-block, .has-success .control-label, .has-success .radio, .has-success .checkbox, .has-success .radio-inline, .has-success .checkbox-inline {
   color: #8cc152;
 }
-.has-success .form-control {
+.has-conference .form-control {
   border-color: #8cc152;
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
 }
-.has-success .form-control:focus {
+.has-conference .form-control:focus {
   border-color: #8cc152;
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
 }
-.has-success .input-group-addon {
+.has-conference .input-group-addon {
   background-color: #8cc152;
   border-color: #8cc152;
 }
-.has-success .form-control-feedback {
+.has-conference .form-control-feedback {
   color: #8cc152;
 }
 
-.has-warning .help-block, .has-warning .control-label, .has-warning .radio, .has-warning .checkbox, .has-warning .radio-inline, .has-warning .checkbox-inline {
+.has-journal .help-block, .has-warning .control-label, .has-warning .radio, .has-warning .checkbox, .has-warning .radio-inline, .has-warning .checkbox-inline {
   color: #f6bb42;
 }
-.has-warning .form-control {
+.has-journal .form-control {
   border-color: #f6bb42;
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
 }
-.has-warning .form-control:focus {
+.has-journal .form-control:focus {
   border-color: #f6bb42;
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
 }
-.has-warning .input-group-addon {
+.has-journal .input-group-addon {
   background-color: #f6bb42;
   border-color: #f6bb42;
 }
-.has-warning .form-control-feedback {
+.has-journal .form-control-feedback {
   color: #f6bb42;
 }
 
-.has-error .help-block, .has-error .control-label, .has-error .radio, .has-error .checkbox, .has-error .radio-inline, .has-error .checkbox-inline {
+.has-patent .help-block, .has-error .control-label, .has-error .radio, .has-error .checkbox, .has-error .radio-inline, .has-error .checkbox-inline {
   color: #da4453;
 }
-.has-error .form-control {
+.has-patent .form-control {
   border-color: #da4453;
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
 }
-.has-error .form-control:focus {
+.has-patent .form-control:focus {
   border-color: #da4453;
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
 }
-.has-error .input-group-addon {
+.has-patent .input-group-addon {
   background-color: #da4453;
   border-color: #da4453;
 }
-.has-error .form-control-feedback {
+.has-patent .form-control-feedback {
   color: #da4453;
 }
+
+
+
 
 /**
  * stepper
