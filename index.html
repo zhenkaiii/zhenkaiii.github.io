@@ -36,9 +36,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-
 <link rel="stylesheet" href="assets/css/arlington.css" />
 <link rel="stylesheet" href="assets/css/washingtonpost.css" />
+<link rel="stylesheet" href="assets/css/sub.css" />
+	
 
 <!--
 <link rel="stylesheet"  media="screen and (max-width: 1680px)" href="assets/css/sub.css" />
@@ -46,12 +47,13 @@
 <link rel="stylesheet" href="css/style.css" />
 <link rel="stylesheet" href="css/style-desktop.css" />
 <link rel="stylesheet" type="text/css" href="assets/css/fibonacci.css">
+<link rel="stylesheet" href="assets/css/sub.css" />
+
 -->
 
 	<link rel="stylesheet"
 	      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
 	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
-	<link rel="stylesheet" href="assets/css/sub.css" />
 </head>
 
   <div align="center">
@@ -66,6 +68,8 @@
 
 
 <br>
+<div id="container">
+<div id="home_target" style="position: relative; top: -50px;"></div>
 <p>
 	<b><font size="4">Ph.D. Candidate at Indiana University</font></b><br><br>
   <font size="3">Research Interests:</font> <a href="http://www.google.com/search?q=Neural+Waveform+Coding"> Neural Waveform Coding for Speech and Audio Signals </a><br>
@@ -81,6 +85,7 @@
   Currently, I am open to internship opportunities. <a href="Resume9516.pdf">Check out my resume (as of September 2016).</a> <br> -->
 </p>
 
+</div>
               <!--I'm in my final year of the Ph.D. program, advised by <a href="https://minjekim.com/">Prof. Minje Kim</a> at Indiana University.              
               My research is mainly on scalable and efficient speech and audio coding via techniques spanning the traditional digital signal processing domain and modern computational paradigm.
               <!--In my view, innovation does not only come from proposing brand new methodologies but reviving the conventional techniques as well.
@@ -92,57 +97,70 @@
 
 
 
-<b><font size="4">Publications and Patents</font></b> 
+<b><font size="4">Publications</font></b> 
 <br>
-  J: Journal Articles; C: Conference Proceedings; P: Patents; W: Workshop Papers
+<b class="label label-journal">J: Journal Articles </b>&nbsp
+<b class="label label-conference">C: Conference Proceedings </b>&nbsp
+<b class="label label-patent">P: Patents </b>&nbsp
+<b class="label label-workshop">W: Workshop Papers </b>
+<br><br>
 
 <ul>
 
-	<li> [J-001] <b>Kai Zhen</b>, Mi Suk Lee, Jongmo Sung, Seungkwon Beack, and Minje Kim, "<u>Psychoacoustic Calibration of Loss Functions for Efficient End-to-End Neural Audio Coding</u>," <i>IEEE Signal Processing Letters, vol. 27, pp. 2159-2163, 2020, doi: 10.1109/LSP.2020.3039765.</i>.
+<p align="justify">
+	 <b class="label label-journal">J-001</b> <b>Kai Zhen</b>, Mi Suk Lee, Jongmo Sung, Seungkwon Beack, and Minje Kim, "<b>Psychoacoustic Calibration of Loss Functions for Efficient End-to-End Neural Audio Coding</b>," <i>IEEE Signal Processing Letters, vol. 27, pp. 2159-2163, 2020, doi: 10.1109/LSP.2020.3039765.</i>.
 <br>
 <a href="http://kaizhen.us/neural-audio-coding.html">[demo]</a>
 <a href="http://kaizhen.us/pub/zhenk-spl.pdf">[pdf]</a>
 <a href="http://kaizhen.us/pub/zhenk2020nac.txt">[bib]</a>
-<a href="https://github.com/cocosci/pam-nac">[code]</a></li>
+<a href="https://github.com/cocosci/pam-nac">[code]</a></p>
 <!--
-<li> [C-005] <b>Kai Zhen</b>, Hieu Duy Nguyen, Feng-Ju Chang, Athanasios Mouchtaris, and Ariya Rastrow, "<u>Sparsification via Compressed Sensing for Automatic Speech Recognition</u>," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i>,Toronto, ON, Canada, June 6-12, 2021. <br><a href="http://kaizhen.us/collaborative-quantization.html">[demo]</a><a href="http://kaizhen.us/pub/zhenk2020cq.pdf">[pdf]</a><a href="http://kaizhen.us/pub/cq.txt">[bib]</a><a href="https://github.com/cocosci/NSC">[code]</a></li>
+ <b class="label label-conference">C-005</b>  <b>Kai Zhen</b>, Hieu Duy Nguyen, Feng-Ju Chang, Athanasios Mouchtaris, and Ariya Rastrow, "<b>Sparsification via Compressed Sensing for Automatic Speech Recognition</b>," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i>,Toronto, ON, Canada, June 6-12, 2021. <br><a href="http://kaizhen.us/collaborative-quantization.html">[demo]</a><a href="http://kaizhen.us/pub/zhenk2020cq.pdf">[pdf]</a><a href="http://kaizhen.us/pub/cq.txt">[bib]</a><a href="https://github.com/cocosci/NSC">[code]</a></p>
 
-<li> [C-004] Haici Yang, <b>Kai Zhen</b>, Seungkwon Beack, Minje Kim, "<u>Source-Aware Neural Speech Coding for Noisy Speech Compression</u>," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i>,Toronto, ON, Canada, June 6-12, 2021. <br><a href="http://kaizhen.us/collaborative-quantization.html">[demo]</a><a href="http://kaizhen.us/pub/zhenk2020cq.pdf">[pdf]</a><a href="http://kaizhen.us/pub/cq.txt">[bib]</a><a href="https://github.com/cocosci/NSC">[code]</a></li>
+<b class="label label-conference">C-004</b>  Haici Yang, <b>Kai Zhen</b>, Seungkwon Beack, Minje Kim, "<b>Source-Aware Neural Speech Coding for Noisy Speech Compression</b>," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i>,Toronto, ON, Canada, June 6-12, 2021. <br><a href="http://kaizhen.us/collaborative-quantization.html">[demo]</a><a href="http://kaizhen.us/pub/zhenk2020cq.pdf">[pdf]</a><a href="http://kaizhen.us/pub/cq.txt">[bib]</a><a href="https://github.com/cocosci/NSC">[code]</a></p>
 -->
-<li> [C-003] <b>Kai Zhen</b>, Mi Suk Lee, Jongmo Sung, Seungkwon Beack, and Minje Kim, "<u>Efficient and Scalable Neural Residual Waveform Coding with Collaborative Quantization</u>," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i>, Barcelona, Spain, May 4-8, 2020. <br><a href="http://kaizhen.us/collaborative-quantization.html">[demo]</a><a href="http://kaizhen.us/pub/zhenk2020cq.pdf">[pdf]</a><a href="http://kaizhen.us/pub/cq.txt">[bib]</a><a href="https://github.com/cocosci/NSC">[code]</a></li>
+<p align="justify">
+ <b class="label label-conference">C-003</b> <b>Kai Zhen</b>, Mi Suk Lee, Jongmo Sung, Seungkwon Beack, and Minje Kim, "<b>Efficient and Scalable Neural Residual Waveform Coding with Collaborative Quantization</b>," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i>, Barcelona, Spain, May 4-8, 2020. <br><a href="http://kaizhen.us/collaborative-quantization.html">[demo]</a><a href="http://kaizhen.us/pub/zhenk2020cq.pdf">[pdf]</a><a href="http://kaizhen.us/pub/cq.txt">[bib]</a><a href="https://github.com/cocosci/NSC">[code]</a></p>
 
-<li> [C-002] <b>Kai Zhen</b>, Mi Suk Lee, Minje Kim. "<u>A Dual-Staged Context Aggregation Method towards Efficient End-To-End Speech Enhancement</u>,"  <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i>, Barcelona, Spain, May 4-8, 2020. <br><a href="http://kaizhen.us/speechenhancement.html">[demo]</a><a href="http://kaizhen.us/pub/dccrn.txt">[bib]</a></li>
+<p align="justify">
+ <b class="label label-conference">C-002</b> <b>Kai Zhen</b>, Mi Suk Lee, Minje Kim. "<b>A Dual-Staged Context Aggregation Method towards Efficient End-To-End Speech Enhancement</b>,"  <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i>, Barcelona, Spain, May 4-8, 2020. <br><a href="http://kaizhen.us/speechenhancement.html">[demo]</a><a href="http://kaizhen.us/pub/dccrn.txt">[bib]</a></p>
 
+<p align="justify">
+ <b class="label label-conference">C-001</b> <b>Kai Zhen</b>, Jongmo Sung, Mi Suk Lee, Seungkwon Beack, and Minje Kim, "<b>Cascaded Cross-Module Residual Learning towards Lightweight End-to-End Speech Coding</b>," <i>In Proc. Annual Conference of the International Speech Communication Association (Interspeech)</i>, Graz, Austria, September 15-19, 2019. <br><a href="https://saige.sice.indiana.edu/research-projects/neural-audio-coding/">[demo]</a> <a href="http://kaizhen.us/pub/cmrl.txt">[bib]</a>
+ </p>
 
-<li> [C-001] <b>Kai Zhen</b>, Jongmo Sung, Mi Suk Lee, Seungkwon Beack, and Minje Kim, "<u>Cascaded Cross-Module Residual Learning towards Lightweight End-to-End Speech Coding</u>," In Proc. Annual Conference of the International Speech Communication Association (Interspeech)</i>, Graz, Austria, September 15-19, 2019. <br><a href="https://saige.sice.indiana.edu/research-projects/neural-audio-coding/">[demo]</a> <a href="http://kaizhen.us/pub/cmrl.txt">[bib]</a>
- </li>
-<li> [P-004] Minje Kim, <b>Kai Zhen</b>, Seungkwon Beack, et al, "<u>Collaborative quantization for efficient and scalable neural waveform coding</u>," <i>US Patent Application, US 2020</i>.
-</li>
+ <p align="justify">
+ 
+ <b class="label label-patent">P-004</b>  Minje Kim, <b>Kai Zhen</b>, Seungkwon Beack, et al, "<b>Collaborative quantization for efficient and scalable neural waveform coding</b>," <i>US Patent Application, US 2020</i>.
+</p>
 
-<li> [P-003] Minje Kim, <b>Kai Zhen</b>, Mi Suk Lee, "<u>Apparatus and Method for Speech Processing Using a Densely Connected Hybrid Neural Network</u>," <i>US Patent Application, 2020</i>.
-</li>
+<p align="justify">
+ <b class="label label-patent">P-003</b> Minje Kim, <b>Kai Zhen</b>, Mi Suk Lee, "<b>Apparatus and Method for Speech Processing Using a Densely Connected Hybrid Neural Network</b>," <i>US Patent Application, 2020</i>.
+</p>
 
-<li> [P-002] Minje Kim, <b>Kai Zhen</b>, Seungkwon Beack, et al, "<u>Audio Signal Encoding Method and Audio Signal Decoding Method, And Encoder And Decoder Performing the Same</u>," <i>US Patent Application, US20200135220A1</i>.
-</li>
+<p align="justify">
+ <b class="label label-patent">P-002</b> Minje Kim, <b>Kai Zhen</b>, Seungkwon Beack, et al, "<b>Audio Signal Encoding Method and Audio Signal Decoding Method, And Encoder And Decoder Performing the Same</b>," <i>US Patent Application, US20200135220A1</i>.
+</p>
 
+<p align="justify">
+ <b class="label label-patent">P-001</b> Minje Kim, Aswin Sivaraman, <b>Kai Zhen</b>, Jongmo Sung, et al, "<b>Audio signal encoding method and apparatus and audio signal decoding method and apparatus using psychoacoustic-based weighted error function</b>," <i>US Patent Application, US20190164052A1</i>.
+</p>
 
-<li> [P-001] Minje Kim, Aswin Sivaraman, <b>Kai Zhen</b>, Jongmo Sung, et al, "<u>Audio signal encoding method and apparatus and audio signal decoding method and apparatus using psychoacoustic-based weighted error function</u>," <i>US Patent Application, US20190164052A1</i>.
-</li>
+<p align="justify">
+ <b class="label label-workshop">W-004</b> <b>Kai Zhen</b>, Hieu Duy Nguyen, Feng-Ju (Claire) Chang, Athanasios Mouchtaris. <b>Network Sparsification for On-Device ASR</b>. <i>Amazon Machine Learning Conference (AMLC) Workshop on Network Inference Optimization, 2020.</i></a>
+</p>
 
+<p align="justify">
+ <b class="label label-workshop">W-003</b> <b>Kai Zhen</b>, Aswin Sivaraman, Jongmo Sung, Minje Kim, "<b>On Psychoacoustically Weighted Cost Functions Towards Resource-efficient Deep Neural Networks for Speech Denoising</b>," <i>The 7th Annual Midwest Cognitive Science Conference</i>, Bloomington, IN, 2018. <a href="http://kaizhen.us/pub/zhen2018psychoacoustically.txt">[bib]</a>
+</p>
 
-<li> [W-004] <b>Kai Zhen</b>, Hieu Duy Nguyen, Feng-Ju (Claire) Chang, Athanasios Mouchtaris. Network Sparsification for On-Device ASR. Amazon Machine Learning Conference (AMLC) Workshop on Network Inference Optimization, 2020.</a>
-</li>
+<p align="justify">
+ <b class="label label-workshop">W-002</b> Peter Miksza, Kevin Watson, <b>Kai Zhen</b>, Sanna Wager, Minje Kim, "<b>Relationships between experts' subjective ratings of jazz improvisations and computational measures of melodic entropy</b>," <i>The Improvising Brain III: Cultural Variation and Analytical Techniques Symposium</i>, Atlanta, GA, in Feb, 2017.
+</p>
 
-
-<li> [W-003] <b>Kai Zhen</b>, Aswin Sivaraman, Jongmo Sung, Minje Kim, "<u>On Psychoacoustically Weighted Cost Functions Towards Resource-efficient Deep Neural Networks for Speech Denoising</u>," <i>The 7th Annual Midwest Cognitive Science Conference</i>, Bloomington, IN, 2018. <a href="http://kaizhen.us/pub/zhen2018psychoacoustically.txt">[bib]</a>
-</li>
-
-<li> [W-002] Peter Miksza, Kevin Watson, <b>Kai Zhen</b>, Sanna Wager, Minje Kim, "<u>Relationships between experts' subjective ratings of jazz improvisations and computational measures of melodic entropy</u>," <i>The Improvising Brain III: Cultural Variation and Analytical Techniques Symposium</i>, Atlanta, GA, in Feb, 2017.
-</li>
-
-
-<li> [W-001] <b>Kai Zhen</b> and David Crandall, "<u>Finding egocentric image topics through convolutional neural network based representations (extended abstract)</u>," <i>In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) Workshop on Egocentric Computer Vision</i>, Las Vegas, US, June 26 - July 1, 2016. 
-</li>
+<p align="justify">
+ <b class="label label-workshop">W-001</b> <b>Kai Zhen</b> and David Crandall, "<b>Finding egocentric image topics through convolutional neural network based representations (extended abstract)</b>," <i>In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) Workshop on Egocentric Computer Vision</i>, Las Vegas, US, June 26 - July 1, 2016. 
+</p>
 
 
 </ul>

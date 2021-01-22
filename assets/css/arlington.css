@@ -328,26 +328,26 @@ blockquote {
   border-color: #3bafda;
 }
 
-.label-success,
-.badge-success {
+.label-journal,
+.badge-journal {
   background-color: #8cc152;
   border-color: #8cc152;
 }
 
-.label-danger,
-.badge-danger {
-  background-color: #da4453;
-  border-color: #da4453;
+.label-conference,
+.badge-conference {
+  background-color: #5A5667;
+  border-color: #5A5667;
 }
 
-.label-warning,
-.badge-warning {
+.label-patent,
+.badge-patent {
   background-color: #f6bb42;
   border-color: #f6bb42;
 }
 
-.label-info,
-.badge-info {
+.label-workshop,
+.badge-workshop {
   background-color: #37bc9b;
   border-color: #37bc9b;
 }
