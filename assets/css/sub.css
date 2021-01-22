@@ -203,6 +203,7 @@ input, select, textarea {
 	}
 
 	em {
+		font-style: normal;
 		line-height: 2.4;
 	}
 
