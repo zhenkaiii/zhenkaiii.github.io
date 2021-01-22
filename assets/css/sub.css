@@ -198,8 +198,12 @@ input, select, textarea {
 		letter-spacing: -0.015em;
 	}
 
-	em, i {
+	i {
 		font-style: italic;
+	}
+
+	em {
+		line-height: 2.4;
 	}
 
 	br.clear {
