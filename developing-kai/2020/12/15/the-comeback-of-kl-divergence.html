@@ -1,0 +1,319 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+
+
+
+
+
+
+
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Self-Supervised Representation Learning</title>
+
+    <meta name="description" content="Self-supervised learning opens up a huge opportunity for better utilizing unlabelled data, while learning in a supervised learning manner. This post covers m...">
+
+    <meta content="Lil'Log" property="og:site_name">
+
+        <meta content="Self-Supervised Representation Learning" property="og:title">
+
+
+        <meta content="article" property="og:type">
+
+
+        <meta content="Self-supervised learning opens up a huge opportunity for better utilizing unlabelled data, while learning in a supervised learning manner. This post covers many interesting ideas of self-supervised learning tasks on images, videos, and control problems." property="og:description">
+
+
+        <meta content="https://lilianweng.github.io/2019/11/10/self-supervised-learning.html" property="og:url">
+
+
+        <meta content="2019-11-10T18:00:00+00:00" property="article:published_time">
+        <meta content="https://lilianweng.github.io/about/" property="article:author">
+
+
+
+
+        <meta content="representation-learning" property="article:tag">
+
+        <meta content="long-read" property="article:tag">
+
+        <meta content="generative-model" property="article:tag">
+
+        <meta content="object-recognition" property="article:tag">
+
+        <meta content="reinforcement-learning" property="article:tag">
+
+
+
+    <link rel="shortcut icon" href="/lil-log/assets/favicon_peach.ico">
+    <link rel="stylesheet" href="../../../../assets/css/blog.css">
+    <link rel="canonical" href="https://lilianweng.github.io/lil-log/2019/11/10/self-supervised-learning.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- For Facebook share button -->
+    <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <!-- Twitter cards -->
+    <meta name="twitter:site"    content="@lilianweng">
+    <meta name="twitter:creator" content="@Lilian Weng">
+    <meta name="twitter:title"   content="Self-Supervised Representation Learning">
+
+
+        <meta name="twitter:description" content="<blockquote>
+  <p>Self-supervised learning opens up a huge opportunity for better utilizing unlabelled data, while learning in a supervised learning manner. This post covers many interesting ideas of self-supervised learning tasks on images, videos, and control problems.</p>
+</blockquote>
+
+">
+
+
+
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+
+    <!-- end of Twitter cards -->
+
+</head>
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+
+        <a class="site-title" href="./">&#214;ld&#39;&#209;Oob</a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav>
+        <nav class="site-nav">
+            <a class="page-link" href="./contact.html">&#x1f984; Contact</a>
+        </nav>
+        <nav class="site-nav">
+            <a class="page-link" href="./FAQ.html">&#x1F64B; FAQ</a>
+        </nav>
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="./log.html">&#x231b; Log</a>
+        </nav>
+        <nav class="site-nav">
+            <a class="page-link" href="./archive.html">&#x231b; Archive</a>
+        </nav>-->
+
+    </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+
+
+
+
+
+
+                <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>Self-supervised learning opens up a huge opportunity for better utilizing unlabelled data, while learning in a supervised learning manner. This post covers many interesting ideas of self-supervised learning tasks on images, videos, and control problems.</p>
+</blockquote>
+
+<!--more-->
+
+<p><span style="color: #286ee0;">[Updated on 2020-01-09: add a new section on <a href="#contrastive-predictive-coding">Contrastive Predictive Coding</a>].</span>
+<br />
+<span style="color: #286ee0;">[Updated on 2020-04-13: add a <a href="#momentum-contrast">“Momentum Contrast”</a> section on MoCo, SimCLR and CURL.]</span>
+<br />
+<span style="color: #286ee0;">[Updated on 2020-07-08: add a <a href="#bisimulation">“Bisimulation”</a> section on DeepMDP and DBC.]</span>
+<br />
+<span style="color: #286ee0;">[Updated on 2020-09-12: add <a href="#mocov2">MoCo V2</a> and <a href="#BYOL">BYOL</a> in the <a href="#momentum-contrast">“Momentum Contrast”</a> section.]</span></p>
+
+<p>Given a task and enough labels, supervised learning can solve it really well. Good performance usually requires a decent amount of labels, but collecting manual labels is expensive (i.e. ImageNet) and hard to be scaled up. Considering the amount of unlabelled data (e.g. free text, all the images on the Internet) is substantially more than a limited number of human curated labelled datasets, it is kinda wasteful not to use them. However, unsupervised learning is not easy and usually works much less efficiently than supervised learning.</p>
+
+<p>What if we can get labels for free for unlabelled data and train unsupervised dataset in a supervised manner? We can achieve this by framing a supervised learning task in a special form to predict only a subset of information using the rest. In this way, all the information needed, both inputs and labels, has been provided. This is known as <em>self-supervised learning</em>.</p>
+
+<p>This idea has been widely used in language modeling. The default task for a language model is to predict the next word given the past sequence. <a href="/lil-log/2019/01/31/generalized-language-models.html#bert">BERT</a> adds two other auxiliary tasks and both rely on self-generated labels.</p>
+
+<p style="width: 75%;" class="center"><img src="/lil-log/assets/images/self-sup-lecun.png" alt="Self-supervised learning summary" /></p>
+<p><em>Fig. 1. A great summary of how self-supervised learning tasks can be constructed (Image source: <a href="https://www.youtube.com/watch?v=7I0Qt7GALVk">LeCun’s talk</a>)</em></p>
+
+<p><a href="https://github.com/jason718/awesome-self-supervised-learning">Here</a> is a nicely curated list of papers in self-supervised learning. Please check it out if you are interested in reading more in depth.</p>
+
+<p>Note that this post does not focus on either NLP / <a href="/lil-log/2019/01/31/generalized-language-models.html">language modeling</a> or <a href="https://lilianweng.github.io/lil-log/tag/generative-model">generative modeling</a>.</p>
+
+<ul class="table-of-content" id="markdown-toc">
+  <li><a href="#why-self-supervised-learning" id="markdown-toc-why-self-supervised-learning">Why Self-Supervised Learning?</a></li>
+  <li><a href="#images-based" id="markdown-toc-images-based">Images-Based</a>    <ul>
+      <li><a href="#distortion" id="markdown-toc-distortion">Distortion</a></li>
+      <li><a href="#patches" id="markdown-toc-patches">Patches</a></li>
+      <li><a href="#colorization" id="markdown-toc-colorization">Colorization</a></li>
+      <li><a href="#generative-modeling" id="markdown-toc-generative-modeling">Generative Modeling</a></li>
+      <li><a href="#contrastive-predictive-coding" id="markdown-toc-contrastive-predictive-coding">Contrastive Predictive Coding</a></li>
+      <li><a href="#momentum-contrast" id="markdown-toc-momentum-contrast">Momentum Contrast</a></li>
+    </ul>
+  </li>
+  <li><a href="#video-based" id="markdown-toc-video-based">Video-Based</a>    <ul>
+      <li><a href="#tracking" id="markdown-toc-tracking">Tracking</a></li>
+      <li><a href="#frame-sequence" id="markdown-toc-frame-sequence">Frame Sequence</a></li>
+      <li><a href="#video-colorization" id="markdown-toc-video-colorization">Video Colorization</a></li>
+    </ul>
+  </li>
+  <li><a href="#control-based" id="markdown-toc-control-based">Control-Based</a>    <ul>
+      <li><a href="#multi-view-metric-learning" id="markdown-toc-multi-view-metric-learning">Multi-View Metric Learning</a></li>
+      <li><a href="#autonomous-goal-generation" id="markdown-toc-autonomous-goal-generation">Autonomous Goal Generation</a></li>
+      <li><a href="#bisimulation" id="markdown-toc-bisimulation">Bisimulation</a></li>
+    </ul>
+  </li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="why-self-supervised-learning">Why Self-Supervised Learning?</h2>
+
+<p>Self-supervised learning empowers us to exploit a variety of labels that come with the data for free. The motivation is quite straightforward. Producing a dataset with clean labels is expensive but unlabeled data is being generated all the time. To make use of this much larger amount of unlabeled data, one way is to set the learning objectives properly so as to get supervision from the data itself.</p>
+
+<p>The <em>self-supervised task</em>, also known as <em>pretext task</em>, guides us to a supervised loss function. However, we usually don’t care about the final performance of this invented task. Rather we are interested in the learned intermediate representation with the expectation that this representation can carry good semantic or structural meanings and can be beneficial to a variety of practical downstream tasks.</p>
+
+<p>For example, we might rotate images at random and train a model to predict how each input image is rotated. The rotation prediction task is made-up, so the actual accuracy is unimportant, like how we treat auxiliary tasks. But we expect the model to learn high-quality latent variables for real-world tasks, such as constructing an object recognition classifier with very few labeled samples.</p>
+
+<p>Broadly speaking, all the generative models can be considered as self-supervised, but with different goals: Generative models focus on creating diverse and realistic images, while self-supervised representation learning care about producing good features generally helpful for many tasks. Generative modeling is not the focus of this post, but feel free to check my <a href="https://lilianweng.github.io/lil-log/tag/generative-model">previous posts</a>.</p>
+
+<h2 id="images-based">Images-Based</h2>
+
+<p>Many ideas have been proposed for self-supervised representation learning on images. A common workflow is to train a model on one or multiple pretext tasks with unlabelled images and then use one intermediate feature layer of this model to feed a multinomial logistic regression classifier on ImageNet classification. The final classification accuracy quantifies how good the learned representation is.</p>
+
+<p>Recently, some researchers proposed to train supervised learning on labelled data and self-supervised pretext tasks on unlabelled data simultaneously with shared weights, like in <a href="https://arxiv.org/abs/1905.03670">Zhai et al, 2019</a> and <a href="https://arxiv.org/abs/1909.11825">Sun et al, 2019</a>.</p>
+
+<h3 id="distortion">Distortion</h3>
+
+<p>We expect small distortion on an image does not modify its original semantic meaning or geometric forms. Slightly distorted images are considered the same as original and thus the learned features are expected to be invariant to distortion.</p>
+
+<p><mark><b>Exemplar-CNN</b></mark> (<a href="https://arxiv.org/abs/1406.6909">Dosovitskiy et al., 2015</a>) create surrogate training datasets with unlabeled image patches:</p>
+<ol>
+  <li>Sample \(N\) patches of size 32 × 32 pixels from different images at varying positions and scales, only from regions containing considerable gradients as those areas cover edges and tend to contain objects or parts of objects. They are <em>“exemplary”</em> patches.</li>
+  <li>Each patch is distorted by applying a variety of random transformations (i.e., translation, rotation, scaling, etc.). All the resulting distorted patches are considered to belong to the <em>same surrogate class</em>.</li>
+  <li>The pretext task is to discriminate between a set of surrogate classes. We can arbitrarily create as many surrogate classes as we want.</li>
+</ol>
+
+<p style="width: 60%;" class="center"><img src="/lil-log/assets/images/examplar-cnn.png" alt="Examplar CNN" /></p>
+<p><em>Fig. 2. The original patch of a cute deer is in the top left corner. Random transformations are applied, resulting in a variety of distorted patches. All of them should be classified into the same class in the pretext task. (Image source: <a href="https://arxiv.org/abs/1406.6909">Dosovitskiy et al., 2015</a>)</em></p>
+
+<p><mark><b>Rotation</b></mark> of an entire image (<a href="https://arxiv.org/abs/1803.07728">Gidaris et al. 2018</a> is another interesting and cheap way to modify an input image while the semantic content stays unchanged. Each input image is first rotated by a multiple of \(90^\circ\) at random, corresponding to \([0^\circ, 90^\circ, 180^\circ, 270^\circ]\). The model is trained to predict which rotation has been applied, thus a 4-class classification problem.</p>
+
+<p>In order to identify the same image with different rotations, the model has to learn to recognize high level object parts, such as heads, noses, and eyes, and the relative positions of these parts, rather than local patterns. This pretext task drives the model to learn semantic concepts of objects in this way.</p>
+
+<p style="width: 100%;" class="center"><img src="/lil-log/assets/images/self-sup-rotation.png" alt="Self supervised by rotation prediction" /></p>
+<p><em>Fig. 3. Illustration of self-supervised learning by rotating the entire input images. The model learns to predict which rotation is applied. (Image source: <a href="https://arxiv.org/abs/1803.07728">Gidaris et al. 2018</a>)</em></p>
+
+<h3 id="patches">Patches</h3>
+
+<p>The second category of self-supervised learning tasks extract multiple patches from one image and ask the model to predict the relationship between these patches.</p>
+
+<p><a href="https://arxiv.org/abs/1505.05192">Doersch et al. (2015)</a> formulates the pretext task as predicting the <mark><b>relative position</b></mark> between two random patches from one image. A model needs to understand the spatial context of objects in order to tell the relative position between parts.</p>
+
+<p>The training patches are sampled in the following way:</p>
+<ol>
+  <li>Randomly sample the first patch without any reference to image content.</li>
+  <li>Considering that the first patch is placed in the middle of a 3x3 grid, and the second patch is sampled from its 8 neighboring locations around it.</li>
+  <li>To avoid the model only catching low-level trivial signals, such as connecting a straight line across boundary or matching local patterns, additional noise is introduced by:
+    <ul>
+      <li>Add gaps between patches</li>
+      <li>Small jitters</li>
+      <li>Randomly downsample some patches to as little as 100 total pixels, and then upsampling it, to build robustness to pixelation.</li>
+      <li>Shift green and magenta toward gray or randomly drop 2 of 3 color channels (See <a href="#chromatic-aberration">“chromatic aberration”</a> below)</li>
+    </ul>
+  </li>
+  <li>The model is trained to predict which one of 8 neighboring locations the second patch is selected from, a classification problem over 8 classes.</li>
+</ol>
+
+<p style="width: 80%;" class="center"><img src="/lil-log/assets/images/self-sup-by-relative-position.png" alt="Self-supervised learning by context" /></p>
+<p><em>Fig. 4. Illustration of self-supervised learning by predicting the relative position of two random patches. (Image source: <a href="https://arxiv.org/abs/1505.05192">Doersch et al., 2015</a>)</em></p>
+
+<p><a href="#chromatic-aberration"></a>Other than trivial signals like boundary patterns or textures continuing, another interesting and a bit surprising trivial solution was found, called <a href="https://en.wikipedia.org/wiki/Chromatic_aberration"><em>“chromatic aberration”</em></a>. It is triggered by different focal lengths of lights at different wavelengths passing through the lens. In the process, there might exist small offsets between color channels. Hence, the model can learn to tell the relative position by simply comparing how green and magenta are separated differently in two patches. This is a trivial solution and has nothing to do with the image content. Pre-processing images by shifting green and magenta toward gray or randomly dropping 2 of 3 color channels can avoid this trivial solution.</p>
+
+<p style="width: 50%;" class="center"><img src="/lil-log/assets/images/chromatic-aberration.png" alt="Chromatic aberration" /></p>
+<p><em>Fig. 5. Illustration of how chromatic aberration happens. (Image source: <a href="https://upload.wikimedia.org/wikipedia/commons/a/aa/Chromatic_aberration_lens_diagram.svg">wikipedia</a>)</em></p>
+
+<p>Since we have already set up a 3x3 grid in each image in the above task, why not use all of 9 patches rather than only 2 to make the task more difficult? Following this idea, <a href="https://arxiv.org/abs/1603.09246">Noroozi &amp; Favaro (2016)</a> designed a <mark><b>jigsaw puzzle</b></mark> game as pretext task: The model is trained to place 9 shuffled patches back to the original locations.</p>
+
+<p>A convolutional network processes each patch independently with shared weights and outputs a probability vector per patch index out of a predefined set of permutations. To control the difficulty of jigsaw puzzles, the paper proposed to shuffle patches according to a predefined permutation set and configured the model to predict a probability vector over all the indices in the set.</p>
+
+<p>Because how the input patches are shuffled does not alter the correct order to predict. A potential improvement to speed up training is to use permutation-invariant graph convolutional network (GCN) so that we don’t have to shuffle the same set of patches multiple times, same idea as in this <a href="https://arxiv.org/abs/1911.00025">paper</a>.</p>
+
+<p style="width: 100%;" class="center"><img src="/lil-log/assets/images/self-sup-jigsaw-puzzle.png" alt="Jigsaw puzzle" /></p>
+<p><em>Fig. 6. Illustration of self-supervised learning by solving jigsaw puzzle. (Image source: <a href="https://arxiv.org/abs/1603.09246">Noroozi &amp; Favaro, 2016</a>)</em></p>
+
+<p>Another idea is to consider “feature” or “visual primitives” as a scalar-value attribute that can be summed up over multiple patches and compared across different patches. Then the relationship between patches can be defined by <mark><b>counting features</b></mark> and simple arithmetic (<a href="https://arxiv.org/abs/1708.06734">Noroozi, et al, 2017</a>).</p>
+
+<p>The paper considers two transformations:</p>
+<ol>
+  <li><em>Scaling</em>:  If an image is scaled up by 2x, the number of visual primitives should stay the same.</li>
+  <li><em>Tiling</em>: If an image is tiled into a 2x2 grid, the number of visual primitives is expected to be the sum, 4 times the original feature counts.</li>
+</ol>
+
+<p>The model learns a feature encoder \(\phi(.)\) using the above feature counting relationship. Given an input image \(\mathbf{x} \in \mathbb{R}^{m \times n \times 3}\), considering two types of transformation operators:</p>
+<ol>
+  <li>Downsampling operator, \(D: \mathbb{R}^{m \times n \times 3} \mapsto \mathbb{R}^{\frac{m}{2} \times \frac{n}{2} \times 3}\): downsample by a factor of 2</li>
+  <li>Tiling operator \(T_i: \mathbb{R}^{m \times n \times 3} \mapsto \mathbb{R}^{\frac{m}{2} \times \frac{n}{2} \times 3}\): extract the \(i\)-th tile from a 2x2 grid of the image.</li>
+</ol>
+
+<p>We expect to learn:</p>
+  </div>
+
+
+
+
+
+
+
+
+    </main>
+
+    <div style="clear: both;"/>
+<footer class="site-footer">
+    2020 &copy; Built or inspired by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a>, <a href="https://github.com/jekyll/minima/" target="_blank">minima</a>, and  <a href="https://github.com/lilianweng./tree/gh-pages" target="_blank">Lilianweng</a></a>
+
+    <p>
+
+        <a href="https://scholar.google.com/citations?user=TcK2JhcAAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="./assets/images/logo_scholar.jpeg" />
+        </a>
+        <a href="https://www.linkedin.com/in/kai-zhen-01b7b5103/" target="_blank">
+            <img src="./assets/images/logo_linkedin.png" />
+        </a>
+
+    </p>
+</footer>
+
+
+  </body>
+
+</html>
