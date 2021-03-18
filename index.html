@@ -36,10 +36,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
+
 <link rel="stylesheet" href="assets/css/arlington.css" />
 <link rel="stylesheet" href="assets/css/washingtonpost.css" />
 <link rel="stylesheet" href="assets/css/sub.css" />
-	
+	<link rel="stylesheet" href="assets/css/slideshow.css" />
+
+
+
+<script>
+	var slideIndex = 1;
+showSlides(slideIndex);
+
+
+// Thumbnail image controls
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("dot");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+}
+</script>
+
 
 <!--
 <link rel="stylesheet"  media="screen and (max-width: 1680px)" href="assets/css/sub.css" />
@@ -49,15 +80,15 @@
 <link rel="stylesheet" type="text/css" href="assets/css/fibonacci.css">
 <link rel="stylesheet" href="assets/css/sub.css" />
 
--->
 
 	<link rel="stylesheet"
 	      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
 	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
 </head>
 
+-->
   <div align="center">
-    <img src="head_2021.jpg" style="width: 55vw; min-width: 330px;">    
+    <img src="head_2021.jpg" style="width: 55vw; min-width: 330px;">
      <SPAN STYLE="font-size:.0pt"><BR></SPAN>
     <b><font size="6">Kai Zhen</font></b>
   </div>
@@ -163,6 +194,53 @@ During my Ph.D. study with Minje's supervision, I proposed a very compact neural
 </div>
 -->
 
+
+<div style="margin-left: 350px;">
+  <span class="dot" onclick="currentSlide(1)"></span>
+  <span class="dot" onclick="currentSlide(2)"></span>
+  <span class="dot" onclick="currentSlide(3)"></span>
+</div>
+<div class="slideshow-container">
+
+  <!-- Full-width images with number and caption text -->
+  <div class="mySlides fade">
+    <div class="numbertext">1 / 3</div>
+	  <a href="default.asp">
+
+		  <a href="dccrn.html"> <img src="assets/dccrn-2.png" style="width: 25vw;"></a>
+		  <a href="dccrn.html"> <figcaption style="margin-left: 50px;">Context aggregation with dilated CNN is ubiquitous: check out our hybrid model with only 1.38M parameters.</figcaption></a>
+	  </a>
+
+  </div>
+
+  <div class="mySlides fade">
+    <div class="numbertext">2 / 3</div>
+	  <a href="neural-audio-coding.html"> <img src="assets/audio_coding_artifact.gif" style="width: 25vw;">
+    <figcaption style="margin-left: 50px;">Artifacts can be harmless if they are inaudible. Can psychoacoustics be leveraged in contemporary models? <br> Check out our  neural audio coding project!</figcaption></a>
+  </div>
+
+  <div class="mySlides fade">
+    <div class="numbertext">3 / 3</div>
+    <a href="default.asp">
+		<a href="https://saige.sice.indiana.edu/research-projects/neural-audio-coding/"><img src="assets/nsc.png" style="width: 25vw;">
+		 <figcaption style="margin-left: 50px;margin-top: 10px;">Efficient neural speech coding: see what we can do with a tiny neural codec with 0.35M parameters!</figcaption></a>
+	</a>
+    <div class="text">Caption Three</div>
+
+
+
+	  <script>
+currentSlide(2)
+		</script>
+</div>
+<br>
+
+<!-- The dots/circles -->
+
+
+
+
+
 <b><font size="4">Publications</font></b> 
 <br>
 <em>
@@ -179,7 +257,7 @@ During my Ph.D. study with Minje's supervision, I proposed a very compact neural
 
  <b class="label label-conference">C-005</b>  <b>Kai Zhen</b>, Hieu Duy Nguyen, Feng-Ju (Claire) Chang, Athanasios Mouchtaris, and Ariya Rastrow, "<b>Sparsification via Compressed Sensing for Automatic Speech Recognition</b>," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i>,Toronto, ON, Canada, June 6-12, 2021. <br>
 <!--<a href="http://kaizhen.us/pub/cs-poster.png">[poster]</a>-->
-	<a href="https://assets.amazon.science/d1/3e/1301067541d0ac20abbcfe0d93d5/sparsification-via-compressed-sensing-for-automatic-speech-recognition.pdf">[pdf]</a> <br><i>&#42;From the summer internship with Amazon</i>
+	<a href="https://assets.amazon.science/d1/3e/1301067541d0ac20abbcfe0d93d5/sparsification-via-compressed-sensing-for-automatic-speech-recognition.pdf">[pdf]</a> <br><i>&#42;from the summer internship with Amazon</i>
 </p>
 
 <b class="label label-conference">C-004</b>  Haici Yang, <b>Kai Zhen</b>, Seungkwon Beack, Minje Kim, "<b>Source-Aware Neural Speech Coding for Noisy Speech Compression</b>," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i>,Toronto, ON, Canada, June 6-12, 2021. <br>
