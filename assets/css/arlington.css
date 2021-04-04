@@ -37,6 +37,20 @@ a:focus {
   outline: none;
 }
 
+
+navline {
+    font-size: 1.2rem;
+}
+navline::before,
+navline::after {
+    display: inline-block;
+    content: "";
+    border-top: .1rem solid black;
+    width: 10rem;
+    margin: 0 2rem;
+    transform: translateY(-0.2rem);
+}
+
 h1,
 h2,
 h3,
