@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a89bea6d-a7bf-4255-bd47-37002d6a5b5f" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/css/arlington.css" afterPath="$PROJECT_DIR$/assets/css/arlington.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demos.html" afterPath="$PROJECT_DIR$/demos.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/presentations.html" afterPath="$PROJECT_DIR$/presentations.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/publications.html" afterPath="$PROJECT_DIR$/publications.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -27,8 +32,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="281">
-              <caret line="143" column="5" lean-forward="false" selection-start-line="143" selection-start-column="5" selection-end-line="143" selection-end-column="5" />
+            <state relative-caret-position="462">
+              <caret line="96" column="0" lean-forward="true" selection-start-line="89" selection-start-column="10" selection-end-line="96" selection-end-column="0" />
               <folding>
                 <element signature="n#style#0;n#img#0;n#div#0;n#head#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#STYLE#0;n#SPAN#0;n#div#0;n#head#0;n#html#0;n#!!top" expanded="true" />
@@ -36,17 +41,17 @@
                 <element signature="n#style#0;n#ul#0;n#li#0;n#ul#0;n#div#1;n#div#5;n#head#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#ul#0;n#head#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#ul#1;n#head#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="e#7897#7903#0" expanded="true" />
+                <element signature="e#8133#8139#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="arlington.css" pinned="false" current-in-tab="true">
+      <file leaf-file-name="arlington.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/assets/css/arlington.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="406">
-              <caret line="47" column="27" lean-forward="false" selection-start-line="47" selection-start-column="27" selection-end-line="47" selection-end-column="27" />
+            <state relative-caret-position="249">
+              <caret line="44" column="14" lean-forward="false" selection-start-line="44" selection-start-column="14" selection-end-line="44" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -55,8 +60,8 @@
       <file leaf-file-name="demos.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/demos.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="68" />
+            <state relative-caret-position="285">
+              <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
               <folding>
                 <element signature="n#STYLE#0;n#SPAN#0;n#div#0;n#!!top" expanded="true" />
               </folding>
@@ -67,8 +72,8 @@
       <file leaf-file-name="presentations.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/presentations.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="285">
+              <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
               <folding>
                 <element signature="n#STYLE#0;n#SPAN#0;n#div#0;n#!!top" expanded="true" />
               </folding>
@@ -76,11 +81,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="publications.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="publications.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/publications.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="38">
-              <caret line="2" column="30" lean-forward="false" selection-start-line="2" selection-start-column="30" selection-end-line="2" selection-end-column="30" />
+            <state relative-caret-position="285">
+              <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
               <folding>
                 <element signature="n#STYLE#0;n#SPAN#0;n#div#0;n#!!top" expanded="true" />
               </folding>
@@ -191,11 +196,11 @@
         <option value="$PROJECT_DIR$/index_old_fancy.html" />
         <option value="$PROJECT_DIR$/assets/css/slideshow.css" />
         <option value="$PROJECT_DIR$/index3.html" />
-        <option value="$PROJECT_DIR$/demos.html" />
-        <option value="$PROJECT_DIR$/publications.html" />
         <option value="$PROJECT_DIR$/index.html" />
-        <option value="$PROJECT_DIR$/presentations.html" />
         <option value="$PROJECT_DIR$/assets/css/arlington.css" />
+        <option value="$PROJECT_DIR$/demos.html" />
+        <option value="$PROJECT_DIR$/presentations.html" />
+        <option value="$PROJECT_DIR$/publications.html" />
       </list>
     </option>
   </component>
@@ -546,7 +551,7 @@
             <element signature="n#style#0;n#ul#0;n#li#0;n#ul#0;n#div#1;n#div#5;n#head#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ul#0;n#head#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ul#1;n#head#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#7897#7903#0" expanded="true" />
+            <element signature="e#8133#8139#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -633,7 +638,7 @@
             <element signature="n#style#0;n#ul#0;n#li#0;n#ul#0;n#div#1;n#div#5;n#head#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ul#0;n#head#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ul#1;n#head#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#7897#7903#0" expanded="true" />
+            <element signature="e#8133#8139#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -720,7 +725,7 @@
             <element signature="n#style#0;n#ul#0;n#li#0;n#ul#0;n#div#1;n#div#5;n#head#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ul#0;n#head#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ul#1;n#head#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#7897#7903#0" expanded="true" />
+            <element signature="e#8133#8139#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -792,7 +797,7 @@
             <element signature="n#style#0;n#ul#0;n#li#0;n#ul#0;n#div#1;n#div#5;n#head#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ul#0;n#head#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ul#1;n#head#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#7897#7903#0" expanded="true" />
+            <element signature="e#8133#8139#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -916,10 +921,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/assets/css/arlington.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="44" column="14" lean-forward="false" selection-start-line="44" selection-start-column="14" selection-end-line="44" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="143" column="5" lean-forward="false" selection-start-line="143" selection-start-column="5" selection-end-line="143" selection-end-column="5" />
+        <state relative-caret-position="462">
+          <caret line="96" column="0" lean-forward="true" selection-start-line="89" selection-start-column="10" selection-end-line="96" selection-end-column="0" />
           <folding>
             <element signature="n#style#0;n#img#0;n#div#0;n#head#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#STYLE#0;n#SPAN#0;n#div#0;n#head#0;n#html#0;n#!!top" expanded="true" />
@@ -927,25 +940,15 @@
             <element signature="n#style#0;n#ul#0;n#li#0;n#ul#0;n#div#1;n#div#5;n#head#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ul#0;n#head#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ul#1;n#head#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#7897#7903#0" expanded="true" />
+            <element signature="e#8133#8139#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/demos.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="68" />
-          <folding>
-            <element signature="n#STYLE#0;n#SPAN#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/publications.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="30" lean-forward="false" selection-start-line="2" selection-start-column="30" selection-end-line="2" selection-end-column="30" />
+        <state relative-caret-position="285">
+          <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
           <folding>
             <element signature="n#STYLE#0;n#SPAN#0;n#div#0;n#!!top" expanded="true" />
           </folding>
@@ -954,19 +957,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/presentations.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="285">
+          <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
           <folding>
             <element signature="n#STYLE#0;n#SPAN#0;n#div#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/css/arlington.css">
+    <entry file="file://$PROJECT_DIR$/publications.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="406">
-          <caret line="47" column="27" lean-forward="false" selection-start-line="47" selection-start-column="27" selection-end-line="47" selection-end-column="27" />
-          <folding />
+        <state relative-caret-position="285">
+          <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding>
+            <element signature="n#STYLE#0;n#SPAN#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
