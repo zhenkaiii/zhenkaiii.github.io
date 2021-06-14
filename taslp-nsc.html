@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="assets/css/fibonacci.css">
+	<link rel="stylesheet"
+	      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+</head>
+<body>
+
+<header class="header">
+	<a href="index.html" class="logo">
+		back
+	</a>
+</header>
+
+	<style>
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 1px;
+}
+
+
+
+tr:nth-child(even) {
+  background-color: #1E1E1E;
+  opacity: 1;
+}
+ 
+
+</style>
+
+<main class="main post-detail">
+	<article>
+		<header>
+			<!--
+			<div class="author">
+				<img src="images/head.jpg" width="80"/>
+				<span>Kai Zhen</span>
+				<span class="role"></span>
+			</div>
+		
+
+			<h2>End-to-End Monaural Speech Enhancement with Dual-Staged Context Aggregation</h2>-->
+			<h2>Scalable and Efficient Neural Speech Coding: a Hybrid Design</h2>
+			
+			<h1></h1>
+		</header>
+
+		<blockquote>
+            <p>We propose a scalable and efficient neural speech codec. Through a hybrid design, both LPC and residual coding are integrated in network training.</p>
+            <p>List of strengths:</p>
+            <ul class="container">
+                <li>It's efficient</li>
+                <ul class="container">
+                    <li>Our neural codec is based on a lightweight neural speech coding module (NSC) with only 0.35 million parameters.</li>
+                    <li>The decoder of NSC contains only 0.12 million parameters which is 100x smaller than a WaveNet decoder.</li>
+                    <li>It can run on a single core CPU without further hardware adapted optimization, such as network pruning and quantization. The processing (encoding and decoding) time is less than the utterance duration. </li>
+                </ul>
+
+                <li>It's scalable</li>
+                <ul class="container">
+                    <li>Unlike neural vocoders, our codec conducts waveform coding, supporting a wide range of bitrates from 12 to 32 kbps.</li>
+                    <li>The speech coding performance is comparable or superior to AMR-WB and Opus, both operating at the same or higher bitrates.</li>
+                </ul>
+            </ul>
+
+            <p>List of limitations:</p>
+            <ul class="container">
+                    <li>Although it is significantly smaller than other neural vocoders,
+                        its runtime complexity is still higher than traditional codecs such as AMR-WB. To meet the case of edge applications, the model weights may need
+                    to be quantized and pruned. </li>
+            </ul>
+
+        </blockquote>
+
+		
+
+
+		
+		<figure>
+			<center>
+			<img src="assets/nsc-journal.png" style="width:60%;">
+			</center>
+			<figcaption>
+			</figcaption>
+		</figure>
+
+		
+
+		
+
+
+		<h3>Decoded Speech Samples</h3>
+
+
+		<ul><h4><li>Speaker: DR5-MBPM0</li></h4></ul>
+<table>
+  <tr>
+    <th>Models</th>
+    <th>~12 kbps</th>
+    <th>~20 kbps</th>
+    <th>~32 kbps</th>
+  </tr>
+
+<tr>
+    <td><font color="white">Reference</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/d/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/d/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/d/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+</tr>
+
+
+        <td>LP-4K</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/k/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/k/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/k/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+</tr>
+
+<tr>
+    <td><font color="white">Model-I</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/7/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/8/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/9/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+
+  <tr>
+    <td>Model-II</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/6/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/5/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/4/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+  <tr>
+    <td><font color="white">Model-III</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/1/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/2/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/3/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+  <tr>
+    <td>Model-IV</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/aa/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/aa/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/a/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  <tr>
+    <td><font color="white">AMR-WB</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/b/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/c/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/cc/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+<tr>
+    <td>OPUS</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/e/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/f/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/g/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+
+</tr>
+</table>
+
+
+
+
+        <ul><h4><li>Speaker: DR8-FJSJ0</li></h4></ul>
+<table>
+  <tr>
+    <th>Models</th>
+    <th>~12 kbps</th>
+    <th>~20 kbps</th>
+    <th>~32 kbps</th>
+  </tr>
+
+<tr>
+    <td><font color="white">Reference</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/d/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/d/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/d/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+</tr>
+
+
+        <td>LP-4K</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/k/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/k/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/k/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+</tr>
+
+<tr>
+    <td><font color="white">Model-I</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/7/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/8/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/9/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+
+  <tr>
+    <td>Model-II</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/6/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/5/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/4/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+  <tr>
+    <td><font color="white">Model-III</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/1/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/2/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/3/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+  <tr>
+    <td>Model-IV</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/aa/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/aa/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/a/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  <tr>
+    <td><font color="white">AMR-WB</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/b/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/c/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/cc/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+<tr>
+    <td>OPUS</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/e/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/f/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/g/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+
+</tr>
+</table>
+
+        <p>MUSHRA sessions: try it for yourself:)</p>
+<ul class="container">
+
+    <li><a href="http://kaizhen.us/beaqlejs/session_low_i.html">http://kaizhen.us/beaqlejs/session_low_i.html</a></li>
+    <li><a href="http://kaizhen.us/beaqlejs/session_low_ii.html">http://kaizhen.us/beaqlejs/session_low_ii.html</a></li>
+    <li><a href="http://kaizhen.us/beaqlejs/session_mid_i.html">http://kaizhen.us/beaqlejs/session_mid_i.html</a></li>
+    <li><a href="http://kaizhen.us/beaqlejs/session_mid_ii.html">http://kaizhen.us/beaqlejs/session_mid_ii.html</a></li>
+    <li><a href="http://kaizhen.us/beaqlejs/session_high_i.html">http://kaizhen.us/beaqlejs/session_high_i.html</a></li>
+    <li><a href="http://kaizhen.us/beaqlejs/session_high_ii.html">http://kaizhen.us/beaqlejs/session_high_ii.html</a></li>
+</ul>
+
+
+
+
+<hr>
+	</article>
+</main>
+
+<footer class="footer">
+	&copy; Tomorrow &middot; is another day.
+</footer>
+<script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>
