@@ -1,0 +1,242 @@
+<ul><h4><li>Speaker: DR5-MBPM0</li></h4></ul>
+<table>
+  <tr>
+    <th>Models</th>
+    <th>~12 kbps</th>
+    <th>~20 kbps</th>
+    <th>~32 kbps</th>
+  </tr>
+
+<tr>
+    <td><font color="white">Reference</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/d/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/d/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/d/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+</tr>
+
+
+        <td>LP-4K</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/k/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/k/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/k/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+</tr>
+
+<tr>
+    <td><font color="white">Model-I</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/7/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/8/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/9/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+
+  <tr>
+    <td>Model-II</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/6/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/5/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/4/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+  <tr>
+    <td><font color="white">Model-III</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/1/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/2/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/3/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+  <tr>
+    <td>Model-IV</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/aa/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/aa/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/a/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  <tr>
+    <td><font color="white">AMR-WB</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/b/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/c/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/cc/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+<tr>
+    <td>OPUS</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/e/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/f/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/g/DR5-MBPM0-SA1.wav" type="audio/mpeg">
+</audio></td>
+
+</tr>
+</table>
+
+
+
+
+        <ul><h4><li>Speaker: DR8-FJSJ0</li></h4></ul>
+<table>
+  <tr>
+    <th>Models</th>
+    <th>~12 kbps</th>
+    <th>~20 kbps</th>
+    <th>~32 kbps</th>
+  </tr>
+
+<tr>
+    <td><font color="white">Reference</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/d/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/d/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/d/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+</tr>
+
+
+        <td>LP-4K</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/k/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/k/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/k/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+</tr>
+
+<tr>
+    <td><font color="white">Model-I</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/7/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/8/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/9/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+
+  <tr>
+    <td>Model-II</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/6/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/5/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/4/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+  <tr>
+    <td><font color="white">Model-III</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/1/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/2/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/3/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+  <tr>
+    <td>Model-IV</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/aa/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/aa/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/a/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+  <tr>
+    <td><font color="white">AMR-WB</font></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/b/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/c/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/cc/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+  </tr>
+
+
+<tr>
+    <td>OPUS</td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/e/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+    <td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/f/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+<td><audio controls style="width: 240px;">
+  <source src="beaqlejs/taslp_samples/g/DR8-FJSJ0-SX44.wav" type="audio/mpeg">
+</audio></td>
+
+</tr>
+</table>
