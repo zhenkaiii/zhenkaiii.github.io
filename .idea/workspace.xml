@@ -17,8 +17,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="86" column="95" lean-forward="false" selection-start-line="86" selection-start-column="95" selection-end-line="86" selection-end-column="95" />
+            <state relative-caret-position="289">
+              <caret line="367" column="9" lean-forward="false" selection-start-line="367" selection-start-column="9" selection-end-line="367" selection-end-column="9" />
               <folding>
                 <element signature="n#style#0;n#img#0;n#div#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#1;n#html#0;n#!!top" expanded="true" />
@@ -128,7 +128,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>image-caption</find>
       <find>a:hover</find>
       <find>center</find>
       <find>font-family</find>
@@ -158,6 +157,7 @@
       <find>size</find>
       <find>font-size</find>
       <find>@iu.edu</find>
+      <find>2021</find>
     </findStrings>
     <replaceStrings>
       <replace>style=&quot;width: 55vw; min-width: 330px;&quot;</replace>
@@ -866,8 +866,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="86" column="95" lean-forward="false" selection-start-line="86" selection-start-column="95" selection-end-line="86" selection-end-column="95" />
+        <state relative-caret-position="289">
+          <caret line="367" column="9" lean-forward="false" selection-start-line="367" selection-start-column="9" selection-end-line="367" selection-end-column="9" />
           <folding>
             <element signature="n#style#0;n#img#0;n#div#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#1;n#html#0;n#!!top" expanded="true" />
