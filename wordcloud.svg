@@ -1,0 +1,1341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="900">
+<defs>
+<style type="text/css"> @import url(https://fonts.googleapis.com/css2?family=Actor:wght@400&amp;display=swap); </style>
+</defs>
+<g>
+<g transform="translate(798,448) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="90.1916px" font-style="normal" font-weight="normal" x="-118.78021240234375" y="-36.07662240000001" text-anchor="start" dominant-baseline="alphabetic">neural</text>
+</g>
+<g transform="translate(800,590) rotate(7.809068994366594,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="80.1703px" font-style="normal" font-weight="normal" x="-118.33089447021484" y="-32.068108800000005" text-anchor="start" dominant-baseline="alphabetic">speech</text>
+</g>
+<g transform="translate(794,278) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="75.1596px" font-style="normal" font-weight="normal" x="-108.89232635498047" y="-30.063852000000004" text-anchor="start" dominant-baseline="alphabetic">codecs</text>
+</g>
+<g transform="translate(798,214) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="65.1383px" font-style="normal" font-weight="normal" x="-176.4696502685547" y="-26.055338400000007" text-anchor="start" dominant-baseline="alphabetic">optimization</text>
+</g>
+<g transform="translate(758,624) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="60.1277px" font-style="normal" font-weight="normal" x="-97.39435577392578" y="-24.051081600000003" text-anchor="start" dominant-baseline="alphabetic">bitrates</text>
+</g>
+<g transform="translate(780,380) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="45.0958px" font-style="normal" font-weight="normal" x="-121.04405975341797" y="-18.038311200000006" text-anchor="start" dominant-baseline="alphabetic">quantization</text>
+</g>
+<g transform="translate(616,450) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="40.0851px" font-style="normal" font-weight="normal" x="-93.9675064086914" y="-16.034054400000002" text-anchor="start" dominant-baseline="alphabetic">complexity</text>
+</g>
+<g transform="translate(994,450) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="40.0851px" font-style="normal" font-weight="normal" x="-89.17794799804688" y="-16.034054400000002" text-anchor="start" dominant-baseline="alphabetic">perceptual</text>
+</g>
+<g transform="translate(958,410) rotate(-5.047323691610691,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="35.0745px" font-style="normal" font-weight="normal" x="-42.978240966796875" y="-14.029797600000002" text-anchor="start" dominant-baseline="alphabetic">signal</text>
+</g>
+<g transform="translate(958,260) rotate(41.53888342725792,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="30.0639px" font-style="normal" font-weight="normal" x="-72.51971435546875" y="-12.025540800000002" text-anchor="start" dominant-baseline="alphabetic">parameters</text>
+</g>
+<g transform="translate(820,522) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="30.0639px" font-style="normal" font-weight="normal" x="-61.863441467285156" y="-12.025540800000002" text-anchor="start" dominant-baseline="alphabetic">denoising</text>
+</g>
+<g transform="translate(618,406) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="25.0532px" font-style="normal" font-weight="normal" x="-63.739654541015625" y="-10.021284000000001" text-anchor="start" dominant-baseline="alphabetic">applications</text>
+</g>
+<g transform="translate(598,470) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="25.0532px" font-style="normal" font-weight="normal" x="-67.29674530029297" y="-10.021284000000001" text-anchor="start" dominant-baseline="alphabetic">compression</text>
+</g>
+<g transform="translate(936,592) rotate(-41.30084236806918,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="25.0532px" font-style="normal" font-weight="normal" x="-61.209617614746094" y="-10.021284000000001" text-anchor="start" dominant-baseline="alphabetic">end-to-end</text>
+</g>
+<g transform="translate(672,566) rotate(-89.25528652624713,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="25.0532px" font-style="normal" font-weight="normal" x="-41.019317626953125" y="-10.021284000000001" text-anchor="start" dominant-baseline="alphabetic">training</text>
+</g>
+<g transform="translate(784,338) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="25.0532px" font-style="normal" font-weight="normal" x="-38.90260314941406" y="-10.021284000000001" text-anchor="start" dominant-baseline="alphabetic">devices</text>
+</g>
+<g transform="translate(994,474) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="25.0532px" font-style="normal" font-weight="normal" x="-35.984283447265625" y="-10.021284000000001" text-anchor="start" dominant-baseline="alphabetic">quality</text>
+</g>
+<g transform="translate(800,694) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="25.0532px" font-style="normal" font-weight="normal" x="-41.896087646484375" y="-10.021284000000001" text-anchor="start" dominant-baseline="alphabetic">weights</text>
+</g>
+<g transform="translate(950,374) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="25.0532px" font-style="normal" font-weight="normal" x="-35.65863037109375" y="-10.021284000000001" text-anchor="start" dominant-baseline="alphabetic">coding</text>
+</g>
+<g transform="translate(1070,470) rotate(-32.68453336308272,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="20.0426px" font-style="normal" font-weight="normal" x="-51.83918762207031" y="-8.0199951171875" text-anchor="start" dominant-baseline="alphabetic">perceptually</text>
+</g>
+<g transform="translate(800,716) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="20.0426px" font-style="normal" font-weight="normal" x="-46.175071716308594" y="-8.0199951171875" text-anchor="start" dominant-baseline="alphabetic">techniques</text>
+</g>
+<g transform="translate(576,488) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="20.0426px" font-style="normal" font-weight="normal" x="-38.66636657714844" y="-8.0199951171875" text-anchor="start" dominant-baseline="alphabetic">objective</text>
+</g>
+<g transform="translate(624,380) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="20.0426px" font-style="normal" font-weight="normal" x="-34.325538635253906" y="-8.0199951171875" text-anchor="start" dominant-baseline="alphabetic">learning</text>
+</g>
+<g transform="translate(694,534) rotate(-75.0432974728619,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="20.0426px" font-style="normal" font-weight="normal" x="-20.811859130859375" y="-8.0199951171875" text-anchor="start" dominant-baseline="alphabetic">error</text>
+</g>
+<g transform="translate(870,436) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="20.0426px" font-style="normal" font-weight="normal" x="-29.543624877929688" y="-8.0199951171875" text-anchor="start" dominant-baseline="alphabetic">human</text>
+</g>
+<g transform="translate(756,436) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="20.0426px" font-style="normal" font-weight="normal" x="-15.518684387207031" y="-8.0199951171875" text-anchor="start" dominant-baseline="alphabetic">low</text>
+</g>
+<g transform="translate(802,732) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-46.52532196044922" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">computational</text>
+</g>
+<g transform="translate(940,608) rotate(-55.413130359985026,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-37.958221435546875" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">architecture</text>
+</g>
+<g transform="translate(838,212) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-41.460205078125" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">conventional</text>
+</g>
+<g transform="translate(688,624) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-43.752296447753906" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">enhancement</text>
+</g>
+<g transform="translate(740,212) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-40.07746124267578" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">outperforms</text>
+</g>
+<g transform="translate(802,432) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-29.030410766601562" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">literature</text>
+</g>
+<g transform="translate(850,332) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-26.48284149169922" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">efficient</text>
+</g>
+<g transform="translate(716,336) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-27.14415740966797" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">example</text>
+</g>
+<g transform="translate(758,572) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-21.372634887695312" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">million</text>
+</g>
+<g transform="translate(1026,408) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-26.535438537597656" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">problem</text>
+</g>
+<g transform="translate(948,452) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-24.05548095703125" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">process</text>
+</g>
+<g transform="translate(640,560) rotate(-64.92301182038544,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-24.491371154785156" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">pruning</text>
+</g>
+<g transform="translate(882,588) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-21.553001403808594" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">signals</text>
+</g>
+<g transform="translate(798,752) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-29.646644592285156" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">AMR-WB</text>
+</g>
+<g transform="translate(920,536) rotate(62.15907448519207,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-19.62165069580078" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">better</text>
+</g>
+<g transform="translate(904,340) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-23.769912719726562" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">employ</text>
+</g>
+<g transform="translate(636,360) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-24.341064453125" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">scheme</text>
+</g>
+<g transform="translate(1020,388) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-20.508407592773438" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">simply</text>
+</g>
+<g transform="translate(652,416) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-16.645713806152344" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">clean</text>
+</g>
+<g transform="translate(980,412) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-15.713851928710938" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">large</text>
+</g>
+<g transform="translate(766,408) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-13.376678466796875" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">cost</text>
+</g>
+<g transform="translate(992,488) rotate(44.77018990786229,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-14.316070556640625" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">data</text>
+</g>
+<g transform="translate(726,436) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-13.93280029296875" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">high</text>
+</g>
+<g transform="translate(872,556) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-11.753448486328125" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">less</text>
+</g>
+<g transform="translate(874,604) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-14.436302185058594" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">time</text>
+</g>
+<g transform="translate(1052,456) rotate(-26.379515629997403,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-15.172775268554688" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">wide</text>
+</g>
+<g transform="translate(512,450) rotate(36.88233628105018,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-13.384208679199219" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">DSP</text>
+</g>
+<g transform="translate(854,396) rotate(-30.30168915588711,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="15.0319px" font-style="normal" font-weight="normal" x="-12.369674682617188" y="-6.012770400000001" text-anchor="start" dominant-baseline="alphabetic">LPC</text>
+</g>
+<g transform="translate(652,264) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-37.64000701904297" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">resource-efficient</text>
+</g>
+<g transform="translate(552,500) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-36.031837463378906" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">implementations</text>
+</g>
+<g transform="translate(682,632) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-31.262298583984375" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">representation</text>
+</g>
+<g transform="translate(1048,508) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-28.997787475585938" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">convolutional</text>
+</g>
+<g transform="translate(800,144) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-25.631088256835938" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">significantly</text>
+</g>
+<g transform="translate(528,414) rotate(-35.03690336822167,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-25.560935974121094" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">consistently</text>
+</g>
+<g transform="translate(1058,496) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-26.272354125976562" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">contribution</text>
+</g>
+<g transform="translate(506,456) rotate(41.6837714554293,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-28.005828857421875" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">experimental</text>
+</g>
+<g transform="translate(926,260) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-30.606002807617188" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">mean-squared</text>
+</g>
+<g transform="translate(660,252) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-24.85955047607422" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">significance</text>
+</g>
+<g transform="translate(1076,484) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-24.46875762939453" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">approaches</text>
+</g>
+<g transform="translate(658,240) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-26.65813446044922" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">components</text>
+</g>
+<g transform="translate(616,276) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-25.41565704345703" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">compressed</text>
+</g>
+<g transform="translate(980,576) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-20.510887145996094" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">efficiency</text>
+</g>
+<g transform="translate(552,512) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-20.42070770263672" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">especially</text>
+</g>
+<g transform="translate(798,760) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-22.099044799804688" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">integrated</text>
+</g>
+<g transform="translate(662,228) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-22.930702209472656" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">operations</text>
+</g>
+<g transform="translate(1088,472) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-19.994842529296875" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">particular</text>
+</g>
+<g transform="translate(590,294) rotate(-17.055432009994714,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-22.59502410888672" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">processing</text>
+</g>
+<g transform="translate(668,216) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-21.122085571289062" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">structures</text>
+</g>
+<g transform="translate(754,694) rotate(10.082373700384503,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-22.70024871826172" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">topologies</text>
+</g>
+<g transform="translate(860,148) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-21.352569580078125" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">degrading</text>
+</g>
+<g transform="translate(858,696) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-18.52691650390625" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">effective</text>
+</g>
+<g transform="translate(606,252) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-22.65015411376953" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">emphasize</text>
+</g>
+<g transform="translate(1048,308) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-21.132110595703125" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">frequency</text>
+</g>
+<g transform="translate(926,248) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-19.183250427246094" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">inaudible</text>
+</g>
+<g transform="translate(752,152) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-20.300453186035156" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">perceived</text>
+</g>
+<g transform="translate(536,316) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-20.60106658935547" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">questions</text>
+</g>
+<g transform="translate(592,264) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-20.230316162109375" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">threshold</text>
+</g>
+<g transform="translate(568,284) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-17.374618530273438" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">acoustic</text>
+</g>
+<g transform="translate(544,304) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-20.25035858154297" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">advanced</text>
+</g>
+<g transform="translate(516,328) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-20.626113891601562" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">enhanced</text>
+</g>
+<g transform="translate(736,504) rotate(-7.385656063362639,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-18.076026916503906" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">evaluate</text>
+</g>
+<g transform="translate(636,592) rotate(-34.178974001004924,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-14.799507141113281" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">fidelity</text>
+</g>
+<g transform="translate(976,588) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-17.830535888671875" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">function</text>
+</g>
+<g transform="translate(966,602) rotate(-9.8088726440914,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-19.007888793945312" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">generate</text>
+</g>
+<g transform="translate(948,348) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-17.68024444580078" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">ignoring</text>
+</g>
+<g transform="translate(672,448) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-16.848587036132812" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">infusing</text>
+</g>
+<g transform="translate(608,240) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-17.74034881591797" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">ordinary</text>
+</g>
+<g transform="translate(952,204) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-17.234359741210938" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">possible</text>
+</g>
+<g transform="translate(520,488) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-16.327545166015625" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">residual</text>
+</g>
+<g transform="translate(940,626) rotate(-49.87312655244621,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-19.18323516845703" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">response</text>
+</g>
+<g transform="translate(616,228) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-16.928756713867188" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">sensible</text>
+</g>
+<g transform="translate(636,204) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-20.761383056640625" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">showcase</text>
+</g>
+<g transform="translate(998,248) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-15.836570739746094" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">specific</text>
+</g>
+<g transform="translate(968,216) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-21.547935485839844" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">waveform</text>
+</g>
+<g transform="translate(920,236) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-16.05199432373047" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">achieve</text>
+</g>
+<g transform="translate(958,272) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-15.320549011230469" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">audible</text>
+</g>
+<g transform="translate(896,204) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-16.24237060546875" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">balance</text>
+</g>
+<g transform="translate(982,228) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-18.376617431640625" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">compact</text>
+</g>
+<g transform="translate(1050,296) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-18.82752227783203" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">compute</text>
+</g>
+<g transform="translate(864,612) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-13.096107482910156" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">digital</text>
+</g>
+<g transform="translate(1070,320) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-19.22832489013672" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">However</text>
+</g>
+<g transform="translate(624,216) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-17.810508728027344" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">masking</text>
+</g>
+<g transform="translate(1022,268) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-15.591079711914062" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">metrics</text>
+</g>
+<g transform="translate(1086,332) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-18.101097106933594" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">modules</text>
+</g>
+<g transform="translate(500,340) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-16.041969299316406" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">present</text>
+</g>
+<g transform="translate(1036,280) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-16.157203674316406" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">ranging</text>
+</g>
+<g transform="translate(1104,344) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-13.90771484375" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">results</text>
+</g>
+<g transform="translate(472,360) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-16.011924743652344" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">sensing</text>
+</g>
+<g transform="translate(454,378) rotate(-67.09801482585517,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-16.212318420410156" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">shallow</text>
+</g>
+<g transform="translate(1110,458) rotate(-12.998462455678455,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-15.505897521972656" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">spectra</text>
+</g>
+<g transform="translate(532,292) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-17.239364624023438" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">systems</text>
+</g>
+<g transform="translate(554,272) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-14.809516906738281" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">testing</text>
+</g>
+<g transform="translate(700,560) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-12.635185241699219" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">utilize</text>
+</g>
+<g transform="translate(1128,356) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-13.020957946777344" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">global</text>
+</g>
+<g transform="translate(602,412) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-14.388694763183594" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">guided</text>
+</g>
+<g transform="translate(1024,448) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-13.511932373046875" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">higher</text>
+</g>
+<g transform="translate(1060,412) rotate(-16.557396358014184,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-13.431770324707031" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">hybrid</text>
+</g>
+<g transform="translate(850,524) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-11.718360900878906" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">linear</text>
+</g>
+<g transform="translate(816,398) rotate(82.23471739059069,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-16.35761260986328" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">manner</text>
+</g>
+<g transform="translate(1140,368) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-16.683265686035156" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">modern</text>
+</g>
+<g transform="translate(1152,380) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-16.011932373046875" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">module</text>
+</g>
+<g transform="translate(678,644) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-15.185256958007812" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">narrow</text>
+</g>
+<g transform="translate(620,566) rotate(-72.17162496522474,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-14.223335266113281" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">proves</text>
+</g>
+<g transform="translate(1030,254) rotate(-4.47302617249304,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-13.717353820800781" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">simple</text>
+</g>
+<g transform="translate(468,348) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-13.617141723632812" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">sparse</text>
+</g>
+<g transform="translate(662,340) rotate(-16.71595162161764,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-15.3355712890625" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">Speech</text>
+</g>
+<g transform="translate(938,534) rotate(61.84626849741664,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-13.146217346191406" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">added</text>
+</g>
+<g transform="translate(982,564) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-11.843612670898438" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">audio</text>
+</g>
+<g transform="translate(576,380) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-12.529983520507812" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">based</text>
+</g>
+<g transform="translate(714,234) rotate(-47.48401609097071,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-12.429771423339844" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">codec</text>
+</g>
+<g transform="translate(562,256) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-15.926750183105469" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">DCCRN</text>
+</g>
+<g transform="translate(858,232) rotate(53.48716207060253,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-10.596122741699219" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">learn</text>
+</g>
+<g transform="translate(998,366) rotate(25.832558039430175,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-11.9788818359375" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">lower</text>
+</g>
+<g transform="translate(738,704) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-11.362655639648438" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">noise</text>
+</g>
+<g transform="translate(926,412) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-10.42578125" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">scale</text>
+</g>
+<g transform="translate(890,510) rotate(13.259429342008234,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-10.986907958984375" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">small</text>
+</g>
+<g transform="translate(1016,236) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-13.041000366210938" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">sound</text>
+</g>
+<g transform="translate(982,448) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-7.279510498046875" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">still</text>
+</g>
+<g transform="translate(742,612) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-9.999916076660156" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">tract</text>
+</g>
+<g transform="translate(1044,520) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-9.879692077636719" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">valid</text>
+</g>
+<g transform="translate(506,476) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-11.102119445800781" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">vocal</text>
+</g>
+<g transform="translate(916,156) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-12.740394592285156" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">CMRL</text>
+</g>
+<g transform="translate(484,454) rotate(53.944408001420335,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-12.555030822753906" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">DNNs</text>
+</g>
+<g transform="translate(962,376) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-9.999931335449219" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">kbps</text>
+</g>
+<g transform="translate(906,626) rotate(-39.48796993984523,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-8.867683410644531" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">lead</text>
+</g>
+<g transform="translate(860,708) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-9.899742126464844" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">seen</text>
+</g>
+<g transform="translate(1052,276) rotate(65.34122585538408,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-11.457839965820312" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">show</text>
+</g>
+<g transform="translate(914,518) rotate(-47.266117876226886,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-9.29852294921875" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">zero</text>
+</g>
+<g transform="translate(560,412) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-8.592124938964844" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">ASR</text>
+</g>
+<g transform="translate(636,608) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="10.0213px" font-style="normal" font-weight="normal" x="-8.381706237792969" y="-4.008513600000001" text-anchor="start" dominant-baseline="alphabetic">CSP</text>
+</g>
+<g transform="translate(800,492) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-21.20972442626953" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">feature-engineering</text>
+</g>
+<g transform="translate(574,444) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-19.639083862304688" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">compression-error</text>
+</g>
+<g transform="translate(1094,308) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-20.51335906982422" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">telecommunication</text>
+</g>
+<g transform="translate(814,196) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-16.051971435546875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">generalizability</text>
+</g>
+<g transform="translate(820,152) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-17.805442810058594" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">less-complicated</text>
+</g>
+<g transform="translate(990,204) rotate(20.38326262063246,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-17.04387664794922" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">state-of-the-art</text>
+</g>
+<g transform="translate(492,316) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-17.314483642578125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">computationally</text>
+</g>
+<g transform="translate(504,304) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-18.692214965820312" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">cross-component</text>
+</g>
+<g transform="translate(800,384) rotate(-83.70027323063738,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-16.91619873046875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">domain-specific</text>
+</g>
+<g transform="translate(528,280) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-17.492324829101562" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">general-purpose</text>
+</g>
+<g transform="translate(770,196) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-16.34003448486328" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">high-resolution</text>
+</g>
+<g transform="translate(704,394) rotate(81.35534065482763,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-17.261863708496094" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">psychoacoustics</text>
+</g>
+<g transform="translate(682,152) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-16.675682067871094" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">representations</text>
+</g>
+<g transform="translate(1170,388) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-14.9998779296875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">floating-point</text>
+</g>
+<g transform="translate(1054,392) rotate(22.455792945387316,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-14.381111145019531" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">infrastructure</text>
+</g>
+<g transform="translate(688,198) rotate(-24.2675926594516,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-15.350555419921875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">reconstructing</text>
+</g>
+<g transform="translate(954,618) rotate(-44.1829153069365,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-16.309967041015625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">time-frequency</text>
+</g>
+<g transform="translate(566,244) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-16.127098083496094" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">transformation</text>
+</g>
+<g transform="translate(424,386) rotate(69.93718208891718,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-13.69976806640625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">collaborative</text>
+</g>
+<g transform="translate(1106,320) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-15.25537109375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">corresponding</text>
+</g>
+<g transform="translate(700,608) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-14.341049194335938" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">incorporating</text>
+</g>
+<g transform="translate(596,220) rotate(-55.12507206091911,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-16.06450653076172" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">methodologies</text>
+</g>
+<g transform="translate(1088,300) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-14.581527709960938" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">reformulating</text>
+</g>
+<g transform="translate(442,362) rotate(-44.87154372893838,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-15.360595703125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">understanding</text>
+</g>
+<g transform="translate(866,336) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.374641418457031" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">coefficients</text>
+</g>
+<g transform="translate(1120,332) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-13.020927429199219" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">connectivity</text>
+</g>
+<g transform="translate(468,336) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-14.21832275390625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">Conventional</text>
+</g>
+<g transform="translate(476,328) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-14.413703918457031" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">cross-module</text>
+</g>
+<g transform="translate(904,556) rotate(-65.3115032009122,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.602584838867188" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">interactions</text>
+</g>
+<g transform="translate(610,192) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-15.583549499511719" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">mono-channel</text>
+</g>
+<g transform="translate(1136,344) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-13.000869750976562" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">necessitates</text>
+</g>
+<g transform="translate(860,166) rotate(79.08213814065846,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-14.456275939941406" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">speech/audio</text>
+</g>
+<g transform="translate(540,260) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-13.499382019042969" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">transmission</text>
+</g>
+<g transform="translate(618,444) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.064010620117188" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">accordingly</text>
+</g>
+<g transform="translate(822,696) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.818023681640625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">aggregating</text>
+</g>
+<g transform="translate(732,404) rotate(-83.11120779210486,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.908203125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">aggregation</text>
+</g>
+<g transform="translate(794,716) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.104118347167969" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">challenging</text>
+</g>
+<g transform="translate(730,196) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.219337463378906" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">considering</text>
+</g>
+<g transform="translate(1076,286) rotate(32.79967235816247,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.459800720214844" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">constrained</text>
+</g>
+<g transform="translate(566,236) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.850578308105469" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">cornerstone</text>
+</g>
+<g transform="translate(596,204) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-13.704780578613281" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">demonstrate</text>
+</g>
+<g transform="translate(1088,416) rotate(60.85290486674055,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.442268371582031" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">discrepancy</text>
+</g>
+<g transform="translate(986,192) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.61260986328125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">dual-staged</text>
+</g>
+<g transform="translate(1018,224) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.069526672363281" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">effectively</text>
+</g>
+<g transform="translate(796,548) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.250389099121094" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">facilitates</text>
+</g>
+<g transform="translate(1056,260) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-13.582054138183594" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">fundamental</text>
+</g>
+<g transform="translate(524,272) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-14.321014404296875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">improvement</text>
+</g>
+<g transform="translate(570,228) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.650192260742188" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">information</text>
+</g>
+<g transform="translate(804,568) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.6812744140625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">intelligent</text>
+</g>
+<g transform="translate(498,296) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.084068298339844" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">lightweight</text>
+</g>
+<g transform="translate(574,218) rotate(-4.978931992344834,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-14.436264038085938" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">methodology</text>
+</g>
+<g transform="translate(608,184) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-13.078559875488281" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">multi-modal</text>
+</g>
+<g transform="translate(986,184) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.647689819335938" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">outsourcing</text>
+</g>
+<g transform="translate(856,682) rotate(19.219636884263956,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.74786376953125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">predecessor</text>
+</g>
+<g transform="translate(1158,356) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.136665344238281" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">recognition</text>
+</g>
+<g transform="translate(1182,380) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.757904052734375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">Recognition</text>
+</g>
+<g transform="translate(1022,216) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.702766418457031" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">represented</text>
+</g>
+<g transform="translate(892,324) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.661231994628906" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">Scalability</text>
+</g>
+<g transform="translate(1046,240) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.001899719238281" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">traditional</text>
+</g>
+<g transform="translate(1058,252) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-12.963302612304688" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">zero-weight</text>
+</g>
+<g transform="translate(732,378) rotate(-75.27581155704793,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.9517822265625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">affordable</text>
+</g>
+<g transform="translate(1078,272) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.4027099609375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">algorithms</text>
+</g>
+<g transform="translate(778,380) rotate(-88.26406905371822,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.831062316894531" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">compatible</text>
+</g>
+<g transform="translate(1174,368) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.595603942871094" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">compelling</text>
+</g>
+<g transform="translate(414,372) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.360107421875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">contextual</text>
+</g>
+<g transform="translate(438,348) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.387672424316406" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">converting</text>
+</g>
+<g transform="translate(496,288) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-13.394172668457031" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">downstream</text>
+</g>
+<g transform="translate(610,176) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.445289611816406" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">encryption</text>
+</g>
+<g transform="translate(628,472) rotate(-30.262325633158756,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.392692565917969" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">estimation</text>
+</g>
+<g transform="translate(684,568) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.601104736328125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">excitation</text>
+</g>
+<g transform="translate(828,240) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.205810546875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">facilitate</text>
+</g>
+<g transform="translate(986,176) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.287467956542969" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">generative</text>
+</g>
+<g transform="translate(800,768) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.014938354492188" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">heuristics</text>
+</g>
+<g transform="translate(1010,200) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.189773559570312" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">impressive</text>
+</g>
+<g transform="translate(1090,280) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.016937255859375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">leveraging</text>
+</g>
+<g transform="translate(836,170) rotate(-17.896168832228792,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.249908447265625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">multistage</text>
+</g>
+<g transform="translate(546,240) rotate(-53.480955030525784,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.382644653320312" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">perception</text>
+</g>
+<g transform="translate(912,224) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.653701782226562" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">potentials</text>
+</g>
+<g transform="translate(742,714) rotate(22.85282285053919,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.385665893554688" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">predictive</text>
+</g>
+<g transform="translate(418,364) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.640678405761719" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">production</text>
+</g>
+<g transform="translate(988,236) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.649200439453125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">relatively</text>
+</g>
+<g transform="translate(1010,476) rotate(29.978704499782143,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.554008483886719" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">revitalize</text>
+</g>
+<g transform="translate(862,716) rotate(-34.92663156028672,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.586082458496094" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">subjective</text>
+</g>
+<g transform="translate(424,356) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-13.679718017578125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">Wave-U-Net</text>
+</g>
+<g transform="translate(1022,208) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.067039489746094" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">Automatic</text>
+</g>
+<g transform="translate(1172,396) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.7193603515625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">baselines</text>
+</g>
+<g transform="translate(1044,232) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.177757263183594" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">bitstream</text>
+</g>
+<g transform="translate(1104,292) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.092605590820312" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">challenge</text>
+</g>
+<g transform="translate(1136,324) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.062545776367188" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">cognition</text>
+</g>
+<g transform="translate(1150,336) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.305015563964844" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">comparing</text>
+</g>
+<g transform="translate(438,340) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.385177612304688" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">competing</text>
+</g>
+<g transform="translate(458,320) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.154708862304688" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">conducted</text>
+</g>
+<g transform="translate(470,308) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.124649047851562" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">connected</text>
+</g>
+<g transform="translate(984,168) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.921760559082031" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">Deploying</text>
+</g>
+<g transform="translate(984,284) rotate(26.31712326579917,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.142196655273438" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">embracing</text>
+</g>
+<g transform="translate(926,558) rotate(42.075640680836706,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.283485412597656" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">essential</text>
+</g>
+<g transform="translate(1116,300) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.9598388671875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">functions</text>
+</g>
+<g transform="translate(946,456) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.922767639160156" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">identical</text>
+</g>
+<g transform="translate(1130,312) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.435287475585938" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">implement</text>
+</g>
+<g transform="translate(1164,348) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.087577819824219" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">introduce</text>
+</g>
+<g transform="translate(448,328) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.403205871582031" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">necessary</text>
+</g>
+<g transform="translate(496,280) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.335578918457031" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">optimizes</text>
+</g>
+<g transform="translate(512,264) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.609123229980469" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">potential</text>
+</g>
+<g transform="translate(568,208) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.388175964355469" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">preceding</text>
+</g>
+<g transform="translate(580,196) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.671226501464844" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">procedure</text>
+</g>
+<g transform="translate(814,518) rotate(-1.2023661868178113,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.649200439453125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">real-time</text>
+</g>
+<g transform="translate(1012,192) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.686767578125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">recurrent</text>
+</g>
+<g transform="translate(1044,224) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.117645263671875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">reduction</text>
+</g>
+<g transform="translate(1084,264) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.208328247070312" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">residuals</text>
+</g>
+<g transform="translate(472,300) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.167732238769531" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">sub-tasks</text>
+</g>
+<g transform="translate(520,252) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.356124877929688" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">trainable</text>
+</g>
+<g transform="translate(542,228) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.495384216308594" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">two-phase</text>
+</g>
+<g transform="translate(1186,360) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-11.818519592285156" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">waveforms</text>
+</g>
+<g transform="translate(496,272) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.153213500976562" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">accuracy</text>
+</g>
+<g transform="translate(524,244) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.376167297363281" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">achieved</text>
+</g>
+<g transform="translate(580,188) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.070556640625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">achieves</text>
+</g>
+<g transform="translate(874,560) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.945304870605469" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">Acoustic</text>
+</g>
+<g transform="translate(846,408) rotate(-35.757791050322716,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.797523498535156" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">addition</text>
+</g>
+<g transform="translate(938,336) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.975883483886719" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">all-pole</text>
+</g>
+<g transform="translate(1012,184) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.566551208496094" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">although</text>
+</g>
+<g transform="translate(668,374) rotate(58.79197089669674,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.912742614746094" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">auditory</text>
+</g>
+<g transform="translate(542,444) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.729896545410156" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">bridging</text>
+</g>
+<g transform="translate(1010,392) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.759933471679688" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">capacity</text>
+</g>
+<g transform="translate(1072,244) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.598609924316406" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">codebook</text>
+</g>
+<g transform="translate(1084,256) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.463836669921875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">concerns</text>
+</g>
+<g transform="translate(1200,372) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.153213500976562" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">converts</text>
+</g>
+<g transform="translate(528,236) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.749420166015625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">decoding</text>
+</g>
+<g transform="translate(544,220) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.807029724121094" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">deployed</text>
+</g>
+<g transform="translate(738,232) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.7980194091796875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">directly</text>
+</g>
+<g transform="translate(1048,216) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.769462585449219" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">encoding</text>
+</g>
+<g transform="translate(1114,438) rotate(29.707041140772954,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.336601257324219" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">existing</text>
+</g>
+<g transform="translate(836,734) rotate(2.121733442590802,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.449333190917969" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">gigantic</text>
+</g>
+<g transform="translate(748,180) rotate(72.5231966214308,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.972885131835938" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">inducing</text>
+</g>
+<g transform="translate(1104,274) rotate(59.431999363714574,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.845108032226562" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">instance</text>
+</g>
+<g transform="translate(1160,328) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.721870422363281" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">language</text>
+</g>
+<g transform="translate(762,140) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.168785095214844" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">millions</text>
+</g>
+<g transform="translate(1034,200) rotate(10.451607932844148,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.967369079589844" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">modeling</text>
+</g>
+<g transform="translate(494,348) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.604644775390625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">multiple</text>
+</g>
+<g transform="translate(956,182) rotate(81.73362920817446,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.019950866699219" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">paradigm</text>
+</g>
+<g transform="translate(918,376) rotate(36.263251485932415,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.294021606445312" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">pipeline</text>
+</g>
+<g transform="translate(412,348) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.263435363769531" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">platform</text>
+</g>
+<g transform="translate(748,534) rotate(-59.544164006470204,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.511444091796875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">powerful</text>
+</g>
+<g transform="translate(468,292) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.065536499023438" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">presents</text>
+</g>
+<g transform="translate(466,368) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.43927001953125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">referred</text>
+</g>
+<g transform="translate(410,380) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.91021728515625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">research</text>
+</g>
+<g transform="translate(1068,232) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.012924194335938" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">resource</text>
+</g>
+<g transform="translate(1128,292) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.137687683105469" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">shoehorn</text>
+</g>
+<g transform="translate(582,180) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.920249938964844" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">shortcut</text>
+</g>
+<g transform="translate(878,172) rotate(84.39021592066374,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.248931884765625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">simplify</text>
+</g>
+<g transform="translate(1148,312) rotate(49.71464338373647,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.642219543457031" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">solution</text>
+</g>
+<g transform="translate(1010,176) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.258934020996094" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">sparsity</text>
+</g>
+<g transform="translate(1176,340) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.306022644042969" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">supports</text>
+</g>
+<g transform="translate(1112,270) rotate(61.82069914960233,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.67425537109375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">temporal</text>
+</g>
+<g transform="translate(1188,352) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.72186279296875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">topology</text>
+</g>
+<g transform="translate(424,332) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-10.01995849609375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">workload</text>
+</g>
+<g transform="translate(668,522) rotate(-20.863972720446757,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.11865234375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">address</text>
+</g>
+<g transform="translate(394,364) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.4217529296875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">average</text>
+</g>
+<g transform="translate(416,390) rotate(54.14834094420251,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.975883483886719" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">Besides</text>
+</g>
+<g transform="translate(446,312) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.762962341308594" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">bridges</text>
+</g>
+<g transform="translate(748,508) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.700828552246094" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">carrier</text>
+</g>
+<g transform="translate(546,212) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.6727752685546875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">Certain</text>
+</g>
+<g transform="translate(896,436) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.655754089355469" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">classic</text>
+</g>
+<g transform="translate(748,586) rotate(-62.28535572514895,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.027976989746094" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">complex</text>
+</g>
+<g transform="translate(558,200) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.226364135742188" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">context</text>
+</g>
+<g transform="translate(704,408) rotate(-79.49084668305298,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.612648010253906" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">current</text>
+</g>
+<g transform="translate(1138,300) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.106147766113281" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">densely</text>
+</g>
+<g transform="translate(398,356) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.6477203369140625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">desired</text>
+</g>
+<g transform="translate(726,520) rotate(-58.130689839551934,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.748420715332031" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">differs</text>
+</g>
+<g transform="translate(782,232) rotate(-35.327766406411776,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.452323913574219" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">discard</text>
+</g>
+<g transform="translate(414,340) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.447319030761719" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">forcing</text>
+</g>
+<g transform="translate(828,552) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.976387023925781" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">glottal</text>
+</g>
+<g transform="translate(434,320) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.013458251953125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">hearing</text>
+</g>
+<g transform="translate(846,558) rotate(-84.5532967547606,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.275970458984375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">however</text>
+</g>
+<g transform="translate(470,284) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.522491455078125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">include</text>
+</g>
+<g transform="translate(600,490) rotate(-33.85667201316183,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.648246765136719" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">jointly</text>
+</g>
+<g transform="translate(490,264) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.695320129394531" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">latency</text>
+</g>
+<g transform="translate(498,256) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.2744903564453125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">limited</text>
+</g>
+<g transform="translate(1034,192) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.987907409667969" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">machine</text>
+</g>
+<g transform="translate(1066,224) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.4974212646484375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">natural</text>
+</g>
+<g transform="translate(448,302) rotate(-7.4605404681259,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.958343505859375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">reading</text>
+</g>
+<g transform="translate(892,376) rotate(75.05607403653683,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.424263000488281" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">reduced</text>
+</g>
+<g transform="translate(894,408) rotate(82.42253654874615,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.11865234375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">reduces</text>
+</g>
+<g transform="translate(474,276) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.1592559814453125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">relying</text>
+</g>
+<g transform="translate(558,192) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.376678466796875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">remains</text>
+</g>
+<g transform="translate(1054,208) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.372161865234375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">require</text>
+</g>
+<g transform="translate(1094,248) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.181304931640625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">running</text>
+</g>
+<g transform="translate(1210,364) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.434791564941406" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">several</text>
+</g>
+<g transform="translate(716,170) rotate(-80.95229286066235,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.007949829101562" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">showing</text>
+</g>
+<g transform="translate(728,582) rotate(-38.276350183275426,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.89874267578125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">similar</text>
+</g>
+<g transform="translate(498,248) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.081077575683594" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">storage</text>
+</g>
+<g transform="translate(516,228) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-9.849624633789062" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">summary</text>
+</g>
+<g transform="translate(1106,256) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.6622314453125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">towards</text>
+</g>
+<g transform="translate(872,384) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.520454406738281" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">afford</text>
+</g>
+<g transform="translate(644,444) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.139732360839844" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">aligns</text>
+</g>
+<g transform="translate(916,446) rotate(33.5201503946825,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.515480041503906" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">brings</text>
+</g>
+<g transform="translate(944,374) rotate(7.254997472110629,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.575080871582031" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">decade</text>
+</g>
+<g transform="translate(920,346) rotate(8.298660982493402,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.231895446777344" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">decent</text>
+</g>
+<g transform="translate(1156,308) rotate(37.22777499104515,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.958351135253906" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">depend</text>
+</g>
+<g transform="translate(780,668) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.9413299560546875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">design</text>
+</g>
+<g transform="translate(1134,284) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.069084167480469" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">enable</text>
+</g>
+<g transform="translate(1012,412) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.077606201171875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">filter</text>
+</g>
+<g transform="translate(1036,412) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.755928039550781" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">forced</text>
+</g>
+<g transform="translate(748,680) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.472877502441406" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">future</text>
+</g>
+<g transform="translate(640,572) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.450347900390625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">highly</text>
+</g>
+<g transform="translate(604,360) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.914276123046875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">levels</text>
+</g>
+<g transform="translate(1170,320) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.064079284667969" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">mainly</text>
+</g>
+<g transform="translate(1088,236) rotate(17.294385643694184,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.937812805175781" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">memory</text>
+</g>
+<g transform="translate(922,600) rotate(-60.72710258018743,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.700843811035156" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">merits</text>
+</g>
+<g transform="translate(1182,332) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.2469482421875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">mobile</text>
+</g>
+<g transform="translate(446,296) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-8.218879699707031" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">number</text>
+</g>
+<g transform="translate(502,240) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.840614318847656" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">phones</text>
+</g>
+<g transform="translate(700,260) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.0846099853515625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">priors</text>
+</g>
+<g transform="translate(522,220) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.50244140625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">pruned</text>
+</g>
+<g transform="translate(840,422) rotate(-77.16961625470016,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.5881195068359375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">pulses</text>
+</g>
+<g transform="translate(1020,372) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.472869873046875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">rather</text>
+</g>
+<g transform="translate(780,152) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.688301086425781" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">recent</text>
+</g>
+<g transform="translate(552,520) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.029502868652344" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">series</text>
+</g>
+<g transform="translate(616,588) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.152259826660156" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">single</text>
+</g>
+<g transform="translate(652,272) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.871177673339844" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">stages</text>
+</g>
+<g transform="translate(936,640) rotate(-52.24432887640593,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.575080871582031" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">system</text>
+</g>
+<g transform="translate(580,272) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.345130920410156" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">tackle</text>
+</g>
+<g transform="translate(920,176) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.197334289550781" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">thesis</text>
+</g>
+<g transform="translate(538,204) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.637718200683594" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">unseen</text>
+</g>
+<g transform="translate(786,336) rotate(12.043456729183218,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.658256530761719" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">values</text>
+</g>
+<g transform="translate(1070,216) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.7053375244140625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">weaker</text>
+</g>
+<g transform="translate(1198,344) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.3346099853515625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">weight</text>
+</g>
+<g transform="translate(1210,356) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.482414245605469" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">among</text>
+</g>
+<g transform="translate(640,172) rotate(20.691762500882295,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.7664794921875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">apply</text>
+</g>
+<g transform="translate(1054,198) rotate(1.3438514429174588,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.4503326416015625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">aware</text>
+</g>
+<g transform="translate(588,212) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.300048828125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">dense</text>
+</g>
+<g transform="translate(616,168) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.801544189453125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">fancy</text>
+</g>
+<g transform="translate(1032,184) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.337615966796875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">hence</text>
+</g>
+<g transform="translate(886,518) rotate(-80.20930799592803,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.513481140136719" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">input</text>
+</g>
+<g transform="translate(958,410) rotate(-28.382196526084098,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.31207275390625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">known</text>
+</g>
+<g transform="translate(392,348) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.169792175292969" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">major</text>
+</g>
+<g transform="translate(760,736) rotate(21.820211895053543,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.760963439941406" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">merge</text>
+</g>
+<g transform="translate(416,324) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.658775329589844" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">noisy</text>
+</g>
+<g transform="translate(822,374) rotate(-87.9320741819014,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.706352233886719" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">order</text>
+</g>
+<g transform="translate(428,312) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.07208251953125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">paper</text>
+</g>
+<g transform="translate(472,268) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.781005859375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">power</text>
+</g>
+<g transform="translate(528,212) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.06707763671875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">range</text>
+</g>
+<g transform="translate(1128,272) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.6362152099609375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">serve</text>
+</g>
+<g transform="translate(716,438) rotate(-8.183516933668427,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-7.099143981933594" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">shown</text>
+</g>
+<g transform="translate(1148,292) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.773490905761719" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">shows</text>
+</g>
+<g transform="translate(396,340) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.2679901123046875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">sides</text>
+</g>
+<g transform="translate(404,332) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.1277008056640625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">spite</text>
+</g>
+<g transform="translate(448,288) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.6712799072265625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">takes</text>
+</g>
+<g transform="translate(480,256) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.12969970703125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">terms</text>
+</g>
+<g transform="translate(540,196) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.621177673339844" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">three</text>
+</g>
+<g transform="translate(1052,192) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.856666564941406" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">times</text>
+</g>
+<g transform="translate(1084,224) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.821586608886719" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">types</text>
+</g>
+<g transform="translate(1124,264) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.518486022949219" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">users</text>
+</g>
+<g transform="translate(428,304) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.094635009765625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">Using</text>
+</g>
+<g transform="translate(762,492) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-4.210884094238281" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">aids</text>
+</g>
+<g transform="translate(838,492) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-4.4839324951171875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">dual</text>
+</g>
+<g transform="translate(452,280) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.1176910400390625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">even</text>
+</g>
+<g transform="translate(754,384) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-4.534034729003906" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">gain</text>
+</g>
+<g transform="translate(870,404) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-4.088142395019531" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">loss</text>
+</g>
+<g transform="translate(1072,208) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.941841125488281" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">many</text>
+</g>
+<g transform="translate(1112,248) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.019493103027344" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">Many</text>
+</g>
+<g transform="translate(810,168) rotate(-67.28902753449218,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.6262054443359375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">mask</text>
+</g>
+<g transform="translate(1164,300) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.851661682128906" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">much</text>
+</g>
+<g transform="translate(1176,312) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.255470275878906" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">need</text>
+</g>
+<g transform="translate(1188,324) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.618690490722656" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">Opus</text>
+</g>
+<g transform="translate(1200,336) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-6.367683410644531" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">OPUS</text>
+</g>
+<g transform="translate(978,476) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-4.564079284667969" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">past</text>
+</g>
+<g transform="translate(496,430) rotate(34.360782796831096,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.9844207763671875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">PESQ</text>
+</g>
+<g transform="translate(698,534) rotate(39.93845936090515,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-4.744438171386719" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">pure</text>
+</g>
+<g transform="translate(802,668) rotate(0,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-3.7173995971679688" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">rise</text>
+</g>
+<g transform="translate(850,416) rotate(-27.21816258123036,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-4.0104827880859375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">size</text>
+</g>
+<g transform="translate(412,316) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.2855224609375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">stem</text>
+</g>
+<g transform="translate(802,556) rotate(63.383408914023725,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.185325622558594" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">STOI</text>
+</g>
+<g transform="translate(772,350) rotate(-67.36328204750302,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-4.4663848876953125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">task</text>
+</g>
+<g transform="translate(758,252) rotate(-26.119267259942315,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-4.6417388916015625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">thus</text>
+</g>
+<g transform="translate(682,336) rotate(0,0,0)">
+<text fill="#ce3440" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-4.97991943359375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">used</text>
+</g>
+<g transform="translate(776,412) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-2.908294677734375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">viii</text>
+</g>
+<g transform="translate(678,560) rotate(0,0,0)">
+<text fill="#4ba894" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-4.2685089111328125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">well</text>
+</g>
+<g transform="translate(770,518) rotate(-0.4476396379262953,0,0)">
+<text fill="#bed843" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.4157867431640625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">work</text>
+</g>
+<g transform="translate(456,272) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.247962951660156" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">DNN</text>
+</g>
+<g transform="translate(622,380) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-3.9353408813476562" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">due</text>
+</g>
+<g transform="translate(570,468) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-3.2639923095703125" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">etc</text>
+</g>
+<g transform="translate(808,528) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-2.9358291625976562" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">far</text>
+</g>
+<g transform="translate(748,400) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-2.3847503662109375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">i.e</text>
+</g>
+<g transform="translate(480,248) rotate(0,0,0)">
+<text fill="#ca8f57" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-5.0225067138671875" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">PCM</text>
+</g>
+<g transform="translate(790,696) rotate(0,0,0)">
+<text fill="#bc0a13" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-3.9603805541992188" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">raw</text>
+</g>
+<g transform="translate(578,412) rotate(0,0,0)">
+<text fill="#4362a7" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-3.2239151000976562" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">set</text>
+</g>
+<g transform="translate(638,344) rotate(0,0,0)">
+<text fill="#7e42a6" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-4.4964599609375" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">SNR</text>
+</g>
+<g transform="translate(722,256) rotate(0,0,0)">
+<text fill="#fff" stroke="none" font-family="Actor" font-size="5.01064px" font-style="normal" font-weight="normal" x="-4.228424072265625" y="-2.0042568000000003" text-anchor="start" dominant-baseline="alphabetic">two</text>
+</g>
+</g>
+</svg>
