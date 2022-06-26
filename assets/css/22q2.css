@@ -1,0 +1,363 @@
+.parent .popup {
+  display: none;
+}
+
+.parent:hover .popup {
+  display: block;
+}
+
+/**
+ * labels and badges
+ * --------------------------------------------------
+ */
+.label,
+.badge {
+  background-color: #aab2bd;
+}
+
+.label-default,
+.badge-default {
+  color: #434a54;
+  background-color: white;
+  border: 1px solid #aab2bd;
+}
+
+.label-primary,
+.badge-primary {
+  background-color: #3bafda;
+  border-color: #3bafda;
+}
+
+.label-journal,
+.badge-journal {
+  background-color: #8cc152;
+  border-color: #8cc152;
+}
+
+.label-conference,
+.badge-conference {
+  background-color: #bbc5d2;
+  border-color: #bbc5d2;
+}
+
+.label-patent,
+.badge-patent {
+  background-color: #f6bb42;
+  border-color: #f6bb42;
+}
+
+.label-workshop,
+.badge-workshop {
+  background-color: #37bc9b;
+  border-color: #37bc9b;
+}
+
+body
+{
+/*  color: black;
+  background-color: white; */
+/*	font: 10px "times new roman";  */
+/*font-family: 'Lato', 'san-serif';*/
+font-family: 'Open+Sans', 'san-serif';
+/*	font: 8px "Lucida Grande"; */
+/*font: 18px sans-serif; 
+font-family: Verdana;*/
+font-size: 1.0em; 
+/*
+line-height: 1.0em;
+letter-spacing: 0;
+text-align: left;
+word-spacing: normal;
+text-decoration: none;
+color: #444;
+background-color: #fff;
+*/
+
+background-color: #dddddd;
+-webkit-text-size-adjust: none;
+text-size-adjust: none;
+}
+
+table.white
+{
+background-color: #ffffff;
+    padding-left:50px;
+    padding-right:50px;
+    padding-top:50px;
+}
+
+h1,h2,h3,h4,h5,h6
+{
+	font: 20px "BentonSansRegular";
+font-weight: bold;
+/*)  font-family: sans-serif;*/
+}
+
+
+h6
+{
+	font: 20px "BentonSansRegular";
+font-weight: bold;
+margin-bottom: 6pt;
+
+/*)  font-family: sans-serif;*/
+}
+
+
+h5
+{
+	font: 13px "BentonSansRegular";
+margin-top: 0.5em;
+margin-bottom: -0.4em;
+font-weight: bold;
+/*)  font-family: sans-serif;*/
+}
+
+/* This needs a patched html file else you have it all over the place */
+/* we only want this for the "visual header" at the page top */
+h1
+{
+  text-align: center;
+  background-color: #CCCC00;
+}
+
+/* Number the h2/h3 -- doesn't work on v4/5 browsers */
+h2
+{
+	font: 14px "BentonSansRegular";
+}
+
+/*
+h3
+{
+   counter-increment: h3-count;
+}
+
+h3:before
+{
+   content: counter(h2-count) "." counter(h3-count) " ";
+   
+}
+ */ 
+h4
+{ 
+	font: 14px "BentonSansRegular";
+  font-weight: bold;
+}
+
+tt
+{
+  color: rgb(40%,24%,24%);
+}
+
+a > tt, a > b > tt
+{
+  color: blue;
+}
+
+a:link
+{
+  color: blue;
+ text-decoration: none;
+}
+
+a.offsite
+{
+  font-style: oblique;
+}
+
+a:visited
+{
+  color: blue;
+ text-decoration: none;
+}
+
+a:hover, a:active, a:focus
+{
+ text-decoration: underline;
+}
+
+td
+{
+  vertical-align: top;
+  font: 14px "BentonSansRegular";
+}
+
+ul {
+   list-style: none;
+margin-left: 0;
+	     padding-left: 1em;
+	     text-indent: -1em;
+padding-top:1em;
+margin:0;
+}
+
+ul.mylist {
+   list-style: none;
+margin-left: 0;
+	     padding-left: 1em;
+	     text-indent: 0em;
+padding-top:0;
+margin:0;
+}
+
+ul.publist {
+   list-style: none;
+margin-left: 0;
+	     padding-left: 1em;
+	     text-indent: 0em;
+padding-top:1em;
+margin:0;
+padding-bottom:0em;
+}
+
+ul.publist li { padding-bottom:0.8em; }
+
+ul.tightlist {
+   list-style: none;
+margin-left: 0;
+	     padding-left: 1em;
+	     text-indent: 0em;
+padding-top:0.5em;
+margin:0;
+padding-bottom:0.5em;
+}
+
+ul.tightlist li { padding-bottom:0em; }
+
+ul li:before{ content:"\2013"; position:relative; left:-5px;}
+ul li{ text-indent:-8px; 
+padding-top:0px; 
+margin:0; 
+}
+
+
+div {
+    -webkit-transition: all .25s ease;
+       -moz-transition: all .25s ease;
+            transition: all .25s ease;
+}
+
+
+
+#testbox {
+    overflow: hidden;
+    max-height: 13em;
+    width: 850px;
+    margin-right:25px;
+    /* ignoring other CSS */
+}
+
+#testbox.removeThis {
+    max-height: 1000px;
+    width: 850px;
+    overflow: hidden;
+    margin-right:25px;
+}
+
+div.myblock {
+    width: 850px;
+    overflow: hidden;
+    margin-right:25px;
+/*    padding-right:50px; */
+}
+
+div.left {
+    text-align: left;
+}
+
+div.mybiggerblock {
+    width: 950px;
+    overflow: hidden;
+    margin-left:0px;
+    padding-left:50px;
+    padding-right:50px;
+    padding-bottom:50px;
+    padding-top:20px;
+    margin-bottom:0px;
+    margin-top:25px;
+    background-color:#ffffff;
+    font: 14px "BentonSansRegular"; 
+}
+
+div.blockhead {
+    float: left;
+    width: 100px;
+    font: 14px "BentonSansRegular";
+    font-weight: bold;
+    text-align: right;
+    margin-left:0;
+    padding-left:0;
+}
+
+div.blockcontent {
+    margin-left: 120px;
+    font-family: "BentonSansRegular";
+    font-size: 14px;
+    font-weight: 100;
+    line-height: 150%;
+    text-align: left;
+    }
+
+div.footer {
+    width: 1050px;
+    overflow: hidden;
+    margin-left:0px;
+    padding-left:0px;
+    padding-right:0px;
+    padding-bottom:0px;
+    padding-top:0px;
+    margin-bottom:40px;
+    margin-top:0px;
+    text-align:right;
+    font: 12px "BentonSansRegular"; 
+}
+
+
+div.headleft {
+    float: left;
+    width: 400px;
+    font: 14px "BentonSansRegular";
+    font-weight: bold;
+    text-align: left;
+    margin-left:0;
+    padding-left:0;
+    padding-bottom:10px;
+    padding-top: 0px;
+}
+
+div.headright {
+    margin-left: 120px;
+    font: 14px "BentonSansRegular"; 
+    text-align: right;
+    }
+
+span.newsdate {
+    float: left;
+    width: 8em;
+    height: 18pt;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+}
+
+div.newsitem {
+display: inline-block;
+}
+div.newstext {
+    padding-left:10em;
+}
+
+/* span.newsdate:before{ content:"\2013\00a0\00a0";} */
+
+td.newsdate:before{ content:"\2013\00a0\00a0";}
+span.newsdate:before{ content:"\2013\00a0\00a0";}
+
+td.newsdate {
+white-space: nowrap
+/* width: 99%; */
+}
+
+table {
+border-collapse: separate;
+border-spacing: 0 0em;
+}

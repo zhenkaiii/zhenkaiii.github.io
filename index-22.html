@@ -1,0 +1,567 @@
+
+<html><head>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.iu.edu/style.css?family=BentonSans:regular,bold|BentonSansCond:regular|GeorgiaPro:regular" media="screen" rel="stylesheet" type="text/css"/>
+<link rel=stylesheet type="text/css" href="assets/css/22q2.css">
+  
+
+
+<title>Kai Zhen</title>
+</head>
+<body>
+<!-- Start of StatCounter Code -->
+<script type="text/javascript" language="javascript">
+var sc_project=1092383; 
+var sc_invisible=1; 
+var sc_partition=9; 
+var sc_security="6d0e5518"; 
+</script>
+
+<script type="text/javascript" language="javascript">
+function toggle_profile() {
+if(document.getElementById("testbox").className == "removeThis") {
+document.getElementById("testbox").className = "";
+
+var vid_id=document.getElementById('oldernews');
+var anchor=vid_id.getElementsByTagName('a');
+anchor[0].innerHTML="Older news...";
+
+} else {
+document.getElementById("testbox").className = "removeThis";
+
+var vid_id=document.getElementById('oldernews');
+var anchor=vid_id.getElementsByTagName('a');
+anchor[0].innerHTML="Hide news...";
+}
+
+}
+</script>
+
+<script>
+  function resizeIframe(obj) {
+  obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+  }
+  </script>
+
+<!-- Start of StatCounter Code for Default Guide -->
+<script type="text/javascript">
+var sc_project=1092383; 
+var sc_invisible=1; 
+var sc_security="6d0e5518"; 
+var scJsHost = (("https:" == document.location.protocol) ?
+"https://secure." : "http://www.");
+document.write("<sc"+"ript type='text/javascript' src='" +
+scJsHost+
+"statcounter.com/counter/counter.js'></"+"script>");
+</script>
+<noscript><div class="statcounter"><a title="shopify
+analytics ecommerce tracking"
+href="http://statcounter.com/shopify/" target="_blank"><img
+class="statcounter"
+src="http://c.statcounter.com/1092383/0/6d0e5518/1/"
+alt="shopify analytics ecommerce
+tracking"></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->
+
+
+<center>
+
+<div class="mybiggerblock">
+
+<div class="headleft">
+<h3>Kai Zhen</h3>
+<h2>
+Applied Scientist at Alexa Speech
+<br>Ph.D. in Computer Science and Cognitive Science (joint degree) at <a href="https://www.indiana.edu">Indiana University Bloomington</a>
+<br><br>
+<br>kaizhen723(at)gmail(dot)com
+<br>
+<br>
+<a href="zhenk_cv.pdf">Curriculum vitae</a> &emsp;
+</h2>
+
+</div>
+<div class="headright">
+<img src="kaizhen-image.jpg" width=250px alt="Kai Zhen" style="margin-block-start: 25px; margin-right: 25px"> 
+</div>
+
+<div class="myblock">
+</div>
+
+<hr>
+
+<div class="myblock" id="testbox">
+<div class="blockhead" style="font-size: 14px">
+News
+</div>
+<div class="blockcontent">
+<table>
+<div class="newsitem"><span class="newsdate">June 15, 2022:</span>
+  <span class="newstext">Check out out paper (to be presented at <a href="https://interspeech2022.org/">Interspeech'22</a>) highlighting Alexa's recent efforts on Sub-8-Bit quantization for on-device ASR!</span></div>
+
+<div class="newsitem"><span class="newsdate">Apr 26, 2021:</span> <span class="newstext"> I received the <a href="https://cogs.indiana.edu/news-events/awards-recipients/index.html">Outstanding Research Award </a> from the Cognitive Science program for my recent dissertation research.</span></div>
+<div class="newsitem"><span class="newsdate">Apr 19, 2021:</span> <span class="newstext"> Joining <a href="https://amazon.science/">Amazon Alexa Speech</a> as an applied scientist!</span></div>
+<div class="newsitem"><span class="newsdate">Apr 6, 2021:</span> <span class="newstext"> I successfully defended my Ph.D. dissertation, entitled “Neural Waveform Coding: Scalability, Efficiency and Psychoacoustic Calibration.”</span></div>
+</table>
+</div>
+</div>
+
+<div class="myblock">
+<div class="blockhead">
+</div>
+<div class="blockcontent" id="oldernews">
+     <a id="displayProfile" href="javascript:toggle_profile();">Older news...</a>
+</div>
+</div>
+
+<hr>
+<div class="myblock" id="research">
+<div class="blockhead">Research</div>
+<div class="blockcontent">
+  <em>
+<b class="label label-journal">Journal Articles </b>&nbsp
+<b class="label label-conference">Conference Proceedings </b>&nbsp
+<b class="label label-patent">Patents </b>&nbsp
+<!--<b class="label label-workshop">Workshop Papers </b>-->
+</em>
+<p>I worked on neural speech and audio waveform coding supervised by <a href="https://saige.sice.indiana.edu/people/">Prof. Minje Kim </a>. One way to describe this problem is to compress the acoustic waveform into a very compact representation which can be reconstructed with little to no quality degradation. From the neural network quantization's perspective, it is simply to quantize the activation from one specific (usually the bottleneck) layer. 
+
+<p>Of course, the data-driven paradigm has built a better ladder; but that may not always "get you to the moon". Usually, the better solution is observed from the marriage between the model computational framework and conventional domain-specific knowledge. To that end, we proposed ways to incorporated residual coding, linear predictive coding and psychoacoustics in an end-to-end neural waveform codec. 
+
+<p>Some of the related publications are
+  <p align="justify">
+   <b class="label label-journal">J-002</b> <b>Kai Zhen</b>, Jongmo Sung, Mi Suk Lee, Seungkwon Beack, Minje Kim, "<b>Scalable and Efficient Neural Speech Coding: A Hybrid Design," <i>IEEE/ACM Transactions on Audio, Speech, and Language Processing (IEEE/ACM TASLP), 30 (2021): 12-25</i></b>.
+<br>
+  <a href="http://kaizhen.us/pub/zhenk-taslp-2021-sc.pdf">[pdf]</a>
+</p>
+
+<p align="justify">
+   <b class="label label-journal">J-001</b> <b>Kai Zhen</b>, Mi Suk Lee, Jongmo Sung, Seungkwon Beack, and Minje Kim, "<b>Psychoacoustic Calibration of Loss Functions for Efficient End-to-End Neural Audio Coding," <i>IEEE Signal Processing Letters</b>, vol. 27, pp. 2159-2163, 2020, doi: 10.1109/LSP.2020.3039765.</i>. (Also presented at ICASSP 2022)
+<br>
+<a href="http://kaizhen.us/neural-audio-coding.html">[demo]</a>
+<a href="http://kaizhen.us/pub/zhenk-spl.pdf">[pdf]</a>
+<a href="https://github.com/cocosci/pam-nac">[code]</a></p>
+
+
+
+<p align="justify">
+ <b class="label label-conference">C-003</b> <b>Kai Zhen</b>, Mi Suk Lee, Jongmo Sung, Seungkwon Beack, and Minje Kim, "<b>Efficient and Scalable Neural Residual Waveform Coding with Collaborative Quantization," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i></b>, Barcelona, Spain, May 4-8, 2020. <br>
+  <a href="http://kaizhen.us/collaborative-quantization.html">[demo]</a>
+  <a href="http://kaizhen.us/pub/zhenk2020cq.pdf">[pdf]</a>
+  <!--<a href="http://kaizhen.us/pub/cq.txt">[bib]</a>-->
+  <a href="https://github.com/cocosci/NSC">[code]</a></p>
+
+
+<p align="justify">
+ <b class="label label-conference">C-001</b> <b>Kai Zhen</b>, Jongmo Sung, Mi Suk Lee, Seungkwon Beack, and Minje Kim, "<b>Cascaded Cross-Module Residual Learning towards Lightweight End-to-End Speech Coding," <i>In Proc. Annual Conference of the International Speech Communication Association (Interspeech)</i></b>, Graz, Austria, September 15-19, 2019. <br>
+  <a href="https://saige.sice.indiana.edu/research-projects/neural-audio-coding/">[demo]</a>
+  <a href="https://www.isca-speech.org/archive/Interspeech_2019/pdfs/1816.pdf">[pdf]</a>
+  <!--<a href="http://kaizhen.us/pub/cmrl.txt">[bib]</a>-->
+ </p>
+
+<p align="justify">
+    <b class="label label-patent">P-005</b> Mi Suk Lee, Seung Kwon Beack, Jongmo Sung, Tae Jin Lee, Jin Soo Choi, Minje Kim, <b>Kai Zhen</b>, "<b>Method and apparatus for processing audio signal</b>," <i>U.S. Patent Application US20210233547A1</i>.
+</p>
+
+<p align="justify">
+    <b class="label label-patent">P-004</b> Minje Kim, <b>Kai Zhen</b>, Mi Suk Lee, Seung Kwon Beack, Jongmo Sung, Tae Jin Lee, Jin Soo Choi "<b>Residual Coding Method of Linear Prediction Coding Coefficient Based on Collaborative Quantization, and Computing Device for Performing the Method</b>," <i>U.S. Patent Application No. 17/098,090</i>.
+</p>
+
+<p align="justify">
+ <b class="label label-patent">P-002</b> Minje Kim, <b>Kai Zhen</b>, Seungkwon Beack, et al, "<b>Audio Signal Encoding Method and Audio Signal Decoding Method, And Encoder And Decoder Performing the Same</b>," <i>US Patent Application, US20200135220A1</i>.
+</p>
+
+
+<p> After joining Amazon, I worked on on-device ASR where model efficiency is as important as accuracy. As a natural extention to my PhD studies, I, along with my colleagues, put effort into model sparsification (pruning) and quantization. Check out our recently published papers as follows.
+
+<p align="justify">
+ <b class="label label-conference">C-006</b>  <b>Kai Zhen</b>, Hieu Duy Nguyen, Raviteja Chinta, Nathan Susanj, Athanasios Mouchtaris, Tariq Afzal, and Ariya Rastrow, <b>"Sub-8-Bit Quantization Aware Training for 8-Bit Neural Network Accelerator with On-Device Speech Recognition," <i>In Proc. Annual Conference of the International Speech Communication Association (Interspeech)</i></b>, Incheon, Korea, September 18-22, 2022.<br>
+ </p>
+
+<p align="justify">
+ <b class="label label-conference">C-005</b>  <b>Kai Zhen</b>, Hieu Duy Nguyen, Feng-Ju (Claire) Chang, Athanasios Mouchtaris, and Ariya Rastrow, "<b>Sparsification via Compressed Sensing for Automatic Speech Recognition," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i></b>, Toronto, ON, Canada, June 6-12, 2021. <br>
+  <a href="https://assets.amazon.science/d1/3e/1301067541d0ac20abbcfe0d93d5/sparsification-via-compressed-sensing-for-automatic-speech-recognition.pdf">[pdf]</a> <br>
+  <!--<i>&#42;from the summer internship with Amazon</i>-->
+</p>
+
+
+
+Find a complete list of my publications from <a href="http://www.kaizhen.us/publications.html">here</a> or my <a href="https://scholar.google.com/citations?user=biSonYMAAAAJ&hl=en&oi=ao">Google Scholar profile </a>.
+</div>
+
+<!--
+<hr>
+<div class="myblock" id="publications">
+<div class="blockhead">Recent Publications</div>
+<div class="blockcontent">
+
+
+
+
+<br>
+<em>
+<b class="label label-journal">Journal Articles </b>&nbsp
+<b class="label label-conference">Conference Proceedings </b>&nbsp
+<b class="label label-patent">Patents </b>&nbsp
+<b class="label label-workshop">Workshop Papers </b>
+</em>
+<br><br>
+
+<p align="justify">
+ <b class="label label-conference">C-006</b>  <b>Kai Zhen</b>, Hieu Duy Nguyen, Raviteja Chinta, Nathan Susanj, Athanasios Mouchtaris, Tariq Afzal, and Ariya Rastrow, <b>"Sub-8-Bit Quantization Aware Training for 8-Bit Neural Network Accelerator with On-Device Speech Recognition," <i>In Proc. Annual Conference of the International Speech Communication Association (Interspeech)</i></b>, Incheon, Korea, September 18-22, 2022.<br>
+ </p>
+
+
+
+
+
+<p align="justify">
+   <b class="label label-journal">J-002</b> <b>Kai Zhen</b>, Jongmo Sung, Mi Suk Lee, Seungkwon Beack, Minje Kim, "<b>Scalable and Efficient Neural Speech Coding: A Hybrid Design," <i>IEEE/ACM Transactions on Audio, Speech, and Language Processing (IEEE/ACM TASLP), 30 (2021): 12-25</i></b>.
+<br>
+  <a href="http://kaizhen.us/pub/zhenk-taslp-2021-sc.pdf">[pdf]</a>
+
+</p>
+
+<p align="justify">
+    <b class="label label-patent">P-005</b> Mi Suk Lee, Seung Kwon Beack, Jongmo Sung, Tae Jin Lee, Jin Soo Choi, Minje Kim, <b>Kai Zhen</b>, "<b>Method and apparatus for processing audio signal</b>," <i>U.S. Patent Application US20210233547A1</i>.
+</p>
+
+<p align="justify">
+    <b class="label label-patent">P-004</b> Minje Kim, <b>Kai Zhen</b>, Mi Suk Lee, Seung Kwon Beack, Jongmo Sung, Tae Jin Lee, Jin Soo Choi "<b>Residual Coding Method of Linear Prediction Coding Coefficient Based on Collaborative Quantization, and Computing Device for Performing the Method</b>," <i>U.S. Patent Application No. 17/098,090</i>.
+</p>
+
+<p align="justify">
+ <b class="label label-conference">C-005</b>  <b>Kai Zhen</b>, Hieu Duy Nguyen, Feng-Ju (Claire) Chang, Athanasios Mouchtaris, and Ariya Rastrow, "<b>Sparsification via Compressed Sensing for Automatic Speech Recognition," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i></b>, Toronto, ON, Canada, June 6-12, 2021. <br>
+  <a href="https://assets.amazon.science/d1/3e/1301067541d0ac20abbcfe0d93d5/sparsification-via-compressed-sensing-for-automatic-speech-recognition.pdf">[pdf]</a> <br><i>&#42;from the summer internship with Amazon</i>
+</p>
+
+<p>
+<b class="label label-conference">C-004</b>  Haici Yang, <b>Kai Zhen</b>, Seungkwon Beack, Minje Kim, "<b>Source-Aware Neural Speech Coding for Noisy Speech Compression," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i></b>, Toronto, ON, Canada, June 6-12, 2021. <br>
+<a href="https://arxiv.org/pdf/2008.12889.pdf">[pdf]</a>
+</p>
+
+
+<p align="justify">
+   <b class="label label-journal">J-001</b> <b>Kai Zhen</b>, Mi Suk Lee, Jongmo Sung, Seungkwon Beack, and Minje Kim, "<b>Psychoacoustic Calibration of Loss Functions for Efficient End-to-End Neural Audio Coding," <i>IEEE Signal Processing Letters</b>, vol. 27, pp. 2159-2163, 2020, doi: 10.1109/LSP.2020.3039765.</i>. (Also presented at ICASSP 2022)
+<br>
+<a href="http://kaizhen.us/neural-audio-coding.html">[demo]</a>
+<a href="http://kaizhen.us/pub/zhenk-spl.pdf">[pdf]</a>
+<a href="https://github.com/cocosci/pam-nac">[code]</a></p>
+
+
+<p align="justify">
+ <b class="label label-conference">C-003</b> <b>Kai Zhen</b>, Mi Suk Lee, Jongmo Sung, Seungkwon Beack, and Minje Kim, "<b>Efficient and Scalable Neural Residual Waveform Coding with Collaborative Quantization," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i></b>, Barcelona, Spain, May 4-8, 2020. <br>
+  <a href="http://kaizhen.us/collaborative-quantization.html">[demo]</a>
+  <a href="http://kaizhen.us/pub/zhenk2020cq.pdf">[pdf]</a>
+  <a href="https://github.com/cocosci/NSC">[code]</a></p>
+
+<p align="justify">
+ <b class="label label-conference">C-002</b> <b>Kai Zhen</b>, Mi Suk Lee, Minje Kim. "<b>A Dual-Staged Context Aggregation Method towards Efficient End-To-End Speech Enhancement,"  <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i></b>, Barcelona, Spain, May 4-8, 2020. <br>
+  <a href="http://kaizhen.us/speechenhancement.html">[demo]</a>
+  <a href="http://kaizhen.us/pub/zhenk2020dccrn.pdf">[pdf]</a>
+</p>
+
+
+
+
+<p align="justify">
+ <b class="label label-patent">P-003</b> Minje Kim, <b>Kai Zhen</b>, Mi Suk Lee, "<b>Apparatus and Method for Speech Processing Using a Densely Connected Hybrid Neural Network</b>," <i>US Patent Application, 2020</i>.
+</p>
+
+<p align="justify">
+ <b class="label label-patent">P-002</b> Minje Kim, <b>Kai Zhen</b>, Seungkwon Beack, et al, "<b>Audio Signal Encoding Method and Audio Signal Decoding Method, And Encoder And Decoder Performing the Same</b>," <i>US Patent Application, US20200135220A1</i>.
+</p>
+
+<p align="justify">
+ <b class="label label-workshop">W-004</b> <b>Kai Zhen</b>, Hieu Duy Nguyen, Feng-Ju (Claire) Chang, Athanasios Mouchtaris. <b>Network Sparsification for On-Device ASR</b>. <i>Amazon Machine Learning Conference (AMLC) Workshop on Network Inference Optimization, 2020.</i></a>
+</p>
+
+
+
+<p align="justify">
+ <b class="label label-conference">C-001</b> <b>Kai Zhen</b>, Jongmo Sung, Mi Suk Lee, Seungkwon Beack, and Minje Kim, "<b>Cascaded Cross-Module Residual Learning towards Lightweight End-to-End Speech Coding," <i>In Proc. Annual Conference of the International Speech Communication Association (Interspeech)</i></b>, Graz, Austria, September 15-19, 2019. <br>
+  <a href="https://saige.sice.indiana.edu/research-projects/neural-audio-coding/">[demo]</a>
+  <a href="https://www.isca-speech.org/archive/Interspeech_2019/pdfs/1816.pdf">[pdf]</a>
+ </p>
+
+
+<p align="justify">
+ <b class="label label-patent">P-001</b> Minje Kim, Aswin Sivaraman, <b>Kai Zhen</b>, Jongmo Sung, et al, "<b>Audio signal encoding method and apparatus and audio signal decoding method and apparatus using psychoacoustic-based weighted error function</b>," <i>US Patent Application, US20190164052A1</i>.
+</p>
+
+
+<p align="justify">
+ <b class="label label-workshop">W-003</b> <b>Kai Zhen</b>, Aswin Sivaraman, Jongmo Sung, Minje Kim, "<b>On Psychoacoustically Weighted Cost Functions Towards Resource-efficient Deep Neural Networks for Speech Denoising</b>," <i>The 7th Annual Midwest Cognitive Science Conference</i>, Bloomington, IN, 2018.<br>
+  <a href="https://arxiv.org/pdf/1801.09774.pdf">[pdf]</a>
+
+</p>
+
+<p align="justify">
+ <b class="label label-workshop">W-002</b> Peter Miksza, Kevin Watson, <b>Kai Zhen</b>, Sanna Wager, Minje Kim, "<b>Relationships between experts' subjective ratings of jazz improvisations and computational measures of melodic entropy</b>," <i>The Improvising Brain III: Cultural Variation and Analytical Techniques Symposium</i>, Atlanta, GA, in Feb, 2017.
+</p>
+
+<p align="justify">
+ <b class="label label-workshop">W-001</b> <b>Kai Zhen</b> and David Crandall, "<b>Finding egocentric image topics through convolutional neural network based representations (extended abstract)</b>," <i>In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) Workshop on Egocentric Computer Vision</i>, Las Vegas, US, June 26 - July 1, 2016.
+</p>
+
+-->
+
+
+<!--
+<p>
+<h5>3-d reconstruction</h5>
+<ul class="publist"><li> "SfM with MRFs: Discrete-Continuous Optimization for Large-Scale Structure from Motion," in PAMI 2013 (with A. Owens, N. Snavely, D. Huttenlocher)
+<small> <a href="http://vision.soic.indiana.edu/papers/disco2013pami.pdf">[pdf]</a></small> 
+<small><a href="http://vision.soic.indiana.edu/disco/">[project website]</a></small>
+<li> "Discrete-Continuous Optimization for Large-Scale Structure from Motion," in CVPR 2011 (with A. Owens, N. Snavely, D. Huttenlocher)
+<small> <a href="http://vision.soic.indiana.edu/papers/disco2011cvpr.pdf">[pdf]</a></small> 
+<small><a href="http://vision.soic.indiana.edu/disco/">[project website]</a></small>
+<font color="red"><i>Runner-up best paper!</i></font>
+</ul>
+
+<h5>First-person and opportunistic imagery</h5>
+<ul class="publist">
+<li> "Joint Person Segmentation and Identification in Synchronized First- and Third-person Videos," in ECCV 2018 (with M. Xu, C. Fan, Y. Wang, M. Ryoo)
+<small><a href="http://vision.soic.indiana.edu/papers/firstthirdseg2018eccv.pdf">[pdf]</a></small>
+<li> "From Coarse Attention to Fine-Grained Gaze: A Two-stage 3D Fully Convolutional Network for Predicting Eye Gaze in First Person Video," in BMVC 2018 (with Z. Zhang, S. Bambach, C. Yu)
+<small><a href="http://vision.soic.indiana.edu/papers/gaze2018bmvc.pdf">[pdf]</a></small>
+<li> "Estimating Head Motion from Egocentric Vision," in ICMI 2018 (with S. Tsutsui, S. Bambach, C. Yu)
+<smalle><a href="http://vision.soic.indiana.edu/papers/headmotion2018icmi.pdf">[pdf]</a></small>
+<li> "Identifying first-person camera wearers in third-person videos," in CVPR 2017 (with C. Fan, J. Lee, M. Xu, K.K. Singh, Y.J. Lee, M. Ryoo)
+<small><a href="http://vision.soic.indiana.edu/papers/firstthird2017cvpr.pdf">[pdf]</a></small>
+<li> "DeepDiary: Automatically Captioning Lifelogging Image Streams," in ECCV EPIC 2016 (with C. Fan)
+<small><a href = "http://vision.soic.indiana.edu/papers/deepdiary2016eccvw.pdf">[pdf]</a></small>
+<small><a href = "http://vision.soic.indiana.edu/projects/deepdiary/">[www with code and data]</a></small>
+<li> "Enhancing Lifelogging Privacy by Detecting Screens," in CHI 2016 (with M. Korayem, R. Templeman, D. Chen, A. Kapadia)
+<small><a href = "http://vision.soic.indiana.edu/papers/screenavoider2016chi.pdf">[pdf]</a></small>
+<small><a href = "http://vision.soic.indiana.edu/projects/screenavoider/">[www]</a></small> <font color="red"><i>Best paper honorable mention!</i></font>
+<li> "Lending A Hand: Detecting Hands and Recognizing Activities in Complex Egocentric Interactions," in ICCV 2015 (with S. Bambach, S. Lee, C. Yu)
+<small><a href = "http://vision.soic.indiana.edu/papers/egohands2015iccv.pdf">[pdf]</a></small>
+<small><a href = "http://vision.soic.indiana.edu/projects/lending-a-hand/">[www]</a></small>
+<small><a href = "http://vision.soic.indiana.edu/projects/egohands/">[dataset]</a></small>
+<li> "Viewpoint Integration for Hand-Based Recognition of Social Interactions from a First-Person View," in ICMI 2015 (with S. Bambach, C. Yu)
+<small><a href = "http://vision.soic.indiana.edu/papers/handintegration2015icmi.pdf">[pdf]</a></small>
+<small><a href = "http://vision.soic.indiana.edu/projects/egohands/">[dataset]</a></small>
+<li> "PlaceAvoider: Steering First-Person Cameras away from Sensitive Spaces," in NDSS 2014 (with R. Templeman, M. Korayem, A. Kapadia)
+<small><a href = "http://vision.soic.indiana.edu/papers/placeavoider2014ndss.pdf">[pdf]</a></small>
+<li> "This Hand is My Hand: A Probabilistic Approach to Hand Disambiguation in Egocentric Video," in CVPR Workshop on Egocentric Vision 2014 (with S. Lee, S. Bambach, J. Franchak, C. Yu)
+<small><a href = "http://vision.soic.indiana.edu/papers/handtracking2014cvprw.pdf">[pdf]</a></small>
+<font color="red"><i>Best paper!</i></font>
+<li> "PlaceRaider: Virtual Theft in Physical Spaces with Smartphones," in NDSS 2013 (with R. Templeman, Z. Rahman, A. Kapadia)
+<small><a href="http://www.cs.indiana.edu/~kapadia/papers/placeraider-ndss13.pdf">[pdf]</a></small>
+<small><a href="http://private.soic.indiana.edu/projects/placeraider-virtual-theft-in-physical-spaces-with-smartphones/">[project website]</a></small>
+</ul>
+
+      <h5>Recognition</h5>
+      <ul class="publist">
+<li>"Fully-Coupled Two-Stream Spatiotemporal Networks for Extremely Low Resolution Action Recognition," in WACV 2018 (with M. Xu, A. Sharghi, X. Chen)
+<small><a href="http://vision.soic.indiana.edu/papers/extremelylow2018wacv.pdf"></a></small>
+<li> "Vehicle Recognition with Constrained Multiple Instance SVMs," in WACV 2014 (with K. Duan, L. Marchesotti)
+        <small>   <a href="http://vision.soic.indiana.edu/papers/vehicle2014wacv.pdf">[pdf]</a></small>
+      <li> "Discovering localized attributes for fine-grained recognition," in CVPR 2012 (with K. Duan, D. Parikh, K. Grauman)
+        <small>   <a href="http://vision.soic.indiana.edu/papers/attributes2012cvpr.pdf">[pdf]</a></small>
+<small><a href="http://vision.soic.indiana.edu/attributediscovery/">[project website]</a></small>
+<li> "A Multi-layer Composite Model for Human Pose Estimation," in BMVC 2012 (with K. Duan, D. Batra) 
+        <small>   <a href="http://vision.soic.indiana.edu/papers/poseest2012bmvc.pdf">[pdf]</a></small>
+<small><a href="http://vision.soic.indiana.edu/poserecognition/">[project website]</a></small>
+<li> "Landmark classification in large-scale image collections," in ICCV 2009 (with Y. Li and D. Huttenlocher)
+	<small>    <a href="http://vision.soic.indiana.edu/papers/landmark2009iccv.pdf">[pdf]</a></small>
+	<small>    <a href="http://vision.soic.indiana.edu/papers/landmarks2015book.pdf">[expanded book chapter]</a></small>
+<li> "Composite models of objects and scenes for category recognition," in CVPR 2007 (with D. Huttenlocher)
+	<small>    <a href="http://vision.soic.indiana.edu/papers/composite2007cvpr.pdf">[pdf]</a></small>
+<li> "Weakly-supervised learning of part-based spatial models for visual object recognition," in ECCV 2006 (with D. Huttenlocher)
+	<small>    <a href="http://vision.soic.indiana.edu/papers/weaklysupervised2006eccv.pdf">[pdf]</a></small>
+	<small>	   <a href="http://www.cs.indiana.edu/~djcran/research/kfans"> [source code]</a></small>
+<li> "Spatial Priors for Part-Based Recognition using
+	    Statistical Models," in CVPR 2005
+	    (with P. Felzenszwalb and D. Huttenlocher)
+	<small>    <a href="http://vision.soic.indiana.edu/papers/kfan2005cvpr.pdf">[pdf]</a></small>
+	<small>    <a href="http://vision.soic.indiana.edu/papers/kfan2006lncs.pdf"> [expanded LNCS version] </a></small>
+	<small>	   <a href="http://www.cs.indiana.edu/~djcran/research/kfans"> [source code]</a></small>
+<li> "Robust Color Object Detection using Spatial-Color
+	    Joint Probability Functions," in IEEE
+	    Transactions on Image Processing, 2006 (with J. Luo)
+<small><a href="http://vision.soic.indiana.edu/papers/compoundcolor2004cvpr.pdf">[CVPR 2004 version]</a></small>
+<li> "Part-based statistical models for visual object class recognition," 2008 (Ph.D. thesis)
+	<small>    <a href="http://vision.soic.indiana.edu/papers/crandall2008thesis.pdf">[pdf]</a></small>
+        </ul>
+
+      <h5>Mining and modeling large-scale photo collections</h5>
+<ul class="publist">
+<li> A Unified Model for Near and Remote Sensing," in ICCV 2017 (with S. Workman, M. Zhai, N. Jacobs)
+<small><a href="http://vision.soic.indiana.edu/papers/sensing2017iccv.pdf">[pdf]</a></small>
+<li> "Tracking Natural Events through Social Media and Computer Vision," in ACM Multimedia 2016 (with J. Wang, M. Korayem, S. Blanco)
+<small> <a href="http://vision.soic.indiana.edu/papers/tracking2016mm.pdf">[pdf]</a></small>
+<li> "Linking Past to Present: Discovering Style in Two Centuries of Architecture," in ICCP 2015 (with S. Lee, N. Maisonneuve, A. Efros, J. Sivic)
+<small> <a href="http://vision.soic.indiana.edu/papers/linking2015iccp.pdf">[pdf]</a></small>
+<small> <a href="http://vision.soic.indiana.edu/projects/linking-past-to-present/">[project website]</a></small>
+        <br>See also an <a href="http://vision.soic.indiana.edu/paris/vis/?">online demo of some results</a>.
+<li> "Predicting Geo-informative Attributes in Large-scale Image Collections using Convolutional Neural Networks," in WACV 2015 (with S. Lee, H. Zhang)
+<small> <a href="http://vision.soic.indiana.edu/papers/geoinformative2015wacv.pdf">[pdf]</a></small>
+<li> "Multimodal Learning in Loosely-organized Web Images," in CVPR 2014 (with K. Duan, D. Batra)
+<small> <a href="http://vision.soic.indiana.edu/papers/multimodal2014cvpr.pdf">[pdf]</a></small>
+<li> "Observing the natural world with Flickr," in ICCV Workshop on Computer Vision for Converging Perspectives, 2013 (with J. Wang, M. Korayem)
+<small> <a href="http://vision.soic.indiana.edu/papers/snow2013iccvw.pdf">[pdf]</a></small>
+<font color="red"><i>Best paper!</i></font>
+<li> "Modeling people and places with internet photo collections," in Communications of the ACM (with N. Snavely)
+<small><a href="http://cacm.acm.org/magazines/2012/6/149788-modeling-people-and-places-with-internet-photo-collections/fulltext">[pdf]</a></small>
+<li> "Mining photo-sharing websites to study ecological phenomena," in WWW 2012 (with H. Zhang, M. Korayem, G. LeBuhn)
+<small> <a href="http://vision.soic.indiana.edu/papers/ecology2012www.pdf">[pdf]</a></small>
+<small> <a href="http://vision.soic.indiana.edu/miningecology/">[project website]</a></small>
+<li> "Beyond co-occurrence: Discovering and visualizing tag relationships from geo-spatial and temporal similarities," in WSDM 2012 (with H. Zhang, M. Korayem, E. You)
+<small> <a href="http://vision.soic.indiana.edu/papers/cooccur2012wsdm.pdf">[pdf]</a></small> 
+<small><a href="http://vision.soic.indiana.edu/tagclusters/">[project website]</a></small>
+<li> "Mapping the World's Photos," in WWW 2009 (with L. Backstrom, D. Huttenlocher, J. Kleinberg)
+	<small>    <a href="http://vision.soic.indiana.edu/papers/mapping2009www.pdf">[pdf]</a></small> <font color="red"><i>Runner-up best paper!</i></font>
+        <br>See also a <a href="photomap/">gallery of automatically-generated maps</a>.
+    </ul>
+
+      <h5>Mining and modeling online social networks</h5>
+<ul class="publist">
+<li> "Utilizing remote sensing and big data to quantify conflict intensity: The Arab Spring as a case study," in Applied Geography 2018 (with N. Levin, S. Ali)
+<small><a href="http://vision.soic.indiana.edu/papers/conflicts2018ag.pdf">[pdf]</a></small>
+<li> "Where have all the people gone? Enhancing global conservation using night lights and social media," in Ecological Applications 2015 (with N. Levin, S. Kark)
+<small><a href="http://vision.soic.indiana.edu/papers/globalconservation2015ea.pdf">[pdf]</a></small>
+<li> "De-anonymizing users across heterogeneous social computing platforms," in ICWSM 2013 (with M. Korayem)
+<small> <a href="http://vision.soic.indiana.edu/papers/deanonymize2013icwsm.pdf">[pdf]</a></small>
+<small> <a href="http://vision.soic.indiana.edu/miningecology/">[project website]</a></small>
+<li> "Inferring Social Ties from Geographic Coincidences," in Proc. National Academy of Sciences (PNAS), 8 December 2010 (with L. Backstrom, D. Cosley, S. Suri, D. Huttenlocher, J. Kleinberg)
+	<small>    <a href="http://www.pnas.org/content/early/2010/12/02/1006155107.full.pdf+html">[pdf]</a></small>
+<li> "Feedback Effects between Similarity and Social Influence in Online Communities," in KDD 2008 (with D. Cosley, J. Kleinberg, D. Huttenlocher, S. Suri)
+	<small>    <a href="http://vision.soic.indiana.edu/papers/feedback2008kdd.pdf">[pdf]</a></small>
+    </ul>
+
+<h5>Image privacy attitudes and applications</h5>
+<ul class="publist">
+<li> "Viewer Experience of Obscuring Scene Elements in Photos to Enhance Privacy," in CHI 2018 (with R. Hasan, E. Hassan, Y. Li, K. Caine, R. Hoyle, A. Kapadia)
+<small><a href = "http://vision.soic.indiana.edu/papers/viewerexperience2018chi.pdf">[pdf]</a></small>
+<li> "Cartooning for enhanced privacy in lifelogging and streaming video," in CVPR CV-COPS 2017 (with E. Hassan, R. Hasan, P. Shaffer, A. Kapadia)
+<small><a href="http://vision.soic.indiana.edu/papers/cartooning2017cvcops.pdf">[pdf]</a></small>
+<li> "Addressing physical safety, security, and privacy for people with visual impairments," in SOUPS 2016 (with T. Ahmed, P. Shaffer, K. Connelly, A. Kapadia)
+<small><a href = "http://vision.soic.indiana.edu/papers/privacybubble2016soups.pdf">[pdf]</a></small>
+<li> "Sensitive Lifelogs: A Privacy Analysis of Photos from Wearable Cameras," in CHI 2015 (with R. Hoyle, R. Templeman, D. Anthony, A. Kapadia)
+<small><a href = "http://vision.soic.indiana.edu/papers/sensitive2015chi.pdf">[pdf]</a></small>
+<li> "Privacy Concerns and Behaviors of People with Visual Impairments" in CHI 2015 (with T. Ahmed, R. Hoyle, K. Connelly, A. Kapadia)
+<small><a href = "http://vision.soic.indiana.edu/papers/impairments2015chi.pdf">[pdf]</a></small>
+<li> "Privacy Behaviors of Lifeloggers using Wearable Cameras," in Ubicomp 2014 (with R. Hoyle, R. Templeman, S. Armes, D. Anthony, A. Kapadia)
+<small><a href = "http://vision.soic.indiana.edu/papers/firstperson2014ubicomp.pdf">[pdf]</a></small>
+</ul>
+
+
+
+      <h5>Human vision and learning</h5>
+	<ul class="publist">
+<li>"Exploring inter-observer differences in first-person object views using deep learning models," in ICCV MBCCV workshop, 2017 (with S. Bambach, Z. Zhang, C.Yu)
+<small><a href="http://vision.soic.indiana.edu/papers/interobserver2017mbcv.pdf">[pdf]</a></small>
+<li>"An Egocentric Perspective on Active Vision and Visual Object Learning in Toddlers," in ICDL 2017 (with S. Bambach, L. Smith, C. Yu)
+<small><a href="http://vision.soic.indiana.edu/papers/egocentric2017icdl.pdf">[pdf]</a></small>
+	  <li> "Active Viewing in Toddlers Facilitates Visual Object Learning: An Egocentric Vision Approach," in CogSci 2016 (with S. Bambach, L. Smith, C. Yu)
+<small> <a href="http://vision.soic.indiana.edu/papers/activeviewing2016cogsci.pdf">[pdf]</a></small>
+	  <li> "Objects in the Center: How the Infant's Body Constrains Infant Science," in ICDL 2016 (with S. Bambach, L. Smith, C. Yu)
+<small> <a href="http://vision.soic.indiana.edu/papers/objectscenter2016icdl.pdf">[pdf]</a></small><font color="red"> <i>Best paper!</i></font>
+	  <li> "Detecting Hands in Children's Egocentric Views to Understand Embodied Attention during Social Interaction," in CogSci 2014 (with S. Bambach, J. Franchak, C. Yu)
+<small> <a href="http://vision.soic.indiana.edu/papers/hands2014cogsci.pdf">[pdf]</a></small>
+	  <li> "Understanding embodied visual attention in child-parent interaction," in ICDL 2013 (with S. Bambach, C. Yu)
+<small> <a href="http://vision.soic.indiana.edu/papers/firstperson2013icdl.pdf">[pdf]</a></small>
+	  <li> "Psychophysical study of image orientation perception,"
+	    in Spatial Vision, 2003, pp. 429-457. (with J. Luo,
+	    A. Singhal, M. Boutell and R. Gray.)
+<small> <a href="http://vision.soic.indiana.edu/papers/imageorientation2003sv.pdf">[pdf]</a></small>
+	  </li>
+	</ul>
+
+
+<h5>Deep networks</h5>
+<ul class="publist">
+<li> "Diverse Beam Search for Improved Description of Complex Scenes," AAAI Conference on Artificial Intelligence," AAAI 2018 (with A. Vijayakumar, M. Cogswell, R. Selvaraju, Q. Sun, S. Lee, D. Batra)
+<li> "Stochastic Multiple Choice Learning for Training Diverse Deep Ensembles," NIPS 2016 (with S. Lee, S. Purushwalkam, M. Cogswell, V. Ranjan, D. Batra)
+<small><a href="http://vision.soic.indiana.edu/papers/mcl2016nips.pdf">[pdf]</a></small>
+<li> "Diverse Beam Search: Decoding Diverse Solutions from Neural Sequence Models," arXiv 2016 (with A. Vijayakumar, M Cogswell, R. Selvaraju, Q. Sun, S. Lee, D. Batra)
+<small><a href="https://arxiv.org/abs/1610.02424">[arXiv link]</a></small>
+<li> "Why M Heads are Better than One: Training a Diverse Ensemble of Deep Networks," arXiv 2015 (with S. Lee, S. Purushwalkam, M. Cogswell, D. Batra)
+<small><a href="https://arxiv.org/abs/1511.06314">[arXiv link]</a></small>
+</ul>
+
+
+      <h5>Computer vision for polar science</h5>
+	<ul class="publist">
+<li> "Multi-Task Spatiotemporal Neural Networks for Structured Surface Reconstruction," in WACV 2018 (with M. Xu, C. Fan, J. Paden, G. Fox, D. Crandall)
+<small><a href="http://vision.soic.indiana.edu/papers/ice2018wacv.pdf">[pdf]</a></small>
+<li> "Automatic estimation of ice bottom surfaces from radar imagery", in ICIP 2017 (with M. Xu, G. Fox, J. Paden)
+<small><a href="http://vision.soic.indiana.edu/papers/icesurface2017icip.pdf">[pdf]</a></small>
+<li> "Estimating bedrock and surface layer boundaries and confidence intervals in ice sheet radar imagery using MCMC", in ICIP 2014 (with S. Lee, J. Mitchell, G. Fox)
+	    <small><a href="http://vision.soic.indiana.edu/papers/icelayers2014icip.pdf">[pdf]</a></small>
+	    <small><a href="http://vision.soic.indiana.edu/projects/icelayers/">[project website]</a></small>
+<li> "Layer-finding in radar echograms using probabilistic graphical models", in ICPR 2012 (with G. Fox, J. Paden)
+	    <small><a href="http://vision.soic.indiana.edu/wp/wp-content/uploads/icpr12-ice1.pdf">[pdf]</a></small>
+	    <small><a href="http://vision.soic.indiana.edu/projects/icelayers/">[project website]</a></small>
+	</ul>
+
+      <h5>Text and document analysis</h5>
+	<ul class="publist">
+	  <li> A Data Driven Approach for Compound Figure Separation Using Convolutional Neural Networks," in ICDAR 2017 (with S. Tsutsui)
+<small><a href="http://vision.soic.indiana.edu/papers/figures2017icdar.pdf">[pdf]</a></small>
+<small><a href="http://vision.soic.indiana.edu/figure-separator/">[project website]</a></small>
+	  <li> "Extraction of special effects caption text events from
+	    digital video," in International Journal on Document Analysis and
+	    Recognition, 2002 (with S. Antani and R. Kasturi) 
+	    <small><a href="http://vision.soic.indiana.edu/papers/specialeffects2002ijdar.pdf">[pdf]</a></small>
+	    <small><a href="http://vision.soic.indiana.edu/papers/crandall2001thesis.pdf">[M.S.&nbsp;thesis&nbsp;version]</a></small>
+	    <small><a href="http://vision.soic.indiana.edu/papers/specialeffects2001icdar.pdf">[ICDAR01&nbsp;version]</a></small>
+	</ul>
+
+      <h5>Other interests :)</h5>
+	<ul class="publist">
+<li> "A deep study into the history of web design," in WebSci 2017 (with B. Doosti, N. Su)
+<small><a href="http://vision.soic.indiana.edu/papers/webdesign2017websci.pdf">[pdf]</a></small>
+<small><a href="http://vision.soic.indiana.edu/papers/webdesign">[project website]</a></small>
+	  <li> "Understanding the Aesthetic Evolution of Websites: Towards a Notion of Design Periods," in CHI 2017 (with W. Chen, N. Su)
+<small><a href="http://vision.soic.indiana.edu/papers/webevolution2017chi.pdf">[pdf]</a></small>
+	  <li> "From funding agencies to scientific agency: Collective allocation of science funding as an alternative to peer review,"
+	    in EMBO Reports, 2014 (with J. Bollen, D. Junk, Y. Ding, K. Borner)
+	    <small><a href="http://vision.soic.indiana.edu/papers/fundrank2014embo.pdf">[pdf]</a></small>
+<li> "Learning visual features for the Avatar Captcha Recognition Challenge," in ICMLA 2012 (with M. Korayem, A. Mohammed, D. Crandall, R. Yampolskiy)
+	    <small><a href="http://vision.soic.indiana.edu/papers/avatarcaptcha2012icmla.pdf">[pdf]</a></small>
+<li> "Subjectivity and Sentiment Analysis of Arabic: A Survey", in AMLTA, 2012 (with M. Korayem, M. Abdul-Mageed)
+	    <small><a href="http://vision.soic.indiana.edu/papers/arabicsentiment2012amlta.pdf">[pdf]</a></small>
+</ul>
+-->
+
+
+
+<hr>
+<div class="myblock" id="fun">
+<div class="blockhead">Fun Fact</div>
+<div class="blockcontent">
+I used to have 14 rabbits -- well, 2 at first. The mother escaped once and my neighbor helped me get her back. A few months later, my neighbor became an olympic champion, or so I read in the newspaper. The causality is remarkably limited though as I'm having 2 cats, 1 escaped and I got him back, but nothing happened afterwards.
+
+
+
+  <div align="center">
+  <section id="custom_html-7" class="widget_text widget widget_custom_html">
+    <!--<div class="widget_text widget-wrap">
+    <div class="textwidget custom-html-widget"></div></div>-->
+    <script type="text/javascript" id="" src="//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=1&t=n&d=jGdG1k5xplNC_7uIAOKPmrstD74VXasxYxZ3i0GfUlk"></script>
+  </section>
+    </div>
+    <left><br><br><br>
+ <footer> <small>&copy; Copyright 2022, Kai Zhen</small> </footer></left>
+
+
+
+
+
+
+
+
+
+<script src="https://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-351602-1";
+urchinTracker();
+</script>
+
+</body>
+</html>
