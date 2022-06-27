@@ -4,8 +4,7 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400' rel='stylesheet' type='text/css'>
     <link href="https://fonts.iu.edu/style.css?family=BentonSans:regular,bold|BentonSansCond:regular|GeorgiaPro:regular" media="screen" rel="stylesheet" type="text/css"/>
 <link rel=stylesheet type="text/css" href="assets/css/22q2.css">
-  
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Kai Zhen</title>
 </head>
@@ -83,7 +82,7 @@ Applied Scientist at Alexa Speech
 
 </div>
 <div class="headright">
-<img src="kaizhen-image.jpg" width=250px alt="Kai Zhen" style="margin-block-start: 25px; margin-right: 25px"> 
+<img src="kaizhen-image.jpg" width=200px alt="Kai Zhen" style="margin-block-start: 25px; margin-right: 25px"> 
 </div>
 
 <div class="myblock">
@@ -119,17 +118,16 @@ News
 <div class="myblock" id="research">
 <div class="blockhead">Research</div>
 <div class="blockcontent">
-  <em>
-<b class="label label-journal">Journal Articles </b>&nbsp
-<b class="label label-conference">Conference Proceedings </b>&nbsp
-<b class="label label-patent">Patents </b>&nbsp
-<!--<b class="label label-workshop">Workshop Papers </b>-->
-</em>
-<p>I worked on neural speech and audio waveform coding supervised by <a href="https://saige.sice.indiana.edu/people/">Prof. Minje Kim </a>. One way to describe this problem is to compress the acoustic waveform into a very compact representation which can be reconstructed with little to no quality degradation. From the neural network quantization's perspective, it is simply to quantize the activation from one specific (usually the bottleneck) layer. 
+
+
+    <blockquote>
+I worked on neural speech and audio waveform coding supervised by <a href="https://saige.sice.indiana.edu/people/">Prof. Minje Kim</a>. One way to describe this problem is to compress the acoustic waveform into a very compact representation which can be reconstructed with little to no quality degradation. From the neural network quantization's perspective, it is simply to quantize the activation from one specific (usually the bottleneck) layer. 
 
 <p>Of course, the data-driven paradigm has built a better ladder; but that may not always "get you to the moon". Usually, the better solution is observed from the marriage between the model computational framework and conventional domain-specific knowledge. To that end, we proposed ways to incorporated residual coding, linear predictive coding and psychoacoustics in an end-to-end neural waveform codec. 
 
 <p>Some of the related publications are
+    </blockquote>
+
   <p align="justify">
    <b class="label label-journal">J-002</b> <b>Kai Zhen</b>, Jongmo Sung, Mi Suk Lee, Seungkwon Beack, Minje Kim, "<b>Scalable and Efficient Neural Speech Coding: A Hybrid Design," <i>IEEE/ACM Transactions on Audio, Speech, and Language Processing (IEEE/ACM TASLP), 30 (2021): 12-25</i></b>.
 <br>
@@ -144,7 +142,10 @@ News
 <a href="https://github.com/cocosci/pam-nac">[code]</a></p>
 
 
-
+<p>
+<b class="label label-conference">C-004</b>  Haici Yang, <b>Kai Zhen</b>, Seungkwon Beack, Minje Kim, "<b>Source-Aware Neural Speech Coding for Noisy Speech Compression," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i></b>, Toronto, ON, Canada, June 6-12, 2021. <br>
+<a href="https://arxiv.org/pdf/2008.12889.pdf">[pdf]</a>
+</p>
 <p align="justify">
  <b class="label label-conference">C-003</b> <b>Kai Zhen</b>, Mi Suk Lee, Jongmo Sung, Seungkwon Beack, and Minje Kim, "<b>Efficient and Scalable Neural Residual Waveform Coding with Collaborative Quantization," <i>in Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP)</i></b>, Barcelona, Spain, May 4-8, 2020. <br>
   <a href="http://kaizhen.us/collaborative-quantization.html">[demo]</a>
@@ -172,8 +173,12 @@ News
  <b class="label label-patent">P-002</b> Minje Kim, <b>Kai Zhen</b>, Seungkwon Beack, et al, "<b>Audio Signal Encoding Method and Audio Signal Decoding Method, And Encoder And Decoder Performing the Same</b>," <i>US Patent Application, US20200135220A1</i>.
 </p>
 
+<blockquote>
+After joining Amazon, I worked on on-device ASR where model efficiency is as important as accuracy. As a natural extention to my PhD studies, I, along with my colleagues, put effort into model sparsification (pruning) and quantization.
+<p> Check out our recently published papers as follows.
+    </blockquote>
 
-<p> After joining Amazon, I worked on on-device ASR where model efficiency is as important as accuracy. As a natural extention to my PhD studies, I, along with my colleagues, put effort into model sparsification (pruning) and quantization. Check out our recently published papers as follows.
+
 
 <p align="justify">
  <b class="label label-conference">C-006</b>  <b>Kai Zhen</b>, Hieu Duy Nguyen, Raviteja Chinta, Nathan Susanj, Athanasios Mouchtaris, Tariq Afzal, and Ariya Rastrow, <b>"Sub-8-Bit Quantization Aware Training for 8-Bit Neural Network Accelerator with On-Device Speech Recognition," <i>In Proc. Annual Conference of the International Speech Communication Association (Interspeech)</i></b>, Incheon, Korea, September 18-22, 2022.<br>
