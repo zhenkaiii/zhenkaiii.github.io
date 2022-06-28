@@ -294,7 +294,7 @@ div.mybiggerblock {
 div.blockhead {
     float: left;
     width: 100px;
-    font: 14px "BentonSansRegular";
+    font: 15px "BentonSansRegular";
     font-weight: bold;
     text-align: right;
     margin-left:0;
@@ -309,6 +309,14 @@ div.blockcontent {
     line-height: 150%;
     text-align: justify;
     }
+div.blockcontentlarger {
+    margin-left: 120px;    
+    font-family: "BentonSansRegular";
+    font-size: 15px;
+    font-weight: 100;
+    line-height: 150%;
+    text-align: justify;
+    }    
 
 div.footer {
     width: 1050px;
