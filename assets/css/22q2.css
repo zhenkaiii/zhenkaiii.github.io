@@ -266,7 +266,7 @@ div.left {
     text-align: left;
 }
 
-blockquote {
+div.blockquote {
   background-color: #f1f7ea;
   padding: 0.84rem 1.31rem;
   border-radius: 10px;
@@ -304,7 +304,7 @@ div.blockhead {
 div.blockcontent {
     margin-left: 120px;
     font-family: "BentonSansRegular";
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 100;
     line-height: 150%;
     text-align: left;
