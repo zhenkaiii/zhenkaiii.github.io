@@ -260,6 +260,7 @@ div.myblock {
     width: 850px;
     overflow: hidden;
     margin-right:25px;
+
 /*    padding-right:50px; */
 }
 
@@ -292,7 +293,7 @@ div.mybiggerblock {
     font: 14px "BentonSansRegular"; 
 }
 
-div.blockhead {
+div.blockhead {/*research*/
     float: left;
     width: 100px;
     font: 15px "BentonSansRegular";
@@ -303,14 +304,13 @@ div.blockhead {
 }
 
 div.blockcontent {
-    margin-left: 120px;    
-    font-family: "BentonSansRegular";
-    font-size: 14px;
-    font-weight: 100;
+    margin-left: 120px;   
+    font: 16px "Fantasy";
+    font-weight: lighter;     
     line-height: 150%;
     text-align: justify;
     }
-div.blockcontentlarger {
+div.blockcontentlarger { /*quote*/
     margin-left: 120px;    
     font-family: "BentonSansRegular";
     font-size: 15px;
