@@ -259,8 +259,9 @@ div {
 div.myblock {
     width: 850px;
     overflow: hidden;
-    margin-right:25px;
-
+    margin-right:-5px;
+    
+    
 /*    padding-right:50px; */
 }
 
@@ -336,11 +337,11 @@ div.footer {
 
 div.headleft {
     float: left;
-    width: 350px;
+    width: 550px;
     font: 14px "BentonSansRegular";
     font-weight: bold;
     text-align: left;
-    margin-left:0;
+    margin-left:40px;
     padding-left:0;
     padding-bottom:10px;
     padding-top: 0px;
