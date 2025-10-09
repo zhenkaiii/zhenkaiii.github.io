@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Binary Search and BFS: Invariants and Intuition</title>
+<style>
+    body {
+        font-family: "Georgia", "Times New Roman", serif;
+        color: #222;
+        background: #fafafa;
+        margin: 0;
+        padding: 2rem 1rem;
+        line-height: 1.6;
+        max-width: 850px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    h1, h2 {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 600;
+        color: #111;
+    }
+    h1 {
+        font-size: 1.8rem;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 0.3rem;
+    }
+    h2 {
+        font-size: 1.3rem;
+        margin-top: 2rem;
+        color: #333;
+    }
+    pre {
+        background: #f5f5f5;
+        border-radius: 6px;
+        padding: 1rem;
+        overflow-x: auto;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+    }
+    code {
+        background: #f5f5f5;
+        border-radius: 4px;
+        padding: 2px 4px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+    }
+    table {
+        border-collapse: collapse;
+        margin: 1rem 0;
+        width: 100%;
+        font-size: 0.95rem;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    em {
+        color: #444;
+    }
+    footer {
+        margin-top: 3rem;
+        font-size: 0.9rem;
+        color: #777;
+        border-top: 1px solid #e5e5e5;
+        padding-top: 1rem;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<h1>Binary Search and BFS: Invariants and Intuition</h1>
+<div id="author-links" style="margin-bottom:1.5rem; font-size:0.95rem;">
+  <a href="https://scholar.google.com/citations?user=biSonYMAAAAJ&hl=en&oi=ao" target="_blank" style="margin-right:1rem; text-decoration:none;">
+    <img src="../google-scholar-icon.png" alt="Scholar" width="18" style="vertical-align:middle; margin-right:4px;"> Scholar
+  </a>
+  <a href="https://www.linkedin.com/in/kai-zhen-01b7b5103/" target="_blank" style="margin-right:1rem; text-decoration:none;">
+    <img src="../linkedin-icon.png" alt="LinkedIn" width="18" style="vertical-align:middle; margin-right:4px;"> LinkedIn
+  </a>
+  <a href="../zhenk_cv.pdf" target="_blank" style="text-decoration:none;">
+    <img src="../bcs-icon.png" alt="CV" width="28" style="vertical-align:middle; margin-right:4px;"> CV
+  </a>
+</div>
+
+
+<h2>Binary Search</h2>
+<p>
+Binary search can mean: <strong>value matching</strong> and <strong>boundary search</strong>.
+This means one cannot simply memorize a template such as <code>if (arr[mid] == target)</code>.
+The true, generic essence of binary search lies in its invariant form:
+</p>
+
+<pre><code>if condition(mid):
+    update high
+else:
+    update low
+</code></pre>
+
+<p>
+Here:
+</p>
+<ul>
+  <li><code>high</code> represents the last index where the condition can be <strong>true</strong>.</li>
+  <li><code>low</code> represents the first index where the condition can be <strong>true</strong>.</li>
+</ul>
+
+<p>
+For example, if the task is to <em>return the first value greater than the target</em>,  
+the condition should be:
+</p>
+
+<pre><code>arr[mid] &gt; target</code></pre>
+
+<h2>Dual Setup Invariants</h2>
+<p>
+There exist two consistent (and equivalent) formulations of binary search,
+differing only in the initialization of <code>high</code>,
+the loop condition, and how <code>high</code> is updated:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variant</th>
+      <th>Initial <code>high</code></th>
+      <th>Loop condition</th>
+      <th>Update rule for <code>high</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>A</td>
+      <td><code>high = len(arr)</code></td>
+      <td><code>while low &lt; high</code></td>
+      <td><code>high = mid</code> (keep mid)</td>
+    </tr>
+    <tr>
+      <td>B</td>
+      <td><code>high = len(arr) - 1</code></td>
+      <td><code>while low &lt;= high</code></td>
+      <td><code>high = mid - 1</code> (exclude mid)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+As long as these three components are aligned,
+both variants converge to the same correct boundary.
+</p>
+
+<h2>BFS for Binary Tree</h2>
+<p>
+This is essentially a <strong>level-order traversal</strong>.
+The key idea is that a single queue to stash offspring is not enough.
+You may need two!
+Swap them within the <code>while</code> loop to make the traversal progress.
+</p>
+
+<pre><code>curr_queue = [root]   # current level gives offspring
+while curr_queue:
+    next_queue = []   # collect ALL offspring from curr_queue
+    for n in curr_queue:
+        if n.left:  next_queue.append(n.left)
+        if n.right: next_queue.append(n.right)
+
+    # do whatever you need for all nodes at the same level here
+
+    curr_queue = next_queue   # now the kids become mature to give offspring too
+</code></pre>
+
+<p>
+This “two-queue swap” pattern ensures that each iteration of the loop
+handles exactly one level of the tree.
+It provides full visibility of all nodes on that level
+before moving to the next, which is essential when performing
+cross-parent operations (such as linking cousins via <code>.next</code> pointers).
+</p>
+
+<footer>
+© 2025 Kai Zhen — All rights reserved. <br>
+Last updated October 2025.
+</footer>
+
+</body>
+</html>
