@@ -1,0 +1,278 @@
+
+
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GRU Seq2Seq — ML/AI Fundamentals</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:28px 0 10px;font-size:20px}
+  p{color:var(--ink);opacity:.92;line-height:1.6}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  .grid{display:grid;gap:16px}
+  @media(min-width:900px){.grid{grid-template-columns:1.2fr .8fr}}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:14px;overflow:auto}
+  .k{color:#c792ea} .nb{color:#82aaff} .s{color:#c3e88d} .c{color:#6b708c}
+  .tabbar{display:flex;gap:8px;margin-bottom:10px}
+  .tabbar button{background:transparent;border:1px solid var(--code-border);color:var(--muted);padding:6px 10px;border-radius:10px;cursor:pointer}
+  .tabbar button.active{border-color:var(--accent);color:var(--ink)}
+  .hidden{display:none}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px}
+  .kbd{background:var(--kbd);border:1px solid var(--code-border);padding:1px 6px;border-radius:6px;font-size:12px}
+  .pill{display:inline-block;padding:2px 8px;border:1px solid var(--code-border);border-radius:999px;color:var(--muted);font-size:12px;margin-right:6px}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+  .shape{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .shape div{background:var(--panel);border:1px dashed var(--code-border);padding:10px;border-radius:10px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>GRU Sequence‑to‑Sequence (Next‑Step Forecasting)</h1>
+      <span class="badge">ML/AI Fundamentals</span>
+    </header>
+
+    <section class="panel">
+      <h2>Summary</h2>
+      <p>GRU and LSTM are RNN variants for sequence modeling, used in end‑to‑end or end‑to‑one prediction. In this sine‑wave task, the model predicts the next point in a sequence.</p>
+      <p>The GRU expects a <b>3D input tensor</b>: <code>[batch_size, seq_len, input_size]</code> (when <code>batch_first=True</code>).</p>
+      <ul>
+        <li><b>batch_size</b> — number of sequences in a batch</li>
+        <li><b>seq_len</b> — number of time steps (e.g., 32)</li>
+        <li><b>input_size</b> — number of features per time step (1 for sine wave)</li>
+      </ul>
+      <p><code>input_size</code> ≠ <code>hidden_size</code>; the latter defines model capacity. GRUs can handle variable sequence lengths.</p>
+    </section>
+
+    <div class="grid">
+      <section class="panel">
+        <h2>Model Design</h2>
+        <ul>
+          <li>2‑layer GRU</li>
+          <li>Linear output projection mapping <code>hidden_size → 1</code></li>
+        </ul>
+        <p>The forward pass outputs <code>[batch, seq_len, 1]</code>. Training uses <b>MSE loss</b> between predicted and true sequences.</p>
+        <div class="callout">
+          <b>Training loop steps</b>
+          <ol>
+            <li><code>optimizer.zero_grad()</code> — clear old gradients</li>
+            <li>Forward pass</li>
+            <li>Compute loss</li>
+            <li><code>loss.backward()</code> — backpropagate</li>
+            <li><code>optimizer.step()</code> — update parameters</li>
+          </ol>
+          <p>This prevents gradient accumulation and ensures proper learning each step.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Tensor Shapes (at a glance)</h2>
+        <div class="shape">
+          <div>
+            <b>Input</b>
+            <pre>[B, T, F]
+B=batch, T=seq_len, F=input_size</pre>
+          </div>
+          <div>
+            <b>GRU Output</b>
+            <pre>[B, T, H]
+H=hidden_size</pre>
+          </div>
+          <div>
+            <b>Projection</b>
+            <pre>Linear: H → 1</pre>
+          </div>
+          <div>
+            <b>Final Output</b>
+            <pre>[B, T, 1]</pre>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel">
+      <h2>Inference (Autoregressive)</h2>
+      <p>Switch to <code>model.eval()</code> and wrap the loop with <code>torch.no_grad()</code>. Feed an initial window (e.g., 32 points), take the last prediction, append it, drop the oldest point, and repeat to forecast ahead.</p>
+      <pre>
+Pseudocode:
+  model.eval()
+  disable gradients
+  x = first_window  # shape [1, T, 1]
+  for step in range(K):
+      y = model(x)          # [1, T, 1]
+      next_val = y[:, -1:, :]
+      x = concat(x[:, 1:, :], next_val)  # slide window
+      store(next_val)
+      </pre>
+    </section>
+
+    <section class="panel">
+      <h2>Code</h2>
+      <div class="tabbar">
+        <button class="tabbtn active" data-tab="orig">Original snippet (as given)</button>
+        <button class="tabbtn" data-tab="fixed">Fixed & runnable version</button>
+      </div>
+
+      <div id="orig" class="tabcontent">
+<pre><code class="c">from tqdm import tqdm
+import numpy as np
+import torch
+import torch.nn as nn
+import matplotlib.pyplot as plt
+
+def generate_sin(l, freq, phase, amp):
+  time = np.arange(0, l)
+  vals = amp * np.sin(2 * np.pi * freq * time + phase)
+  return vals
+
+sin_wave = generate_sin(1000, 0.01, 0, 1.0)
+
+class SequenceModel(nn.Module):
+  """A GRU-based sequence model
+
+  Fill in your implementation below
+  """
+  def __init__(self, input_size: int, hidden_size: int, num_layers=1):
+    super().__init__()
+    # add 2 gru layer2
+    self.gru_layer = nn.GRU(input_size, hidden_size, 2)
+
+    # add output_proj dense layer
+    self.output_proj = nn.Linear(hidden_size, 1)
+
+  def forward(self, input_tensor: torch.tensor):
+    output = self.output_proj(self.gru_layer(input_tensor)[0])
+    return output
+
+
+dataset = torch.tensor(sin_wave).float().cuda()
+model = SequenceModel(1, 512, 5).cuda()
+model.train()
+params = list(model.parameters())
+optimizer = torch.optim.Adam(params, lr=1e-3, weight_decay=0.0)
+
+# TODO: Add training logic here
+# [1:32] -> [1:32]
+# [2:33] -> [2:33]
+# [1, 128] bs x seq_len
+
+step = 200
+current_step = 128
+window_size = 32
+while current_step &lt; step:
+  optimizer.zero_grad()
+  input_data = dataset[:-1].unsqueeze(1)
+  output = model(input_data)
+  loss = nn.MSELoss()
+  output_loss = loss(dataset[1:].unsqueeze(1), output)
+  output_loss.backward()
+  optimizer.step()
+  current_step += 1
+  print("current_step --- ", current_step, output_loss)</code></pre>
+      </div>
+
+      <div id="fixed" class="tabcontent hidden">
+<pre><code># ✅ Fixed & runnable GRU next-step forecasting (PyTorch)
+import numpy as np
+import torch
+import torch.nn as nn
+
+# --- Data ---
+def generate_sin(l, freq, phase, amp):
+    t = np.arange(0, l)
+    return amp * np.sin(2 * np.pi * freq * t + phase)
+
+series = generate_sin(1000, 0.01, 0, 1.0)
+series = torch.tensor(series, dtype=torch.float32)
+
+# --- Model ---
+class SequenceModel(nn.Module):
+    def __init__(self, input_size: int, hidden_size: int, num_layers: int = 2):
+        super().__init__()
+        self.gru = nn.GRU(input_size, hidden_size, num_layers=num_layers, batch_first=True)
+        self.out = nn.Linear(hidden_size, 1)
+    def forward(self, x):               # x: [B, T, 1]
+        y, _ = self.gru(x)              # y: [B, T, H]
+        return self.out(y)              # [B, T, 1]
+
+model = SequenceModel(1, 128, 2)
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+loss_fn = nn.MSELoss()
+
+# --- Training ---
+seq_len = 32
+epochs = 200
+series = series.unsqueeze(-1)           # [N, 1]
+
+for ep in range(epochs):
+    total = 0.0
+    for i in range(len(series) - seq_len - 1):
+        x = series[i:i+seq_len].unsqueeze(0)        # [1, T, 1]
+        y = series[i+1:i+seq_len+1].unsqueeze(0)    # shifted by 1
+        optimizer.zero_grad()
+        yhat = model(x)
+        loss = loss_fn(yhat, y)
+        loss.backward()
+        optimizer.step()
+        total += loss.item()
+    if ep % 50 == 0:
+        print(f"epoch {ep}: loss={total/(len(series)):.6f}")
+
+# --- Inference (autoregressive) ---
+model.eval()
+with torch.no_grad():
+    window = series[:seq_len].unsqueeze(0)   # [1, T, 1]
+    preds = []
+    for _ in range(200):
+        out = model(window)
+        nxt = out[:, -1:, :]
+        preds.append(nxt.item())
+        window = torch.cat([window[:, 1:, :], nxt], dim=1)
+print("generated steps:", len(preds))
+</code></pre>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Why <code>optimizer.zero_grad()</code> and <code>model.eval()</code> matter</h2>
+      <ul>
+        <li><span class="pill">Training</span> <code>optimizer.zero_grad()</code> clears old gradients so they don’t accumulate before the next <code>loss.backward()</code>.</li>
+        <li><span class="pill">Inference</span> <code>model.eval()</code> disables dropout & freezes batch‑norm stats; use with <code>torch.no_grad()</code> to skip grad tracking.</li>
+      </ul>
+    </section>
+
+    <p class="footer">© ML/AI Fundamentals • GRU Seq2Seq (sine wave) • HTML5 single‑file handout</p>
+  </div>
+<script>
+  // Simple tabs
+  const btns = document.querySelectorAll('.tabbtn');
+  const tabs = { orig: document.getElementById('orig'), fixed: document.getElementById('fixed') };
+  btns.forEach(b=>b.addEventListener('click', ()=>{
+    btns.forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    const k = b.dataset.tab;
+    Object.entries(tabs).forEach(([name, el])=>{
+      if(name===k) el.classList.remove('hidden'); else el.classList.add('hidden');
+    });
+  }));
+</script>
+</body>
+</html>
+
