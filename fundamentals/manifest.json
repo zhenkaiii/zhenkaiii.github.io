@@ -6,7 +6,7 @@
   },
   {
     "file": "speech_tokenizer.html",
-    "title": "Use Encodec in Seq2Seq",
+    "title": "Using Encodec in Seq2Seq",
     "tags": ["Speech", "Codec / Tokenization"]
   },
   {
