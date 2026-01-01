@@ -2,16 +2,26 @@
   {
     "file": "s2s_gru.html",
     "title": "Seq2Seq with GRU",
-    "tags": ["pytorch", "fundamentals", "rnn", "sequence-models"]
+    "tags": ["Seq2Seq", "AI Coding / PyTorch"]
   },
   {
     "file": "speech_tokenizer.html",
-    "title": "Speech Tokenizer",
-    "tags": ["speech", "tokenization", "ml", "fundamentals"]
+    "title": "Use Encodec in Seq2Seq",
+    "tags": ["Speech", "Codec / Tokenization"]
   },
   {
     "file": "weight_tying.html",
     "title": "Weight Tying",
-    "tags": ["pytorch", "fundamentals", "optimization"]
+    "tags": ["Seq2Seq"]
+  }
+  {
+    "file": "pytorch-kmeans.html",
+    "title": "Tasting the Power of PyTorch Ops via Kmeans Clustering",
+    "tags": ["AI Coding / PyTorch"]
+  }
+  {
+    "file": "bst_bfs.html",
+    "title": "Binary Search and BFS: Invariants and Intuition",
+    "tags": ["Core Coding Patterns"]
   }
 ]
