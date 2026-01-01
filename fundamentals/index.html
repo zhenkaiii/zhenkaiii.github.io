@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Fundamentals</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: 40px auto; }
+    h1 { margin-bottom: 10px; }
+    h2 { margin-top: 30px; }
+    a { display: block; margin: 4px 0; }
+  </style>
+</head>
+<body>
+
+<h1>Fundamentals</h1>
+<div id="content"></div>
+
+<script>
+fetch("manifest.json")
+  .then(r => r.json())
+  .then(items => {
+    const params = new URLSearchParams(window.location.search);
+    const filterTag = params.get("tag");
+
+    const byTag = {};
+    items.forEach(it => {
+      it.tags.forEach(tag => {
+        if (filterTag && tag !== filterTag) return;
+        byTag[tag] = byTag[tag] || [];
+        byTag[tag].push(it);
+      });
+    });
+
+    const root = document.getElementById("content");
+    Object.keys(byTag).sort().forEach(tag => {
+      const h = document.createElement("h2");
+      h.textContent = "#" + tag;
+      root.appendChild(h);
+
+      byTag[tag].forEach(it => {
+        const a = document.createElement("a");
+        a.href = it.file;
+        a.textContent = it.title;
+        root.appendChild(a);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

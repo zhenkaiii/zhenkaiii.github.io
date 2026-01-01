@@ -1,0 +1,17 @@
+[
+  {
+    "file": "s2s_gru.html",
+    "title": "Seq2Seq with GRU",
+    "tags": ["pytorch", "fundamentals", "rnn", "sequence-models"]
+  },
+  {
+    "file": "speech_tokenizer.html",
+    "title": "Speech Tokenizer",
+    "tags": ["speech", "tokenization", "ml", "fundamentals"]
+  },
+  {
+    "file": "weight_tying.html",
+    "title": "Weight Tying",
+    "tags": ["pytorch", "fundamentals", "optimization"]
+  }
+]
