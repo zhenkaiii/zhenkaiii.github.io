@@ -23,5 +23,10 @@
     "file": "bst_bfs.html",
     "title": "Binary Search and BFS: Invariants and Intuition",
     "tags": ["Core Coding Patterns"]
+  },
+  {
+    "file": "wrapper.html",
+    "title": "What's PyTorch Wrapper? And Why SmoothQuant Likes It?",
+    "tags": ["AI Coding / PyTorch"]
   }
 ]
