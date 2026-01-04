@@ -7,7 +7,7 @@
   {
     "file": "speech_tokenizer.html",
     "title": "Using Encodec in Seq2Seq",
-    "tags": ["Speech", "Codec / Tokenization"]
+    "tags": ["Speech Codec / Tokenization"]
   },
   {
     "file": "weight_tying.html",
@@ -27,6 +27,11 @@
   {
     "file": "wrapper.html",
     "title": "What's PyTorch Wrapper? And Why SmoothQuant Likes It?",
-    "tags": ["AI Coding / PyTorch"]
+    "tags": ["AI Coding / PyTorch", "Efficiency / Co-Design"]
+  },
+  {
+    "file": "sweep.html",
+    "title": "INT8 does not automatically reduce latency - It often gets worse until conditions are right.",
+    "tags": ["AI Coding / PyTorch", "Efficiency / Co-Design"]
   }
 ]
