@@ -1,0 +1,9 @@
+# Private files - encrypted and hidden
+.private_files/
+private_files_encrypted.tar.gz.enc
+
+# macOS
+.DS_Store
+
+# Temporary files
+~$*
