@@ -1,0 +1,42 @@
+name: Visit YouTube Video
+
+on:
+  schedule:
+    # Run every 2 hours at random minutes
+    - cron: '7 */2 * * *'   # Every 2 hours at :07
+    - cron: '23 */2 * * *'  # Every 2 hours at :23
+    - cron: '41 */2 * * *'  # Every 2 hours at :41
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  visit:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install Chrome and ChromeDriver
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y chromium-browser chromium-chromedriver
+    
+    - name: Install Python dependencies
+      run: |
+        pip install selenium
+    
+    - name: Visit YouTube Video
+      run: |
+        python3 visit_youtube_once.py
+      env:
+        CHROMEDRIVER_PATH: /usr/bin/chromedriver
+    
+    - name: Log completion
+      if: always()
+      run: |
+        echo "Visit completed at $(date)"
