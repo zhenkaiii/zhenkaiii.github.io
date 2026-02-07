@@ -1,7 +1,7 @@
 #!/bin/bash
 # Complete daily video creation workflow
 
-cd /Users/kaizhen/myworkspace/twitter-bot
+cd /Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot
 
 echo "🎬 DAILY VIDEO CREATION STARTING..."
 echo ""

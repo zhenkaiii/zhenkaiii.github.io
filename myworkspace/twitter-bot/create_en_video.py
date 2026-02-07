@@ -3,10 +3,10 @@ import subprocess
 import os
 
 # Paths
-thumb = "/Users/kaizhen/myworkspace/twitter-bot/avartar/thumb-en.png"
-talking_head = "/Users/kaizhen/myworkspace/twitter-bot/avartar/image4-removed.png"
-voiceover = "/Users/kaizhen/myworkspace/twitter-bot/scripts/2026-02-01/voiceover-en.m4a"
-output_dir = "/Users/kaizhen/myworkspace/twitter-bot/scripts/2026-02-01"
+thumb = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/avartar/thumb-en.png"
+talking_head = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/avartar/image4-removed.png"
+voiceover = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/scripts/2026-02-01/voiceover-en.m4a"
+output_dir = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/scripts/2026-02-01"
 output = f"{output_dir}/video-en.mp4"
 
 # Step 1: Adjust voiceover (speed up 15%, pitch down 2 semitones)

@@ -31,7 +31,7 @@ Automatically creates daily videos with:
 ### Installation
 
 ```bash
-cd /Users/kaizhen/myworkspace/twitter-bot
+cd /Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot
 pip3 install tweepy requests beautifulsoup4 feedparser newspaper3k
 ```
 
@@ -46,7 +46,7 @@ API keys are already configured in the scripts:
 ### Automated Script Generation (2 minutes)
 
 ```bash
-cd /Users/kaizhen/myworkspace/twitter-bot
+cd /Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot
 ./generate_daily_script.sh
 ```
 
@@ -71,7 +71,7 @@ This creates a folder: `scripts/YYYY-MM-DD/` with:
 ### Create Final Video (30 seconds)
 
 ```bash
-cd /Users/kaizhen/myworkspace/twitter-bot
+cd /Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot
 python3 video_creator.py --create-video
 ```
 

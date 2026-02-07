@@ -4,11 +4,11 @@ import os
 import glob
 
 # Paths
-thumb = "/Users/kaizhen/myworkspace/twitter-bot/avartar/thumb-en.png"
-talking_head_img = "/Users/kaizhen/myworkspace/twitter-bot/avartar/image4-removed.png"
-voiceover = "/Users/kaizhen/myworkspace/twitter-bot/scripts/2026-02-01/voiceover-en.m4a"
-images_dir = "/Users/kaizhen/myworkspace/twitter-bot/images_asset"
-output_dir = "/Users/kaizhen/myworkspace/twitter-bot/scripts/2026-02-01"
+thumb = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/avartar/thumb-en.png"
+talking_head_img = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/avartar/image4-removed.png"
+voiceover = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/scripts/2026-02-01/voiceover-en.m4a"
+images_dir = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/images_asset"
+output_dir = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/scripts/2026-02-01"
 final_output = f"{output_dir}/video-en-final.mp4"
 
 print("=" * 60)
@@ -36,7 +36,7 @@ print(f"      Duration: {vo_duration:.1f}s")
 # Step 2: Create talking head with Wav2Lip
 talking_head_video = f"{output_dir}/talking_head.mp4"
 print("\n[2/7] Creating lip-synced talking head with Wav2Lip...")
-wav2lip_dir = "/Users/kaizhen/myworkspace/twitter-bot/Wav2Lip"
+wav2lip_dir = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/Wav2Lip"
 subprocess.run([
     "python3", "inference.py",
     "--checkpoint_path", "checkpoints/wav2lip_gan.pth",

@@ -44,5 +44,5 @@ def download_from_shared_album(url, output_dir):
 
 if __name__ == "__main__":
     url = "https://photos.app.goo.gl/W3Lwr9WuYvUEmQ9m8"
-    output_dir = "/Users/kaizhen/myworkspace/twitter-bot/images_asset"
+    output_dir = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/images_asset"
     download_from_shared_album(url, output_dir)

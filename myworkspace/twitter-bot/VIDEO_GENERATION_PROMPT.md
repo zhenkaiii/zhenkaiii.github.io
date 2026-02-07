@@ -12,7 +12,7 @@
 
 ### 3. Download Background Images
 - Download ~16 images from Google Photos shared album
-- Save to `/Users/kaizhen/myworkspace/twitter-bot/images_asset/`
+- Save to `/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/images_asset/`
 - Images should be named: `image_001.jpg`, `image_002.jpg`, etc.
 
 ### 4. Create/Update Thumbnail Images
@@ -72,7 +72,7 @@ pip install openai-whisper
 
 ### External Tools
 1. **Wav2Lip** - AI lip-sync generation
-   - Location: `/Users/kaizhen/myworkspace/twitter-bot/Wav2Lip/`
+   - Location: `/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/Wav2Lip/`
    - Model: `checkpoints/wav2lip_gan.pth` (416MB)
    - GitHub: https://github.com/Rudrabha/Wav2Lip
 
@@ -116,7 +116,7 @@ brew install ffmpeg
 pip install opencv-python numpy scipy librosa torch torchvision torchaudio face-alignment batch-face Pillow
 
 # Clone and setup Wav2Lip
-cd /Users/kaizhen/myworkspace/twitter-bot
+cd /Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot
 git clone https://github.com/Rudrabha/Wav2Lip.git
 cd Wav2Lip
 
@@ -143,13 +143,13 @@ Before starting automation, ensure you have:
 ```
 Generate English and Chinese videos for Twitter bot with these specifications:
 
-**Directory:** /Users/kaizhen/myworkspace/twitter-bot/scripts/YYYY-MM-DD/
+**Directory:** /Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/scripts/YYYY-MM-DD/
 (Replace YYYY-MM-DD with today's date)
 
 **Video Requirements:**
 1. **Thumbnails:** 
-   - EN: Use `/Users/kaizhen/myworkspace/twitter-bot/avartar/thumb-en.png` at start and end (7 seconds each)
-   - CN: Use `/Users/kaizhen/myworkspace/twitter-bot/avartar/thumb-cn.png` at start and end (7 seconds each)
+   - EN: Use `/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/avartar/thumb-en.png` at start and end (7 seconds each)
+   - CN: Use `/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/avartar/thumb-cn.png` at start and end (7 seconds each)
    - Scale to fit 1280x720 without cropping (pad with black bars if needed)
 
 2. **Voiceover:**
@@ -159,7 +159,7 @@ Generate English and Chinese videos for Twitter bot with these specifications:
    - Lower pitch by 2 semitones (asetrate=44100*0.887,atempo=1.127)
 
 3. **Talking Head:**
-   - Use `/Users/kaizhen/myworkspace/twitter-bot/avartar/image4-removed.png`
+   - Use `/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/avartar/image4-removed.png`
    - Generate lip-synced video with Wav2Lip using adjusted audio
    - Size: 115px width
    - Position: Bottom-right corner (10px from right, 60px from bottom)
@@ -171,13 +171,13 @@ Generate English and Chinese videos for Twitter bot with these specifications:
    - Display throughout entire video (including thumbnails)
 
 5. **Background:**
-   - Create slideshow from images in `/Users/kaizhen/myworkspace/twitter-bot/images_asset/`
+   - Create slideshow from images in `/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/images_asset/`
    - Scale to 1280:720 and crop to remove black bars
    - Duration: Total video length minus 14 seconds (for thumbnails)
 
 **Output Files:**
-- `/Users/kaizhen/myworkspace/twitter-bot/scripts/YYYY-MM-DD/final_video_en_complete.mp4`
-- `/Users/kaizhen/myworkspace/twitter-bot/scripts/YYYY-MM-DD/final_video_cn_complete.mp4`
+- `/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/scripts/YYYY-MM-DD/final_video_en_complete.mp4`
+- `/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/scripts/YYYY-MM-DD/final_video_cn_complete.mp4`
 
 **Workflow Steps:**
 1. Adjust voiceovers (speed +20%, pitch -2 semitones)
@@ -194,7 +194,7 @@ If you need to run steps manually:
 
 ### 1. Adjust Voiceovers
 ```bash
-cd /Users/kaizhen/myworkspace/twitter-bot/scripts/YYYY-MM-DD
+cd /Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/scripts/YYYY-MM-DD
 
 # English
 ffmpeg -i voiceover-en.m4a -filter:a "atempo=1.20,asetrate=44100*0.887,atempo=1.127" voiceover-en-adjusted.m4a -y
@@ -205,7 +205,7 @@ ffmpeg -i voiceover-cn.m4a -filter:a "atempo=1.20,asetrate=44100*0.887,atempo=1.
 
 ### 2. Generate Lip-Synced Talking Heads
 ```bash
-cd /Users/kaizhen/myworkspace/twitter-bot/Wav2Lip
+cd /Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/Wav2Lip
 
 # English
 python3 inference.py --checkpoint_path checkpoints/wav2lip_gan.pth \

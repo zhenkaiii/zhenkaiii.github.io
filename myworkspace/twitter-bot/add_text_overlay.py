@@ -20,8 +20,8 @@ text_overlay = "/tmp/kfromkmedia_text.png"
 img.save(text_overlay)
 
 # Add text overlay to video
-input_video = "/Users/kaizhen/myworkspace/twitter-bot/scripts/2026-02-01/video-en.mp4"
-output_video = "/Users/kaizhen/myworkspace/twitter-bot/scripts/2026-02-01/video-en-final.mp4"
+input_video = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/scripts/2026-02-01/video-en.mp4"
+output_video = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/scripts/2026-02-01/video-en-final.mp4"
 
 print("Adding @kfromkmedia text overlay...")
 subprocess.run([

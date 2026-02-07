@@ -14,7 +14,7 @@ def main():
         sys.exit(1)
     
     date = sys.argv[1]
-    base_dir = "/Users/kaizhen/myworkspace/twitter-bot"
+    base_dir = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot"
     scripts_dir = f"{base_dir}/scripts/{date}"
     
     # Check prerequisites

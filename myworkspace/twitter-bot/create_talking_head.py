@@ -3,10 +3,10 @@ import subprocess
 import os
 
 # Paths
-avatar = "/Users/kaizhen/myworkspace/twitter-bot/avartar/jeff.jpg"
-audio = "/Users/kaizhen/myworkspace/twitter-bot/scripts/2026-02-01/voiceover-en.m4a"
-bg_video = "/Users/kaizhen/myworkspace/twitter-bot/scripts/2026-02-01/final_video_en.mp4"
-output = "/Users/kaizhen/myworkspace/twitter-bot/scripts/2026-02-01/final_video_en_talking.mp4"
+avatar = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/avartar/jeff.jpg"
+audio = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/scripts/2026-02-01/voiceover-en.m4a"
+bg_video = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/scripts/2026-02-01/final_video_en.mp4"
+output = "/Users/kaizhen/zhenkaiii.github.io/myworkspace/twitter-bot/scripts/2026-02-01/final_video_en_talking.mp4"
 
 # Create talking head overlay - circular avatar in bottom right
 cmd = f"""ffmpeg -i {bg_video} -loop 1 -i {avatar} -filter_complex "
