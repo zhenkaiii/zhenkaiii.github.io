@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Binary Search: Invariants and Intuition</title>
+<style>
+    body {
+        font-family: "Georgia", "Times New Roman", serif;
+        color: #222;
+        background: #fafafa;
+        margin: 0;
+        padding: 2rem 1rem;
+        line-height: 1.6;
+        max-width: 850px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    h1, h2 {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 600;
+        color: #111;
+    }
+    h1 {
+        font-size: 1.8rem;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 0.3rem;
+    }
+    h2 {
+        font-size: 1.3rem;
+        margin-top: 2rem;
+        color: #333;
+    }
+    pre {
+        background: #f5f5f5;
+        border-radius: 6px;
+        padding: 1rem;
+        overflow-x: auto;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+    }
+    code {
+        background: #f5f5f5;
+        border-radius: 4px;
+        padding: 2px 4px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+    }
+    table {
+        border-collapse: collapse;
+        margin: 1rem 0;
+        width: 100%;
+        font-size: 0.95rem;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    em {
+        color: #444;
+    }
+    footer {
+        margin-top: 3rem;
+        font-size: 0.9rem;
+        color: #777;
+        border-top: 1px solid #e5e5e5;
+        padding-top: 1rem;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<h1>Binary Search: Invariants and Intuition</h1>
+<div id="author-links" style="margin-bottom:1.5rem; font-size:0.95rem;">
+  <a href="https://scholar.google.com/citations?user=biSonYMAAAAJ&hl=en&oi=ao" target="_blank" style="margin-right:1rem; text-decoration:none;">
+    <img src="../google-scholar-icon.png" alt="Scholar" width="18" style="vertical-align:middle; margin-right:4px;"> Scholar
+  </a>
+  <a href="https://www.linkedin.com/in/kai-zhen-01b7b5103/" target="_blank" style="margin-right:1rem; text-decoration:none;">
+    <img src="../linkedin-icon.png" alt="LinkedIn" width="18" style="vertical-align:middle; margin-right:4px;"> LinkedIn
+  </a>
+  <a href="../zhenk_cv.pdf" target="_blank" style="text-decoration:none;">
+    <img src="../bcs-icon.png" alt="CV" width="28" style="vertical-align:middle; margin-right:4px;"> CV
+  </a>
+</div>
+
+
+<h2>Binary Search</h2>
+<p>
+Binary search is <strong>boundary search</strong>, not value matching.
+It finds the boundary where a condition flips from false to true.
+It does not guarantee the value at the boundary equals your target —
+<strong>always verify before returning</strong>.
+The generic template:
+</p>
+
+<pre><code>lo, hi = 0, len(arr) - 1
+while lo &lt;= hi:
+    mid = (lo + hi) // 2
+    if condition(mid):
+        hi = mid - 1
+    else:
+        lo = mid + 1
+</code></pre>
+
+<p>
+The invariant maintained throughout:
+</p>
+<ul>
+  <li>Everything before <code>lo</code> is known to be <strong>false</strong> (condition not met).</li>
+  <li>Everything after <code>hi</code> is known to be <strong>true</strong> (condition met).</li>
+  <li>The boundary — the first index where the condition becomes true — lies in <code>[lo, hi]</code>.</li>
+</ul>
+<p>
+When <code>condition(mid)</code> is true, the boundary is at <code>mid</code> or to its left, so we set <code>hi = mid - 1</code>.
+When false, the boundary is to the right, so we set <code>lo = mid + 1</code>.
+When the loop exits (<code>lo &gt; hi</code>), <code>lo</code> is the first index where the condition is true.
+</p>
+
+<p>
+For example, if the task is to <em>return the first value greater than the target</em>,
+the condition should be:
+</p>
+
+<pre><code>arr[mid] &gt; target</code></pre>
+
+<h2>Condition Reference</h2>
+<p>
+With this single template, you only need to choose the <strong>condition</strong> and read the
+<strong>answer</strong> from the right place. When the loop exits, <code>lo = hi + 1</code>.
+<code>lo</code> is the first index where the condition is true;
+<code>hi</code> is the last index where the condition is false.
+</p>
+
+<pre><code>... F  F  F  [hi] [lo]  T  T  T ...
+              ↑     ↑
+          last false  first true
+</code></pre>
+
+<table>
+  <thead>
+    <tr>
+      <th>Task</th>
+      <th>Condition</th>
+      <th>Answer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>First index with <code>arr[i] &ge; x</code></td>
+      <td><code>arr[mid] &gt;= x</code></td>
+      <td><code>lo</code></td>
+    </tr>
+    <tr>
+      <td>First index with <code>arr[i] &gt; x</code></td>
+      <td><code>arr[mid] &gt; x</code></td>
+      <td><code>lo</code></td>
+    </tr>
+    <tr>
+      <td>Last index with <code>arr[i] &le; x</code></td>
+      <td><code>arr[mid] &gt; x</code></td>
+      <td><code>hi</code></td>
+    </tr>
+    <tr>
+      <td>Last index with <code>arr[i] &lt; x</code></td>
+      <td><code>arr[mid] &gt;= x</code></td>
+      <td><code>hi</code></td>
+    </tr>
+    <tr>
+      <td>First occurrence of <code>x</code></td>
+      <td><code>arr[mid] &gt;= x</code></td>
+      <td><code>lo</code> (verify <code>arr[lo] == x</code>)</td>
+    </tr>
+    <tr>
+      <td>Last occurrence of <code>x</code></td>
+      <td><code>arr[mid] &gt; x</code></td>
+      <td><code>hi</code> (verify <code>arr[hi] == x</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+Notice: only <strong>two conditions</strong> ever appear — <code>&gt;= x</code> and <code>&gt; x</code>.
+The "first/last" distinction comes from whether you read <code>lo</code> (first true) or <code>hi</code> (last false).
+</p>
+
+<h2>Common Pitfall: Translating the Problem</h2>
+<p>
+The hardest step is <strong>not</strong> writing the template — it's translating the problem into the right condition.
+Before touching code, write this sentence:
+</p>
+<blockquote style="border-left:3px solid #ccc; padding-left:1rem; color:#333; font-style:italic;">
+"I need the <strong>first / last</strong> index where <code>arr[i] ___ target</code>."
+</blockquote>
+<p>
+Once that sentence is clear, the condition falls straight out of the table above.
+</p>
+<p>
+A common mistake: writing the <em>negation</em> of the condition you need.
+For example, wanting "last <code>&le; x</code>" and writing <code>arr[mid] &lt; x</code> instead of <code>arr[mid] &gt; x</code>.
+Remember: the condition in the <code>if</code> is what triggers <code>hi = mid - 1</code>.
+Ask yourself: <em>"what property do I want to push hi past?"</em> — that's your condition.
+For "last <code>&le; x</code>", you want to push <code>hi</code> past elements that are <code>&gt; x</code>,
+so the condition is <code>arr[mid] &gt; x</code>.
+</p>
+
+<h2>Boundary Search ≠ Value Matching</h2>
+<p>
+Binary search always converges — <code>lo</code> and <code>hi</code> will land <em>somewhere</em>,
+even if the target does not exist in the array.
+The boundary is real; the value there may not be what you want.
+<strong>Always verify</strong> that the returned index actually holds the target
+before using it as a match.
+</p>
+<pre><code># After binary search, lo might be out of bounds or point to a different value.
+# Always check:
+if lo &lt; len(arr) and arr[lo] == target:
+    return lo
+else:
+    return -1   # target not found
+</code></pre>
+
+<h2>Dual Setup Invariants</h2>
+<p>
+There exist two consistent (and equivalent) formulations of binary search,
+differing only in the initialization of <code>high</code>,
+the loop condition, and how <code>high</code> is updated:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variant</th>
+      <th>Initial <code>high</code></th>
+      <th>Loop condition</th>
+      <th>Update rule for <code>high</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>A</td>
+      <td><code>high = len(arr)</code></td>
+      <td><code>while low &lt; high</code></td>
+      <td><code>high = mid</code> (keep mid)</td>
+    </tr>
+    <tr>
+      <td>B</td>
+      <td><code>high = len(arr) - 1</code></td>
+      <td><code>while low &lt;= high</code></td>
+      <td><code>high = mid - 1</code> (exclude mid)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+As long as these three components are aligned,
+both variants converge to the same correct boundary.
+</p>
+
+<h2>Application: bisect_left and bisect_right</h2>
+<p>
+Python's <code>bisect</code> module provides two fundamental operations.
+Both use Variant A internally. Understanding them through our invariant lens:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Function</th>
+      <th>Condition</th>
+      <th>Returns</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>bisect_left(arr, x)</code></td>
+      <td><code>arr[mid] &gt;= x</code></td>
+      <td>First position where <code>x</code> could be inserted (leftmost)</td>
+    </tr>
+    <tr>
+      <td><code>bisect_right(arr, x)</code></td>
+      <td><code>arr[mid] &gt; x</code></td>
+      <td>Last position where <code>x</code> could be inserted (rightmost)</td>
+    </tr>
+  </tbody>
+</table>
+
+<pre><code>import bisect
+
+arr = [1, 3, 3, 3, 5, 7]
+
+bisect.bisect_left(arr, 3)   # 1  (first index where 3 could go)
+bisect.bisect_right(arr, 3)  # 4  (past the last 3)
+</code></pre>
+
+<p>
+A common trick: to find the <em>number of elements equal to x</em>, compute
+<code>bisect_right(arr, x) - bisect_left(arr, x)</code>.
+</p>
+
+<h2>Search Space Beyond Arrays</h2>
+<p>
+Binary search applies whenever the search space has a <strong>monotonic predicate</strong> —
+the "array" can be implicit. Instead of searching over indices,
+you search over <em>candidate answers</em>.
+</p>
+
+<p>
+<strong>Example (LC 1011):</strong> A conveyor belt has packages with weights
+<code>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</code>.
+You must ship them <strong>in order</strong> within <code>days = 5</code> days.
+Each day you load packages sequentially until adding the next would exceed
+the ship's capacity, then you stop for the day.
+Find the <strong>minimum capacity</strong> that gets everything shipped in time.
+</p>
+
+<pre><code># If capacity c works, any capacity > c also works → monotonic.
+# Search range: [max(weights), sum(weights)]
+#   lo = max(weights): must at least fit the heaviest single package
+#   hi = sum(weights): ship everything in one day (always works)
+
+def ship_within_days(weights, days):
+    def can_ship(capacity):
+        """Greedily load packages day by day. Return True if done within `days`."""
+        day_count = 1
+        current_load = 0
+        for w in weights:
+            if current_load + w &gt; capacity:
+                day_count += 1
+                current_load = 0
+            current_load += w
+        return day_count &lt;= days
+
+    lo, hi = max(weights), sum(weights)
+    while lo &lt; hi:
+        mid = (lo + hi) // 2
+        if can_ship(mid):
+            hi = mid
+        else:
+            lo = mid + 1
+    return lo
+
+# ship_within_days([1,2,3,4,5,6,7,8,9,10], 5) → 15
+</code></pre>
+
+<h2>How to Talk About It</h2>
+<p>
+In an interview, narrate your approach <em>before</em> writing code.
+Here are two templates — one for classic sorted-array problems, one for search-on-answer problems:
+</p>
+
+<p><strong>Sorted array (e.g., "find the first element &gt; target"):</strong></p>
+<blockquote style="border-left:3px solid #ccc; padding-left:1rem; color:#333; font-style:italic;">
+"The array is sorted, so I'll use binary search. I need to find the first index where
+<code>arr[mid] &gt; target</code>, so that's my condition. I'll maintain the invariant that
+everything left of <code>lo</code> fails the condition and everything from <code>hi</code> onward
+satisfies it. Each iteration I check the midpoint — if the condition holds I pull <code>hi</code>
+down to <code>mid</code>; otherwise I push <code>lo</code> up to <code>mid + 1</code>.
+When <code>lo</code> meets <code>hi</code>, that's my answer. This runs in O(log n) time, O(1) space."
+</blockquote>
+
+<p><strong>Search on answer (e.g., "minimum capacity to ship within D days"):</strong></p>
+<blockquote style="border-left:3px solid #ccc; padding-left:1rem; color:#333; font-style:italic;">
+"The key observation is that the feasibility is monotonic — if capacity <code>c</code> works,
+then any capacity greater than <code>c</code> also works. So I can binary search on the answer.
+My search range is <code>[max(weights), sum(weights)]</code>. For each candidate capacity
+at the midpoint, I run a greedy check to see if we can ship within D days.
+If yes, I shrink the upper bound; if no, I raise the lower bound.
+The greedy check is O(n), and we do it O(log S) times where S is the search range,
+so the total is O(n log S)."
+</blockquote>
+
+<p>
+The pattern: <strong>state the condition, state the invariant, state the complexity</strong>.
+This shows the interviewer you understand <em>why</em> the algorithm works,
+not just <em>what</em> code to write.
+</p>
+
+<footer>
+&copy; 2025 Kai Zhen — All rights reserved. <br>
+Last updated October 2025.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BFS &amp; DFS</title>
+<style>
+    body {
+        font-family: "Georgia", "Times New Roman", serif;
+        color: #222;
+        background: #fafafa;
+        margin: 0;
+        padding: 2rem 1rem;
+        line-height: 1.6;
+        max-width: 850px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    h1, h2 {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 600;
+        color: #111;
+    }
+    h1 {
+        font-size: 1.8rem;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 0.3rem;
+    }
+    h2 {
+        font-size: 1.3rem;
+        margin-top: 2rem;
+        color: #333;
+    }
+    pre {
+        background: #f5f5f5;
+        border-radius: 6px;
+        padding: 1rem;
+        overflow-x: auto;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+    }
+    code {
+        background: #f5f5f5;
+        border-radius: 4px;
+        padding: 2px 4px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+    }
+    table {
+        border-collapse: collapse;
+        margin: 1rem 0;
+        width: 100%;
+        font-size: 0.95rem;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    em {
+        color: #444;
+    }
+    footer {
+        margin-top: 3rem;
+        font-size: 0.9rem;
+        color: #777;
+        border-top: 1px solid #e5e5e5;
+        padding-top: 1rem;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<h1>BFS &amp; DFS</h1>
+<div id="author-links" style="margin-bottom:1.5rem; font-size:0.95rem;">
+  <a href="https://scholar.google.com/citations?user=biSonYMAAAAJ&hl=en&oi=ao" target="_blank" style="margin-right:1rem; text-decoration:none;">
+    <img src="../google-scholar-icon.png" alt="Scholar" width="18" style="vertical-align:middle; margin-right:4px;"> Scholar
+  </a>
+  <a href="https://www.linkedin.com/in/kai-zhen-01b7b5103/" target="_blank" style="margin-right:1rem; text-decoration:none;">
+    <img src="../linkedin-icon.png" alt="LinkedIn" width="18" style="vertical-align:middle; margin-right:4px;"> LinkedIn
+  </a>
+  <a href="../zhenk_cv.pdf" target="_blank" style="text-decoration:none;">
+    <img src="../bcs-icon.png" alt="CV" width="28" style="vertical-align:middle; margin-right:4px;"> CV
+  </a>
+</div>
+
+
+<h2>BFS for Binary Trees (Level-Order Traversal)</h2>
+<p>
+The key idea is that a single queue to stash offspring is not enough.
+You may need two!
+Swap them within the <code>while</code> loop to make the traversal progress.
+</p>
+
+<pre><code>curr_queue = [root]   # current level gives offspring
+while curr_queue:
+    next_queue = []   # collect ALL offspring from curr_queue
+    for n in curr_queue:
+        if n.left:  next_queue.append(n.left)
+        if n.right: next_queue.append(n.right)
+
+    # do whatever you need for all nodes at the same level here
+
+    curr_queue = next_queue   # now the kids become mature to give offspring too
+</code></pre>
+
+<p>
+This "two-queue swap" pattern ensures that each iteration of the loop
+handles exactly one level of the tree.
+It provides full visibility of all nodes on that level
+before moving to the next, which is essential when performing
+cross-parent operations (such as linking cousins via <code>.next</code> pointers).
+</p>
+
+<h2>General Graph BFS (Shortest Path in Unweighted Graphs)</h2>
+<p>
+BFS finds the shortest path in an <strong>unweighted</strong> graph.
+The template uses a single <code>deque</code> plus a <code>visited</code> set.
+Mark nodes as visited <em>when enqueueing</em>, not when dequeueing — otherwise you'll process duplicates.
+</p>
+
+<pre><code>from collections import deque
+
+def bfs(graph, start):
+    visited = {start}
+    queue = deque([start])
+    dist = {start: 0}
+
+    while queue:
+        node = queue.popleft()
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)       # mark BEFORE enqueue
+                queue.append(neighbor)
+                dist[neighbor] = dist[node] + 1
+
+    return dist
+</code></pre>
+
+<p>
+<strong>When do you need level-by-level vs. single queue?</strong>
+If you only care about shortest distances, a single <code>deque</code> suffices — the distance is tracked per node.
+The two-queue (or <code>len(queue)</code> loop) pattern is needed when you must process an entire "wave" together,
+e.g., multi-source BFS or counting levels.
+</p>
+
+<h2>Multi-Source BFS</h2>
+<p>
+Initialize the queue with <em>all</em> source nodes at once. The BFS then expands outward from
+all sources simultaneously, finding the shortest distance from any source to every cell.
+Classic example: "01 Matrix" — distance of each cell to nearest 0.
+</p>
+
+<pre><code>queue = deque()
+dist = {}
+for r in range(rows):
+    for c in range(cols):
+        if grid[r][c] == 0:
+            queue.append((r, c))
+            dist[(r, c)] = 0
+
+while queue:
+    r, c = queue.popleft()
+    for dr, dc in [(0,1),(0,-1),(1,0),(-1,0)]:
+        nr, nc = r + dr, c + dc
+        if 0 &lt;= nr &lt; rows and 0 &lt;= nc &lt; cols and (nr, nc) not in dist:
+            dist[(nr, nc)] = dist[(r, c)] + 1
+            queue.append((nr, nc))
+</code></pre>
+
+<h2>DFS — Recursive</h2>
+<p>
+DFS explores as deep as possible before backtracking.
+On trees, recursion is natural and clean:
+</p>
+
+<pre><code>def dfs(node):
+    if not node:
+        return
+    # pre-order: process node here
+    dfs(node.left)
+    # in-order: process node here
+    dfs(node.right)
+    # post-order: process node here
+</code></pre>
+
+<p>
+On general graphs, add a <code>visited</code> set:
+</p>
+
+<pre><code>def dfs(graph, node, visited):
+    visited.add(node)
+    for neighbor in graph[node]:
+        if neighbor not in visited:
+            dfs(graph, neighbor, visited)
+</code></pre>
+
+<h2>DFS — Iterative (with Explicit Stack)</h2>
+<p>
+Converting recursion to an explicit stack avoids stack overflow on deep graphs
+and gives you more control over traversal order.
+</p>
+
+<pre><code>def dfs_iterative(graph, start):
+    visited = {start}
+    stack = [start]
+
+    while stack:
+        node = stack.pop()
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                stack.append(neighbor)
+</code></pre>
+
+<p>
+<strong>Caveat:</strong> iterative DFS with a stack visits nodes in a different order than recursive DFS
+(it processes the last-pushed neighbor first). For most problems this doesn't matter,
+but if exact pre/in/post-order is required, the recursive version is simpler.
+</p>
+
+<h2>BFS vs. DFS — When to Use Which</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Prefer</th>
+      <th>Why</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Shortest path (unweighted)</td>
+      <td>BFS</td>
+      <td>BFS guarantees shortest distance by level expansion</td>
+    </tr>
+    <tr>
+      <td>Connectivity / cycle detection</td>
+      <td>Either</td>
+      <td>Both visit all reachable nodes</td>
+    </tr>
+    <tr>
+      <td>Topological sort</td>
+      <td>DFS (or Kahn's BFS)</td>
+      <td>DFS post-order gives reverse topological order</td>
+    </tr>
+    <tr>
+      <td>Path finding / backtracking</td>
+      <td>DFS</td>
+      <td>Natural fit for exploring and undoing choices</td>
+    </tr>
+    <tr>
+      <td>Level-order / wave expansion</td>
+      <td>BFS</td>
+      <td>Processes all nodes at same distance together</td>
+    </tr>
+  </tbody>
+</table>
+
+<footer>
+&copy; 2025 Kai Zhen — All rights reserved. <br>
+Last updated October 2025.
+</footer>
+
+</body>
+</html>

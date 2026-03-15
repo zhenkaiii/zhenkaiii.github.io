@@ -20,8 +20,33 @@
     "tags": ["AI Coding / PyTorch"]
   },
   {
-    "file": "bst_bfs.html",
-    "title": "Binary Search and BFS: Invariants and Intuition",
+    "file": "binary_search.html",
+    "title": "Binary Search: Invariants and Intuition",
+    "tags": ["Core Coding Patterns"]
+  },
+  {
+    "file": "hashtable_counting.html",
+    "title": "Hash Table & Counting",
+    "tags": ["Core Coding Patterns"]
+  },
+  {
+    "file": "two_pointer_sliding_window.html",
+    "title": "Two Pointer & Sliding Window",
+    "tags": ["Core Coding Patterns"]
+  },
+  {
+    "file": "heap.html",
+    "title": "Heap / Priority Queue",
+    "tags": ["Core Coding Patterns"]
+  },
+  {
+    "file": "sorting_intervals.html",
+    "title": "Sorting, Intervals & Merging",
+    "tags": ["Core Coding Patterns"]
+  },
+  {
+    "file": "bfs_dfs.html",
+    "title": "BFS & DFS",
     "tags": ["Core Coding Patterns"]
   },
   {

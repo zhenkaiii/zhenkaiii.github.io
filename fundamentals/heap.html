@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heap / Priority Queue</title>
+<style>
+    body {
+        font-family: "Georgia", "Times New Roman", serif;
+        color: #222;
+        background: #fafafa;
+        margin: 0;
+        padding: 2rem 1rem;
+        line-height: 1.6;
+        max-width: 850px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    h1, h2 {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 600;
+        color: #111;
+    }
+    h1 {
+        font-size: 1.8rem;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 0.3rem;
+    }
+    h2 {
+        font-size: 1.3rem;
+        margin-top: 2rem;
+        color: #333;
+    }
+    pre {
+        background: #f5f5f5;
+        border-radius: 6px;
+        padding: 1rem;
+        overflow-x: auto;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+    }
+    code {
+        background: #f5f5f5;
+        border-radius: 4px;
+        padding: 2px 4px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+    }
+    table {
+        border-collapse: collapse;
+        margin: 1rem 0;
+        width: 100%;
+        font-size: 0.95rem;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    em {
+        color: #444;
+    }
+    footer {
+        margin-top: 3rem;
+        font-size: 0.9rem;
+        color: #777;
+        border-top: 1px solid #e5e5e5;
+        padding-top: 1rem;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<h1>Heap / Priority Queue</h1>
+<div id="author-links" style="margin-bottom:1.5rem; font-size:0.95rem;">
+  <a href="https://scholar.google.com/citations?user=biSonYMAAAAJ&hl=en&oi=ao" target="_blank" style="margin-right:1rem; text-decoration:none;">
+    <img src="../google-scholar-icon.png" alt="Scholar" width="18" style="vertical-align:middle; margin-right:4px;"> Scholar
+  </a>
+  <a href="https://www.linkedin.com/in/kai-zhen-01b7b5103/" target="_blank" style="margin-right:1rem; text-decoration:none;">
+    <img src="../linkedin-icon.png" alt="LinkedIn" width="18" style="vertical-align:middle; margin-right:4px;"> LinkedIn
+  </a>
+  <a href="../zhenk_cv.pdf" target="_blank" style="text-decoration:none;">
+    <img src="../bcs-icon.png" alt="CV" width="28" style="vertical-align:middle; margin-right:4px;"> CV
+  </a>
+</div>
+
+
+<h2>heapq Basics</h2>
+<p>
+Python's <code>heapq</code> implements a <strong>min-heap</strong> on a plain list.
+There is no max-heap — negate values to simulate one.
+</p>
+
+<pre><code>import heapq
+
+h = []
+heapq.heappush(h, 5)
+heapq.heappush(h, 2)
+heapq.heappush(h, 8)
+
+heapq.heappop(h)     # 2  (smallest)
+h[0]                  # 5  (peek without popping)
+</code></pre>
+
+<table>
+  <thead>
+    <tr>
+      <th>Operation</th>
+      <th>Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>heappush</code></td>
+      <td>O(log n)</td>
+    </tr>
+    <tr>
+      <td><code>heappop</code></td>
+      <td>O(log n)</td>
+    </tr>
+    <tr>
+      <td><code>heapify</code></td>
+      <td>O(n)</td>
+    </tr>
+    <tr>
+      <td><code>heapreplace</code> (pop + push)</td>
+      <td>O(log n)</td>
+    </tr>
+    <tr>
+      <td>peek (<code>h[0]</code>)</td>
+      <td>O(1)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Pattern 1: Top-K Elements</h2>
+<p>
+To find the <strong>k largest</strong> elements, maintain a <strong>min-heap of size k</strong>.
+When the heap exceeds size k, pop the smallest — what remains are the k largest.
+</p>
+
+<pre><code>def top_k_largest(nums, k):
+    heap = []
+    for x in nums:
+        heapq.heappush(heap, x)
+        if len(heap) &gt; k:
+            heapq.heappop(heap)    # evict smallest
+    return sorted(heap, reverse=True)
+</code></pre>
+
+<p>
+<strong>Why min-heap for k largest?</strong> The heap acts as a gatekeeper: anything smaller than
+the current minimum of the top-k gets rejected. This is O(n log k), better than
+sorting O(n log n) when k &laquo; n.
+</p>
+
+<p>
+For <strong>k smallest</strong>, use a max-heap (negate values) of size k, or simply use
+<code>heapq.nsmallest(k, nums)</code>.
+</p>
+
+<h2>Pattern 2: Merge K Sorted Lists</h2>
+<p>
+Push the head of each list into a min-heap. Pop the smallest, then push its successor.
+The heap always holds at most <code>k</code> elements.
+</p>
+
+<pre><code>def merge_k_sorted(lists):
+    heap = []
+    for i, lst in enumerate(lists):
+        if lst:
+            heapq.heappush(heap, (lst[0], i, 0))  # (value, list_idx, elem_idx)
+
+    result = []
+    while heap:
+        val, li, ei = heapq.heappop(heap)
+        result.append(val)
+        if ei + 1 &lt; len(lists[li]):
+            heapq.heappush(heap, (lists[li][ei + 1], li, ei + 1))
+
+    return result
+</code></pre>
+
+<p>
+Time: O(N log k) where N is total elements across all lists.
+This same pattern applies to merging k sorted linked lists — just push <code>(node.val, id, node)</code>.
+</p>
+
+<h2>Pattern 3: Two-Heap Median</h2>
+<p>
+Maintain two heaps to track the median of a data stream:
+</p>
+<ul>
+  <li><strong>max-heap</strong> (<code>lo</code>): stores the smaller half (negate for max-heap behavior)</li>
+  <li><strong>min-heap</strong> (<code>hi</code>): stores the larger half</li>
+</ul>
+<p>
+Invariant: <code>len(lo) == len(hi)</code> or <code>len(lo) == len(hi) + 1</code>.
+The median is <code>-lo[0]</code> (odd count) or <code>(-lo[0] + hi[0]) / 2</code> (even count).
+</p>
+
+<pre><code>class MedianFinder:
+    def __init__(self):
+        self.lo = []   # max-heap (negated)
+        self.hi = []   # min-heap
+
+    def add_num(self, num):
+        heapq.heappush(self.lo, -num)
+        # ensure max of lo &lt;= min of hi
+        heapq.heappush(self.hi, -heapq.heappop(self.lo))
+        # balance sizes: lo should be >= hi in size
+        if len(self.lo) &lt; len(self.hi):
+            heapq.heappush(self.lo, -heapq.heappop(self.hi))
+
+    def find_median(self):
+        if len(self.lo) &gt; len(self.hi):
+            return -self.lo[0]
+        return (-self.lo[0] + self.hi[0]) / 2
+</code></pre>
+
+<h2>Pattern 4: Lazy Deletion</h2>
+<p>
+Python's <code>heapq</code> doesn't support removing arbitrary elements.
+Workaround: mark elements as deleted and skip them when popping.
+</p>
+
+<pre><code># Conceptual pattern
+removed = set()
+
+def lazy_pop(heap):
+    while heap:
+        val = heapq.heappop(heap)
+        if val not in removed:
+            return val
+    raise IndexError("empty heap")
+
+def lazy_remove(heap, val):
+    removed.add(val)
+</code></pre>
+
+<p>
+This is useful in problems like "sliding window maximum" with a heap approach,
+where elements leave the window but may still sit in the heap.
+</p>
+
+<h2>heapq Convenience Functions</h2>
+<pre><code>heapq.nlargest(k, iterable)    # k largest, returns sorted list
+heapq.nsmallest(k, iterable)   # k smallest, returns sorted list
+heapq.merge(*iterables)        # merge pre-sorted iterables (lazy)
+</code></pre>
+
+<p>
+<code>nlargest</code> / <code>nsmallest</code> use a heap internally for small k,
+and sort for large k. They accept a <code>key</code> parameter.
+</p>
+
+<footer>
+&copy; 2025 Kai Zhen — All rights reserved. <br>
+Last updated October 2025.
+</footer>
+
+</body>
+</html>

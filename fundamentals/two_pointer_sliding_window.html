@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two Pointer &amp; Sliding Window</title>
+<style>
+    body {
+        font-family: "Georgia", "Times New Roman", serif;
+        color: #222;
+        background: #fafafa;
+        margin: 0;
+        padding: 2rem 1rem;
+        line-height: 1.6;
+        max-width: 850px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    h1, h2 {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 600;
+        color: #111;
+    }
+    h1 {
+        font-size: 1.8rem;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 0.3rem;
+    }
+    h2 {
+        font-size: 1.3rem;
+        margin-top: 2rem;
+        color: #333;
+    }
+    pre {
+        background: #f5f5f5;
+        border-radius: 6px;
+        padding: 1rem;
+        overflow-x: auto;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+    }
+    code {
+        background: #f5f5f5;
+        border-radius: 4px;
+        padding: 2px 4px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+    }
+    table {
+        border-collapse: collapse;
+        margin: 1rem 0;
+        width: 100%;
+        font-size: 0.95rem;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    em {
+        color: #444;
+    }
+    footer {
+        margin-top: 3rem;
+        font-size: 0.9rem;
+        color: #777;
+        border-top: 1px solid #e5e5e5;
+        padding-top: 1rem;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<h1>Two Pointer &amp; Sliding Window</h1>
+<div id="author-links" style="margin-bottom:1.5rem; font-size:0.95rem;">
+  <a href="https://scholar.google.com/citations?user=biSonYMAAAAJ&hl=en&oi=ao" target="_blank" style="margin-right:1rem; text-decoration:none;">
+    <img src="../google-scholar-icon.png" alt="Scholar" width="18" style="vertical-align:middle; margin-right:4px;"> Scholar
+  </a>
+  <a href="https://www.linkedin.com/in/kai-zhen-01b7b5103/" target="_blank" style="margin-right:1rem; text-decoration:none;">
+    <img src="../linkedin-icon.png" alt="LinkedIn" width="18" style="vertical-align:middle; margin-right:4px;"> LinkedIn
+  </a>
+  <a href="../zhenk_cv.pdf" target="_blank" style="text-decoration:none;">
+    <img src="../bcs-icon.png" alt="CV" width="28" style="vertical-align:middle; margin-right:4px;"> CV
+  </a>
+</div>
+
+
+<h2>The Gist</h2>
+<p>
+Both two-pointer and sliding window avoid O(n&sup2;) brute force by exploiting structure
+to skip work. The core idea:
+</p>
+<ul>
+  <li><strong>Two pointers:</strong> use sorted order or sequential constraints to eliminate pairs you don't need to check.</li>
+  <li><strong>Sliding window:</strong> maintain a window state incrementally — don't recompute from scratch for every subarray.
+    Expand <code>right</code> every step. Shrink <code>left</code> only when invalid. Each element enters and exits at most once &rarr; O(n).</li>
+</ul>
+
+<h2>Two Pointers: Opposite Ends</h2>
+<p>
+Start with <code>lo = 0</code> and <code>hi = n - 1</code>, move them inward.
+Works on <strong>sorted arrays</strong>. Move the pointer that gets you closer to the goal.
+</p>
+
+<p>
+<strong>LC 167:</strong> Given a <strong>sorted</strong> array <code>[2, 7, 11, 15]</code> and <code>target = 9</code>,
+find two numbers that add up to target. Return their indices. &rarr; <code>[0, 1]</code>
+</p>
+
+<pre><code>def two_sum_sorted(nums, target):
+    lo, hi = 0, len(nums) - 1
+    while lo &lt; hi:
+        s = nums[lo] + nums[hi]
+        if s == target:
+            return [lo, hi]
+        elif s &lt; target:
+            lo += 1      # sum too small, need larger value
+        else:
+            hi -= 1      # sum too large, need smaller value
+</code></pre>
+
+<h2>Two Pointers: Same Direction (Fast &amp; Slow)</h2>
+<p>
+Both pointers start at the beginning. Fast scans every element;
+slow only advances when a condition is met.
+</p>
+
+<p>
+<strong>LC 26:</strong> Given sorted array <code>[0, 0, 1, 1, 1, 2, 2, 3]</code>,
+remove duplicates <strong>in-place</strong> and return the new length. &rarr; <code>4</code> (array becomes <code>[0, 1, 2, 3, ...]</code>)
+</p>
+
+<pre><code>def remove_duplicates(nums):
+    if not nums:
+        return 0
+    slow = 0
+    for fast in range(1, len(nums)):
+        if nums[fast] != nums[slow]:
+            slow += 1
+            nums[slow] = nums[fast]
+    return slow + 1
+</code></pre>
+
+<h2>Sliding Window: Fixed Size</h2>
+<p>
+Window size <code>k</code> is given. Slide across the array,
+updating a running aggregate in O(1) per step.
+</p>
+
+<p>
+<strong>Example:</strong> Given <code>[2, 1, 5, 1, 3, 2]</code> and <code>k = 3</code>,
+find the maximum sum of any contiguous subarray of size 3. &rarr; <code>9</code> (subarray <code>[5, 1, 3]</code>)
+</p>
+
+<pre><code>def max_sum_subarray(nums, k):
+    window_sum = sum(nums[:k])
+    best = window_sum
+
+    for i in range(k, len(nums)):
+        window_sum += nums[i] - nums[i - k]   # add right, drop left
+        best = max(best, window_sum)
+
+    return best
+</code></pre>
+
+<h2>Sliding Window: Variable Size</h2>
+<p>
+This is the core pattern. The window has no fixed size —
+it grows and shrinks to find the optimal (longest or shortest) subarray satisfying a constraint.
+The template:
+</p>
+
+<pre><code>left = 0
+state = ...     # tracks the window (Counter, sum, set, etc.)
+best = ...
+
+for right in range(len(arr)):
+    # 1. Expand: add arr[right] into state
+
+    # 2. Shrink: while window is invalid, remove arr[left] from state
+    while invalid(state):
+        # remove arr[left] from state
+        left += 1
+
+    # 3. Record best
+</code></pre>
+
+<p>
+Like binary search, <strong>the template is always the same</strong>.
+The only thing that changes per problem:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>What changes</th>
+      <th>Per-problem decision</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>State</strong></td>
+      <td>What do you track in the window? (Counter, sum, set, ...)</td>
+    </tr>
+    <tr>
+      <td><strong>Invalid condition</strong></td>
+      <td>When must you shrink? (duplicate found, sum exceeds k, missing chars, ...)</td>
+    </tr>
+    <tr>
+      <td><strong>Record when?</strong></td>
+      <td>Want <em>longest</em>? Record after shrinking (window is valid). Want <em>shortest</em>? Record while shrinking (window just became valid).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>State Reference</h2>
+<p>
+The template is always the same. The creative part is choosing the <strong>state</strong> —
+what data structure captures whether the window is valid?
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Problem keyword</th>
+      <th>State</th>
+      <th>Invalid when</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>"without repeating" / "distinct"</td>
+      <td><code>Counter</code> (char &rarr; count)</td>
+      <td>any count &gt; 1</td>
+    </tr>
+    <tr>
+      <td>"at most k distinct"</td>
+      <td><code>Counter</code> (char &rarr; count)</td>
+      <td><code>len(counter) &gt; k</code></td>
+    </tr>
+    <tr>
+      <td>"sum &le; target"</td>
+      <td><code>int</code> (running sum)</td>
+      <td><code>window_sum &gt; target</code></td>
+    </tr>
+    <tr>
+      <td>"contains all chars of t"</td>
+      <td><code>Counter</code> + <code>missing</code> int</td>
+      <td><code>missing &gt; 0</code> (still need chars)</td>
+    </tr>
+    <tr>
+      <td>"max consecutive ones with k flips"</td>
+      <td><code>int</code> (zero count)</td>
+      <td><code>zero_count &gt; k</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Variable Window: Longest</h2>
+<p>
+<strong>LC 3:</strong> Given string <code>"abcabcbb"</code>, find the length of the
+longest substring without repeating characters. &rarr; <code>3</code> (<code>"abc"</code>)
+</p>
+
+<pre><code>def length_of_longest_substring(s):
+    count = {}
+    left = 0
+    best = 0
+
+    for right in range(len(s)):
+        count[s[right]] = count.get(s[right], 0) + 1   # 1. Expand
+        while count[s[right]] &gt; 1:                      # 2. Shrink
+            count[s[left]] -= 1
+            left += 1
+        best = max(best, right - left + 1)              # 3. Record
+
+    return best
+</code></pre>
+
+<h2>Variable Window: Shortest</h2>
+<p>
+<strong>LC 76:</strong> Given <code>s = "ADOBECODEBANC"</code> and <code>t = "ABC"</code>,
+find the smallest window in <code>s</code> that contains all characters of <code>t</code>. &rarr; <code>"BANC"</code>
+</p>
+
+<pre><code>from collections import Counter
+
+def min_window(s, t):
+    need = Counter(t)
+    missing = len(t)         # total chars still needed
+    left = 0
+    best = (0, float('inf'))
+
+    for right in range(len(s)):
+        if need[s[right]] &gt; 0:
+            missing -= 1
+        need[s[right]] -= 1
+
+        while missing == 0:              # valid: window contains all of t
+            if right - left &lt; best[1] - best[0]:
+                best = (left, right)     # record WHILE shrinking
+            need[s[left]] += 1
+            if need[s[left]] &gt; 0:
+                missing += 1
+            left += 1
+
+    start, end = best
+    return s[start:end+1] if end &lt; float('inf') else ""
+</code></pre>
+
+<h2>How to Talk About It</h2>
+
+<p><strong>Variable sliding window:</strong></p>
+<blockquote style="border-left:3px solid #ccc; padding-left:1rem; color:#333; font-style:italic;">
+"I'll use a sliding window with two pointers. I expand <code>right</code> every step and
+track [state] in the window. When [invalid condition], I shrink from the left
+until the window is valid again. I record the best [longest/shortest] valid window.
+Each element enters and exits the window at most once, so this is O(n)."
+</blockquote>
+
+<p><strong>Two pointers (opposite ends):</strong></p>
+<blockquote style="border-left:3px solid #ccc; padding-left:1rem; color:#333; font-style:italic;">
+"The array is sorted, so I'll use two pointers starting from both ends.
+If the sum is too small I move the left pointer right; if too large I move the right pointer left.
+Each step eliminates one candidate, so this is O(n)."
+</blockquote>
+
+<h2>Quick Reference</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Pattern</th>
+      <th>Pointer Motion</th>
+      <th>Typical Signal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Opposite-ends</td>
+      <td><code>lo++</code> / <code>hi--</code></td>
+      <td>Sorted input, pair/triplet search</td>
+    </tr>
+    <tr>
+      <td>Fast &amp; slow</td>
+      <td>Both start at 0</td>
+      <td>In-place removal, partition, linked-list cycle</td>
+    </tr>
+    <tr>
+      <td>Fixed window</td>
+      <td>Window size = k</td>
+      <td>Given k, aggregate over subarrays</td>
+    </tr>
+    <tr>
+      <td>Variable window</td>
+      <td>Expand right, shrink left</td>
+      <td>"Longest/shortest substring/subarray with constraint"</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Common Pitfalls</h2>
+<ul>
+  <li><strong>Subarray/substring = contiguous.</strong> Sliding window only works for contiguous ranges.
+    If the problem says "subsequence" (not contiguous), sliding window doesn't apply.</li>
+  <li><strong>Monotonicity required.</strong> Sliding window works when expanding can only make the window
+    "more invalid" and shrinking can only make it "more valid."
+    If elements can be negative (e.g., subarray sum = k), this breaks —
+    use prefix sum + hash map instead.</li>
+  <li><strong>Order is expand &rarr; shrink &rarr; record.</strong>
+    You must add the new element first to know whether the window became invalid.
+    Shrink-first only works in special cases (e.g., set-based peek). Stick with expand first.</li>
+  <li><strong><code>lo &lt; hi</code> vs. <code>lo &lt;= hi</code>.</strong>
+    Two pointers (opposite ends) uses <code>lo &lt; hi</code> because you need two distinct elements.
+    Sliding window allows <code>left == right</code> (window of size 1 is valid).</li>
+  <li><strong>Shrinking removes collateral.</strong>
+    When shrinking to fix a duplicate, you remove everything between <code>left</code> and the offending element —
+    not just the duplicate itself. The window must stay contiguous.</li>
+</ul>
+
+<footer>
+&copy; 2025 Kai Zhen — All rights reserved. <br>
+Last updated October 2025.
+</footer>
+
+</body>
+</html>

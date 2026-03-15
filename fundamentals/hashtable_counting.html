@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hash Table &amp; Counting</title>
+<style>
+    body {
+        font-family: "Georgia", "Times New Roman", serif;
+        color: #222;
+        background: #fafafa;
+        margin: 0;
+        padding: 2rem 1rem;
+        line-height: 1.6;
+        max-width: 850px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    h1, h2 {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 600;
+        color: #111;
+    }
+    h1 {
+        font-size: 1.8rem;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 0.3rem;
+    }
+    h2 {
+        font-size: 1.3rem;
+        margin-top: 2rem;
+        color: #333;
+    }
+    pre {
+        background: #f5f5f5;
+        border-radius: 6px;
+        padding: 1rem;
+        overflow-x: auto;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+    }
+    code {
+        background: #f5f5f5;
+        border-radius: 4px;
+        padding: 2px 4px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+    }
+    table {
+        border-collapse: collapse;
+        margin: 1rem 0;
+        width: 100%;
+        font-size: 0.95rem;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    em {
+        color: #444;
+    }
+    footer {
+        margin-top: 3rem;
+        font-size: 0.9rem;
+        color: #777;
+        border-top: 1px solid #e5e5e5;
+        padding-top: 1rem;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<h1>Hash Table &amp; Counting</h1>
+<div id="author-links" style="margin-bottom:1.5rem; font-size:0.95rem;">
+  <a href="https://scholar.google.com/citations?user=biSonYMAAAAJ&hl=en&oi=ao" target="_blank" style="margin-right:1rem; text-decoration:none;">
+    <img src="../google-scholar-icon.png" alt="Scholar" width="18" style="vertical-align:middle; margin-right:4px;"> Scholar
+  </a>
+  <a href="https://www.linkedin.com/in/kai-zhen-01b7b5103/" target="_blank" style="margin-right:1rem; text-decoration:none;">
+    <img src="../linkedin-icon.png" alt="LinkedIn" width="18" style="vertical-align:middle; margin-right:4px;"> LinkedIn
+  </a>
+  <a href="../zhenk_cv.pdf" target="_blank" style="text-decoration:none;">
+    <img src="../bcs-icon.png" alt="CV" width="28" style="vertical-align:middle; margin-right:4px;"> CV
+  </a>
+</div>
+
+
+<h2>The Core Idea</h2>
+<p>
+A hash table gives <strong>O(1) average lookup, insertion, and deletion</strong>.
+In coding interviews, this translates to one dominant pattern:
+<em>trade space for time</em> — build a lookup structure so you avoid nested loops.
+</p>
+
+<h2>Pattern 1: Complement Lookup (Two Sum)</h2>
+<p>
+Instead of checking every pair in O(n&sup2;), store seen values and check for complements:
+</p>
+
+<pre><code>def two_sum(nums, target):
+    seen = {}  # value -> index
+    for i, x in enumerate(nums):
+        complement = target - x
+        if complement in seen:
+            return [seen[complement], i]
+        seen[x] = i
+</code></pre>
+
+<p>
+This generalizes: any time you need to find a pair satisfying <code>f(a, b) = target</code>
+where <code>f</code> is invertible, consider a hash lookup.
+</p>
+
+<h2>Pattern 2: Frequency Counting with Counter</h2>
+<p>
+<code>collections.Counter</code> builds a frequency map in one line:
+</p>
+
+<pre><code>from collections import Counter
+
+freq = Counter("abracadabra")
+# Counter({'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1})
+
+freq.most_common(2)    # [('a', 5), ('b', 2)]
+freq['z']              # 0  (missing keys return 0)
+</code></pre>
+
+<p>
+Counter supports arithmetic:
+</p>
+
+<pre><code>c1 = Counter("aab")
+c2 = Counter("ab")
+c1 - c2   # Counter({'a': 1})  — subtract counts, drop non-positive
+c1 &amp; c2   # Counter({'a': 1, 'b': 1})  — element-wise min
+</code></pre>
+
+<h2>Pattern 3: Anagram Detection</h2>
+<p>
+Two strings are anagrams iff they have the same character frequencies.
+For sliding-window anagram search, maintain a Counter of the window and compare:
+</p>
+
+<pre><code>def find_anagrams(s, p):
+    from collections import Counter
+    target = Counter(p)
+    window = Counter(s[:len(p)])
+    result = []
+
+    if window == target:
+        result.append(0)
+
+    for i in range(len(p), len(s)):
+        window[s[i]] += 1                   # add right
+        left = s[i - len(p)]
+        window[left] -= 1                   # remove left
+        if window[left] == 0:
+            del window[left]
+        if window == target:
+            result.append(i - len(p) + 1)
+
+    return result
+</code></pre>
+
+<h2>Pattern 4: Group-By with defaultdict</h2>
+<p>
+<code>defaultdict(list)</code> lets you group items by a computed key without checking for existence:
+</p>
+
+<pre><code>from collections import defaultdict
+
+def group_anagrams(strs):
+    groups = defaultdict(list)
+    for s in strs:
+        key = tuple(sorted(s))   # canonical form
+        groups[key].append(s)
+    return list(groups.values())
+
+# group_anagrams(["eat","tea","tan","ate","nat","bat"])
+# [['eat','tea','ate'], ['tan','nat'], ['bat']]
+</code></pre>
+
+<p>
+The key insight: <strong>choose a canonical form</strong> that maps equivalent items to the same key.
+For anagrams it's sorted characters. For isomorphic strings it could be a pattern like <code>"0.1.2.1"</code>.
+</p>
+
+<h2>Pattern 5: Prefix Sum + Hash Map (Subarray Sum Equals K)</h2>
+<p>
+To count subarrays with sum <code>k</code>, store prefix sums in a hash map.
+A subarray <code>[i+1..j]</code> has sum <code>k</code> iff <code>prefix[j] - prefix[i] = k</code>:
+</p>
+
+<pre><code>def subarray_sum(nums, k):
+    count = 0
+    prefix = 0
+    seen = {0: 1}  # prefix_sum -> how many times we've seen it
+
+    for x in nums:
+        prefix += x
+        count += seen.get(prefix - k, 0)
+        seen[prefix] = seen.get(prefix, 0) + 1
+
+    return count
+</code></pre>
+
+<h2>Complexity Reminder</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Operation</th>
+      <th>Average</th>
+      <th>Worst</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Lookup / Insert / Delete</td>
+      <td>O(1)</td>
+      <td>O(n)</td>
+    </tr>
+    <tr>
+      <td>Iteration</td>
+      <td>O(n)</td>
+      <td>O(n)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+Worst-case O(n) happens with hash collisions. In interviews, assume average case unless asked.
+Python dicts use open addressing with perturbation; <code>set</code> and <code>dict</code> are both hash tables.
+</p>
+
+<footer>
+&copy; 2025 Kai Zhen — All rights reserved. <br>
+Last updated October 2025.
+</footer>
+
+</body>
+</html>
