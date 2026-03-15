@@ -58,5 +58,15 @@
     "file": "sweep.html",
     "title": "INT8 does not automatically reduce latency - It often gets worse until conditions are right.",
     "tags": ["AI Coding / PyTorch", "Efficiency / Co-Design"]
+  },
+  {
+    "file": "tts_landscape.html",
+    "title": "TTS Landscape 2025-2026: Three Paradigms",
+    "tags": ["Speech & Audio"]
+  },
+  {
+    "file": "cosyvoice_inference_walkthrough.ipynb",
+    "title": "CosyVoice Inference Walkthrough: Tensor Shapes at Every Stage",
+    "tags": ["Speech & Audio", "AI Coding / PyTorch"]
   }
 ]
