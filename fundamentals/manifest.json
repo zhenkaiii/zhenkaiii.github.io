@@ -61,8 +61,18 @@
   },
   {
     "file": "tts_landscape.html",
-    "title": "TTS Landscape 2025-2026: Three Paradigms",
+    "title": "TTS Landscape 2025-2026",
     "tags": ["Speech & Audio"]
+  },
+  {
+    "file": "asr_landscape.html",
+    "title": "ASR Landscape 2025-2026",
+    "tags": ["Speech & Audio"]
+  },
+  {
+    "file": "lora_peft.html",
+    "title": "LoRA / PEFT: Parameter-Efficient Fine-Tuning",
+    "tags": ["Efficiency / Co-Design"]
   },
   {
     "file": "cosyvoice_inference_walkthrough.ipynb",
