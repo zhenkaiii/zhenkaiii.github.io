@@ -7,3 +7,6 @@ private_files_encrypted.tar.gz.enc
 
 # Temporary files
 ~$*
+
+# Workspace
+myworkspace/

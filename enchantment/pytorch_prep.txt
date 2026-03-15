@@ -1,0 +1,398 @@
+================================================================================
+PYTORCH TECHNICAL PREP — RARE BUT POSSIBLE
+================================================================================
+Horia has only asked a PyTorch question with one other candidate.
+If it comes up, it's likely practical/applied, not trivia.
+Focus: how you REASON through PyTorch code, not memorization.
+
+NEW INTEL: Interview includes CoderPad coding. Horia cares about how you
+REASON through problems, STRUCTURE code, and DEBUG — not just final answers.
+Think out loud. Show your process.
+
+================================================================================
+1. CUSTOM TRAINING LOOP — The Foundation
+================================================================================
+
+This is the most likely area. Know this cold.
+
+model = MyModel().to(device)
+optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4, weight_decay=0.1)
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=total_steps)
+scaler = torch.amp.GradScaler()  # for mixed precision
+
+for epoch in range(num_epochs):
+    model.train()
+    for batch_idx, batch in enumerate(dataloader):
+        inputs = batch['input_ids'].to(device)
+        labels = batch['labels'].to(device)
+
+        # Mixed precision forward pass
+        with torch.amp.autocast(device_type='cuda', dtype=torch.bfloat16):
+            outputs = model(inputs)
+            loss = F.cross_entropy(outputs.view(-1, vocab_size), labels.view(-1))
+
+        # Gradient accumulation
+        loss = loss / accumulation_steps
+        scaler.scale(loss).backward()
+
+        if (batch_idx + 1) % accumulation_steps == 0:
+            scaler.unscale_(optimizer)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+            scaler.step(optimizer)
+            scaler.update()
+            optimizer.zero_grad(set_to_none=True)  # more memory efficient
+            scheduler.step()
+
+KEY DETAILS TO MENTION IF ASKED:
+- zero_grad(set_to_none=True) is more memory-efficient than zero_grad()
+  because it deallocates gradient tensors instead of filling with zeros
+- Gradient clipping AFTER unscaling but BEFORE optimizer.step()
+- BF16 autocast is preferred over FP16 for pre-training (wider dynamic range)
+- CosineAnnealingLR with warmup is the standard schedule for pre-training
+
+
+================================================================================
+2. AUTOGRAD MECHANICS — Debugging Territory
+================================================================================
+
+Key concepts Horia might probe:
+
+COMPUTATIONAL GRAPH
+- PyTorch builds a dynamic computational graph during forward pass
+- Each tensor with requires_grad=True records operations
+- .backward() traverses graph in reverse, computing gradients via chain rule
+- Graph is freed after backward (unless retain_graph=True)
+
+COMMON PITFALLS
+- In-place operations on tensors that require grad → RuntimeError
+  x.add_(1)  # BAD if x.requires_grad
+  x = x + 1  # GOOD — creates new tensor
+
+- Detaching tensors:
+  x.detach()    # returns new tensor, stops gradient flow
+  with torch.no_grad():  # context manager, more efficient for inference
+
+- Gradient accumulation bug:
+  # If you forget zero_grad(), gradients accumulate across batches
+  # This is a bug in training loops but a FEATURE for gradient accumulation
+
+HOW TO DEBUG GRADIENT ISSUES
+1. Check for NaN/Inf gradients:
+   for name, p in model.named_parameters():
+       if p.grad is not None and (torch.isnan(p.grad).any() or torch.isinf(p.grad).any()):
+           print(f"Bad gradient in {name}")
+
+2. Register backward hooks to inspect gradients:
+   def hook_fn(grad):
+       print(f"Gradient norm: {grad.norm()}")
+       return grad
+   tensor.register_hook(hook_fn)
+
+3. torch.autograd.detect_anomaly() — slow but catches NaN sources
+   with torch.autograd.detect_anomaly():
+       loss.backward()
+
+
+================================================================================
+3. DISTRIBUTED TRAINING — DDP & FSDP
+================================================================================
+
+DISTRIBUTED DATA PARALLEL (DDP)
+- Each GPU has a full copy of the model
+- Data is split across GPUs (DistributedSampler)
+- Gradients are synchronized via all-reduce after backward
+- Overlaps communication with computation (gradient bucketing)
+
+import torch.distributed as dist
+from torch.nn.parallel import DistributedDataParallel as DDP
+
+dist.init_process_group(backend='nccl')
+model = DDP(model.to(local_rank), device_ids=[local_rank])
+
+# DataLoader with DistributedSampler
+sampler = DistributedSampler(dataset, num_replicas=world_size, rank=rank)
+dataloader = DataLoader(dataset, sampler=sampler, batch_size=per_gpu_batch)
+
+# IMPORTANT: set epoch for proper shuffling
+sampler.set_epoch(epoch)
+
+FULLY SHARDED DATA PARALLELISM (FSDP)
+- Shards model parameters, gradients, AND optimizer states across GPUs
+- Each GPU only holds 1/N of the model at rest
+- All-gathers parameters just-in-time for forward/backward, then re-shards
+- Dramatically reduces per-GPU memory
+
+from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
+
+model = FSDP(
+    model,
+    sharding_strategy=ShardingStrategy.FULL_SHARD,
+    mixed_precision=MixedPrecision(
+        param_dtype=torch.bfloat16,
+        reduce_dtype=torch.bfloat16,
+        buffer_dtype=torch.bfloat16,
+    ),
+    auto_wrap_policy=size_based_auto_wrap_policy,
+)
+
+KEY DIFFERENCE TO ARTICULATE:
+"DDP is simpler and has less communication overhead, but requires each GPU to
+hold the full model. FSDP trades communication for memory — it shards everything
+and all-gathers on-demand. For large pre-training models that don't fit in a
+single GPU's memory, FSDP (or its DeepSpeed equivalent, ZeRO Stage 3) is
+essential."
+
+
+================================================================================
+4. CUSTOM DATASET FOR FINANCIAL DATA
+================================================================================
+
+class FinancialPreTrainingDataset(torch.utils.data.Dataset):
+    """
+    Handles mixed-modality financial data:
+    - Tokenized text (news, filings)
+    - Numerical time-series (prices, volumes)
+    - Metadata (timestamps, asset identifiers)
+    """
+    def __init__(self, data_path, tokenizer, max_seq_len=2048):
+        self.data = self._load_shards(data_path)
+        self.tokenizer = tokenizer
+        self.max_seq_len = max_seq_len
+
+    def _load_shards(self, path):
+        # Memory-map large files instead of loading into RAM
+        # Use numpy memmap or HuggingFace datasets with memory mapping
+        return load_from_disk(path)
+
+    def __getitem__(self, idx):
+        item = self.data[idx]
+
+        # Tokenize text component
+        tokens = self.tokenizer(
+            item['text'],
+            max_length=self.max_seq_len,
+            truncation=True,
+            padding='max_length',
+            return_tensors='pt'
+        )
+
+        # Normalize numerical features
+        numerics = torch.tensor(item['time_series'], dtype=torch.float32)
+        numerics = (numerics - self.feature_means) / self.feature_stds
+
+        return {
+            'input_ids': tokens['input_ids'].squeeze(),
+            'attention_mask': tokens['attention_mask'].squeeze(),
+            'numerics': numerics,
+            'labels': tokens['input_ids'].squeeze(),  # for CLM
+        }
+
+    def __len__(self):
+        return len(self.data)
+
+
+# Collate function for variable-length sequences
+def financial_collate_fn(batch):
+    # Dynamic padding to max length in batch (more efficient than fixed padding)
+    max_len = max(b['input_ids'].size(0) for b in batch)
+    # ... pad each tensor to max_len
+    return collated_batch
+
+KEY POINTS:
+- Memory mapping for large datasets (don't load everything into RAM)
+- Dynamic padding in collate_fn (saves compute vs. fixed max_length padding)
+- Separate handling of text and numerical modalities
+- Feature normalization for numerical inputs
+
+
+================================================================================
+5. MIXED PRECISION TRAINING — DEEP DIVE
+================================================================================
+
+WHY BF16 > FP16 FOR PRE-TRAINING:
+- FP16: 5 exponent bits, 10 mantissa bits → precise but limited range (±65504)
+- BF16: 8 exponent bits, 7 mantissa bits → less precise but huge range (±3.4e38)
+- Pre-training loss values and gradient magnitudes vary wildly
+- BF16 can represent them without overflow/underflow
+- No loss scaling needed with BF16 (needed with FP16)
+
+WHEN THINGS GO WRONG:
+- Loss becomes NaN → check for overflow in FP16 (switch to BF16)
+- Training diverges → might need to keep certain ops in FP32
+  (layer norm, softmax, loss computation)
+- GradScaler skips steps when it detects inf/nan → if too many skips,
+  learning rate effectively drops
+
+CUSTOM AUTOCAST POLICY (advanced):
+# Keep specific layers in FP32 for stability
+class StableLayerNorm(nn.Module):
+    @torch.amp.custom_fwd(cast_inputs=torch.float32)
+    def forward(self, x):
+        return F.layer_norm(x, self.normalized_shape, self.weight, self.bias)
+
+
+================================================================================
+6. GRADIENT CHECKPOINTING — TRADING COMPUTE FOR MEMORY
+================================================================================
+
+from torch.utils.checkpoint import checkpoint
+
+class TransformerBlock(nn.Module):
+    def forward(self, x):
+        # Without checkpointing: stores all activations (high memory)
+        # With checkpointing: recomputes activations during backward (saves ~60% memory)
+        return checkpoint(self._forward, x, use_reentrant=False)
+
+    def _forward(self, x):
+        x = x + self.attention(self.ln1(x))
+        x = x + self.mlp(self.ln2(x))
+        return x
+
+KEY DETAIL:
+- use_reentrant=False is the modern recommended approach
+- Older code uses use_reentrant=True (default) but it has subtle bugs
+  with certain autograd patterns
+- Memory savings: ~60% activation memory reduction
+- Compute cost: ~33% more compute (one extra forward pass per checkpointed segment)
+- WHEN TO USE: "Always for pre-training large models. The memory savings
+  let you increase batch size, which often more than compensates for the
+  extra compute."
+
+
+================================================================================
+7. DEBUGGING PATTERNS — WHAT HORIA REALLY CARES ABOUT
+================================================================================
+
+DEBUGGING METHODOLOGY (talk through this process):
+
+1. REPRODUCE: "First I make sure I can reproduce the issue reliably"
+2. ISOLATE: "Then I narrow down where it's happening"
+   - Is it data? (try synthetic data)
+   - Is it model? (try smaller model)
+   - Is it training? (check gradients, loss curves)
+3. HYPOTHESIZE: "I form a hypothesis about root cause"
+4. TEST: "I design a minimal experiment to test the hypothesis"
+5. FIX & VERIFY: "Fix the issue and verify it doesn't recur"
+
+COMMON PRE-TRAINING BUGS AND HOW TO FIND THEM:
+
+Loss spike mid-training:
+→ Check data pipeline for corrupted/adversarial examples
+→ Log batch-level loss, look for outlier batches
+→ Check learning rate schedule for unexpected jumps
+→ Check gradient norms for explosions
+
+Training loss plateaus:
+→ Learning rate too low? Try warmup restart
+→ Data exhaustion? Check if cycling through same data
+→ Batch size too large? Effective LR drops with large batches
+→ Model capacity saturated? Architecture bottleneck
+
+OOM (Out of Memory):
+→ Reduce batch size
+→ Enable gradient checkpointing
+→ Enable mixed precision (BF16)
+→ Check for memory leaks: tensors accumulating on GPU
+  torch.cuda.memory_summary()  # detailed memory breakdown
+→ Common leak: storing loss tensors without .item()
+  losses.append(loss)        # BAD — keeps computation graph!
+  losses.append(loss.item()) # GOOD — extracts scalar value
+
+Slow training:
+→ Profile with torch.profiler or nvidia-smi
+→ Check DataLoader: num_workers, pin_memory, prefetch_factor
+→ Check for CPU-GPU synchronization bottlenecks
+→ torch.cuda.synchronize() before timing (GPU ops are async)
+
+
+================================================================================
+8. CODERPAD-SPECIFIC TIPS
+================================================================================
+
+Since the interview includes CoderPad coding:
+
+THINK OUT LOUD
+- "Let me start by understanding what we need..."
+- "My first approach would be X because..."
+- "Let me check if this handles the edge case of..."
+- "I notice a potential issue here — let me fix that..."
+
+STRUCTURE YOUR CODE
+- Start with the function signature and docstring
+- Write the happy path first
+- Add edge case handling
+- Test with a simple example
+
+COMMON CODERPAD PATTERNS FOR ML ROLES:
+- Implement a simple layer (attention, layer norm)
+- Write a training loop with specific requirements
+- Debug a broken piece of PyTorch code
+- Data processing / feature engineering
+- Implement a loss function or metric
+
+EXAMPLE: Implement scaled dot-product attention from scratch
+
+def scaled_dot_product_attention(Q, K, V, mask=None):
+    """
+    Args:
+        Q: (batch, heads, seq_len, d_k)
+        K: (batch, heads, seq_len, d_k)
+        V: (batch, heads, seq_len, d_v)
+        mask: optional (batch, 1, 1, seq_len) or (batch, 1, seq_len, seq_len)
+    Returns:
+        output: (batch, heads, seq_len, d_v)
+        attention_weights: (batch, heads, seq_len, seq_len)
+    """
+    d_k = Q.size(-1)
+    # Compute attention scores
+    scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
+
+    # Apply mask (causal or padding)
+    if mask is not None:
+        scores = scores.masked_fill(mask == 0, float('-inf'))
+
+    # Softmax over last dimension (key dimension)
+    attention_weights = F.softmax(scores, dim=-1)
+
+    # Apply attention to values
+    output = torch.matmul(attention_weights, V)
+
+    return output, attention_weights
+
+TALK-THROUGH VERSION:
+"I'll start with the core computation — Q times K-transpose gives us the
+raw attention scores. We scale by sqrt(d_k) to keep the variance stable
+as d_k grows — without this, the softmax saturates and gradients vanish.
+Then mask if needed — I use -inf so softmax sends those positions to zero.
+Finally, multiply by V to get the weighted combination of values."
+
+
+================================================================================
+9. QUICK REFERENCE: TORCH API ESSENTIALS
+================================================================================
+
+Tensor creation:
+  torch.zeros, torch.ones, torch.randn, torch.arange
+  torch.tensor(data, dtype=torch.float32, device='cuda')
+
+Shape operations:
+  x.view(-1, d)        # reshape (contiguous memory required)
+  x.reshape(-1, d)     # reshape (handles non-contiguous)
+  x.permute(0, 2, 1)   # transpose dimensions
+  x.unsqueeze(0)       # add dimension
+  x.squeeze()          # remove size-1 dimensions
+  x.expand(B, -1, -1)  # broadcast without copying
+
+Useful operations:
+  torch.einsum('bik,bkj->bij', A, B)  # einstein summation
+  torch.where(condition, x, y)         # conditional select
+  torch.clamp(x, min=0, max=1)        # clamp values
+  x.masked_fill(mask, value)           # fill where mask is True
+  torch.tril(torch.ones(n, n))        # lower triangular (causal mask)
+
+Module patterns:
+  nn.Linear, nn.LayerNorm, nn.Embedding, nn.Dropout
+  nn.ModuleList (for dynamic layers — registered properly)
+  nn.Sequential (for simple stacks)
+  @torch.no_grad() for inference
+  model.eval() + model.train() for BN/Dropout behavior
