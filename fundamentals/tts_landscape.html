@@ -94,6 +94,118 @@
     <img src="valle.png" alt="VALL-E architecture: text prompt → phoneme conversion, acoustic prompt → audio codec encoder, both feed into neural codec language model → audio codec decoder → personalized speech" />
     <figcaption>Figure: VALL-E (Microsoft). Pipeline: phoneme &rarr; discrete codec codes &rarr; waveform. The 3-second enrolled recording serves as an in-context learning prompt.</figcaption>
   </figure>
+
+  <h3>VALL-E Inference: Step-by-step Pseudocode</h3>
+  <p>Generating 2 seconds of speech from <code>"Hello world"</code>, cloning a 3-second reference voice.</p>
+  <p>VALL-E uses <strong>EnCodec</strong> with 8 RVQ layers at 75 Hz. It has <strong>two stages</strong>: an AR transformer generates the first (coarsest) RVQ layer, then a NAR transformer fills in the remaining 7 layers in parallel.</p>
+
+<pre><code># ── Key rates ─────────────────────────────────────────────
+sample_rate     = 24,000 Hz
+codec_frame_rate = 75 Hz          # EnCodec frames per second
+n_rvq_layers    = 8               # 8 quantization layers (coarse → fine)
+codebook_size   = 1,024           # each RVQ layer has 1024 codes
+
+# So: 1 codec frame = 8 integers (one per RVQ layer) = ~13ms of audio
+# The full code matrix for 2s of audio: (8, 150) — 8 layers × 150 frames</code></pre>
+
+<pre><code># ── Step 0: Frontend ──────────────────────────────────────
+
+text = "Hello world, this is a test."
+
+phonemes = g2p(text)                    # rule-based grapheme-to-phoneme
+# phonemes: (1, 20)                    int IDs, e.g. [HH, AH, L, OW, ...]
+
+ref_audio = load("reference.wav")       # 3-second clip at 24kHz
+
+ref_codes = encodec.encode(ref_audio)   # neural audio codec encoder
+# ref_codes: (8, 225)                  8 RVQ layers × (3s × 75 Hz)
+#   Layer 0: coarsest — captures phoneme identity, rough pitch
+#   Layer 7: finest — captures subtle texture, breathiness</code></pre>
+
+<pre><code># ── Stage 1: AR Transformer — generate coarse codes (SLOW) ─
+# Only generates RVQ layer 0 (the coarsest layer).
+# This is where prosody, rhythm, and phoneme timing are decided.
+
+# Build prompt: phonemes + reference layer-0 codes
+ar_input = concat([
+    phoneme_embeds,                     # (1, 20, 1024)   what to say
+    ref_code_embeds,                    # (1, 225, 1024)  sound like this
+])
+# ar_input: (1, 245, 1024)
+
+# Autoregressive loop — one code at a time, like GPT
+generated_layer0 = []
+for step in range(150):                 # 2s × 75 Hz = 150 frames
+    hidden = ar_transformer(ar_input, kv_cache)   # (1, 1, 1024)
+    logits = output_head(hidden)                  # (1, 1024) over codebook
+    code   = sample(logits)                       # scalar int ∈ [0, 1024)
+    generated_layer0.append(code)
+
+# generated_layer0: (1, 150)           int — coarse codes for 2s
+# These capture: WHICH phonemes, HOW LONG each lasts, pitch contour
+# But audio from only layer 0 would sound very rough/robotic</code></pre>
+
+<pre><code># ── Stage 2: NAR Transformer — fill in fine codes (FAST) ───
+# Generates layers 1-7 ALL AT ONCE (non-autoregressive).
+# Each layer adds more acoustic detail.
+
+code_matrix = zeros(8, 150)             # 8 layers × 150 frames
+code_matrix[0] = generated_layer0      # from Stage 1
+
+for layer in range(1, 8):               # layers 1, 2, ..., 7
+    # NAR sees: phonemes + all codes generated so far
+    nar_input = concat([phonemes, code_matrix[:layer]])
+
+    new_codes = nar_transformer(nar_input)  # predicts ALL 150 codes at once
+    # new_codes: (1, 150)               entire layer in one forward pass!
+
+    code_matrix[layer] = new_codes
+
+# code_matrix: (8, 150) int — full RVQ code matrix
+#   Layer 0: phoneme identity, pitch          (from AR, slow)
+#   Layer 1: spectral shape                   (from NAR, fast)
+#   ...
+#   Layer 7: fine texture, breathiness        (from NAR, fast)</code></pre>
+
+<pre><code># ── Stage 3: EnCodec Decoder — codes → waveform ───────────
+# The codec decoder is a neural network that reverses the encoding.
+# Each RVQ layer's codes get looked up in their codebook, summed,
+# then upsampled through transposed convolutions.
+
+quantized = sum([codebook[l].lookup(code_matrix[l]) for l in range(8)])
+# quantized: (1, 128, 150)             continuous vectors (sum of 8 codebook lookups)
+
+waveform = encodec.decode(quantized)
+# waveform: (1, 48000)                 150 frames × 320 samples/frame = 48,000
+#   = 48,000 ÷ 24,000 Hz = 2.0 seconds of audio</code></pre>
+
+<pre><code># ── Why VALL-E is slow ────────────────────────────────────
+# Stage 1 (AR):  150 sequential steps for layer 0     ← bottleneck
+# Stage 2 (NAR): 7 parallel forward passes             ← fast
+# Stage 3 (Decode): 1 forward pass                     ← fast
+#
+# 2s of audio = 150 AR steps. At ~10ms per step = ~1.5s latency.
+# You wait longer than the audio itself takes to play!</code></pre>
+
+</div>
+
+<h2>Paradigm 1b: Non-AR Token LM</h2>
+<div class="paradigm">
+  <h3>Same discrete tokens, but generated in parallel</h3>
+  <div class="pipeline">Text <em>(string)</em>
+&rarr; Semantic model <em>&rarr; coarse semantic tokens (AR or external)</em>
+&rarr; Non-AR masked Transformer <em>&rarr; all acoustic tokens at once (parallel, like BERT-style masked prediction)</em>
+&rarr; Audio codec decoder <em>&rarr; waveform</em></div>
+  <p>Same representation as Paradigm 1 (discrete codec tokens), but the generation is <strong>non-autoregressive</strong> &mdash; tokens are predicted in parallel using iterative masked prediction (like MaskGIT for images), not one at a time. This removes the AR speed bottleneck while keeping the discrete token framework.</p>
+
+  <table>
+    <tr><th>Model</th><th>Key detail</th></tr>
+    <tr><td>SoundStorm (Google)</td><td>Parallel token generation via masked prediction. Requires semantic tokens from a separate model (e.g., SPEAR-TTS). Very fast.</td></tr>
+  </table>
+
+  <p class="pro"><strong>Pros:</strong> Much faster than AR (parallel generation), same discrete token quality.</p>
+  <p class="con"><strong>Cons:</strong> Needs a separate semantic token model upstream. Less studied than AR approach.</p>
+  <p class="note">This is technically a 4th family. We group it under Paradigm 1 because the representation (discrete codec tokens) is the same &mdash; only the generation strategy differs (parallel vs sequential).</p>
 </div>
 
 <h2>Paradigm 2: Flow-matching / Diffusion</h2>
@@ -135,6 +247,105 @@
     <img src="f5tts.png" alt="F5-TTS architecture: training (left) uses text-guided speech infilling with DiT and ConvNeXt V2 blocks; inference (right) uses ODE solver with Sway Sampling to generate speech from noise" />
     <figcaption>Figure: F5-TTS. Training: text padded with filler tokens + masked speech &rarr; DiT learns conditional flow. Inference: ODE solver with Sway Sampling generates mel from noise. No duration model, no phoneme alignment needed.</figcaption>
   </figure>
+
+  <h3>F5-TTS Inference: Step-by-step Pseudocode</h3>
+  <p>Generating 2 seconds of speech from <code>"Hello world"</code>, cloning a 3-second reference voice.</p>
+  <p>F5-TTS is radically simple: <strong>no phoneme conversion, no duration model, lightweight CNN text encoder</strong> (ConvNeXt instead of Transformer). It treats TTS as a speech <strong>infilling</strong> task &mdash; given reference audio with text, fill in the blank for new text.</p>
+
+<pre><code># ── Key rates ─────────────────────────────────────────────
+sample_rate      = 24,000 Hz
+mel_frame_rate   = 86.1 Hz        # hop_size=256, so 24000/256 ≈ 86
+mel_bins         = 100            # F5-TTS uses 100 mel bins (not 80)
+n_ode_steps      = 32             # default NFE (can be reduced with Sway Sampling)</code></pre>
+
+<pre><code># ── Step 0: Frontend — deliberately minimal ───────────────
+
+text_to_generate = "Hello world, this is a test."
+ref_text         = "This is the reference transcript."
+ref_audio        = load("reference.wav")       # 3-second clip
+
+# Convert text to CHARACTER sequence (not phonemes!)
+# F5-TTS works at the character level — no G2P needed
+gen_chars = list("hello world this is a test")  # lowercase, stripped
+ref_chars = list("this is the reference transcript")
+
+ref_mel = mel_spectrogram(ref_audio)
+# ref_mel: (1, 100, 258)               3s × 86 frames/s ≈ 258 frames
+
+gen_duration_frames = int(2.0 * 86.1)   # target: 2s
+# gen_duration_frames: 172</code></pre>
+
+<pre><code># ── Step 1: Pad text with filler tokens ───────────────────
+# Key F5-TTS trick: pad the text to EXACTLY match the audio length.
+# No duration model needed — the model learns alignment implicitly!
+
+ref_char_ids  = char_to_id(ref_chars)    # (26,) int
+gen_char_ids  = char_to_id(gen_chars)    # (25,) int
+
+# Pad each text to match its mel length using a special FILLER token
+ref_padded  = pad_with_filler(ref_char_ids,  target_len=258)   # (258,)
+gen_padded  = pad_with_filler(gen_char_ids,  target_len=172)   # (172,)
+
+# Concatenate: [ref_text_padded | gen_text_padded]
+text_sequence = concat([ref_padded, gen_padded])
+# text_sequence: (430,)                258 + 172 characters/fillers
+
+# Refine through ConvNeXt V2 blocks (small CNN, not a Transformer)
+text_features = convnext(embed(text_sequence))
+# text_features: (1, 430, 1024)        now same time resolution as mel</code></pre>
+
+<pre><code># ── Step 2: Set up the infilling task ─────────────────────
+# Concatenate reference mel + masked region (zeros for generation)
+
+input_mel = concat([
+    ref_mel,                            # (1, 100, 258)  real reference
+    zeros(1, 100, 172),                 # (1, 100, 172)  blank to fill in
+], dim=time)
+# input_mel: (1, 100, 430)
+
+# The model sees: "here is audio for the reference text,
+#                  now fill in audio for the new text"</code></pre>
+
+<pre><code># ── Step 3: ODE solver with DiT ───────────────────────────
+# Start from noise in the generation region. Reference region stays fixed.
+
+x = randn(1, 100, 172)                 # noise for generation region only
+
+for step in range(32):                  # 32 ODE steps (Sway Sampling schedule)
+    t = sway_schedule(step, 32)         # non-uniform timesteps (more steps near t=0)
+
+    # DiT (Diffusion Transformer) input:
+    #   - noisy mel x_t (generation region)
+    #   - reference mel (real, frozen)
+    #   - text features (aligned by position)
+    #   - timestep embedding
+    full_mel = concat([ref_mel, x], dim=time)
+    # full_mel: (1, 100, 430)
+
+    velocity = dit(full_mel, text_features, t)
+    # velocity: (1, 100, 430)           but we only update generation region
+
+    gen_velocity = velocity[:, :, 258:]  # (1, 100, 172)
+    x = x + dt * gen_velocity            # Euler step
+
+# x: (1, 100, 172) — generated mel spectrogram for 2s</code></pre>
+
+<pre><code># ── Step 4: Vocoder — mel → waveform ──────────────────────
+
+waveform = vocos(x)                     # Vocos vocoder (used by F5-TTS)
+# waveform: (1, 44032)                 172 frames × 256 hop = 44,032 samples
+#   = 44,032 ÷ 24,000 Hz ≈ 1.8 seconds</code></pre>
+
+<pre><code># ── Why F5-TTS is elegant ─────────────────────────────────
+# No G2P:          works on raw characters (even Chinese characters)
+# No duration model: filler padding lets the model learn alignment
+# Lightweight text encoder: ConvNeXt CNN instead of Transformer
+# No AR loop:       entire mel generated via ODE (parallelizable)
+#
+# Speed: 32 steps × 1 DiT forward pass each
+#   With Sway Sampling: can reduce to 6-8 steps with minimal quality loss
+#   With distillation: down to 1-4 steps</code></pre>
+
 </div>
 
 <h2>Paradigm 3: End-to-end Single-pass</h2>
@@ -156,8 +367,8 @@
 
   <p><strong>Voice cloning:</strong> Speaker embedding lookup table &mdash; each known speaker gets a learned vector. Speaker must be seen during training. No zero-shot capability.</p>
   <p class="pro"><strong>Pros:</strong> Fastest inference (~30ms single pass), no separate vocoder needed, fully end-to-end.</p>
-  <p class="con"><strong>Cons:</strong> Less expressive than paradigm 1 &amp; 2, no zero-shot voice cloning (can't clone a new voice without retraining).</p>
-  <p class="note">Best choice when latency is the absolute priority and quality bar is moderate.</p>
+  <p class="con"><strong>Cons:</strong> No zero-shot voice cloning (speaker must be in training set), weaker speaker generalization, prosody modeling less flexible than AR models.</p>
+  <p class="note">Quality can be very high for known speakers. Best choice when latency is the absolute priority and the speaker set is fixed.</p>
 
   <figure class="arch-fig">
     <img src="vits.png" alt="VITS architecture: training (left) with text encoder, posterior encoder, normalizing flow, decoder, and duration predictor; inference (right) with text encoder, stochastic duration predictor, inverse flow, and decoder producing raw waveform" />
@@ -168,6 +379,104 @@
     <img src="vits2.png" alt="VITS2 architecture components: (a) duration predictor with adversarial training, (b) normalizing flows with transformer blocks, (c) speaker-conditioned text encoder" />
     <figcaption>Figure: VITS2 improvements. (a) Duration predictor with adversarial discriminator for more natural timing. (b) Normalizing flows enhanced with Transformer blocks. (c) Speaker-conditioned text encoder &mdash; speaker embedding is injected into every Transformer layer.</figcaption>
   </figure>
+
+  <h3>VITS Inference: Step-by-step Pseudocode</h3>
+  <p>Generating 2 seconds of speech from <code>"Hello world"</code> using a known speaker (speaker #7 from training data).</p>
+  <p>VITS does <strong>everything in one forward pass</strong> &mdash; no iterative ODE, no autoregressive loop. Text goes in, waveform comes out. The key trick: a <strong>normalizing flow</strong> transforms a simple Gaussian distribution into the complex distribution of real speech, and a <strong>built-in HiFi-GAN decoder</strong> generates the waveform directly (no separate vocoder).</p>
+
+<pre><code># ── Key rates ─────────────────────────────────────────────
+sample_rate      = 22,050 Hz      # VITS default (not 24k)
+hop_size         = 256
+frame_rate       = 86 Hz          # 22050 / 256 ≈ 86 frames/sec
+hidden_dim       = 192            # latent / inter-channel dim
+n_speakers       = 109            # multi-speaker: lookup table, not zero-shot</code></pre>
+
+<pre><code># ── Step 0: Frontend ──────────────────────────────────────
+
+text = "Hello world, this is a test."
+
+phoneme_ids = g2p(text)                 # rule-based grapheme-to-phoneme
+# phoneme_ids: (1, 20)                 int IDs for [HH, AH, L, OW, ...]
+
+speaker_id = 7                          # MUST be a speaker seen in training
+spk_embed = speaker_embed_table[speaker_id]
+# spk_embed: (192,)                    learned vector for this speaker
+#   Not extracted from audio — looked up from a fixed table</code></pre>
+
+<pre><code># ── Step 1: Text Encoder ──────────────────────────────────
+# Transformer encoder, conditioned on speaker embedding.
+# Outputs TWO things per phoneme: a mean μ and std σ (Gaussian parameters).
+
+h_text = text_encoder(phoneme_ids, spk_embed)
+# h_text: (1, 192, 20)                one 192-dim vector per phoneme
+
+mu_text    = proj_mu(h_text)            # (1, 192, 20)   mean
+sigma_text = proj_sigma(h_text)         # (1, 192, 20)   log-variance
+
+# These define a Gaussian distribution FOR EACH PHONEME:
+#   "phoneme #3 should sound like N(μ₃, σ₃) in latent space"</code></pre>
+
+<pre><code># ── Step 2: Duration Predictor ────────────────────────────
+# Predicts how many mel frames each phoneme occupies.
+# Uses a flow-based stochastic predictor (not deterministic —
+# same text can produce slightly different rhythms each time).
+
+durations = duration_predictor(h_text, noise=randn(...))
+# durations: (1, 20)                  e.g. [4, 8, 12, 6, 3, ...]
+#   phoneme "HH" → 4 frames, "AH" → 8 frames, etc.
+
+total_frames = sum(durations)           # e.g. 172 frames ≈ 2.0 seconds</code></pre>
+
+<pre><code># ── Step 3: Expand + Normalizing Flow ─────────────────────
+# Repeat each phoneme's (μ, σ) for its predicted duration.
+
+mu_expanded = repeat_by_durations(mu_text, durations)
+# mu_expanded: (1, 192, 172)           20 phonemes expanded to 172 frames
+#   e.g. phoneme "AH" with μ=[0.3,...] and duration=8 → 8 copies of [0.3,...]
+
+sigma_expanded = repeat_by_durations(sigma_text, durations)
+# sigma_expanded: (1, 192, 172)
+
+# Sample from the text-predicted Gaussian
+z_text = mu_expanded + sigma_expanded * randn(1, 192, 172)
+# z_text: (1, 192, 172)               "what the text encoder thinks speech should be"
+
+# Normalizing flow TRANSFORMS this simple Gaussian sample
+# into a realistic speech latent (closer to real speech distribution).
+# This is an INVERSE flow: simple → complex, in ONE pass (no iteration).
+z = inverse_flow(z_text)
+# z: (1, 192, 172)                    same shape, but richer distribution
+#   Now z lives in "real speech space" instead of "simple Gaussian space"</code></pre>
+
+<pre><code># ── Step 4: Decoder — latent → waveform (built-in vocoder)
+# The decoder IS a HiFi-GAN — transposed convolutions that
+# upsample from frame-rate to sample-rate.
+
+waveform = decoder(z)
+# Upsampling: 172 frames × 256 (hop) = 44,032 samples
+# waveform: (1, 1, 44032)
+#   = 44,032 ÷ 22,050 Hz ≈ 2.0 seconds of audio
+
+# That's it. No vocoder call. No ODE steps. No AR loop.
+# One forward pass through the decoder.</code></pre>
+
+<pre><code># ── Why VITS is fast ──────────────────────────────────────
+# Text encoder:      1 forward pass        ~2ms
+# Duration predictor: 1 forward pass       ~1ms
+# Normalizing flow:  1 forward pass        ~3ms  (no iteration!)
+# Decoder:           1 forward pass        ~20ms
+# ─────────────────────────────────────────
+# Total:             ~26ms for 2s of audio
+#
+# Compare:
+#   VALL-E:  150 AR steps + 7 NAR passes + decode ≈ 1.5s
+#   F5-TTS:  32 ODE steps + vocoder                ≈ 500ms
+#   VITS:    4 forward passes total                 ≈ 30ms
+#
+# Tradeoff: no zero-shot voice cloning.
+#   New speaker = retrain or fine-tune the whole model.
+#   VALL-E/F5-TTS just need a 3-second reference clip.</code></pre>
+
 </div>
 
 <h2>Hybrid (the 2026 trend)</h2>
@@ -417,9 +726,26 @@ So: latency &harr; prosody quality is a fundamental tradeoff.</code></pre>
 <p>"The main challenge is latency. Traditional TTS generates the full acoustic representation before synthesis, which introduces hundreds of milliseconds of delay. In interactive settings like games, we need streaming generation where speech starts playing within ~200ms. That requires architectures that support incremental synthesis &mdash; streaming vocoder, chunk-based generation &mdash; while still maintaining natural prosody, which is fundamentally hard because prosody depends on future context. The practical solution is a combination of pipeline parallelism across ASR/LLM/TTS, short utterance generation, pre-generated common lines, and choosing the right model for each use case: single-pass for speed, flow-matching for quality, pre-recorded for critical dialogue."</p>
 </div>
 
-<h2>Interview One-liner</h2>
+<h2>The Key Insight: Semantic / Acoustic Hierarchy</h2>
+<p>The field has converged on a <strong>two-level hierarchy</strong> that separates <em>what to say</em> from <em>how it sounds</em>:</p>
 <div class="paradigm">
-<p>"There are three TTS paradigms: <strong>autoregressive codec LMs</strong> like VALL-E that treat speech as token prediction &mdash; natural but slow; <strong>flow-matching models</strong> like F5-TTS that generate in continuous latent space &mdash; high quality and parallelizable but multi-step; and <strong>single-pass models</strong> like VITS &mdash; fastest but least expressive. The trend is <strong>hybrid</strong>: AR for coarse prosody, flow-matching for acoustic quality. For production, the engineering challenge is picking the right quality-latency tradeoff and applying step distillation, quantization, and streaming to push that frontier."</p>
+<pre><code>Semantic layer  →  "prosody, rhythm, phoneme timing"   (coarse, high-level)
+    ↓
+Acoustic layer  →  "timbre, texture, waveform detail"   (fine, low-level)</code></pre>
+</div>
+<table>
+  <tr><th>System</th><th>Semantic layer</th><th>Acoustic layer</th></tr>
+  <tr><td>AudioLM</td><td>Semantic tokens (w2v-BERT)</td><td>SoundStream tokens</td></tr>
+  <tr><td>VALL-E</td><td>Phonemes &rarr; RVQ layer 0 (AR)</td><td>RVQ layers 1-7 (NAR)</td></tr>
+  <tr><td>CosyVoice</td><td>Speech tokens (AR LLM)</td><td>Mel via flow matching</td></tr>
+  <tr><td>NaturalSpeech 3</td><td>Text &rarr; duration/pitch</td><td>Codec diffusion</td></tr>
+</table>
+<p class="note">This hierarchy is why hybrid systems work: the semantic layer handles the hard part (prosody depends on meaning), and the acoustic layer handles the easy-but-detailed part (making it sound like a real person). Separating them lets each stage use the best tool for the job.</p>
+
+<h2>Interview Answer (30 seconds)</h2>
+<div class="paradigm">
+<p>"Modern TTS has three main paradigms. First, <strong>autoregressive codec LMs</strong> like VALL-E treat speech as discrete audio tokens and generate them with a transformer. They produce very natural prosody and enable strong voice cloning, but inference is slow because tokens are generated sequentially. Second, <strong>diffusion or flow-matching models</strong> like VoiceBox or F5-TTS generate acoustic features such as mel spectrograms by denoising noise conditioned on text and speaker embeddings. They achieve the highest quality but require multiple denoising steps. Third, <strong>feed-forward models</strong> like VITS generate speech in a single pass with an integrated vocoder. They are extremely fast but less flexible for zero-shot voice cloning. The trend in 2025-2026 is <strong>hybrid systems</strong> that use a language model to generate coarse semantic speech tokens and a diffusion or flow model to synthesize the final acoustics."</p>
+<p class="note">The single most important sentence: "Modern TTS separates semantic speech structure (prosody, rhythm, phoneme timing) from acoustic realization (timbre and waveform), typically using a language model for the former and diffusion or codec decoding for the latter."</p>
 </div>
 
 <footer>
