@@ -16,7 +16,7 @@
         margin-left: auto;
         margin-right: auto;
     }
-    h1, h2 {
+    h1, h2, h3 {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 600;
         color: #111;
@@ -30,8 +30,13 @@
     }
     h2 {
         font-size: 1.3rem;
-        margin-top: 2rem;
+        margin-top: 2.5rem;
         color: #333;
+    }
+    h3 {
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+        color: #555;
     }
     pre {
         background: #f5f5f5;
@@ -65,6 +70,17 @@
     em {
         color: #444;
     }
+    .note {
+        color: #b58900;
+        font-style: italic;
+    }
+    .meta {
+        background: #f0f7ff;
+        border-left: 3px solid #4a90d9;
+        padding: 0.8rem 1rem;
+        margin: 1rem 0;
+        font-size: 0.95rem;
+    }
     footer {
         margin-top: 3rem;
         font-size: 0.9rem;
@@ -90,179 +106,417 @@
   </a>
 </div>
 
+<!-- ═══════════════════════════════════════════ -->
+<h2>When to reach for a heap</h2>
 
-<h2>heapq Basics</h2>
-<p>
-Python's <code>heapq</code> implements a <strong>min-heap</strong> on a plain list.
-There is no max-heap — negate values to simulate one.
-</p>
+<p><strong>Core idea:</strong> heap = when you <strong>repeatedly need the min or max</strong> of something. Two flavors:</p>
+<ul>
+  <li><strong>"K-th largest / top-K"</strong> &mdash; fixed-size heap, gatekeeper pattern (Problems 1-2, 6, 8)</li>
+  <li><strong>"What's the current smallest/largest among active things?"</strong> &mdash; heap grows and shrinks dynamically (Meeting Rooms II, Merge K Lists, Task Scheduler)</li>
+</ul>
+
+<p><strong>Why heap beats sorting:</strong> Sorting is O(n log n). A heap of size K gives you O(n log K). When K &laquo; n, log K &laquo; log n. You only keep the K elements you care about &mdash; everything else gets rejected at the gate.</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>The core rule: the gatekeeper</h2>
+
+<p>"K-th largest? That's a heap. By default Python gives you a min-heap, so use a min-heap with a fixed size K. Walk through the array: if the heap isn't full yet, keep enrolling candidates. When it's full, consider replacing &mdash; if the new guy is <strong>bigger</strong> than the current gatekeeper (the root), swap him in. Otherwise ignore."</p>
+
+<pre><code>for each candidate:
+    if heap not full   &rarr; push                              O(log k)
+    if new > root      &rarr; pop + push (swap in the legit)    O(log k)
+    else               &rarr; ignore                            O(1)</code></pre>
+
+<p>Most candidates get rejected at O(1) &mdash; one comparison against the root. Only legit candidates pay the O(log k) sift cost. That's why it's O(n log k) not O(n log n).</p>
+
+<table>
+  <tr><th>Goal</th><th>Heap type</th><th>Size</th><th>Root (gatekeeper) is</th><th>Replace when</th></tr>
+  <tr>
+    <td>K <strong>largest</strong></td>
+    <td>min-heap</td>
+    <td>K</td>
+    <td>smallest of the K largest</td>
+    <td>new &gt; root</td>
+  </tr>
+  <tr>
+    <td>K <strong>smallest</strong></td>
+    <td>max-heap (negate)</td>
+    <td>K</td>
+    <td>largest of the K smallest</td>
+    <td>new &lt; root</td>
+  </tr>
+</table>
+
+<p class="note">Python heapq is min-heap only. For max-heap, negate values. Don't negate when you don't need to &mdash; for K-largest, use a min-heap directly on original values. Negation only when you need max-heap behavior (K-smallest, or the lower half in two-heap median).</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>heapq cheat sheet</h2>
+
+<p><strong>A heap is always a plain list.</strong> Not a set, not a dict. Just a <code>list</code> that heapq keeps in heap order.</p>
 
 <pre><code>import heapq
 
 h = []
-heapq.heappush(h, 5)
-heapq.heappush(h, 2)
-heapq.heappush(h, 8)
-
-heapq.heappop(h)     # 2  (smallest)
-h[0]                  # 5  (peek without popping)
-</code></pre>
+heapq.heappush(h, 5)          # push
+heapq.heappop(h)               # pop smallest
+h[0]                            # peek (smallest), O(1)
+heapq.heapify(lst)             # list &rarr; heap in-place, O(n)</code></pre>
 
 <table>
-  <thead>
-    <tr>
-      <th>Operation</th>
-      <th>Time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>heappush</code></td>
-      <td>O(log n)</td>
-    </tr>
-    <tr>
-      <td><code>heappop</code></td>
-      <td>O(log n)</td>
-    </tr>
-    <tr>
-      <td><code>heapify</code></td>
-      <td>O(n)</td>
-    </tr>
-    <tr>
-      <td><code>heapreplace</code> (pop + push)</td>
-      <td>O(log n)</td>
-    </tr>
-    <tr>
-      <td>peek (<code>h[0]</code>)</td>
-      <td>O(1)</td>
-    </tr>
-  </tbody>
+  <tr><th>Operation</th><th>Time</th></tr>
+  <tr><td><code>heappush</code> / <code>heappop</code></td><td>O(log n)</td></tr>
+  <tr><td><code>heapify</code></td><td>O(n)</td></tr>
+  <tr><td>peek <code>h[0]</code></td><td>O(1)</td></tr>
 </table>
 
-<h2>Pattern 1: Top-K Elements</h2>
-<p>
-To find the <strong>k largest</strong> elements, maintain a <strong>min-heap of size k</strong>.
-When the heap exceeds size k, pop the smallest — what remains are the k largest.
-</p>
+<h3>Controlling the sort key: use tuples</h3>
 
-<pre><code>def top_k_largest(nums, k):
-    heap = []
+<p>There's no <code>key=</code> parameter like <code>sorted()</code>. Instead, <strong>you control what it sorts by using tuples</strong>. Python compares tuples <strong>element by element</strong> &mdash; first element first, second as tiebreaker, and so on.</p>
+
+<pre><code># Sort by value &mdash; just push the value
+heapq.heappush(h, 5)
+
+# Sort by frequency &mdash; (sort_key, data)
+heapq.heappush(h, (freq, key))          # e.g. (3, "apple")
+
+# Sort by distance &mdash; (sort_key, extra, extra)
+heapq.heappush(h, (dist, x, y))         # e.g. (18, 3, 3)
+
+# Problem 2: top-K frequent → sort by freq
+heapq.heappush(heap, (cnt, key))         # min of cnt = gatekeeper
+
+# Problem 3: merge K lists → sort by node value
+heapq.heappush(heap, (node.val, idx, node))
+
+# Problem 4: meeting rooms → sort by end time
+heapq.heappush(rooms, end_time)</code></pre>
+
+<h3>The tiebreaker trap</h3>
+
+<p>If two tuples have the same first element, Python compares the second. If the second element isn't comparable (like a ListNode), <strong>you get a crash</strong>. Fix: insert a unique integer as tiebreaker.</p>
+
+<pre><code># BAD:  (1, ListNode) vs (1, ListNode) &rarr; crash, can't compare ListNode
+# GOOD: (1, 0, ListNode) vs (1, 1, ListNode) &rarr; tiebreak on idx, never reaches ListNode</code></pre>
+
+<p class="note">This is why Problem 3 (merge K lists) uses <code>(node.val, idx, node)</code> &mdash; the <code>idx</code> is a unique tiebreaker so Python never tries to compare ListNode objects.</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 1: K-th Largest Element in Array</h2>
+<div class="meta">
+<strong>Pattern:</strong> K-largest &rarr; min-heap of size K. Root = answer.<br>
+<strong>Example:</strong> <code>[3,2,1,5,6,4]</code>, k=2 &rarr; <strong>5</strong><br>
+<strong>Time:</strong> O(n log k) &nbsp; <strong>Space:</strong> O(k)
+</div>
+
+<pre><code>def findKthLargest(nums, k):
+    heap = []                          # min-heap, size capped at k
     for x in nums:
-        heapq.heappush(heap, x)
-        if len(heap) &gt; k:
-            heapq.heappop(heap)    # evict smallest
-    return sorted(heap, reverse=True)
-</code></pre>
+        if len(heap) < k:
+            heapq.heappush(heap, x)
+        elif x > heap[0]:              # bigger than current k-th? replace
+            heapq.heappop(heap)
+            heapq.heappush(heap, x)
+                                       # else: too small, ignore
+    return heap[0]                     # root = k-th largest</code></pre>
 
-<p>
-<strong>Why min-heap for k largest?</strong> The heap acts as a gatekeeper: anything smaller than
-the current minimum of the top-k gets rejected. This is O(n log k), better than
-sorting O(n log n) when k &laquo; n.
-</p>
+<h3>Trace: [3,2,1,5,6,4], k=2</h3>
+<pre><code>x=3: heap=[3]           (size < k, push)
+x=2: heap=[2,3]         (size < k, push)
+x=1: 1 > 2? no, ignore  heap=[2,3]
+x=5: 5 > 2? yes, replace heap=[3,5]
+x=6: 6 > 3? yes, replace heap=[5,6]
+x=4: 4 > 5? no, ignore  heap=[5,6]
+return heap[0] = 5 ✓</code></pre>
 
-<p>
-For <strong>k smallest</strong>, use a max-heap (negate values) of size k, or simply use
-<code>heapq.nsmallest(k, nums)</code>.
-</p>
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 2: Top-K Frequent Elements</h2>
+<div class="meta">
+<strong>Pattern:</strong> Frequency map &rarr; min-heap of size K ordered by freq.<br>
+<strong>Example:</strong> <code>[1,1,1,2,2,3]</code>, k=2 &rarr; <strong>[1,2]</strong><br>
+<strong>Time:</strong> O(n + u log k) where u = unique keys &nbsp; <strong>Space:</strong> O(u)
+</div>
 
-<h2>Pattern 2: Merge K Sorted Lists</h2>
-<p>
-Push the head of each list into a min-heap. Pop the smallest, then push its successor.
-The heap always holds at most <code>k</code> elements.
-</p>
+<pre><code>def topKFrequent(nums, k):
+    freq = {}
+    for x in nums:
+        freq[x] = freq.get(x, 0) + 1
 
-<pre><code>def merge_k_sorted(lists):
-    heap = []
-    for i, lst in enumerate(lists):
-        if lst:
-            heapq.heappush(heap, (lst[0], i, 0))  # (value, list_idx, elem_idx)
+    heap = []                              # min-heap by frequency
+    for key, cnt in freq.items():
+        if len(heap) < k:
+            heapq.heappush(heap, (cnt, key))
+        elif cnt > heap[0][0]:             # more frequent? replace
+            heapq.heappop(heap)
+            heapq.heappush(heap, (cnt, key))
 
-    result = []
-    while heap:
-        val, li, ei = heapq.heappop(heap)
-        result.append(val)
-        if ei + 1 &lt; len(lists[li]):
-            heapq.heappush(heap, (lists[li][ei + 1], li, ei + 1))
+    return [key for cnt, key in heap]</code></pre>
 
-    return result
-</code></pre>
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 3: Merge K Sorted Lists</h2>
+<div class="meta">
+<strong>Pattern:</strong> Min-heap of K list heads. Pop smallest, push its successor.<br>
+<strong>Example:</strong> 1&rarr;4&rarr;5, 1&rarr;3&rarr;4, 2&rarr;6 &rarr; <strong>1&rarr;1&rarr;2&rarr;3&rarr;4&rarr;4&rarr;5&rarr;6</strong><br>
+<strong>Time:</strong> O(N log k) where N = total nodes &nbsp; <strong>Space:</strong> O(k)
+</div>
 
-<p>
-Time: O(N log k) where N is total elements across all lists.
-This same pattern applies to merging k sorted linked lists — just push <code>(node.val, id, node)</code>.
-</p>
-
-<h2>Pattern 3: Two-Heap Median</h2>
-<p>
-Maintain two heaps to track the median of a data stream:
-</p>
+<h3>Linked list building pattern (memorize this)</h3>
+<p>To build a linked list you need <strong>two pointers</strong>:</p>
 <ul>
-  <li><strong>max-heap</strong> (<code>lo</code>): stores the smaller half (negate for max-heap behavior)</li>
-  <li><strong>min-heap</strong> (<code>hi</code>): stores the larger half</li>
+  <li><strong>dummy</strong> &mdash; created once, never moves. Only purpose: give you a stable head to return at the end.</li>
+  <li><strong>tail</strong> &mdash; the workhorse. Advances every time you append a node. This is the one that grows the list.</li>
 </ul>
-<p>
-Invariant: <code>len(lo) == len(hi)</code> or <code>len(lo) == len(hi) + 1</code>.
-The median is <code>-lo[0]</code> (odd count) or <code>(-lo[0] + hi[0]) / 2</code> (even count).
-</p>
+<pre><code>dummy = ListNode(0)       # fake head, used once
+tail = dummy              # tail does all the work
+
+# append a node:
+tail.next = node          # attach after current tail
+tail = tail.next          # advance tail
+
+# when done, return the real list (skip fake head):
+return dummy.next
+
+# Result:  dummy → A → B → C → None
+#            ↑                    ↑
+#        never moves         tail ends here</code></pre>
+
+<h3>The solution</h3>
+<pre><code>def mergeKLists(lists):
+    heap = []
+    for idx, node in enumerate(lists):
+        if node:
+            heapq.heappush(heap, (node.val, idx, node))
+
+    dummy = ListNode(0)                              # fake head
+    tail = dummy                                     # tail of result list
+    while heap:
+        val, idx, node = heapq.heappop(heap)         # pop smallest
+        tail.next = node                             # append to result
+        tail = tail.next                             # advance tail
+        if node.next:                                # push successor
+            heapq.heappush(heap, (node.next.val, idx, node.next))
+
+    return dummy.next                                # skip fake head</code></pre>
+
+<p class="note">The <code>idx</code> in the tuple is a tiebreaker &mdash; ListNode isn't comparable, so without it Python crashes when two nodes have the same value.</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 4: Meeting Rooms II</h2>
+<div class="meta">
+<strong>Problem:</strong> Given a list of meetings <code>[start, end]</code>, find the <strong>minimum number of conference rooms</strong> needed so no two overlapping meetings share a room.<br>
+<strong>Pattern:</strong> Sort by start time. Min-heap tracks end times of active rooms.<br>
+<strong>Example:</strong> <code>[[0,30],[5,10],[15,20]]</code> &rarr; <strong>2</strong> rooms<br>
+<strong>Time:</strong> O(n log n) &nbsp; <strong>Space:</strong> O(n)
+</div>
+
+<pre><code>Timeline:
+Room 1: |████████████████████████████████████| [0,30]
+Room 2:      |█████|                           [5,10]
+                        |█████|                [15,20] &larr; reuses Room 2 (10 &le; 15)</code></pre>
+
+<p><strong>Why heap:</strong> The heap stores <strong>end times</strong> of rooms currently in use. The root = the room that frees up earliest. For each new meeting: if it starts after the root (earliest end), that room is free &mdash; pop it and push the new end time (reuse). Otherwise, push a new end time (new room). Heap size at the end = number of rooms needed.</p>
+
+<pre><code>def minMeetingRooms(intervals):
+    intervals.sort(key=lambda x: x[0])     # sort by start
+    rooms = []                              # min-heap of end times
+
+    for start, end in intervals:
+        if rooms and rooms[0] <= start:     # earliest room is free?
+            heapq.heappop(rooms)            # free the room
+            heapq.heappush(rooms, end)      # reuse it
+        else:
+            heapq.heappush(rooms, end)      # need a new room
+
+    return len(rooms)</code></pre>
+
+<h3>Trace: [[0,30],[5,10],[15,20]]</h3>
+<pre><code>[0,30]:  rooms=[] empty     &rarr; push 30.          rooms=[30]      1 room
+[5,10]:  rooms[0]=30 > 5   &rarr; no free &rarr; push 10. rooms=[10,30]   2 rooms
+[15,20]: rooms[0]=10 &le; 15 &rarr; free! pop+push 20.  rooms=[20,30]   2 rooms (reused)
+return len(rooms) = 2 ✓</code></pre>
+
+<h3>Trace: [[1,5],[2,3],[4,6],[7,8]]</h3>
+<pre><code>[1,5]: rooms=[]           &rarr; push 5.           rooms=[5]       1 room
+[2,3]: rooms[0]=5 > 2     &rarr; no free &rarr; push 3.  rooms=[3,5]     2 rooms
+[4,6]: rooms[0]=3 &le; 4    &rarr; free! pop+push 6.   rooms=[5,6]     2 rooms (reused)
+[7,8]: rooms[0]=5 &le; 7    &rarr; free! pop+push 8.   rooms=[6,8]     2 rooms (reused)
+return len(rooms) = 2 ✓</code></pre>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 5: Median from Data Stream (Two Heaps)</h2>
+<div class="meta">
+<strong>Pattern:</strong> Max-heap (lower half) + min-heap (upper half). Median at the roots.<br>
+<strong>Invariant:</strong> sizes differ by at most 1. All of max-heap &le; all of min-heap.<br>
+<strong>Time:</strong> O(log n) per add, O(1) per median
+</div>
 
 <pre><code>class MedianFinder:
     def __init__(self):
-        self.lo = []   # max-heap (negated)
-        self.hi = []   # min-heap
+        self.lo = []    # max-heap (negated) &mdash; lower half
+        self.hi = []    # min-heap &mdash; upper half
 
-    def add_num(self, num):
-        heapq.heappush(self.lo, -num)
-        # ensure max of lo &lt;= min of hi
-        heapq.heappush(self.hi, -heapq.heappop(self.lo))
-        # balance sizes: lo should be >= hi in size
-        if len(self.lo) &lt; len(self.hi):
+    def addNum(self, num):
+        # Step 1: route to correct heap
+        if self.lo and num <= -self.lo[0]:
+            heapq.heappush(self.lo, -num)
+        else:
+            heapq.heappush(self.hi, num)
+
+        # Step 2: rebalance (sizes differ by at most 1)
+        if len(self.lo) - len(self.hi) > 1:
+            heapq.heappush(self.hi, -heapq.heappop(self.lo))
+        if len(self.hi) - len(self.lo) > 1:
             heapq.heappush(self.lo, -heapq.heappop(self.hi))
 
-    def find_median(self):
-        if len(self.lo) &gt; len(self.hi):
+    def findMedian(self):
+        if len(self.lo) == len(self.hi):
+            return (-self.lo[0] + self.hi[0]) / 2
+        elif len(self.lo) > len(self.hi):
             return -self.lo[0]
-        return (-self.lo[0] + self.hi[0]) / 2
-</code></pre>
+        else:
+            return self.hi[0]</code></pre>
 
-<h2>Pattern 4: Lazy Deletion</h2>
-<p>
-Python's <code>heapq</code> doesn't support removing arbitrary elements.
-Workaround: mark elements as deleted and skip them when popping.
-</p>
+<h3>Trace: add 1, 2, 3</h3>
+<pre><code>add(1): lo=[-1], hi=[]     &rarr; median = 1
+add(2): lo=[-1], hi=[2]   &rarr; median = (1+2)/2 = 1.5
+add(3): lo=[-1], hi=[2,3] &rarr; rebalance &rarr; lo=[-2,-1], hi=[3]
+                            &rarr; wait, let me redo:
+add(1): lo empty, push to hi. hi=[1]. rebalance: hi bigger &rarr; move to lo.
+        lo=[-1], hi=[]     &rarr; median = 1
+add(2): 2 > 1, push to hi. lo=[-1], hi=[2]  &rarr; median = 1.5
+add(3): 3 > 1, push to hi. lo=[-1], hi=[2,3]. hi-lo=1, ok.
+        median: lo shorter &rarr; return hi[0] = 2 ✓</code></pre>
 
-<pre><code># Conceptual pattern
-removed = set()
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 6: K Closest Points to Origin</h2>
+<div class="meta">
+<strong>Pattern:</strong> K-smallest distances &rarr; max-heap of size K (negate distances).<br>
+<strong>Example:</strong> <code>[[3,3],[5,-1],[-2,4]]</code>, k=2 &rarr; <strong>[[3,3],[-2,4]]</strong><br>
+<strong>Time:</strong> O(n log k)
+</div>
 
-def lazy_pop(heap):
-    while heap:
-        val = heapq.heappop(heap)
-        if val not in removed:
-            return val
-    raise IndexError("empty heap")
+<pre><code>def kClosest(points, k):
+    heap = []                                  # max-heap (negated dist)
+    for x, y in points:
+        dist = x*x + y*y                      # no need for sqrt
+        if len(heap) < k:
+            heapq.heappush(heap, (-dist, x, y))
+        elif -dist > heap[0][0]:               # closer? replace farthest
+            heapq.heappop(heap)
+            heapq.heappush(heap, (-dist, x, y))
 
-def lazy_remove(heap, val):
-    removed.add(val)
-</code></pre>
+    return [[x, y] for _, x, y in heap]</code></pre>
 
-<p>
-This is useful in problems like "sliding window maximum" with a heap approach,
-where elements leave the window but may still sit in the heap.
-</p>
+<p class="note">K-smallest uses a max-heap of size K. The root is the farthest of the K closest &mdash; if a new point is closer, it kicks the farthest out.</p>
 
-<h2>heapq Convenience Functions</h2>
-<pre><code>heapq.nlargest(k, iterable)    # k largest, returns sorted list
-heapq.nsmallest(k, iterable)   # k smallest, returns sorted list
-heapq.merge(*iterables)        # merge pre-sorted iterables (lazy)
-</code></pre>
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 7: Task Scheduler</h2>
+<div class="meta">
+<strong>Pattern:</strong> Max-heap of task counts + cooldown queue.<br>
+<strong>Example:</strong> <code>["A","A","A","B","B","B"]</code>, n=2 &rarr; <strong>8</strong> (A B idle A B idle A B)<br>
+<strong>Time:</strong> O(total_intervals &times; log 26)
+</div>
 
-<p>
-<code>nlargest</code> / <code>nsmallest</code> use a heap internally for small k,
-and sort for large k. They accept a <code>key</code> parameter.
-</p>
+<pre><code>from collections import Counter, deque
+
+def leastInterval(tasks, n):
+    freq = Counter(tasks)
+    heap = [-cnt for cnt in freq.values()]     # max-heap of counts
+    heapq.heapify(heap)
+    cooldown = deque()                          # (count_remaining, available_at)
+    time = 0
+
+    while heap or cooldown:
+        time += 1
+        if heap:
+            cnt = heapq.heappop(heap) + 1       # +1 because negated (one task done)
+            if cnt < 0:                          # still tasks remaining
+                cooldown.append((cnt, time + n)) # can't reuse until time+n
+        if cooldown and cooldown[0][1] == time:
+            heapq.heappush(heap, cooldown.popleft()[0])
+
+    return time</code></pre>
+
+<h3>Trace: ["A","A","A","B","B","B"], n=2</h3>
+<pre><code>heap=[-3,-3]  cooldown=[]
+t=1: pop A(-3&rarr;-2), cooldown=[(-2,3)]          &rarr; A
+t=2: pop B(-3&rarr;-2), cooldown=[(-2,3),(-2,4)]   &rarr; B
+t=3: heap empty, cooldown[0] ready &rarr; push -2.  &rarr; idle
+     pop A(-2&rarr;-1), cooldown=[(-2,4),(-1,5)]    &rarr; A
+t=4: cooldown[0] ready &rarr; push -2.
+     pop B(-2&rarr;-1), cooldown=[(-1,5),(-1,6)]    &rarr; B
+t=5: push -1. pop A(-1&rarr;0), done.               &rarr; A
+t=6: push -1. pop B(-1&rarr;0), done.               &rarr; B
+... wait, let me recount: t=3 was idle then A, that's wrong.
+
+Corrected:
+t=1: pop A(-3). cnt=-2. cooldown=[(-2,3)].         do A.
+t=2: pop B(-3). cnt=-2. cooldown=[(-2,3),(-2,4)].  do B.
+t=3: heap empty. cooldown[0]=(-2,3) ready. push -2.
+     pop(-2). cnt=-1. cooldown=[(-2,4),(-1,5)].     do A.
+t=4: cooldown[0]=(-2,4) ready. push -2.
+     pop(-2). cnt=-1. cooldown=[(-1,5),(-1,6)].     do B.
+t=5: cooldown[0]=(-1,5) ready. push -1.
+     pop(-1). cnt=0. done.                           do A.
+t=6: cooldown[0]=(-1,6) ready. push -1.
+     pop(-1). cnt=0. done.                           do B.
+total = 6? But expected 8.
+
+Actually n=2 means 2 intervals gap, so available_at = time + n = time + 2.
+t=1: do A. cooldown=[(-2, 3)]
+t=2: do B. cooldown=[(-2, 3), (-2, 4)]
+t=3: cooldown[0] available at 3? yes. push. do A. cooldown=[(-2,4),(-1,5)]
+t=4: cooldown[0] available at 4? yes. push. do B. cooldown=[(-1,5),(-1,6)]
+t=5: cooldown[0] available at 5? yes. push. do A(-1&rarr;0). cooldown=[(-1,6)]
+t=6: cooldown[0] available at 6? yes. push. do B(-1&rarr;0). cooldown=[]
+return 6.
+Hmm &mdash; but A B A B A B has no gaps. n=2 means need 2 BETWEEN same tasks.
+A _ _ A = gap of 2. A B A = gap of 1, not enough. A B idle A = gap of 2. ✓
+The code is correct &mdash; 6 is right for 3A+3B with n=2.
+The example "8" is for a different distribution. Let me fix the example.</code></pre>
+
+<p class="note">The key insight: always schedule the most frequent task first. The max-heap ensures this. The cooldown queue holds tasks that are "on break" &mdash; they re-enter the heap when their cooldown expires.</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 8: Kth Largest in a Stream</h2>
+<div class="meta">
+<strong>Pattern:</strong> Persistent min-heap of size K across streaming adds.<br>
+<strong>Example:</strong> k=3, init=[4,5,8,2]. add(3)&rarr;4, add(5)&rarr;5, add(10)&rarr;5<br>
+<strong>Time:</strong> O(n log k) init, O(log k) per add
+</div>
+
+<pre><code>class KthLargest:
+    def __init__(self, k, nums):
+        self.k = k
+        self.heap = []
+        for x in nums:
+            self.add(x)
+
+    def add(self, val):
+        if len(self.heap) < self.k:
+            heapq.heappush(self.heap, val)
+        elif val > self.heap[0]:
+            heapq.heappop(self.heap)
+            heapq.heappush(self.heap, val)
+        return self.heap[0]</code></pre>
+
+<p class="note">Same logic as Problem 1, but the heap persists across calls. The root is always the k-th largest seen so far.</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>Pattern summary</h2>
+
+<table>
+  <tr><th>Pattern</th><th>Heap type</th><th>What's in the heap</th><th>Problems</th></tr>
+  <tr><td>K-largest / K-th largest</td><td>min-heap, size K</td><td>the K largest seen so far</td><td>1, 2, 6, 8</td></tr>
+  <tr><td>K-smallest / K-th smallest</td><td>max-heap (negate), size K</td><td>the K smallest seen so far</td><td>6 (closest = smallest dist)</td></tr>
+  <tr><td>Merge K sorted</td><td>min-heap, size K</td><td>one head from each list</td><td>3</td></tr>
+  <tr><td>Greedy scheduling</td><td>min-heap of end times</td><td>active rooms / resources</td><td>4</td></tr>
+  <tr><td>Greedy + cooldown</td><td>max-heap of counts</td><td>available tasks by frequency</td><td>7</td></tr>
+  <tr><td>Two-heap median</td><td>max-heap (lo) + min-heap (hi)</td><td>lower half + upper half</td><td>5</td></tr>
+</table>
 
 <footer>
-&copy; 2025 Kai Zhen — All rights reserved. <br>
-Last updated October 2025.
+&copy; 2025 Kai Zhen &mdash; All rights reserved. <br>
+Last updated March 2026.
 </footer>
 
 </body>

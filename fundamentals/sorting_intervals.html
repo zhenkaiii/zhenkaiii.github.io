@@ -16,7 +16,7 @@
         margin-left: auto;
         margin-right: auto;
     }
-    h1, h2 {
+    h1, h2, h3 {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 600;
         color: #111;
@@ -30,8 +30,13 @@
     }
     h2 {
         font-size: 1.3rem;
-        margin-top: 2rem;
+        margin-top: 2.5rem;
         color: #333;
+    }
+    h3 {
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+        color: #555;
     }
     pre {
         background: #f5f5f5;
@@ -65,6 +70,17 @@
     em {
         color: #444;
     }
+    .note {
+        color: #b58900;
+        font-style: italic;
+    }
+    .meta {
+        background: #f0f7ff;
+        border-left: 3px solid #4a90d9;
+        padding: 0.8rem 1rem;
+        margin: 1rem 0;
+        font-size: 0.95rem;
+    }
     footer {
         margin-top: 3rem;
         font-size: 0.9rem;
@@ -90,170 +106,220 @@
   </a>
 </div>
 
+<!-- ═══════════════════════════════════════════ -->
+<h2>Mental model: same as heap, just explicit</h2>
 
-<h2>Sort-First Strategy</h2>
-<p>
-Many problems become straightforward once the input is sorted.
-The mental test: <em>"Would a sorted order let me make a single-pass decision?"</em>
-If yes, sort first — O(n log n) sorting rarely dominates the overall complexity.
-</p>
+<p>Just like heap, the fundamental data structure is a <strong>plain list</strong>. Each element is a <strong>tuple</strong> (or list) like <code>[start, end]</code>. The difference from heap:</p>
 
 <table>
-  <thead>
-    <tr>
-      <th>Problem Type</th>
-      <th>Sort By</th>
-      <th>Then</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Interval merge / overlap</td>
-      <td>Start time</td>
-      <td>Linear scan, extend or close intervals</td>
-    </tr>
-    <tr>
-      <td>Meeting rooms</td>
-      <td>Start time</td>
-      <td>Heap or sweep to track concurrent meetings</td>
-    </tr>
-    <tr>
-      <td>Assign tasks to workers</td>
-      <td>Difficulty or deadline</td>
-      <td>Greedy assignment</td>
-    </tr>
-    <tr>
-      <td>Closest pair / duplicates</td>
-      <td>Value</td>
-      <td>Compare adjacent elements</td>
-    </tr>
-  </tbody>
+  <tr><th></th><th>Heap</th><th>Sorting</th></tr>
+  <tr>
+    <td>Sort key</td>
+    <td><strong>Implicit</strong> &mdash; Python compares tuples element by element automatically</td>
+    <td><strong>Explicit</strong> &mdash; you specify <code>key=lambda x: ...</code></td>
+  </tr>
+  <tr>
+    <td>Example</td>
+    <td><code>heappush(h, (freq, word))</code> &mdash; sorts by freq, then word</td>
+    <td><code>intervals.sort(key=lambda x: x[0])</code> &mdash; sort by start</td>
+  </tr>
+  <tr>
+    <td>Default</td>
+    <td>First element of tuple</td>
+    <td>First element of tuple (so <code>.sort()</code> with no key works for intervals!)</td>
+  </tr>
 </table>
 
-<h2>Merge Intervals</h2>
-<p>
-Sort by start, then greedily extend the current interval or start a new one:
-</p>
+<p class="note">intervals.sort() with no key already sorts by start time. You only need key=lambda when you want a non-default order (e.g., sort by end time).</p>
+
+<h3>Custom sort key cheat sheet</h3>
+
+<pre><code># Sort by start time (default &mdash; no key needed)
+intervals.sort()                              # [[1,5],[2,3],[4,6]]
+
+# Sort by end time (for greedy non-overlapping selection)
+intervals.sort(key=lambda x: x[1])           # [[2,3],[1,5],[4,6]]
+
+# Sort by multiple criteria: primary ascending, secondary descending
+tasks.sort(key=lambda x: (x[0], -x[1]))
+
+# Sort strings by length, then lexicographically
+words.sort(key=lambda w: (len(w), w))</code></pre>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 1: Merge Intervals (LC 56)</h2>
+<div class="meta">
+<strong>Problem:</strong> Given a list of intervals <code>[start, end]</code>, merge all overlapping intervals and return the non-overlapping result.<br>
+<strong>Pattern:</strong> Sort by start. Linear scan: extend or start new.<br>
+<strong>Example:</strong> <code>[[1,3],[2,6],[8,10],[15,18]]</code> &rarr; <strong>[[1,6],[8,10],[15,18]]</strong><br>
+<strong>Scenario:</strong> Consolidate overlapping calendar blocks into contiguous free/busy slots.<br>
+<strong>Time:</strong> O(n log n) &nbsp; <strong>Space:</strong> O(n)
+</div>
 
 <pre><code>def merge(intervals):
-    intervals.sort()
+    intervals.sort()                     # sort by start (default)
     merged = [intervals[0]]
 
     for start, end in intervals[1:]:
-        if start &lt;= merged[-1][1]:       # overlap
-            merged[-1][1] = max(merged[-1][1], end)
+        if start &lt;= merged[-1][1]:       # overlap: current start &le; prev end
+            merged[-1][1] = max(merged[-1][1], end)   # extend
         else:
-            merged.append([start, end])  # gap — new interval
+            merged.append([start, end])  # gap &mdash; new interval
 
-    return merged
-</code></pre>
+    return merged</code></pre>
 
-<p>
-<strong>Key insight:</strong> after sorting by start, two intervals overlap iff
-the current start &le; the previous end. No need to check all pairs.
-</p>
+<h3>Trace: [[1,3],[2,6],[8,10],[15,18]]</h3>
+<pre><code>After sort: [[1,3],[2,6],[8,10],[15,18]]   (already sorted)
+merged = [[1,3]]
 
-<h2>Insert Interval</h2>
-<p>
-Given sorted, non-overlapping intervals and a new interval, insert and merge:
-</p>
+[2,6]:   2 &le; 3? yes &rarr; extend end to max(3,6)=6.    merged=[[1,6]]
+[8,10]:  8 &le; 6? no  &rarr; new interval.                merged=[[1,6],[8,10]]
+[15,18]: 15 &le; 10? no &rarr; new interval.                merged=[[1,6],[8,10],[15,18]] &checkmark;</code></pre>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 2: Insert Interval (LC 57)</h2>
+<div class="meta">
+<strong>Problem:</strong> Given a sorted list of non-overlapping intervals and a new interval, insert it and merge if necessary. Return the result still sorted and non-overlapping.<br>
+<strong>Pattern:</strong> Three-phase linear scan: before, overlap, after.<br>
+<strong>Example:</strong> <code>[[1,2],[3,5],[6,7],[8,10],[12,16]]</code>, new=<code>[4,8]</code> &rarr; <strong>[[1,2],[3,10],[12,16]]</strong><br>
+<strong>Scenario:</strong> Add a new meeting to an already-clean calendar.<br>
+<strong>Time:</strong> O(n) &nbsp; <strong>Space:</strong> O(n)
+</div>
 
 <pre><code>def insert(intervals, new):
     result = []
     i = 0
     n = len(intervals)
 
-    # 1. Add all intervals ending before new starts
+    # Phase 1: everything ending before new starts &mdash; keep as-is
     while i &lt; n and intervals[i][1] &lt; new[0]:
         result.append(intervals[i])
         i += 1
 
-    # 2. Merge all overlapping intervals with new
+    # Phase 2: everything overlapping with new &mdash; merge into new
     while i &lt; n and intervals[i][0] &lt;= new[1]:
         new[0] = min(new[0], intervals[i][0])
         new[1] = max(new[1], intervals[i][1])
         i += 1
     result.append(new)
 
-    # 3. Add remaining
-    result.extend(intervals[i:])
-    return result
-</code></pre>
+    # Phase 3: everything after &mdash; keep as-is
+    while i &lt; n:
+        result.append(intervals[i])
+        i += 1
 
-<h2>Meeting Rooms (Min Rooms Needed)</h2>
-<p>
-Sort by start time, use a min-heap to track end times of ongoing meetings.
-If the earliest-ending meeting has ended before the new one starts, reuse that room:
-</p>
+    return result</code></pre>
+
+<h3>Trace: intervals=[[1,2],[3,5],[6,7],[8,10],[12,16]], new=[4,8]</h3>
+<pre><code>Phase 1: [1,2] ends at 2 &lt; 4 &rarr; keep.                      result=[[1,2]]
+Phase 2: [3,5] starts at 3 &le; 8 &rarr; merge. new=[3,8]
+         [6,7] starts at 6 &le; 8 &rarr; merge. new=[3,8]
+         [8,10] starts at 8 &le; 8 &rarr; merge. new=[3,10]
+         Append new.                                       result=[[1,2],[3,10]]
+Phase 3: [12,16] &rarr; keep.                                  result=[[1,2],[3,10],[12,16]] &checkmark;</code></pre>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 3: Non-overlapping Intervals (LC 435)</h2>
+<div class="meta">
+<strong>Problem:</strong> Given a list of intervals, find the <strong>minimum number of intervals to remove</strong> so the rest don't overlap.<br>
+<strong>Pattern:</strong> Sort by <strong>end time</strong>. Greedily keep earliest-ending non-conflicting interval.<br>
+<strong>Example:</strong> <code>[[1,2],[2,3],[3,4],[1,3]]</code> &rarr; remove <strong>1</strong> interval<br>
+<strong>Scenario:</strong> One projector, 10 presentation requests &mdash; max you can fit without overlap.<br>
+<strong>Time:</strong> O(n log n) &nbsp; <strong>Space:</strong> O(1)
+</div>
+
+<p><strong>Why sort by end, not start?</strong> Finishing earliest leaves the most room for future intervals.</p>
+
+<pre><code>def eraseOverlapIntervals(intervals):
+    intervals.sort(key=lambda x: x[1])    # sort by END time
+    removed = 0
+    prev_end = float('-inf')
+
+    for start, end in intervals:
+        if start &gt;= prev_end:             # no conflict &mdash; keep it
+            prev_end = end
+        else:
+            removed += 1                  # conflict &mdash; skip (remove)
+
+    return removed</code></pre>
+
+<h3>Trace: [[1,2],[2,3],[3,4],[1,3]]</h3>
+<pre><code>After sort by end: [[1,2],[2,3],[1,3],[3,4]]
+
+[1,2]: 1 &ge; -inf? yes &rarr; keep.  prev_end=2.  removed=0
+[2,3]: 2 &ge; 2? yes   &rarr; keep.  prev_end=3.  removed=0
+[1,3]: 1 &ge; 3? no    &rarr; skip.                removed=1
+[3,4]: 3 &ge; 3? yes   &rarr; keep.  prev_end=4.  removed=1 &checkmark;</code></pre>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 4: Meeting Rooms II (LC 253)</h2>
+<div class="meta">
+<strong>Problem:</strong> Given a list of meeting time intervals <code>[start, end]</code>, find the <strong>minimum number of conference rooms</strong> needed so no two overlapping meetings share a room.<br>
+<strong>Pattern:</strong> Sort by start. Min-heap tracks end times of active rooms.<br>
+<strong>Example:</strong> <code>[[0,30],[5,10],[15,20]]</code> &rarr; <strong>2</strong> rooms<br>
+<strong>Scenario:</strong> How many conference rooms does the office need to avoid any conflict?<br>
+<strong>Time:</strong> O(n log n) &nbsp; <strong>Space:</strong> O(n)
+</div>
 
 <pre><code>import heapq
 
-def min_meeting_rooms(intervals):
-    intervals.sort()
-    heap = []  # end times of active meetings
+def minMeetingRooms(intervals):
+    intervals.sort(key=lambda x: x[0])     # sort by start
+    rooms = []                              # min-heap of end times
 
     for start, end in intervals:
-        if heap and heap[0] &lt;= start:
-            heapq.heapreplace(heap, end)  # reuse room
+        if rooms and rooms[0] &lt;= start:     # earliest room is free?
+            heapq.heappop(rooms)            # free the room
+            heapq.heappush(rooms, end)      # reuse it
         else:
-            heapq.heappush(heap, end)     # need new room
+            heapq.heappush(rooms, end)      # need a new room
 
-    return len(heap)
-</code></pre>
+    return len(rooms)</code></pre>
 
-<h2>Sweep Line</h2>
-<p>
-An alternative to the heap approach: decompose each interval into two events
-(<code>+1</code> at start, <code>-1</code> at end), sort all events, and sweep through.
-The running total at any point equals the number of concurrent intervals.
-</p>
+<h3>Trace: [[0,30],[5,10],[15,20]]</h3>
+<pre><code>[0,30]:  rooms=[] empty     &rarr; push 30.          rooms=[30]      1 room
+[5,10]:  rooms[0]=30 > 5   &rarr; no free &rarr; push 10. rooms=[10,30]   2 rooms
+[15,20]: rooms[0]=10 &le; 15 &rarr; free! pop+push 20.  rooms=[20,30]   2 rooms (reused)
+return len(rooms) = 2 &checkmark;</code></pre>
 
-<pre><code>def max_concurrent(intervals):
-    events = []
-    for start, end in intervals:
-        events.append((start, +1))
-        events.append((end, -1))
+<p class="note">Why does a heap show up with no "K-th largest" trigger? Because you're repeatedly asking "which room frees up earliest?" &mdash; that's a min question. Heap = repeatedly need the min or max of something.</p>
 
-    events.sort()    # ties broken by type: -1 before +1 (ending before starting)
+<!-- ═══════════════════════════════════════════ -->
+<h2>Pattern summary</h2>
 
-    concurrent = 0
-    max_concurrent = 0
-    for _, delta in events:
-        concurrent += delta
-        max_concurrent = max(max_concurrent, concurrent)
+<table>
+  <tr><th>Problem</th><th>Sort by</th><th>Why this order</th><th>Core move</th></tr>
+  <tr>
+    <td>Merge Intervals</td>
+    <td><strong>Start</strong></td>
+    <td>Process left-to-right</td>
+    <td>Extend or start new</td>
+  </tr>
+  <tr>
+    <td>Insert Interval</td>
+    <td>(pre-sorted)</td>
+    <td>&mdash;</td>
+    <td>Three-phase: before / merge / after</td>
+  </tr>
+  <tr>
+    <td>Non-overlapping Intervals</td>
+    <td><strong>End</strong></td>
+    <td>Finish earliest &rarr; leave most room for future</td>
+    <td>Greedy &mdash; keep if no conflict</td>
+  </tr>
+  <tr>
+    <td>Meeting Rooms II</td>
+    <td><strong>Start</strong></td>
+    <td>Process arrivals in order</td>
+    <td>Min-heap of end times &mdash; reuse or allocate</td>
+  </tr>
+</table>
 
-    return max_concurrent
-</code></pre>
-
-<p>
-<strong>When to use sweep line over heap?</strong>
-Sweep line is simpler when you only need the max concurrency count.
-The heap approach is better when you need to track <em>which</em> rooms / resources are in use.
-</p>
-
-<h2>Custom Sort Keys</h2>
-<p>
-Python's <code>sort</code> is stable (preserves order of equal elements) and accepts a <code>key</code> function:
-</p>
-
-<pre><code># Sort by end time (for greedy interval scheduling)
-intervals.sort(key=lambda x: x[1])
-
-# Sort by multiple criteria: primary ascending, secondary descending
-tasks.sort(key=lambda x: (x[0], -x[1]))
-
-# Sort strings by length, then lexicographically
-words.sort(key=lambda w: (len(w), w))
-</code></pre>
-
-<p>
-For the <strong>non-overlapping intervals</strong> (activity selection) problem,
-sort by <em>end time</em> and greedily pick the earliest-ending non-conflicting interval.
-</p>
+<p class="note"><strong>Start or end?</strong> Sort by start when processing arrivals left-to-right. Sort by end when greedy picking &mdash; finish earliest, leave the most room.</p>
 
 <footer>
-&copy; 2025 Kai Zhen — All rights reserved. <br>
-Last updated October 2025.
+&copy; 2025 Kai Zhen &mdash; All rights reserved. <br>
+Last updated March 2026.
 </footer>
 
 </body>

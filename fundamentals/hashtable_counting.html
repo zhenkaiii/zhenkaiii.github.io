@@ -16,7 +16,7 @@
         margin-left: auto;
         margin-right: auto;
     }
-    h1, h2 {
+    h1, h2, h3 {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 600;
         color: #111;
@@ -30,8 +30,13 @@
     }
     h2 {
         font-size: 1.3rem;
-        margin-top: 2rem;
+        margin-top: 2.5rem;
         color: #333;
+    }
+    h3 {
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+        color: #555;
     }
     pre {
         background: #f5f5f5;
@@ -65,6 +70,17 @@
     em {
         color: #444;
     }
+    .note {
+        color: #b58900;
+        font-style: italic;
+    }
+    .meta {
+        background: #f0f7ff;
+        border-left: 3px solid #4a90d9;
+        padding: 0.8rem 1rem;
+        margin: 1rem 0;
+        font-size: 0.95rem;
+    }
     footer {
         margin-top: 3rem;
         font-size: 0.9rem;
@@ -90,157 +106,178 @@
   </a>
 </div>
 
+<!-- ═══════════════════════════════════════════ -->
+<h2>The core pattern</h2>
 
-<h2>The Core Idea</h2>
-<p>
-A hash table gives <strong>O(1) average lookup, insertion, and deletion</strong>.
-In coding interviews, this translates to one dominant pattern:
-<em>trade space for time</em> — build a lookup structure so you avoid nested loops.
-</p>
+<p>A hash map gives O(1) lookup. In interviews, this means: <strong>trade space for time</strong> &mdash; build a lookup structure so you avoid nested loops.</p>
 
-<h2>Pattern 1: Complement Lookup (Two Sum)</h2>
-<p>
-Instead of checking every pair in O(n&sup2;), store seen values and check for complements:
-</p>
+<p>The single most important rule across all hashmap problems:</p>
+
+<pre><code>Check complement first.  Insert afterwards.</code></pre>
+
+<p>In Two Sum: check if <code>target - x</code> is in the map, <em>then</em> insert <code>x</code>. In Subarray Sum: check if <code>prefix - k</code> is in the map, <em>then</em> insert the prefix. Same pattern.</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 1: Two Sum (LC 1)</h2>
+<div class="meta">
+<strong>Problem:</strong> Given an array <code>nums</code> and an integer <code>target</code>, return the indices of two numbers that sum to <code>target</code>.<br>
+<strong>Pattern:</strong> Complement lookup &mdash; for each element, check if its complement exists in the map.<br>
+<strong>Example:</strong> <code>[2,7,11,15]</code>, target=9 &rarr; <strong>[0,1]</strong><br>
+<strong>Time:</strong> O(n) &nbsp; <strong>Space:</strong> O(n)
+</div>
 
 <pre><code>def two_sum(nums, target):
-    seen = {}  # value -> index
+    seen = {}                          # value &rarr; index
     for i, x in enumerate(nums):
         complement = target - x
-        if complement in seen:
+        if complement in seen:         # check complement FIRST
             return [seen[complement], i]
-        seen[x] = i
-</code></pre>
+        seen[x] = i                    # insert AFTERWARDS</code></pre>
 
-<p>
-This generalizes: any time you need to find a pair satisfying <code>f(a, b) = target</code>
-where <code>f</code> is invertible, consider a hash lookup.
-</p>
+<h3>Trace: [2,7,11,15], target=9</h3>
+<pre><code>x=2: comp=7, 7 in {}? no.       seen={2:0}
+x=7: comp=2, 2 in {2:0}? yes!   return [0, 1] &checkmark;</code></pre>
 
-<h2>Pattern 2: Frequency Counting with Counter</h2>
-<p>
-<code>collections.Counter</code> builds a frequency map in one line:
-</p>
+<p class="note">Why insert after checking? If you insert first, an element could match itself. Check first, insert after &mdash; this guarantees you only find pairs of distinct elements.</p>
 
-<pre><code>from collections import Counter
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 2: Group Anagrams (LC 49)</h2>
+<div class="meta">
+<strong>Problem:</strong> Given a list of strings, group the anagrams together.<br>
+<strong>Pattern:</strong> Choose a <strong>canonical form</strong> as the hash key &mdash; sorted characters.<br>
+<strong>Example:</strong> <code>["eat","tea","tan","ate","nat","bat"]</code> &rarr; <strong>[["eat","tea","ate"],["tan","nat"],["bat"]]</strong><br>
+<strong>Time:</strong> O(n &middot; k log k) where k = max string length &nbsp; <strong>Space:</strong> O(n &middot; k)
+</div>
 
-freq = Counter("abracadabra")
-# Counter({'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1})
+<pre><code>def group_anagrams(words):
+    hm = {}
+    for w in words:
+        key = "".join(sorted(w))       # canonical form: sorted chars
+        if key in hm:
+            hm[key].append(w)
+        else:
+            hm[key] = [w]
 
-freq.most_common(2)    # [('a', 5), ('b', 2)]
-freq['z']              # 0  (missing keys return 0)
-</code></pre>
+    return list(hm.values())</code></pre>
 
-<p>
-Counter supports arithmetic:
-</p>
+<h3>Trace: ["eat","tea","tan","ate","nat","bat"]</h3>
+<pre><code>"eat" &rarr; key="aet"  hm={"aet":["eat"]}
+"tea" &rarr; key="aet"  hm={"aet":["eat","tea"]}
+"tan" &rarr; key="ant"  hm={"aet":["eat","tea"], "ant":["tan"]}
+"ate" &rarr; key="aet"  hm={"aet":["eat","tea","ate"], "ant":["tan"]}
+"nat" &rarr; key="ant"  hm={"aet":["eat","tea","ate"], "ant":["tan","nat"]}
+"bat" &rarr; key="abt"  hm={..., "abt":["bat"]}
+return [["eat","tea","ate"], ["tan","nat"], ["bat"]] &checkmark;</code></pre>
 
-<pre><code>c1 = Counter("aab")
-c2 = Counter("ab")
-c1 - c2   # Counter({'a': 1})  — subtract counts, drop non-positive
-c1 &amp; c2   # Counter({'a': 1, 'b': 1})  — element-wise min
-</code></pre>
+<p class="note">The key insight: same characters in different order &rarr; same sorted string. Sorting is the canonical form. For anagrams, that's all you need.</p>
 
-<h2>Pattern 3: Anagram Detection</h2>
-<p>
-Two strings are anagrams iff they have the same character frequencies.
-For sliding-window anagram search, maintain a Counter of the window and compare:
-</p>
+<!-- ═══════════════════════════════════════════ -->
+<h2>Prefix sum: the building block</h2>
 
-<pre><code>def find_anagrams(s, p):
-    from collections import Counter
-    target = Counter(p)
-    window = Counter(s[:len(p)])
-    result = []
+<p>A <strong>prefix sum</strong> is a running total. <code>prefix[j]</code> = sum of all elements from index 0 to j.</p>
 
-    if window == target:
-        result.append(0)
+<pre><code>nums   = [1, 2, 3, 4]
+prefix = [1, 3, 6, 10]     # prefix[0]=1, prefix[1]=1+2=3, prefix[2]=1+2+3=6, ...</code></pre>
 
-    for i in range(len(p), len(s)):
-        window[s[i]] += 1                   # add right
-        left = s[i - len(p)]
-        window[left] -= 1                   # remove left
-        if window[left] == 0:
-            del window[left]
-        if window == target:
-            result.append(i - len(p) + 1)
+<p>The power: <strong>any subarray sum is just a subtraction of two prefixes.</strong></p>
 
-    return result
-</code></pre>
+<pre><code>sum(i..j) = prefix[j] - prefix[i-1]
 
-<h2>Pattern 4: Group-By with defaultdict</h2>
-<p>
-<code>defaultdict(list)</code> lets you group items by a computed key without checking for existence:
-</p>
+# Example: sum of nums[1..2] = nums[1] + nums[2] = 2 + 3 = 5
+#          prefix[2] - prefix[0] = 6 - 1 = 5  &checkmark;</code></pre>
 
-<pre><code>from collections import defaultdict
+<p>This turns "find a subarray with sum k" into "find two prefix sums whose difference is k" &mdash; which is Two Sum.</p>
 
-def group_anagrams(strs):
-    groups = defaultdict(list)
-    for s in strs:
-        key = tuple(sorted(s))   # canonical form
-        groups[key].append(s)
-    return list(groups.values())
+<!-- ═══════════════════════════════════════════ -->
+<h2>Problem 3: Subarray Sum Equals K (LC 560)</h2>
+<div class="meta">
+<strong>Problem:</strong> Given an integer array <code>nums</code> and an integer <code>k</code>, return the <strong>count of subarrays</strong> whose sum equals <code>k</code>.<br>
+<strong>Pattern:</strong> Prefix sum + hashmap. This is <strong>Two Sum in disguise</strong>.<br>
+<strong>Example:</strong> <code>[1,2,3]</code>, k=3 &rarr; <strong>2</strong> (subarrays [1,2] and [3])<br>
+<strong>Time:</strong> O(n) &nbsp; <strong>Space:</strong> O(n)
+</div>
 
-# group_anagrams(["eat","tea","tan","ate","nat","bat"])
-# [['eat','tea','ate'], ['tan','nat'], ['bat']]
-</code></pre>
-
-<p>
-The key insight: <strong>choose a canonical form</strong> that maps equivalent items to the same key.
-For anagrams it's sorted characters. For isomorphic strings it could be a pattern like <code>"0.1.2.1"</code>.
-</p>
-
-<h2>Pattern 5: Prefix Sum + Hash Map (Subarray Sum Equals K)</h2>
-<p>
-To count subarrays with sum <code>k</code>, store prefix sums in a hash map.
-A subarray <code>[i+1..j]</code> has sum <code>k</code> iff <code>prefix[j] - prefix[i] = k</code>:
-</p>
+<p><strong>The connection to Two Sum:</strong> a subarray sums to <code>k</code> iff <code>prefix[j] - k</code> exists as some earlier prefix sum. That's a complement lookup &mdash; same as Two Sum!</p>
 
 <pre><code>def subarray_sum(nums, k):
-    count = 0
-    prefix = 0
-    seen = {0: 1}  # prefix_sum -> how many times we've seen it
+    running_sum = 0
+    hm = {0: 1}                        # prefix sum of 0 seen once ("starting from -1!")
+    ans = 0
 
     for x in nums:
-        prefix += x
-        count += seen.get(prefix - k, 0)
-        seen[prefix] = seen.get(prefix, 0) + 1
+        running_sum += x               # build prefix sum
 
-    return count
-</code></pre>
+        if running_sum - k in hm:      # like two sum: search complement in hm!
+            ans += hm[running_sum - k]  # there are this many earlier prefixes that work
 
-<h2>Complexity Reminder</h2>
+        hm[running_sum] = hm.get(running_sum, 0) + 1   # insert AFTERWARDS
+
+    return ans</code></pre>
+
+<h3>Why <code>{0: 1}</code>?</h3>
+<p>It means: "a prefix sum of 0 has been seen once &mdash; the empty prefix before index 0." Without it, you miss subarrays that start at the beginning of the array. If <code>running_sum == k</code>, then <code>running_sum - k == 0</code>, and you need <code>0</code> to be in the map.</p>
+
+<h3>Trace: [1,2,3], k=3</h3>
+<pre><code>init: running_sum=0, hm={0:1}, ans=0
+
+x=1: running_sum=1.  comp=1-3=-2. -2 in hm? no.            hm={0:1, 1:1}  ans=0
+x=2: running_sum=3.  comp=3-3=0.   0 in hm? yes! ans += 1. hm={0:1, 1:1, 3:1}  ans=1
+x=3: running_sum=6.  comp=6-3=3.   3 in hm? yes! ans += 1. hm={0:1, 1:1, 3:1, 6:1}  ans=2
+return 2 &checkmark;
+
+subarray [1,2] = 3 (found at x=2, prefix 3 - prefix 0 = 3)
+subarray [3]   = 3 (found at x=3, prefix 6 - prefix 3 = 3)</code></pre>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>HashMap cheat sheet</h2>
+
+<pre><code># Basic ops
+hm = {}
+hm[key] = val                      # insert / update
+if key in hm:                      # check existence
+val = hm.get(key, default)         # get with fallback
+
+# Counting idiom
+hm[x] = hm.get(x, 0) + 1          # increment count
+
+# collections shortcuts
+from collections import Counter, defaultdict
+
+freq = Counter([1,1,2,3,3,3])      # Counter({3:3, 1:2, 2:1})
+freq.most_common(2)                # [(3,3), (1,2)]
+freq['missing']                    # 0 (not KeyError)
+
+groups = defaultdict(list)
+groups[key].append(val)             # no need to check if key exists</code></pre>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>Pattern summary</h2>
+
 <table>
-  <thead>
-    <tr>
-      <th>Operation</th>
-      <th>Average</th>
-      <th>Worst</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Lookup / Insert / Delete</td>
-      <td>O(1)</td>
-      <td>O(n)</td>
-    </tr>
-    <tr>
-      <td>Iteration</td>
-      <td>O(n)</td>
-      <td>O(n)</td>
-    </tr>
-  </tbody>
+  <tr><th>Problem</th><th>What goes in the map</th><th>What you look up</th><th>Core insight</th></tr>
+  <tr>
+    <td>Two Sum</td>
+    <td>value &rarr; index</td>
+    <td><code>target - x</code></td>
+    <td>Check complement first, insert after</td>
+  </tr>
+  <tr>
+    <td>Group Anagrams</td>
+    <td>sorted string &rarr; list of words</td>
+    <td>canonical key</td>
+    <td>Same sorted chars = same group</td>
+  </tr>
+  <tr>
+    <td>Subarray Sum = K</td>
+    <td>prefix sum &rarr; count</td>
+    <td><code>prefix - k</code></td>
+    <td>Two Sum in disguise. Init <code>{0:1}</code>.</td>
+  </tr>
 </table>
 
-<p>
-Worst-case O(n) happens with hash collisions. In interviews, assume average case unless asked.
-Python dicts use open addressing with perturbation; <code>set</code> and <code>dict</code> are both hash tables.
-</p>
-
 <footer>
-&copy; 2025 Kai Zhen — All rights reserved. <br>
-Last updated October 2025.
+&copy; 2025 Kai Zhen &mdash; All rights reserved. <br>
+Last updated March 2026.
 </footer>
 
 </body>
