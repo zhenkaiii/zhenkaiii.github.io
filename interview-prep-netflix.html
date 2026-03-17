@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Prep — Netflix ML Scientist</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 24px;
+    color: #222;
+    line-height: 1.7;
+    font-size: 17px;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .subtitle {
+    color: #888;
+    font-size: 15px;
+    margin-bottom: 40px;
+  }
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 48px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eee;
+  }
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    color: #444;
+  }
+  .r { color: #cc0000; font-weight: 600; }
+  p { margin-bottom: 14px; }
+  .script {
+    background: #fafafa;
+    border-left: 3px solid #cc0000;
+    padding: 20px 24px;
+    margin: 16px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .script p { margin-bottom: 12px; }
+  .script p:last-child { margin-bottom: 0; }
+  .qa {
+    background: #fafafa;
+    padding: 18px 22px;
+    margin: 14px 0;
+    border-radius: 6px;
+  }
+  .qa .q {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #555;
+  }
+  .qa .q::before { content: "Q: "; color: #cc0000; }
+  .qa .a { font-size: 16px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 15px;
+  }
+  th {
+    background: #f5f5f5;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 2px solid #ddd;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+  }
+  .tag {
+    display: inline-block;
+    background: #cc0000;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-right: 4px;
+    vertical-align: middle;
+    letter-spacing: 0.5px;
+  }
+  .timer {
+    display: inline-block;
+    background: #eee;
+    color: #666;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-left: 6px;
+  }
+  .divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 36px 0;
+  }
+  .tip {
+    background: #fff8f0;
+    border: 1px solid #f0e0c8;
+    padding: 14px 18px;
+    border-radius: 6px;
+    font-size: 15px;
+    margin: 16px 0;
+  }
+  .tip::before {
+    content: "Tip: ";
+    font-weight: 700;
+    color: #b8860b;
+  }
+  @media print {
+    body { margin: 20px; font-size: 14px; }
+    .script { break-inside: avoid; }
+    .qa { break-inside: avoid; }
+    h2 { break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Netflix ML Scientist — Interview Script</h1>
+<p class="subtitle">On-Device ASR & Quantization Deep Dive &middot; ~15 min project portion</p>
+
+<!-- ============================================ -->
+<h2>1. Opening Script <span class="timer">~90 sec</span></h2>
+<!-- ============================================ -->
+
+<div class="script">
+<p>
+I spent <span class="r">three years</span> leading on-device ASR at Amazon Alexa.
+The core challenge: Echo devices have <span class="r">constrained memory and compute</span>,
+so cloud ASR doesn't work — you need models that run fast on
+<span class="r">neural network accelerators</span>.
+</p>
+<p>
+I led <span class="r">sub-8-bit quantization</span>, compressing ASR models from 32-bit down to
+<span class="r">5-bit</span>. The naive approach — post-training quantization — blows up word error rate
+by <span class="r">over 10%</span>, because 5-bit gives you only <span class="r">32 weight values instead of 256</span>.
+</p>
+<p>
+I invented a training scheme based on <span class="r">Lloyd-Max theory</span> that learns
+<span class="r">optimal quantization centroids during training</span>, and co-designed the runtime
+with the hardware team.
+Result: <span class="r">30% latency reduction</span>, <span class="r">30% model size reduction</span>,
+<span class="r">zero accuracy loss</span>. Deployed to
+<span class="r">all Echo and Echo Dot products globally</span>.
+Published at <span class="r">Interspeech</span>.
+</p>
+<p>
+I then generalized the method into a plug-and-play solution called
+<span class="r">General Quantizer</span>, which works on <span class="r">any architecture</span>
+— RNN-T or Conformer, on-device or cloud.
+Published at <span class="r">SLT</span>, plus a <span class="r">patent</span>.
+</p>
+</div>
+
+<div class="tip">Pause here. Let them ask. Being concise signals seniority.</div>
+
+<!-- ============================================ -->
+<h2>2. Q&A Bank <span class="timer">~13 min</span></h2>
+<!-- ============================================ -->
+
+<div class="qa">
+<div class="q">Why 5-bit specifically, not 4 or 6?</div>
+<div class="a">
+5-bit is the <span class="r">sweet spot</span>.
+Compared to 8-bit, it already brings down the bandwidth by
+<span class="r">over 37%</span>. We tested 4-bit — it works on RNN-T with less than 3% degradation,
+but <span class="r">attention layers in Conformer degrade noticeably</span> at 4-bit.
+5-bit is where we got <span class="r">zero accuracy loss across all architectures</span> —
+RNN-T and Conformer alike. And importantly, we were able to get
+<span class="r">impressive accuracy on par with the 32-bit baseline</span>,
+which gave us the confidence to <span class="r">get buy-in from the engineering team</span>
+to invest their engineers in co-designing the runtime.
+</div>
+</div>
+
+<div class="qa">
+<div class="q">Why not just use post-training quantization?</div>
+<div class="a">
+First, <span class="r">speech and audio models are more sensitive to quantization noise than LLMs</span>.
+The model size is much smaller — well under a billion parameters — so there's less
+redundancy to absorb the precision loss. We tried post-training quantization to 8-bit
+and it <span class="r">blew up the accuracy by over 10%</span>.
+The hardware only supports <span class="r">INT8, not FP8</span> — the range is fixed — so it was a
+<span class="r">clear no-go</span>. We had to do quantization-aware training.
+Now, these days there are advanced approaches like <span class="r">SmoothQuant</span> and
+<span class="r">activation-aware weight quantization</span>, but for speech models, I still believe
+QAT is the <span class="r">safest approach</span>. Also the model is small enough that training
+<span class="r">won't take more than three weeks</span>. Our recipe is stable — you don't need
+extensive ablation — so financially and accuracy-wise, it's <span class="r">the best shot</span>.
+I proved this in production: when I brought GQ to <span class="r">cloud Conformer</span>,
+the existing post-training approach had a <span class="r">silent quantization-induced loss</span>
+nobody had challenged. GQ <span class="r">recovered 1–3% WERR</span> on tail queries.
+</div>
+</div>
+
+<div class="qa">
+<div class="q">Walk me through how the algorithm works.</div>
+<div class="a">
+Three layers. First, you run the <span class="r">Lloyd-Max algorithm</span> — essentially
+K-means clustering — on a trained model, <span class="r">per kernel</span>. You get a set of
+<span class="r">32 centroids per kernel</span>. That's your prior knowledge to initialize
+quantization-aware training.
+Second, a <span class="r">soft compressor</span> — a regularizer added to the loss function —
+that nudges weights towards those predefined centroids from K-means.
+Third, a <span class="r">hard compressor</span> that periodically snaps every weight to
+its exact nearest centroid to ensure convergence. That way you don't need
+a very large blending weight that would <span class="r">dampen the main training objective</span>.
+<span class="r">Soft gets you close, hard locks it in.</span>
+Together, they eliminate the gap between training and runtime.
+</div>
+</div>
+
+<div class="qa">
+<div class="q">What's GQ and why did you build it?</div>
+<div class="a">
+Our previous sub-8-bit quantization requires running <span class="r">K-means clustering
+on a trained model</span> to extract reference centroids per layer.
+That's overhead — you need a ground truth. And when it comes to
+<span class="r">Conformer instead of RNN-T</span>, there are <span class="r">hundreds of kernels</span>
+because of the CNN components. Too many <span class="r">nitty-gritty details to calibrate
+each kernel</span>.
+That's the motivation for GQ: <span class="r">why don't we make the centroid set learnable?</span>
+We completely get rid of all regularizers. It's <span class="r">self-adjustable centroids</span>
+through Softmax annealing in <span class="r">mu-Law space</span>.
+It's just a <span class="r">callback — plug-and-play</span>.
+Same compression wins, works on any architecture,
+and the code is <span class="r">reduced by 30%</span>.
+</div>
+</div>
+
+<div class="qa">
+<div class="q">How did you handle hardware co-design?</div>
+<div class="a">
+I sent <span class="r">feature request tickets to the hardware team from day one</span>
+so we could validate the hypothesis early.
+They built a <span class="r">K-means runtime quantization</span> that matches our in-training
+Lloyd-Max centroids. <span class="r">Parallel workstreams</span> — I owned the training side,
+they owned the SDK. The 5-bit prototype on NNA showed
+<span class="r">17% faster frame processing</span> than 8-bit, which gave us the green light.
+That coordination was <span class="r">honestly harder than the algorithm itself</span>.
+</div>
+</div>
+
+<div class="qa">
+<div class="q">Which teams did you collaborate with?</div>
+<div class="a">
+Three main groups: the <span class="r">modeling team</span> who owns the acoustic model and rescorer,
+the <span class="r">hardware team</span> who builds the neural network accelerator SDK,
+and the <span class="r">runtime team</span> who owns inference execution.
+My role sat <span class="r">at the intersection</span> — I co-designed the training-side
+quantization with the hardware team's runtime quantization so they matched.
+I also <span class="r">onboarded other scientists</span> to productize 5-bit quantization across
+multiple locales, created runbooks and tutorials.
+</div>
+</div>
+
+<div class="qa">
+<div class="q">Why does 5-bit sometimes beat the 32-bit baseline in accuracy?</div>
+<div class="a">
+It's <span class="r">not luck — it's consistent across test sets</span>.
+The quantization acts as a <span class="r">regularizer that stabilizes training</span>.
+With our soft-to-hard Softmax annealing, weights are guaranteed to stay
+within a <span class="r">negative-1 to positive-1 interval</span> — no outliers that you'd
+otherwise see. Constraining weights to 32 centroids
+<span class="r">reduces the search space</span>, making it an arguably easier optimization.
+Conformer at 5-bit: <span class="r">5.50 WER</span> vs <span class="r">5.74</span> for 32-bit on test-clean.
+But if you really want <span class="r">guaranteed accuracy gains</span>, here's the production
+insight: with 5-bit quantization, you <span class="r">break down latency by 30%</span>.
+That's huge headroom. You can <span class="r">make the model slightly larger</span> — stack
+one extra encoding layer — and that extra layer greatly helps WER,
+especially on <span class="r">critical production test suites</span>.
+Bigger model, still faster. That's the real win.
+</div>
+</div>
+
+<div class="qa">
+<div class="q">What would you do differently?</div>
+<div class="a">
+I'd <span class="r">start with GQ's simpler approach</span> from the beginning.
+S8BQAT's regularizer was effective but <span class="r">over-engineered in hindsight</span>.
+The Softmax annealing in GQ is more principled, easier to tune,
+and works across architectures without manual centroid configuration.
+That said, S8BQAT taught me <span class="r">what mattered</span>, which is why GQ is so clean.
+</div>
+</div>
+
+<div class="qa">
+<div class="q">How does this apply to Netflix games?</div>
+<div class="a">
+<span class="r">Latency is always the key for real-time services.</span>
+For Netflix games, I'd assume it's real-time voice interaction:
+<span class="r">ASR</span> to transcribe player commands, <span class="r">TTS</span> to synthesize NPC dialogue
+in high fidelity, <span class="r">voice cloning</span> for personalization.
+Latency plays a central role in all those components, and the hardware
+is always with <span class="r">limited bandwidth, compute, and memory</span>.
+It's the same problem I solved — you want to <span class="r">compress the model
+without losing quality</span>. You're trying to
+<span class="r">win the trade-off game</span>.
+Also, the <span class="r">plug-and-play nature of GQ</span> means the solution is
+<span class="r">model and platform agnostic</span>. At Netflix, things change fast — you
+upgrade model architectures, cover more device types, offer
+<span class="r">multi-tier quality bars</span>. A plug-and-play solution lowers the friction
+for the research and development teams.
+</div>
+</div>
+
+<div class="qa">
+<div class="q">How does quantization relate to LoRA/PEFT?</div>
+<div class="a">
+They're <span class="r">complementary</span>.
+With LoRA, you can <span class="r">recover quantization-induced loss</span>.
+You could quantize your model to 4-bit or even lower if that brings
+actual latency benefit, then attach <span class="r">low-rank adapters</span> trained on a
+small calibration dataset for maybe <span class="r">half a day or less</span>.
+You preserve 98% of performance and your base weights are at
+<span class="r">even lower bit depth</span>.
+Both are about <span class="r">parameter efficiency</span> — same philosophy.
+You don't need <span class="r">full precision or full rank</span> to preserve model capacity.
+For Netflix, for the <span class="r">best latency win, you'll need both</span>:
+quantize the base weights, then run LoRA for
+<span class="r">fine-tuning TTS voices</span>, personalized adaptation, or to
+<span class="r">recover any accuracy gap</span> induced by quantization.
+</div>
+</div>
+
+<!-- ============================================ -->
+<h2>3. Numbers Cheat Sheet</h2>
+<!-- ============================================ -->
+
+<table>
+<tr><th>Metric</th><th>Number</th><th>Context</th></tr>
+<tr><td>Latency reduction (8-bit → 5-bit)</td><td class="r">~30%</td><td>Apples-to-apples, same model</td></tr>
+<tr><td>Size reduction (8-bit → 5-bit)</td><td class="r">~30%</td><td>Bifocal RNN-T on NNA</td></tr>
+<tr><td>End-to-end pipeline latency</td><td class="r">up to 50%</td><td>Full Pryon engine, includes arch changes</td></tr>
+<tr><td>NNA bandwidth saving</td><td class="r">37.5%</td><td>5-bit vs 8-bit data transfer</td></tr>
+<tr><td>Naive 5-bit WER blow-up</td><td class="r">>10%</td><td>Linear QAT fails at sub-8-bit</td></tr>
+<tr><td>S8BQAT: model params increase</td><td class="r">+10.3%</td><td>Bigger model, still faster</td></tr>
+<tr><td>S8BQAT: WER improvement</td><td class="r">4–16% rel.</td><td>Across 4 test sets</td></tr>
+<tr><td>S8BQAT: UPL P50 reduction</td><td class="r">5–7%</td><td>Even with larger model</td></tr>
+<tr><td>GQ: Conformer size reduction</td><td class="r">6.4×</td><td>Full 5-bit, no accuracy loss</td></tr>
+<tr><td>GQ: Conformer beats 32-bit</td><td class="r">5.50 vs 5.74</td><td>test-clean WER, implicit regularization</td></tr>
+<tr><td>GQ cloud: WERR on tail</td><td class="r">1–3%</td><td>de-DE Conformer, recovered from PTQ loss</td></tr>
+<tr><td>Cannoli/CheeseCake constraint</td><td class="r">&lt;30 MB</td><td>5th gen Echo Dot memory limit</td></tr>
+<tr><td>GQ code reduction</td><td class="r">28%</td><td>Simpler than S8BQAT in Phasa mainline</td></tr>
+<tr><td>Publications</td><td class="r">2 papers + 1 patent</td><td>Interspeech'22, SLT'23</td></tr>
+<tr><td>Deployment</td><td class="r">All Echo products, all locales</td><td>Echo, Echo Dot, Echo Show</td></tr>
+</table>
+
+<!-- ============================================ -->
+<h2>4. S8BQAT vs GQ — Evolution Story</h2>
+<!-- ============================================ -->
+
+<table>
+<tr><th></th><th>S8BQAT (Interspeech'22)</th><th>GQ (SLT'23)</th></tr>
+<tr><td><strong>Centroids</strong></td><td>Pre-computed from Lloyd-Max, <span class="r">fixed</span></td><td><span class="r">Self-adjustable</span> via μ-Law</td></tr>
+<tr><td><strong>Mechanism</strong></td><td>MRACos <span class="r">regularizer</span> + hard compressor</td><td>Softmax annealing, <span class="r">no regularizer</span></td></tr>
+<tr><td><strong>Tuning</strong></td><td>λ (reg weight) + τ (period) — needs tuning</td><td>α (temperature) + μ — <span class="r">more principled</span></td></tr>
+<tr><td><strong>Architectures</strong></td><td>RNN-T only</td><td>RNN-T, Bifocal RNN-T, <span class="r">Conformer</span></td></tr>
+<tr><td><strong>Scalability</strong></td><td>Must configure per layer</td><td><span class="r">Plug-and-play callback</span></td></tr>
+<tr><td><strong>Extreme</strong></td><td>5-bit</td><td>Down to <span class="r">1-bit</span> on some layers</td></tr>
+<tr><td><strong>Cloud</strong></td><td>No</td><td><span class="r">Yes</span> — deployed to de-DE, en-GB, en-AU</td></tr>
+</table>
+
+<div class="tip">If asked "tell me about the evolution" — say: "S8BQAT taught me what mattered. GQ is the distilled, production-ready version."</div>
+
+<!-- ============================================ -->
+<h2>5. Netflix Connection</h2>
+<!-- ============================================ -->
+
+<table>
+<tr><th>JD Requirement</th><th>Your Evidence</th></tr>
+<tr><td>Model R&D & Adaptation (LoRA/PEFT)</td><td>S8BQAT → GQ: <span class="r">parameter-efficient compression, QAT</span></td></tr>
+<tr><td>Strategic Integration (build vs buy)</td><td>8-bit was off-the-shelf; <span class="r">5-bit required custom research</span></td></tr>
+<tr><td>Scalable Training</td><td>Deployed <span class="r">across all locales</span>, on-device + cloud</td></tr>
+<tr><td>Data & Alignment</td><td>End-to-end: training, packaging, <span class="r">accuracy testing, device benchmarking</span></td></tr>
+<tr><td>Speech & Audio Expertise</td><td><span class="r">Acoustic modeling, RNN-T, Conformer</span>, WER optimization</td></tr>
+<tr><td>Pragmatic Innovator</td><td>SW/HW co-design; GQ <span class="r">28% less code</span>; plug-and-play</td></tr>
+<tr><td>DSP + Real-Time Audio</td><td><span class="r">NNA bandwidth optimization</span>, latency-critical inference</td></tr>
+<tr><td>Multi-modal (bonus)</td><td>Audio-JEPA: <span class="r">self-supervised world model for speech+LLM</span></td></tr>
+</table>
+
+<hr class="divider">
+
+<p style="color:#999; font-size:13px; text-align:center; margin-top:32px;">
+  Local reference only &middot; Not published &middot; Last updated March 2026
+</p>
+
+</body>
+</html>

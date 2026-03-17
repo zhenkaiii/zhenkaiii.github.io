@@ -78,5 +78,15 @@
     "file": "cosyvoice_inference_walkthrough.ipynb",
     "title": "CosyVoice Inference Walkthrough: Tensor Shapes at Every Stage",
     "tags": ["Speech & Audio", "AI Coding / PyTorch"]
+  },
+  {
+    "file": "local_semantic_search.html",
+    "title": "Local Semantic Search over Browser History",
+    "tags": ["Information Retrieval"]
+  },
+  {
+    "file": "flow_matching.html",
+    "title": "Flow Matching for TTS — Minimal PyTorch",
+    "tags": ["Speech & Audio", "AI Coding / PyTorch"]
   }
 ]
