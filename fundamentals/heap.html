@@ -502,6 +502,65 @@ The example "8" is for a different distribution. Let me fix the example.</code><
 <p class="note">Same logic as Problem 1, but the heap persists across calls. The root is always the k-th largest seen so far.</p>
 
 <!-- ═══════════════════════════════════════════ -->
+<h2>Problem 9: Dead Language Tokenizer (Mozilla Interview)</h2>
+<div class="meta">
+<strong>Problem:</strong> Given a Latin text corpus, build a tokenizer for the <strong>500 most frequent words</strong>. Assign each a unique int ID; unknown words map to <code>-1</code>.<br>
+<strong>Pattern:</strong> HashMap counting &rarr; min-heap of size 500 (top-K frequent) &rarr; HashMap for ID lookup.<br>
+<strong>Time:</strong> O(n) counting + O(n log 500) heap &nbsp; <strong>Space:</strong> O(n)<br>
+<strong>Source:</strong> Mozilla ML Engineer interview (CoderPad, 25 min)
+</div>
+
+<p>This is a <strong>real interview problem</strong> that combines two patterns: HashMap counting (step 1) and min-heap top-K (step 2). It's essentially Problem 2 (Top-K Frequent Elements) applied to NLP tokenization.</p>
+
+<h3>Full solution</h3>
+<pre><code>import heapq
+
+# ── Step 1: Count word frequencies (HashMap) ──────────────
+word_count = {}
+for word in latin_text.split():                # don't forget .split()!
+    word_count[word] = word_count.get(word, 0) + 1
+
+# ── Step 2: Top-500 via min-heap (gatekeeper pattern) ─────
+heap = []                                       # min-heap, size capped at 500
+for word, cnt in word_count.items():
+    if len(heap) < 500:
+        heapq.heappush(heap, (cnt, word))       # (count, word) &mdash; sort by count!
+    elif cnt > heap[0][0]:                      # more frequent than gatekeeper?
+        heapq.heappop(heap)
+        heapq.heappush(heap, (cnt, word))
+
+# ── Step 3: Assign unique IDs (second HashMap) ───────────
+token_map = {}
+token_id = 0
+for cnt, word in heap:
+    token_map[word] = token_id
+    token_id += 1
+
+# ── Step 4: Tokenize function ────────────────────────────
+def tokenize(text):
+    result = []
+    for word in text.split():
+        if word in token_map:
+            result.append(token_map[word])      # known &rarr; ID
+        else:
+            result.append(-1)                   # unknown &rarr; -1
+    return result</code></pre>
+
+<h3>Why this is a heap problem</h3>
+<p>The corpus may have <strong>tens of thousands</strong> of unique words, but we only care about the top 500. Sorting all of them would be O(n log n). The min-heap of size 500 gives us O(n log 500) &mdash; and log 500 &asymp; 9 is practically constant.</p>
+<p>This is <strong>exactly Problem 2</strong> (Top-K Frequent Elements) with K=500. The heap tuple is <code>(cnt, word)</code> &mdash; count first so the heap sorts by frequency, not alphabetically.</p>
+
+<h3>Interview gotchas (from the actual interview)</h3>
+<table>
+  <tr><th>Gotcha</th><th>What happened</th></tr>
+  <tr><td>Forgot <code>.split()</code></td><td>Corpus is a raw string, not a list of words. Only got 77 unique entries (characters, not words) until splitting was added.</td></tr>
+  <tr><td>Swapped key/value in heap tuple</td><td>Pushed <code>(word, cnt)</code> instead of <code>(cnt, word)</code>. Heap sorted alphabetically, not by frequency.</td></tr>
+  <tr><td>Returned per-character instead of per-word</td><td><code>for i in text</code> iterates characters. Must use <code>for word in text.split()</code>.</td></tr>
+</table>
+
+<p class="note">The interviewer's hint: "check the length of the output list compared to the length of your input." This catches the per-character vs per-word bug &mdash; if input is "liber sub" (2 words) but output has 9 elements, you're iterating characters.</p>
+
+<!-- ═══════════════════════════════════════════ -->
 <h2>Pattern summary</h2>
 
 <table>
@@ -512,6 +571,7 @@ The example "8" is for a different distribution. Let me fix the example.</code><
   <tr><td>Greedy scheduling</td><td>min-heap of end times</td><td>active rooms / resources</td><td>4</td></tr>
   <tr><td>Greedy + cooldown</td><td>max-heap of counts</td><td>available tasks by frequency</td><td>7</td></tr>
   <tr><td>Two-heap median</td><td>max-heap (lo) + min-heap (hi)</td><td>lower half + upper half</td><td>5</td></tr>
+  <tr><td>Top-K frequent + ID assign</td><td>min-heap, size K</td><td>K most frequent (count, word)</td><td>2, 9</td></tr>
 </table>
 
 <footer>

@@ -229,6 +229,74 @@ subarray [1,2] = 3 (found at x=2, prefix 3 - prefix 0 = 3)
 subarray [3]   = 3 (found at x=3, prefix 6 - prefix 3 = 3)</code></pre>
 
 <!-- ═══════════════════════════════════════════ -->
+<h2>Problem 4: Dead Language Tokenizer (Mozilla Interview)</h2>
+<div class="meta">
+<strong>Problem:</strong> Given a Latin text corpus, build a tokenizer: find the <strong>500 most frequent words</strong>, assign each a unique integer ID. Unknown words map to <code>-1</code>.<br>
+<strong>Pattern:</strong> HashMap counting + heap for top-K + HashMap for ID lookup.<br>
+<strong>Input:</strong> a string in the dead language. <strong>Output:</strong> a list of integer token IDs.<br>
+<strong>Time:</strong> O(n) counting + O(n log 500) heap &nbsp; <strong>Space:</strong> O(n)
+</div>
+
+<p>This is a <strong>three-step</strong> problem that combines hash table counting (this page) with a heap (see Heap page):</p>
+
+<h3>Step 1: Count word frequencies (HashMap)</h3>
+<pre><code># Split corpus into words, count each one
+word_count = {}
+for word in latin_text.split():
+    word_count[word] = word_count.get(word, 0) + 1
+
+# word_count: {"et": 342, "in": 298, "est": 201, ...}
+# Could be thousands of unique words</code></pre>
+
+<p class="note">Same pattern as Subarray Sum &mdash; <code>hm[x] = hm.get(x, 0) + 1</code>. The universal counting idiom.</p>
+
+<h3>Step 2: Top-500 via min-heap (see Heap page for details)</h3>
+<pre><code>import heapq
+
+heap = []                                   # min-heap, size capped at 500
+for word, cnt in word_count.items():
+    if len(heap) < 500:
+        heapq.heappush(heap, (cnt, word))   # (count, word) &mdash; sorts by count
+    elif cnt > heap[0][0]:                  # more frequent than gatekeeper?
+        heapq.heappop(heap)
+        heapq.heappush(heap, (cnt, word))   # swap in</code></pre>
+
+<p class="note">Why heap instead of sorting? O(n log 500) vs O(n log n). When the vocabulary is huge but we only need 500, the heap is the right tool. Log 500 &asymp; 9 vs log 100,000 &asymp; 17.</p>
+
+<h3>Step 3: Build token lookup (second HashMap)</h3>
+<pre><code># Assign unique ID to each of the 500 words
+token_map = {}                              # word &rarr; unique int ID
+token_id = 0
+for cnt, word in heap:
+    token_map[word] = token_id
+    token_id += 1
+
+# token_map: {"et": 0, "in": 1, "est": 2, ..., "liber": 499}</code></pre>
+
+<h3>Step 4: Tokenize</h3>
+<pre><code>def tokenize(text):
+    result = []
+    for word in text.split():
+        if word in token_map:               # known word &rarr; its ID
+            result.append(token_map[word])
+        else:                               # unknown word &rarr; -1
+            result.append(-1)
+    return result
+
+# tokenize("liber sub et") &rarr; [499, 470, 0]
+# tokenize("xyzzy liber") &rarr; [-1, 499]</code></pre>
+
+<h3>Why three HashMaps?</h3>
+<table>
+  <tr><th>HashMap</th><th>Key</th><th>Value</th><th>Purpose</th></tr>
+  <tr><td><code>word_count</code></td><td>word</td><td>frequency</td><td>Count occurrences in corpus</td></tr>
+  <tr><td>(heap)</td><td>&mdash;</td><td>(count, word) tuples</td><td>Keep top 500 by frequency</td></tr>
+  <tr><td><code>token_map</code></td><td>word</td><td>unique int ID</td><td>O(1) lookup during tokenization</td></tr>
+</table>
+
+<p class="note">The gotcha from the interview: don't forget to <code>.split()</code> the corpus text into words first. The raw corpus is a string, not a list. Also, in the heap tuple <code>(cnt, word)</code>, count must come first so the heap sorts by frequency, not alphabetically.</p>
+
+<!-- ═══════════════════════════════════════════ -->
 <h2>HashMap cheat sheet</h2>
 
 <pre><code># Basic ops
@@ -272,6 +340,12 @@ groups[key].append(val)             # no need to check if key exists</code></pre
     <td>prefix sum &rarr; count</td>
     <td><code>prefix - k</code></td>
     <td>Two Sum in disguise. Init <code>{0:1}</code>.</td>
+  </tr>
+  <tr>
+    <td>Dead Language Tokenizer</td>
+    <td>word &rarr; count, then word &rarr; ID</td>
+    <td>word in token_map</td>
+    <td>Count + heap top-K + ID assignment. Three-step.</td>
   </tr>
 </table>
 
