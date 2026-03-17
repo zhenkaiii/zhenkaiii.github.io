@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Modern LLM Architecture — Beyond "It's Just a Transformer"</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:28px 0 10px;font-size:20px}
+  h3{margin:20px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .diagram{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:20px;margin:14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:14px;line-height:1.6;overflow-x:auto;white-space:pre}
+  .grid{display:grid;gap:16px}
+  @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Modern LLM Architecture</h1>
+  <span class="badge">Beyond "It's Just a Transformer"</span>
+</header>
+
+<section class="panel">
+  <h2>Why This Matters</h2>
+  <p>Everyone says "it's just embedding → MHA → MLP → LM head." That's the 2017 answer.
+  Modern LLMs (LLaMA 3, Mistral, DeepSeek-V2, Gemma 2) have diverged significantly in
+  <b>how attention works</b>, <b>how KV is cached</b>, and <b>how training is stabilized</b>.
+  These are the follow-up questions that separate "I've read the blog post" from "I've built systems."</p>
+</section>
+
+<!-- ====== SECTION 1: KV EFFICIENCY ====== -->
+<section class="panel">
+  <h2>1. KV Cache Efficiency: GQA, MQA, MLA</h2>
+  <p>The problem: during autoregressive inference, you cache K and V for every past token
+  so you don't recompute them. For long sequences, this cache dominates GPU memory.</p>
+
+  <h3>Standard MHA (Multi-Head Attention)</h3>
+  <p>Every Q head has its own K head and V head. 32 heads = 32 K + 32 V = 64 projections cached.</p>
+  <div class="diagram">
+Q heads:  Q₁  Q₂  Q₃  Q₄  Q₅  Q₆  ...  Q₃₂
+K heads:  K₁  K₂  K₃  K₄  K₅  K₆  ...  K₃₂     ← 32 K to cache
+V heads:  V₁  V₂  V₃  V₄  V₅  V₆  ...  V₃₂     ← 32 V to cache
+
+KV cache per token = 32 × 2 × head_dim × 2 bytes</div>
+
+  <h3>GQA (Grouped Query Attention)</h3>
+  <p>Group Q heads to <b>share</b> KV heads. E.g., every 4 Q heads share 1 KV group → 8 KV groups instead of 32.</p>
+  <div class="diagram">
+Q heads:  Q₁ Q₂ Q₃ Q₄ │ Q₅ Q₆ Q₇ Q₈ │ ... │ Q₂₉ Q₃₀ Q₃₁ Q₃₂
+KV group:     KV₁      │     KV₂      │ ... │       KV₈
+
+32 Q heads, 8 KV groups → 4:1 ratio
+KV cache: 8 instead of 32 → 4x reduction</div>
+
+  <p>Used by: <b>LLaMA 2 70B, LLaMA 3, Mistral</b>. Almost no quality loss vs full MHA.</p>
+
+  <h3>MQA (Multi-Query Attention)</h3>
+  <p>Extreme case: <b>all</b> Q heads share a single K and a single V.</p>
+  <div class="diagram">
+Q heads:  Q₁ Q₂ Q₃ Q₄ Q₅ ... Q₃₂
+KV:              KV₁                   ← just 1 K + 1 V for all heads
+
+32:1 ratio. Minimal KV cache but some quality loss.</div>
+  <p>Used by: <b>PaLM, Falcon</b>. Aggressive — works but GQA is the safer choice.</p>
+
+  <h3>MLA (Multi-head Latent Attention)</h3>
+  <p>DeepSeek-V2's approach: don't cache K and V at all. Instead, compress them into a <b>low-rank latent vector</b> and cache that.</p>
+  <div class="diagram">
+Standard:  cache K (d_head per head) + V (d_head per head)
+MLA:       cache c_KV (one small latent vector per token)
+           At attention time: decompress c_KV → K, V on the fly
+
+           c_KV = W_down × [K; V]     (compress)
+           K, V = W_up × c_KV          (decompress)
+
+Cache size: d_latent instead of 2 × n_heads × d_head
+           e.g., 512 instead of 8192 → 16x reduction</div>
+
+  <p>Even more aggressive than GQA. The decompression adds compute but the memory savings are massive for long contexts.</p>
+
+  <h3>Comparison</h3>
+  <table>
+    <tr><th>Method</th><th>KV cache size (per token, relative)</th><th>Quality</th><th>Used by</th></tr>
+    <tr><td>MHA</td><td>1x (baseline)</td><td>Best</td><td>GPT-3, LLaMA 1</td></tr>
+    <tr><td>GQA (4:1)</td><td>0.25x</td><td>~same as MHA</td><td>LLaMA 2/3, Mistral</td></tr>
+    <tr><td>MQA</td><td>1/n_heads (~0.03x)</td><td>Slight loss</td><td>PaLM, Falcon</td></tr>
+    <tr><td>MLA</td><td>~0.06x</td><td>~same as MHA</td><td>DeepSeek-V2</td></tr>
+  </table>
+
+  <div class="callout ok">
+    <p><b>Interview one-liner:</b> "GQA groups query heads to share KV heads — 4x KV cache reduction
+    with negligible quality loss. MLA goes further by compressing KV into a low-rank latent and
+    decompressing on the fly. Both solve the same problem: KV cache is the memory bottleneck at inference."</p>
+  </div>
+</section>
+
+<!-- ====== SECTION 2: SLIDING WINDOW ====== -->
+<section class="panel">
+  <h2>2. Sliding-Window Attention</h2>
+  <p>Full attention: every token attends to all previous tokens. Cost = O(n&sup2;). KV cache grows without bound.</p>
+  <p>Sliding window: each layer only attends to the <b>last W tokens</b> (e.g., W=4096).</p>
+
+  <div class="diagram">
+Full attention (token at position 10000):
+  attends to: [0, 1, 2, ..., 9999]          ← everything
+  KV cache: 10000 entries, unbounded
+
+Sliding window (W=4096):
+  attends to: [5904, 5905, ..., 9999]       ← last 4096 only
+  KV cache: 4096 entries, always bounded</div>
+
+  <h3>But how do you get long-range context?</h3>
+  <p>Stack layers. Each layer's window overlaps with the previous layer's window.
+  Information propagates through the stack:</p>
+
+  <div class="diagram">
+Layer 3:  sees tokens [t-W, t]  but those tokens carry info from Layer 2
+Layer 2:  sees tokens [t-W, t]  but those carry info from Layer 1
+Layer 1:  sees tokens [t-W, t]  raw
+
+Effective context at Layer L = L × W
+
+32 layers × 4096 window = 131K effective context
+Even though each layer only looks at 4096 tokens!</div>
+
+  <p>Used by: <b>Mistral 7B</b> (W=4096), <b>Gemma 2</b> (alternating with full attention).</p>
+
+  <div class="callout">
+    <p><b>The tradeoff:</b> bounded memory and O(n&middot;W) compute vs. slightly weaker
+    direct long-range connections. For most tasks, the stacked propagation is sufficient.</p>
+  </div>
+</section>
+
+<!-- ====== SECTION 3: HYBRID ATTENTION ====== -->
+<section class="panel">
+  <h2>3. Hybrid Attention Patterns</h2>
+  <p>The 2025-2026 insight: not every layer needs the same attention pattern.
+  Alternate between cheap local attention and expensive global attention.</p>
+
+  <div class="diagram">
+Gemma 2 / Mistral-style hybrid:
+
+Layer 0:  [sliding window]    ← local patterns, cheap, bounded KV
+Layer 1:  [sliding window]
+Layer 2:  [FULL attention]    ← global reasoning, expensive, full KV
+Layer 3:  [sliding window]
+Layer 4:  [sliding window]
+Layer 5:  [FULL attention]    ← global reasoning
+...
+
+Ratio: ~1 full : 2 sliding
+Result: ~60% of the KV cache cost, ~95% of the quality</div>
+
+  <p>Why this works: most layers are learning <b>local patterns</b> (syntax, local dependencies)
+  that don't need global context. Only a few layers need to do <b>global reasoning</b>
+  (resolving coreferences, long-range dependencies).</p>
+
+  <div class="callout ok">
+    <p><b>Interview one-liner:</b> "Not every layer needs full attention. Hybrid architectures
+    alternate sliding-window layers (cheap, local) with full attention layers (expensive, global).
+    You get most of the quality at a fraction of the KV cache cost."</p>
+  </div>
+</section>
+
+<!-- ====== SECTION 4: TRAINING STABILITY ====== -->
+<section class="panel">
+  <h2>4. Training Stability: QK-Norm</h2>
+  <p>The problem: as models get larger, attention logits <code>Q &middot; K&sup;T</code> can grow to extreme values.
+  Large logits → softmax saturates → vanishing gradients → training instability.</p>
+
+  <div class="diagram">
+Without QK-Norm:
+  Q · Kᵀ = [2.1, -0.3, 847.2, 1.5, ...]    ← one huge value
+  softmax → [0.0, 0.0, 1.0, 0.0, ...]       ← collapsed, gradient ≈ 0
+
+With QK-Norm:
+  Q_norm = RMSNorm(Q)
+  K_norm = RMSNorm(K)
+  Q_norm · K_normᵀ = [0.8, -0.1, 2.1, 0.5]  ← bounded
+  softmax → [0.3, 0.1, 0.4, 0.2]             ← distributed, healthy gradient</div>
+
+  <p>Applied <b>before</b> the dot product, per head. Just normalize Q and K vectors independently.
+  Trivial to implement, significant impact at scale.</p>
+
+  <p>Used by: <b>Gemma 2, Cohere Command R, Chameleon</b>. Becoming standard for 10B+ models.</p>
+
+  <div class="callout warn">
+    <p><b>Note:</b> this is different from the <code>1/sqrt(d_k)</code> scaling in vanilla attention.
+    That's a fixed scalar. QK-Norm is a learned normalization of the actual Q and K vectors.</p>
+  </div>
+</section>
+
+<!-- ====== SECTION 5: POSITIONAL ENCODING ====== -->
+<section class="panel">
+  <h2>5. Positional Encoding: RoPE, NoPE, Hybrid</h2>
+
+  <h3>RoPE (Rotary Position Embedding)</h3>
+  <p>The current standard. Encodes position by <b>rotating</b> Q and K vectors by an angle proportional to their position.
+  Two tokens close together have similar rotations → high dot product. Far apart → different rotations → lower dot product.</p>
+  <p>Key property: the attention score between positions i and j depends only on their <b>relative distance</b> (i-j), not absolute position.
+  This is what makes length extrapolation possible.</p>
+  <p>Used by: <b>LLaMA, Mistral, Qwen, most modern LLMs</b>.</p>
+
+  <h3>NoPE (No Positional Encoding)</h3>
+  <p>Some layers use <b>no positional encoding at all</b>. The model relies on <b>causal masking</b> alone
+  for position information — token at position 5 can see positions 0-4, token at position 6 can see 0-5.
+  That asymmetry provides an implicit ordering signal.</p>
+
+  <h3>Hybrid: RoPE + NoPE across layers</h3>
+  <div class="diagram">
+Layer 0:  RoPE     ← position-aware
+Layer 1:  NoPE     ← position-free, learns content-only patterns
+Layer 2:  RoPE
+Layer 3:  NoPE
+...
+
+Why: some layers benefit from position (local syntax),
+others don't need it (semantic similarity is position-independent).</div>
+
+  <p>Emerging research direction. The intuition: forcing every layer to be position-aware is wasteful.
+  Some attention patterns (e.g., "find the most similar concept anywhere in context") are better off without positional bias.</p>
+</section>
+
+<!-- ====== SECTION 6: PUTTING IT ALL TOGETHER ====== -->
+<section class="panel">
+  <h2>6. A Modern LLM Layer (2025-2026)</h2>
+  <div class="diagram">
+Input x
+  │
+  ├─→ RMSNorm
+  ├─→ Q, K, V projections
+  │     ├─ Q: 32 heads (full)
+  │     └─ K, V: 8 groups (GQA, 4:1 ratio)
+  ├─→ RoPE on Q, K (or NoPE for some layers)
+  ├─→ QK-Norm on Q, K
+  ├─→ Attention (sliding window OR full, depends on layer)
+  ├─→ Output projection
+  ├─→ Residual + RMSNorm
+  ├─→ FFN (SwiGLU: gate × up projection, then down projection)
+  │     └─ or MoE: router picks top-2 experts, each is a SwiGLU FFN
+  └─→ Residual
+Output</div>
+
+  <p>Compare to vanilla 2017 transformer: LayerNorm (not RMSNorm), full MHA (not GQA),
+  sinusoidal position (not RoPE), ReLU FFN (not SwiGLU), no QK-Norm, no sliding window, no MoE.</p>
+
+  <table>
+    <tr><th>Component</th><th>2017 (vanilla)</th><th>2025-2026 (modern)</th></tr>
+    <tr><td>Normalization</td><td>LayerNorm, post-norm</td><td><b>RMSNorm, pre-norm</b></td></tr>
+    <tr><td>Attention</td><td>Full MHA</td><td><b>GQA or MLA, hybrid sliding/full</b></td></tr>
+    <tr><td>Position</td><td>Sinusoidal (absolute)</td><td><b>RoPE (relative), sometimes NoPE</b></td></tr>
+    <tr><td>Stability</td><td>Gradient clipping only</td><td><b>QK-Norm + gradient clipping</b></td></tr>
+    <tr><td>FFN</td><td>ReLU, 4x hidden</td><td><b>SwiGLU, ~2.67x hidden</b></td></tr>
+    <tr><td>Sparsity</td><td>None</td><td><b>MoE (optional): route to top-K experts</b></td></tr>
+    <tr><td>KV cache</td><td>Unbounded</td><td><b>Bounded via GQA + sliding window</b></td></tr>
+  </table>
+</section>
+
+<!-- ====== INTERVIEW ANSWER ====== -->
+<section class="panel">
+  <h2>The Interview Answer</h2>
+  <div class="callout ok">
+    <p>"Modern LLMs have diverged significantly from vanilla transformers in three areas.
+    <b>KV efficiency</b>: GQA groups query heads to share KV, reducing cache by 4x; sliding-window attention
+    bounds cache size regardless of sequence length; hybrid architectures alternate local and global attention layers.
+    <b>Training stability</b>: QK-Norm prevents attention logit explosion at scale; RMSNorm replaces LayerNorm; pre-norm is standard.
+    <b>Sparsity</b>: MoE decouples model capacity from compute cost — I've trained MoE models,
+    the key insight is you get the representational power of a much larger model at a fraction of the inference cost."</p>
+  </div>
+</section>
+
+<div class="footer">
+  Modern LLM Architecture &middot; Beyond "It's Just a Transformer" &middot; 2026
+</div>
+
+</div>
+</body>
+</html>

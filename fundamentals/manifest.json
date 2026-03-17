@@ -88,5 +88,15 @@
     "file": "flow_matching.html",
     "title": "Flow Matching for TTS — Minimal PyTorch",
     "tags": ["Speech & Audio", "AI Coding / PyTorch"]
+  },
+  {
+    "file": "llm_training_memory.html",
+    "title": "LLM Training: GPU Memory Math & Parallelism",
+    "tags": ["Efficiency / Co-Design"]
+  },
+  {
+    "file": "modern_llm_architecture.html",
+    "title": "Modern LLM Architecture: Beyond 'It's Just a Transformer'",
+    "tags": ["Efficiency / Co-Design"]
   }
 ]
