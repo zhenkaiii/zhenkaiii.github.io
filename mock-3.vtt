@@ -1,0 +1,176 @@
+WEBVTT
+
+00:00.000 --> 00:06.640
+Okay, let me read it out first.
+
+00:06.640 --> 00:09.440
+Problem bitrate threshold.
+
+00:09.440 --> 00:18.520
+Netflix encodes every title at multiple bitrate tiers, so to serve different network conditions.
+
+00:18.520 --> 00:24.240
+Each tier has a measured perceptual quality score.
+
+00:24.240 --> 00:28.160
+From 0 to 100, I assume 100 is the highest.
+
+00:28.160 --> 00:36.080
+Even a sorted array of quality score, sorted at increasing bitrates, find the index of
+
+00:36.080 --> 00:44.720
+the lowest bitrate that exceeds or exceeds the minimum quality bar.
+
+00:44.720 --> 00:52.240
+If no bitrate meets the bar, return minus 1.
+
+00:52.240 --> 01:06.720
+So the input will be array and integer threshold, sorted, ascending array on the quality.
+
+01:06.720 --> 01:21.600
+And the threshold is 75.
+
+01:21.600 --> 01:31.560
+So you want to return the very first number that meets the bar.
+
+01:31.560 --> 01:36.440
+It's a classic binary search problem, I would say.
+
+01:36.440 --> 01:44.240
+Basically from the left to the right, it's going to fail, fail, fail, and you want to find
+
+01:44.240 --> 01:54.240
+the flip point where the fail now becomes success or the false becomes true.
+
+02:14.240 --> 02:37.360
+It's a binary search tree, basically we have low, high to pointer, and it's all about
+
+02:37.360 --> 02:40.200
+the if condition on the mid.
+
+02:40.200 --> 02:46.920
+If that condition is true, we're going to update the high part.
+
+02:46.920 --> 02:51.240
+If it is false, we're going to update the low part.
+
+02:51.240 --> 03:00.040
+Let me first write out the skeleton and the fill in the details.
+
+03:00.040 --> 03:09.280
+We just call it the function, binary search, and it takes the quality which is integer
+
+03:09.280 --> 03:16.680
+array and the bar or threshold, we just call it integer.
+
+03:16.680 --> 03:30.560
+So we have low and high, which is zero, and let's do the length of the bar minus 1.
+
+03:30.560 --> 03:50.600
+Well, low is less or equal than high, we get the mid, which is low plus high divided by
+
+03:50.600 --> 03:51.600
+two.
+
+03:51.600 --> 03:58.480
+We want to make sure it doesn't give me float point, floating point.
+
+03:58.480 --> 04:14.200
+So now we do the if condition on the mid.
+
+04:14.200 --> 04:27.800
+If that mid value is still no less than the threshold, which means that that condition
+
+04:27.800 --> 04:46.680
+is good, we're going to update the high pointer to mid minus 1.
+
+04:46.680 --> 04:57.080
+Otherwise we're going to update the low pointer to mid plus 1.
+
+04:57.080 --> 05:27.040
+This will give us this will give us.
+
+05:27.040 --> 05:52.560
+Basically, I will just return mid because according to binary search, this mid from that array
+
+05:52.560 --> 05:59.680
+will be the very first quality score that is equal to or greater than a bar, but from this
+
+05:59.680 --> 06:07.320
+problem, I realize that there's a case that there's no right answer and then return negative
+
+06:07.320 --> 06:08.320
+one.
+
+06:08.320 --> 06:10.560
+How would that be possible?
+
+06:10.560 --> 06:22.560
+That means, let's just say all the scores are just very low, what will happen then?
+
+06:22.560 --> 06:30.200
+So we have a low value, we have a high value, and we do the mid, and the mid, the if condition
+
+06:30.200 --> 06:43.120
+does not hold, so we're going to bump up the low value, I see.
+
+06:43.120 --> 06:54.520
+So I think in this problem, when there's just no accessible answer, when the while loop
+
+06:54.520 --> 07:23.240
+ends, that means low is actually with the same value of
+
+07:23.240 --> 07:27.240
+the array.
+
+07:27.240 --> 07:43.920
+So I'm going to do if that low is less than the bar, less of the bar, less of the quality.
+
+07:43.920 --> 07:49.760
+However, if it equals to the length of the quality, that means there's no right answer,
+
+07:49.760 --> 07:54.240
+which is return minus one.
+
+07:54.240 --> 07:55.240
+No?
+
+07:55.240 --> 08:04.640
+I wonder if you could give me an example to do the dry run, I will use yours, which is
+
+08:04.640 --> 08:19.320
+going to be the quality array, I'll just paste it here, that's the input of my function,
+
+08:19.320 --> 08:27.960
+and you also have the threshold, which is 75, and if it goes well, it should give me
+
+08:27.960 --> 08:44.120
+3, okay, I got a syntax error, let's see what's going on, oh, I got some note that I have
+
+08:44.120 --> 08:48.040
+to comment out.
+
+08:48.040 --> 09:02.160
+Now it gives me 2 instead of 3, we're off by 1, but why is that?
+
+09:02.160 --> 09:32.120
+We're saying, are we going to return, mean plus 1 instead of mid?
+
+09:32.120 --> 09:42.560
+I think mid is the last value that does not meet the bar, so we're going to bump it up
+
+09:42.560 --> 09:48.400
+by 1, in that case we'll have 3.
+
+09:48.400 --> 09:56.160
+Okay, to some of it's a classic binary search problem, essentially this problem is to
+
+09:56.160 --> 10:06.280
+find the breaker, or the moment where the condition flips, so we have 2 pointers, 1 for
+
+10:06.280 --> 10:15.960
+the low, 1 for the high, and we're going to constantly find the meet point, and depending
+
+10:15.960 --> 10:28.920
+on the if condition, we're going to update either the high pointer or the low point.
+

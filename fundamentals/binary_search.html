@@ -304,6 +304,71 @@ A common trick: to find the <em>number of elements equal to x</em>, compute
 <code>bisect_right(arr, x) - bisect_left(arr, x)</code>.
 </p>
 
+<h2>Application: Bitrate Threshold (Leftmost &ge; Target)</h2>
+<p>
+Netflix encodes every title at multiple bitrate tiers. Each tier has a measured
+perceptual quality score (VMAF, 0–100). Given a sorted array of quality scores
+at increasing bitrates, find the <strong>index of the lowest bitrate</strong> that
+meets or exceeds a minimum quality bar. If none meets the bar, return -1.
+</p>
+
+<pre><code>quality   = [42, 58, 71, 79, 88, 94, 97]   # sorted ascending
+threshold = 75
+
+# "I need the first index where quality[i] >= 75"
+# Condition: quality[mid] >= 75  →  answer is lo
+
+#   lo=0  hi=6  mid=3  quality[3]=79 >= 75 ✓  hi=2
+#   lo=0  hi=2  mid=1  quality[1]=58 <  75     lo=2
+#   lo=2  hi=2  mid=2  quality[2]=71 <  75     lo=3
+#   lo=3  hi=2  → loop ends, lo=3
+
+# Answer: 3  (quality[3] = 79 is the first value >= 75)
+</code></pre>
+
+<pre><code>def bitrate_threshold(quality, bar):
+    lo, hi = 0, len(quality) - 1
+
+    while lo &lt;= hi:
+        mid = (lo + hi) // 2
+        if quality[mid] &gt;= bar:   # condition met — search left for earlier match
+            hi = mid - 1
+        else:                      # too small — discard left half
+            lo = mid + 1
+
+    return lo if lo &lt; len(quality) else -1
+
+# bitrate_threshold([42, 58, 71, 79, 88, 94, 97], 75) → 3
+</code></pre>
+
+<p>
+<strong>Why return <code>lo</code>?</strong> When <code>quality[mid] &ge; bar</code>, we move
+<code>hi</code> left — the answer might be at <code>mid</code> or earlier.
+When <code>quality[mid] &lt; bar</code>, we move <code>lo</code> right — too small, discard.
+When the loop ends, <code>lo</code> has converged to the <strong>first position where the
+condition flips</strong>. That's always the leftmost &ge; target.
+</p>
+
+<p><strong>Common pitfall:</strong> returning <code>mid</code> after the loop.
+<code>mid</code> just holds whatever the last iteration computed — it has <strong>no semantic meaning</strong>
+after the loop exits. The return value is always one of two things:</p>
+<ul>
+  <li><strong>Leftmost true → return <code>lo</code></strong></li>
+  <li><strong>Rightmost false → return <code>hi</code></strong></li>
+  <li><strong>Never <code>mid</code>.</strong></li>
+</ul>
+
+<table>
+  <thead><tr><th>Edge case</th><th>Input</th><th>Expected</th></tr></thead>
+  <tbody>
+    <tr><td>All below threshold</td><td><code>[42, 58, 71], bar=80</code></td><td>-1</td></tr>
+    <tr><td>All above threshold</td><td><code>[80, 90, 95], bar=75</code></td><td>0</td></tr>
+    <tr><td>Exact match</td><td><code>[42, 75, 90], bar=75</code></td><td>1</td></tr>
+    <tr><td>Single element fits</td><td><code>[80], bar=75</code></td><td>0</td></tr>
+    <tr><td>Single element fails</td><td><code>[60], bar=75</code></td><td>-1</td></tr>
+  </tbody>
+</table>
+
 <h2>Search Space Beyond Arrays</h2>
 <p>
 Binary search applies whenever the search space has a <strong>monotonic predicate</strong> —

@@ -1,0 +1,98 @@
+start	end	text
+0	6360	Okay, so the problem is the video buffering window.
+6360	11440	In the video streaming, content is split into chunks.
+11440	13040	One or two seconds each.
+13040	20480	The client has a playback buffer of limited size.
+20480	29920	You want to know what's the longest contiguous run of chunks that fits in the buffer.
+30560	40320	This determines max look ahead before the player must stall and re-buffer.
+40960	51600	Okay, basically the input is the list of array, a list of chunks.
+51600	58160	And each one is non-negative or it's positive in kill-bite.
+60000	65280	Output is the length of the longest contiguous sub array.
+71840	74640	Looks like it's a sliding window problem.
+81600	83280	A concrete example is this.
+83280	86480	The chunk is 4, 2, 1, 3, 5, 2, 1.
+87920	92720	And the budget is 10.
+99680	102160	We start from the left most.
+104000	109360	If it is less than the budget, we add another one.
+110240	122240	Until it exceeds the budget, we will have to shrink from the left until it fits.
+125920	130400	And in the meantime, we keep track of the current max.
+133120	138880	After one traverse or a big O, the current max will be the global max
+138880	140080	and will return it.
+143600	151520	Now, the trivial question is for sliding window, will the left and right one
+155120	157200	be starting from the left most?
+157200	164000	Same position I believe so because sliding window by default can be just empty.
+164720	166240	It's not too pointer.
+167200	173360	So to code this problem, we'll just go ahead with the function signature.
+176240	184400	It takes chunks which is
+184640	190080	inter array
+198880	204880	and the buffer capacity, which is a integer.
+206160	208640	And it will return a integer.
+244880	248960	Okay.
+252160	255440	So it's a sliding window problem.
+258400	260880	The left and right will start from the left most.
+261600	264960	We will push the right first.
+266880	273520	As long as the sum within the window is not greater than the capacity,
+273520	276960	we'll keep enrolling you guy from the right.
+280640	287600	If it exceeds the budget, we will reduce or shrink the window by
+289920	292480	bringing the left pointer to the right.
+295760	298320	So we have left right.
+303600	315280	The error post zero now and the current max will also be zero.
+321360	327760	As long as the right guy is not greater than the size of the array,
+328880	330480	we'll keep doing the for loop.
+394160	409520	So the if branch now is done on rowing the window.
+411840	419120	Basically, if with the current left and right, the sum within that contiguous sub array
+419920	430080	is not greater than the capacity, we'll keep adding right one at a time
+431680	433680	while updating the current max.
+433680	448080	However, if that if condition breaks, we'll reduce the size of the window by adding
+449120	457680	left by one.
+569120	577200	The current sum is also zero here.
+599120	621920	So this is my initial implementation.
+622080	630320	We have left and right standard pointers for sliding window.
+632400	633680	We have a current max.
+634720	637600	It's a track curve at the end of this a while loop.
+637600	640480	It will be the answer global max value.
+641120	651200	Also the current sum, which is the sum of this is sub array and the initialize the value.
+652000	655920	is zero because left and right are both zero.
+656960	666560	Now, I would do one for a while loop as long as the right pointer is less than the length of
+666560	677280	the chunk. I will check if the current sum is not greater than the capacity.
+678160	681040	If not, that means we still have headroom.
+682080	688480	We move that right pointer by one and add this new guy to our current sum.
+690640	692880	Otherwise, we shrink the window.
+699440	703520	After each if else, we're going to update the current max.
+703600	711280	And then at the end, we will return the current max as the final answer.
+720080	723760	Now, let me do a faster run.
+723840	731200	Let's say the chunk is for simplicity.
+731200	734800	I would just deduce solution, which is the function name.
+736960	746400	That takes chunk the int array and the capacity, which is integer here is 10.
+747360	755600	And issued, beginning for.
+764480	770240	Okay, here I'm having the error in line 36 because it says
+776960	780160	list index out of range.
+781920	788000	Okay, for debugging purposes, I'm going to print out that right value.
+789520	792720	For example, right now, the size of the array is seven.
+793440	800160	If right ever gets seven and this line will throw error because it's going to be out of
+800240	805760	memory. But okay, that's indeed the case.
+819760	826560	But to fix this, I will change the condition for this while loop.
+826640	832480	The right should be less than the length of the chunk minus one.
+837280	840240	And there we get the answer, which is four.
+844560	847680	And let's see how long did I use?
+848400	851040	Okay, we use the 14 minute.
+853200	863120	My gut feeling is that I'm not sure if my communication is a pleasant because
+865760	870640	when I code, I keep mumbling myself.
+871200	874640	And I'm actually talking to myself.
+875440	877680	I don't think I was talking to the interviewer.
+878320	881680	So the interviewer might feel left out.
+888080	895120	And I don't think I communicate ahead of time to
+895440	901840	guide interviewer on where I'm going, why am I doing this?
+902800	907440	Rather, I'm just thinking out loud what I'm doing now.
+907440	911200	If I got blocked and I would just say, oh, Jesus, I think that was wrong.
+911920	914880	It was just, I'm talking to myself.
+916160	920080	I think the reason is because I know it's sliding window.
+921040	925840	But I'm not super confident in a sense that I can be an instructor talking to a
+925840	928240	student because I really know this game.
+929040	932720	So it's not die hard solid, perhaps that's why.
+933520	941360	Also for this while loop that does the right less than length of the chunks minus one,
+942400	948720	honestly, I'm not confident if that's the right framework because I rarely recall any of this type
+948720	959040	of condition. In a nutshell, I guess my memorization for sliding windows is only 70% solid,
+959040	963200	not hardest rock, perhaps that's why.
+965280	974560	But I don't know you've overall this mock interview. It's a pass.
+974560	979440	So tell me.

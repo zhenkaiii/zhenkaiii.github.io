@@ -1,0 +1,97 @@
+Okay, so the problem is the video buffering window.
+In the video streaming, content is split into chunks.
+One or two seconds each.
+The client has a playback buffer of limited size.
+You want to know what's the longest contiguous run of chunks that fits in the buffer.
+This determines max look ahead before the player must stall and re-buffer.
+Okay, basically the input is the list of array, a list of chunks.
+And each one is non-negative or it's positive in kill-bite.
+Output is the length of the longest contiguous sub array.
+Looks like it's a sliding window problem.
+A concrete example is this.
+The chunk is 4, 2, 1, 3, 5, 2, 1.
+And the budget is 10.
+We start from the left most.
+If it is less than the budget, we add another one.
+Until it exceeds the budget, we will have to shrink from the left until it fits.
+And in the meantime, we keep track of the current max.
+After one traverse or a big O, the current max will be the global max
+and will return it.
+Now, the trivial question is for sliding window, will the left and right one
+be starting from the left most?
+Same position I believe so because sliding window by default can be just empty.
+It's not too pointer.
+So to code this problem, we'll just go ahead with the function signature.
+It takes chunks which is
+inter array
+and the buffer capacity, which is a integer.
+And it will return a integer.
+Okay.
+So it's a sliding window problem.
+The left and right will start from the left most.
+We will push the right first.
+As long as the sum within the window is not greater than the capacity,
+we'll keep enrolling you guy from the right.
+If it exceeds the budget, we will reduce or shrink the window by
+bringing the left pointer to the right.
+So we have left right.
+The error post zero now and the current max will also be zero.
+As long as the right guy is not greater than the size of the array,
+we'll keep doing the for loop.
+So the if branch now is done on rowing the window.
+Basically, if with the current left and right, the sum within that contiguous sub array
+is not greater than the capacity, we'll keep adding right one at a time
+while updating the current max.
+However, if that if condition breaks, we'll reduce the size of the window by adding
+left by one.
+The current sum is also zero here.
+So this is my initial implementation.
+We have left and right standard pointers for sliding window.
+We have a current max.
+It's a track curve at the end of this a while loop.
+It will be the answer global max value.
+Also the current sum, which is the sum of this is sub array and the initialize the value.
+is zero because left and right are both zero.
+Now, I would do one for a while loop as long as the right pointer is less than the length of
+the chunk. I will check if the current sum is not greater than the capacity.
+If not, that means we still have headroom.
+We move that right pointer by one and add this new guy to our current sum.
+Otherwise, we shrink the window.
+After each if else, we're going to update the current max.
+And then at the end, we will return the current max as the final answer.
+Now, let me do a faster run.
+Let's say the chunk is for simplicity.
+I would just deduce solution, which is the function name.
+That takes chunk the int array and the capacity, which is integer here is 10.
+And issued, beginning for.
+Okay, here I'm having the error in line 36 because it says
+list index out of range.
+Okay, for debugging purposes, I'm going to print out that right value.
+For example, right now, the size of the array is seven.
+If right ever gets seven and this line will throw error because it's going to be out of
+memory. But okay, that's indeed the case.
+But to fix this, I will change the condition for this while loop.
+The right should be less than the length of the chunk minus one.
+And there we get the answer, which is four.
+And let's see how long did I use?
+Okay, we use the 14 minute.
+My gut feeling is that I'm not sure if my communication is a pleasant because
+when I code, I keep mumbling myself.
+And I'm actually talking to myself.
+I don't think I was talking to the interviewer.
+So the interviewer might feel left out.
+And I don't think I communicate ahead of time to
+guide interviewer on where I'm going, why am I doing this?
+Rather, I'm just thinking out loud what I'm doing now.
+If I got blocked and I would just say, oh, Jesus, I think that was wrong.
+It was just, I'm talking to myself.
+I think the reason is because I know it's sliding window.
+But I'm not super confident in a sense that I can be an instructor talking to a
+student because I really know this game.
+So it's not die hard solid, perhaps that's why.
+Also for this while loop that does the right less than length of the chunks minus one,
+honestly, I'm not confident if that's the right framework because I rarely recall any of this type
+of condition. In a nutshell, I guess my memorization for sliding windows is only 70% solid,
+not hardest rock, perhaps that's why.
+But I don't know you've overall this mock interview. It's a pass.
+So tell me.

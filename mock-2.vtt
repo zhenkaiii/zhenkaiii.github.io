@@ -1,0 +1,293 @@
+WEBVTT
+
+00:00.000 --> 00:06.360
+Okay, so the problem is the video buffering window.
+
+00:06.360 --> 00:11.440
+In the video streaming, content is split into chunks.
+
+00:11.440 --> 00:13.040
+One or two seconds each.
+
+00:13.040 --> 00:20.480
+The client has a playback buffer of limited size.
+
+00:20.480 --> 00:29.920
+You want to know what's the longest contiguous run of chunks that fits in the buffer.
+
+00:30.560 --> 00:40.320
+This determines max look ahead before the player must stall and re-buffer.
+
+00:40.960 --> 00:51.600
+Okay, basically the input is the list of array, a list of chunks.
+
+00:51.600 --> 00:58.160
+And each one is non-negative or it's positive in kill-bite.
+
+01:00.000 --> 01:05.280
+Output is the length of the longest contiguous sub array.
+
+01:11.840 --> 01:14.640
+Looks like it's a sliding window problem.
+
+01:21.600 --> 01:23.280
+A concrete example is this.
+
+01:23.280 --> 01:26.480
+The chunk is 4, 2, 1, 3, 5, 2, 1.
+
+01:27.920 --> 01:32.720
+And the budget is 10.
+
+01:39.680 --> 01:42.160
+We start from the left most.
+
+01:44.000 --> 01:49.360
+If it is less than the budget, we add another one.
+
+01:50.240 --> 02:02.240
+Until it exceeds the budget, we will have to shrink from the left until it fits.
+
+02:05.920 --> 02:10.400
+And in the meantime, we keep track of the current max.
+
+02:13.120 --> 02:18.880
+After one traverse or a big O, the current max will be the global max
+
+02:18.880 --> 02:20.080
+and will return it.
+
+02:23.600 --> 02:31.520
+Now, the trivial question is for sliding window, will the left and right one
+
+02:35.120 --> 02:37.200
+be starting from the left most?
+
+02:37.200 --> 02:44.000
+Same position I believe so because sliding window by default can be just empty.
+
+02:44.720 --> 02:46.240
+It's not too pointer.
+
+02:47.200 --> 02:53.360
+So to code this problem, we'll just go ahead with the function signature.
+
+02:56.240 --> 03:04.400
+It takes chunks which is
+
+03:04.640 --> 03:10.080
+inter array
+
+03:18.880 --> 03:24.880
+and the buffer capacity, which is a integer.
+
+03:26.160 --> 03:28.640
+And it will return a integer.
+
+04:04.880 --> 04:08.960
+Okay.
+
+04:12.160 --> 04:15.440
+So it's a sliding window problem.
+
+04:18.400 --> 04:20.880
+The left and right will start from the left most.
+
+04:21.600 --> 04:24.960
+We will push the right first.
+
+04:26.880 --> 04:33.520
+As long as the sum within the window is not greater than the capacity,
+
+04:33.520 --> 04:36.960
+we'll keep enrolling you guy from the right.
+
+04:40.640 --> 04:47.600
+If it exceeds the budget, we will reduce or shrink the window by
+
+04:49.920 --> 04:52.480
+bringing the left pointer to the right.
+
+04:55.760 --> 04:58.320
+So we have left right.
+
+05:03.600 --> 05:15.280
+The error post zero now and the current max will also be zero.
+
+05:21.360 --> 05:27.760
+As long as the right guy is not greater than the size of the array,
+
+05:28.880 --> 05:30.480
+we'll keep doing the for loop.
+
+06:34.160 --> 06:49.520
+So the if branch now is done on rowing the window.
+
+06:51.840 --> 06:59.120
+Basically, if with the current left and right, the sum within that contiguous sub array
+
+06:59.920 --> 07:10.080
+is not greater than the capacity, we'll keep adding right one at a time
+
+07:11.680 --> 07:13.680
+while updating the current max.
+
+07:13.680 --> 07:28.080
+However, if that if condition breaks, we'll reduce the size of the window by adding
+
+07:29.120 --> 07:37.680
+left by one.
+
+09:29.120 --> 09:37.200
+The current sum is also zero here.
+
+09:59.120 --> 10:21.920
+So this is my initial implementation.
+
+10:22.080 --> 10:30.320
+We have left and right standard pointers for sliding window.
+
+10:32.400 --> 10:33.680
+We have a current max.
+
+10:34.720 --> 10:37.600
+It's a track curve at the end of this a while loop.
+
+10:37.600 --> 10:40.480
+It will be the answer global max value.
+
+10:41.120 --> 10:51.200
+Also the current sum, which is the sum of this is sub array and the initialize the value.
+
+10:52.000 --> 10:55.920
+is zero because left and right are both zero.
+
+10:56.960 --> 11:06.560
+Now, I would do one for a while loop as long as the right pointer is less than the length of
+
+11:06.560 --> 11:17.280
+the chunk. I will check if the current sum is not greater than the capacity.
+
+11:18.160 --> 11:21.040
+If not, that means we still have headroom.
+
+11:22.080 --> 11:28.480
+We move that right pointer by one and add this new guy to our current sum.
+
+11:30.640 --> 11:32.880
+Otherwise, we shrink the window.
+
+11:39.440 --> 11:43.520
+After each if else, we're going to update the current max.
+
+11:43.600 --> 11:51.280
+And then at the end, we will return the current max as the final answer.
+
+12:00.080 --> 12:03.760
+Now, let me do a faster run.
+
+12:03.840 --> 12:11.200
+Let's say the chunk is for simplicity.
+
+12:11.200 --> 12:14.800
+I would just deduce solution, which is the function name.
+
+12:16.960 --> 12:26.400
+That takes chunk the int array and the capacity, which is integer here is 10.
+
+12:27.360 --> 12:35.600
+And issued, beginning for.
+
+12:44.480 --> 12:50.240
+Okay, here I'm having the error in line 36 because it says
+
+12:56.960 --> 13:00.160
+list index out of range.
+
+13:01.920 --> 13:08.000
+Okay, for debugging purposes, I'm going to print out that right value.
+
+13:09.520 --> 13:12.720
+For example, right now, the size of the array is seven.
+
+13:13.440 --> 13:20.160
+If right ever gets seven and this line will throw error because it's going to be out of
+
+13:20.240 --> 13:25.760
+memory. But okay, that's indeed the case.
+
+13:39.760 --> 13:46.560
+But to fix this, I will change the condition for this while loop.
+
+13:46.640 --> 13:52.480
+The right should be less than the length of the chunk minus one.
+
+13:57.280 --> 14:00.240
+And there we get the answer, which is four.
+
+14:04.560 --> 14:07.680
+And let's see how long did I use?
+
+14:08.400 --> 14:11.040
+Okay, we use the 14 minute.
+
+14:13.200 --> 14:23.120
+My gut feeling is that I'm not sure if my communication is a pleasant because
+
+14:25.760 --> 14:30.640
+when I code, I keep mumbling myself.
+
+14:31.200 --> 14:34.640
+And I'm actually talking to myself.
+
+14:35.440 --> 14:37.680
+I don't think I was talking to the interviewer.
+
+14:38.320 --> 14:41.680
+So the interviewer might feel left out.
+
+14:48.080 --> 14:55.120
+And I don't think I communicate ahead of time to
+
+14:55.440 --> 15:01.840
+guide interviewer on where I'm going, why am I doing this?
+
+15:02.800 --> 15:07.440
+Rather, I'm just thinking out loud what I'm doing now.
+
+15:07.440 --> 15:11.200
+If I got blocked and I would just say, oh, Jesus, I think that was wrong.
+
+15:11.920 --> 15:14.880
+It was just, I'm talking to myself.
+
+15:16.160 --> 15:20.080
+I think the reason is because I know it's sliding window.
+
+15:21.040 --> 15:25.840
+But I'm not super confident in a sense that I can be an instructor talking to a
+
+15:25.840 --> 15:28.240
+student because I really know this game.
+
+15:29.040 --> 15:32.720
+So it's not die hard solid, perhaps that's why.
+
+15:33.520 --> 15:41.360
+Also for this while loop that does the right less than length of the chunks minus one,
+
+15:42.400 --> 15:48.720
+honestly, I'm not confident if that's the right framework because I rarely recall any of this type
+
+15:48.720 --> 15:59.040
+of condition. In a nutshell, I guess my memorization for sliding windows is only 70% solid,
+
+15:59.040 --> 16:03.200
+not hardest rock, perhaps that's why.
+
+16:05.280 --> 16:14.560
+But I don't know you've overall this mock interview. It's a pass.
+
+16:14.560 --> 16:19.440
+So tell me.
+

@@ -1,0 +1,51 @@
+Okay, let me first read out the problem.
+It's a speech pipeline problem, DAG, a direct async, a cycle graph.
+Speech processing pipeline have stages with dependencies, each station only run after its
+dependencies complete.
+So you have a list of parts, pairs, and we're going to return valid execution order.
+If it's a circular, we're going to return empty list.
+Looks like a BFS problem on graph to me.
+Input will be with the stages and dependencies output will be a list of activity.
+I think it's also called con-argism, topological shorting.
+Step one will be building the graph, which essentially hashmap using that list of activities
+and their dependencies.
+Then we're going to start with those nodes with no dependencies, I mean, the premises that
+can just start right away and then do BFS from there.
+And I will start writing the code skeleton and filling the details as we go.
+Step one is to build the graph.
+The graph essentially is a hash map, so a dictionary.
+I'm going to introduce another data structure called indegree.
+Those nodes without requiring anything happen before them will have zero and to start
+with we'll have basically zero for all nodes.
+So we'll do this a comma zero for a in any stages.
+For graph, I will just do a with a empty list for a in all stages, any stages.
+Now I'm going to leverage that dependencies because the way you gave me the dependency
+is a little bit weird, it's the post pre-pair.
+So for each pair, I will append the post to the pre to the list of the pre and then I
+will add that in degree for the post by one.
+What that means is that oh, I know now after this pre, there could be some post that can
+happen that can follow up.
+And for that post, we know oh, we need that pre to happen first, so we're going to count
+that degree in.
+So indegree of post will plus equal to one.
+Now the graph is built, we're going to do BFS.
+BFS essentially is two cubes and also two loops.
+The first cube will just be those three nodes, nodes with zero indegrees.
+Order is another cube, that's going to be my answer.
+This order takes care of the neighbors for actions or nodes in a cube.
+As long as the cube is not empty, we're going to pop it.
+And then we're going to append that current node that is just being popped from the cube
+into order.
+Now it comes the second loop that we've spent because BFS we're going to expand.
+Now we have the current node, we're going to explore their kits or neighbors for a graph.
+Once we visit their neighbors, what we'll do is that we're going to reduce their indegrees
+by one because the current node is already investigated into order, that means it happens,
+it's being executed, it's ordered.
+And if that number now is down to zero, that means they're free to be executed right next.
+So we're going to add that to the cube.
+And I believe that's it, that's the end of the algorithm, we're going to return order,
+which is the list of execution after we traverse all the nodes that started with zero
+degree or later got reduced to zero degree, they will be executed in order in that order
+cube.
+But we're going to make sure if the size of the order is the same size of the sheer amount
+of a stages, otherwise there will be a cycle and we're going to return an empty list.

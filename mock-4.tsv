@@ -1,0 +1,52 @@
+start	end	text
+0	4120	Okay, let me first read out the problem.
+4120	16160	It's a speech pipeline problem, DAG, a direct async, a cycle graph.
+16160	23620	Speech processing pipeline have stages with dependencies, each station only run after its
+23620	25980	dependencies complete.
+25980	36500	So you have a list of parts, pairs, and we're going to return valid execution order.
+36500	41420	If it's a circular, we're going to return empty list.
+41420	45940	Looks like a BFS problem on graph to me.
+45940	53540	Input will be with the stages and dependencies output will be a list of activity.
+53540	60060	I think it's also called con-argism, topological shorting.
+60060	67980	Step one will be building the graph, which essentially hashmap using that list of activities
+67980	69620	and their dependencies.
+69620	77100	Then we're going to start with those nodes with no dependencies, I mean, the premises that
+77100	90220	can just start right away and then do BFS from there.
+90220	101340	And I will start writing the code skeleton and filling the details as we go.
+101340	103380	Step one is to build the graph.
+103380	113180	The graph essentially is a hash map, so a dictionary.
+113180	121580	I'm going to introduce another data structure called indegree.
+121580	126380	Those nodes without requiring anything happen before them will have zero and to start
+126380	136860	with we'll have basically zero for all nodes.
+156380	169340	So we'll do this a comma zero for a in any stages.
+169340	183060	For graph, I will just do a with a empty list for a in all stages, any stages.
+183060	194220	Now I'm going to leverage that dependencies because the way you gave me the dependency
+194220	210300	is a little bit weird, it's the post pre-pair.
+210300	220980	So for each pair, I will append the post to the pre to the list of the pre and then I
+220980	227900	will add that in degree for the post by one.
+227900	237060	What that means is that oh, I know now after this pre, there could be some post that can
+237060	239460	happen that can follow up.
+239460	247660	And for that post, we know oh, we need that pre to happen first, so we're going to count
+247660	262460	that degree in.
+262460	270020	So indegree of post will plus equal to one.
+270020	273380	Now the graph is built, we're going to do BFS.
+273380	284900	BFS essentially is two cubes and also two loops.
+284900	295860	The first cube will just be those three nodes, nodes with zero indegrees.
+295860	323700	Order is another cube, that's going to be my answer.
+323700	335940	This order takes care of the neighbors for actions or nodes in a cube.
+335940	355340	As long as the cube is not empty, we're going to pop it.
+355340	360060	And then we're going to append that current node that is just being popped from the cube
+360060	368540	into order.
+368540	375460	Now it comes the second loop that we've spent because BFS we're going to expand.
+375460	382460	Now we have the current node, we're going to explore their kits or neighbors for a graph.
+405460	421180	Once we visit their neighbors, what we'll do is that we're going to reduce their indegrees
+421180	429860	by one because the current node is already investigated into order, that means it happens,
+429860	434340	it's being executed, it's ordered.
+434340	440940	And if that number now is down to zero, that means they're free to be executed right next.
+440940	470540	So we're going to add that to the cube.
+470540	488180	And I believe that's it, that's the end of the algorithm, we're going to return order,
+488180	497940	which is the list of execution after we traverse all the nodes that started with zero
+497940	506380	degree or later got reduced to zero degree, they will be executed in order in that order
+506380	509380	cube.
+509380	515180	But we're going to make sure if the size of the order is the same size of the sheer amount
+515180	523580	of a stages, otherwise there will be a cycle and we're going to return an empty list.

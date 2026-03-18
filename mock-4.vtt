@@ -1,0 +1,155 @@
+WEBVTT
+
+00:00.000 --> 00:04.120
+Okay, let me first read out the problem.
+
+00:04.120 --> 00:16.160
+It's a speech pipeline problem, DAG, a direct async, a cycle graph.
+
+00:16.160 --> 00:23.620
+Speech processing pipeline have stages with dependencies, each station only run after its
+
+00:23.620 --> 00:25.980
+dependencies complete.
+
+00:25.980 --> 00:36.500
+So you have a list of parts, pairs, and we're going to return valid execution order.
+
+00:36.500 --> 00:41.420
+If it's a circular, we're going to return empty list.
+
+00:41.420 --> 00:45.940
+Looks like a BFS problem on graph to me.
+
+00:45.940 --> 00:53.540
+Input will be with the stages and dependencies output will be a list of activity.
+
+00:53.540 --> 01:00.060
+I think it's also called con-argism, topological shorting.
+
+01:00.060 --> 01:07.980
+Step one will be building the graph, which essentially hashmap using that list of activities
+
+01:07.980 --> 01:09.620
+and their dependencies.
+
+01:09.620 --> 01:17.100
+Then we're going to start with those nodes with no dependencies, I mean, the premises that
+
+01:17.100 --> 01:30.220
+can just start right away and then do BFS from there.
+
+01:30.220 --> 01:41.340
+And I will start writing the code skeleton and filling the details as we go.
+
+01:41.340 --> 01:43.380
+Step one is to build the graph.
+
+01:43.380 --> 01:53.180
+The graph essentially is a hash map, so a dictionary.
+
+01:53.180 --> 02:01.580
+I'm going to introduce another data structure called indegree.
+
+02:01.580 --> 02:06.380
+Those nodes without requiring anything happen before them will have zero and to start
+
+02:06.380 --> 02:16.860
+with we'll have basically zero for all nodes.
+
+02:36.380 --> 02:49.340
+So we'll do this a comma zero for a in any stages.
+
+02:49.340 --> 03:03.060
+For graph, I will just do a with a empty list for a in all stages, any stages.
+
+03:03.060 --> 03:14.220
+Now I'm going to leverage that dependencies because the way you gave me the dependency
+
+03:14.220 --> 03:30.300
+is a little bit weird, it's the post pre-pair.
+
+03:30.300 --> 03:40.980
+So for each pair, I will append the post to the pre to the list of the pre and then I
+
+03:40.980 --> 03:47.900
+will add that in degree for the post by one.
+
+03:47.900 --> 03:57.060
+What that means is that oh, I know now after this pre, there could be some post that can
+
+03:57.060 --> 03:59.460
+happen that can follow up.
+
+03:59.460 --> 04:07.660
+And for that post, we know oh, we need that pre to happen first, so we're going to count
+
+04:07.660 --> 04:22.460
+that degree in.
+
+04:22.460 --> 04:30.020
+So indegree of post will plus equal to one.
+
+04:30.020 --> 04:33.380
+Now the graph is built, we're going to do BFS.
+
+04:33.380 --> 04:44.900
+BFS essentially is two cubes and also two loops.
+
+04:44.900 --> 04:55.860
+The first cube will just be those three nodes, nodes with zero indegrees.
+
+04:55.860 --> 05:23.700
+Order is another cube, that's going to be my answer.
+
+05:23.700 --> 05:35.940
+This order takes care of the neighbors for actions or nodes in a cube.
+
+05:35.940 --> 05:55.340
+As long as the cube is not empty, we're going to pop it.
+
+05:55.340 --> 06:00.060
+And then we're going to append that current node that is just being popped from the cube
+
+06:00.060 --> 06:08.540
+into order.
+
+06:08.540 --> 06:15.460
+Now it comes the second loop that we've spent because BFS we're going to expand.
+
+06:15.460 --> 06:22.460
+Now we have the current node, we're going to explore their kits or neighbors for a graph.
+
+06:45.460 --> 07:01.180
+Once we visit their neighbors, what we'll do is that we're going to reduce their indegrees
+
+07:01.180 --> 07:09.860
+by one because the current node is already investigated into order, that means it happens,
+
+07:09.860 --> 07:14.340
+it's being executed, it's ordered.
+
+07:14.340 --> 07:20.940
+And if that number now is down to zero, that means they're free to be executed right next.
+
+07:20.940 --> 07:50.540
+So we're going to add that to the cube.
+
+07:50.540 --> 08:08.180
+And I believe that's it, that's the end of the algorithm, we're going to return order,
+
+08:08.180 --> 08:17.940
+which is the list of execution after we traverse all the nodes that started with zero
+
+08:17.940 --> 08:26.380
+degree or later got reduced to zero degree, they will be executed in order in that order
+
+08:26.380 --> 08:29.380
+cube.
+
+08:29.380 --> 08:35.180
+But we're going to make sure if the size of the order is the same size of the sheer amount
+
+08:35.180 --> 08:43.580
+of a stages, otherwise there will be a cycle and we're going to return an empty list.
+

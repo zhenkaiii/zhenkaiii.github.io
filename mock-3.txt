@@ -1,0 +1,58 @@
+Okay, let me read it out first.
+Problem bitrate threshold.
+Netflix encodes every title at multiple bitrate tiers, so to serve different network conditions.
+Each tier has a measured perceptual quality score.
+From 0 to 100, I assume 100 is the highest.
+Even a sorted array of quality score, sorted at increasing bitrates, find the index of
+the lowest bitrate that exceeds or exceeds the minimum quality bar.
+If no bitrate meets the bar, return minus 1.
+So the input will be array and integer threshold, sorted, ascending array on the quality.
+And the threshold is 75.
+So you want to return the very first number that meets the bar.
+It's a classic binary search problem, I would say.
+Basically from the left to the right, it's going to fail, fail, fail, and you want to find
+the flip point where the fail now becomes success or the false becomes true.
+It's a binary search tree, basically we have low, high to pointer, and it's all about
+the if condition on the mid.
+If that condition is true, we're going to update the high part.
+If it is false, we're going to update the low part.
+Let me first write out the skeleton and the fill in the details.
+We just call it the function, binary search, and it takes the quality which is integer
+array and the bar or threshold, we just call it integer.
+So we have low and high, which is zero, and let's do the length of the bar minus 1.
+Well, low is less or equal than high, we get the mid, which is low plus high divided by
+two.
+We want to make sure it doesn't give me float point, floating point.
+So now we do the if condition on the mid.
+If that mid value is still no less than the threshold, which means that that condition
+is good, we're going to update the high pointer to mid minus 1.
+Otherwise we're going to update the low pointer to mid plus 1.
+This will give us this will give us.
+Basically, I will just return mid because according to binary search, this mid from that array
+will be the very first quality score that is equal to or greater than a bar, but from this
+problem, I realize that there's a case that there's no right answer and then return negative
+one.
+How would that be possible?
+That means, let's just say all the scores are just very low, what will happen then?
+So we have a low value, we have a high value, and we do the mid, and the mid, the if condition
+does not hold, so we're going to bump up the low value, I see.
+So I think in this problem, when there's just no accessible answer, when the while loop
+ends, that means low is actually with the same value of
+the array.
+So I'm going to do if that low is less than the bar, less of the bar, less of the quality.
+However, if it equals to the length of the quality, that means there's no right answer,
+which is return minus one.
+No?
+I wonder if you could give me an example to do the dry run, I will use yours, which is
+going to be the quality array, I'll just paste it here, that's the input of my function,
+and you also have the threshold, which is 75, and if it goes well, it should give me
+3, okay, I got a syntax error, let's see what's going on, oh, I got some note that I have
+to comment out.
+Now it gives me 2 instead of 3, we're off by 1, but why is that?
+We're saying, are we going to return, mean plus 1 instead of mid?
+I think mid is the last value that does not meet the bar, so we're going to bump it up
+by 1, in that case we'll have 3.
+Okay, to some of it's a classic binary search problem, essentially this problem is to
+find the breaker, or the moment where the condition flips, so we have 2 pointers, 1 for
+the low, 1 for the high, and we're going to constantly find the meet point, and depending
+on the if condition, we're going to update either the high pointer or the low point.

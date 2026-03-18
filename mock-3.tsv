@@ -1,0 +1,59 @@
+start	end	text
+0	6640	Okay, let me read it out first.
+6640	9440	Problem bitrate threshold.
+9440	18520	Netflix encodes every title at multiple bitrate tiers, so to serve different network conditions.
+18520	24240	Each tier has a measured perceptual quality score.
+24240	28160	From 0 to 100, I assume 100 is the highest.
+28160	36080	Even a sorted array of quality score, sorted at increasing bitrates, find the index of
+36080	44720	the lowest bitrate that exceeds or exceeds the minimum quality bar.
+44720	52240	If no bitrate meets the bar, return minus 1.
+52240	66720	So the input will be array and integer threshold, sorted, ascending array on the quality.
+66720	81600	And the threshold is 75.
+81600	91560	So you want to return the very first number that meets the bar.
+91560	96440	It's a classic binary search problem, I would say.
+96440	104240	Basically from the left to the right, it's going to fail, fail, fail, and you want to find
+104240	114240	the flip point where the fail now becomes success or the false becomes true.
+134240	157360	It's a binary search tree, basically we have low, high to pointer, and it's all about
+157360	160200	the if condition on the mid.
+160200	166920	If that condition is true, we're going to update the high part.
+166920	171240	If it is false, we're going to update the low part.
+171240	180040	Let me first write out the skeleton and the fill in the details.
+180040	189280	We just call it the function, binary search, and it takes the quality which is integer
+189280	196680	array and the bar or threshold, we just call it integer.
+196680	210560	So we have low and high, which is zero, and let's do the length of the bar minus 1.
+210560	230600	Well, low is less or equal than high, we get the mid, which is low plus high divided by
+230600	231600	two.
+231600	238480	We want to make sure it doesn't give me float point, floating point.
+238480	254200	So now we do the if condition on the mid.
+254200	267800	If that mid value is still no less than the threshold, which means that that condition
+267800	286680	is good, we're going to update the high pointer to mid minus 1.
+286680	297080	Otherwise we're going to update the low pointer to mid plus 1.
+297080	327040	This will give us this will give us.
+327040	352560	Basically, I will just return mid because according to binary search, this mid from that array
+352560	359680	will be the very first quality score that is equal to or greater than a bar, but from this
+359680	367320	problem, I realize that there's a case that there's no right answer and then return negative
+367320	368320	one.
+368320	370560	How would that be possible?
+370560	382560	That means, let's just say all the scores are just very low, what will happen then?
+382560	390200	So we have a low value, we have a high value, and we do the mid, and the mid, the if condition
+390200	403120	does not hold, so we're going to bump up the low value, I see.
+403120	414520	So I think in this problem, when there's just no accessible answer, when the while loop
+414520	443240	ends, that means low is actually with the same value of
+443240	447240	the array.
+447240	463920	So I'm going to do if that low is less than the bar, less of the bar, less of the quality.
+463920	469760	However, if it equals to the length of the quality, that means there's no right answer,
+469760	474240	which is return minus one.
+474240	475240	No?
+475240	484640	I wonder if you could give me an example to do the dry run, I will use yours, which is
+484640	499320	going to be the quality array, I'll just paste it here, that's the input of my function,
+499320	507960	and you also have the threshold, which is 75, and if it goes well, it should give me
+507960	524120	3, okay, I got a syntax error, let's see what's going on, oh, I got some note that I have
+524120	528040	to comment out.
+528040	542160	Now it gives me 2 instead of 3, we're off by 1, but why is that?
+542160	572120	We're saying, are we going to return, mean plus 1 instead of mid?
+572120	582560	I think mid is the last value that does not meet the bar, so we're going to bump it up
+582560	588400	by 1, in that case we'll have 3.
+588400	596160	Okay, to some of it's a classic binary search problem, essentially this problem is to
+596160	606280	find the breaker, or the moment where the condition flips, so we have 2 pointers, 1 for
+606280	615960	the low, 1 for the high, and we're going to constantly find the meet point, and depending
+615960	628920	on the if condition, we're going to update either the high pointer or the low point.
