@@ -10,3 +10,14 @@ private_files_encrypted.tar.gz.enc
 
 # Workspace
 myworkspace/
+
+# Mock interview recordings & whisper output
+mock-*.m4a
+mock-*.json
+mock-*.srt
+mock-*.tsv
+mock-*.txt
+mock-*.vtt
+
+# Interview prep (local only)
+interview-prep-*.html
