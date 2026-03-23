@@ -98,5 +98,10 @@
     "file": "modern_llm_architecture.html",
     "title": "Modern LLM Architecture: Beyond 'It's Just a Transformer'",
     "tags": ["Efficiency / Co-Design"]
+  },
+  {
+    "file": "mini_transformer.html",
+    "title": "Mini Transformer Block + Training Loop",
+    "tags": ["AI Coding / PyTorch"]
   }
 ]
