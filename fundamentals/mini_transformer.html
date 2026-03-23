@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mini Transformer Block — ML/AI Fundamentals</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:28px 0 10px;font-size:20px}
+  h3{margin:20px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  .k{color:#c792ea} .fn{color:#82aaff} .s{color:#c3e88d} .c{color:#6b708c} .n{color:#f78c6c} .v{color:#ffcb6b}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .diagram{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:20px;margin:14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:14px;line-height:1.6;overflow-x:auto;white-space:pre}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Mini Transformer Block + Training Loop</h1>
+  <span class="badge">PyTorch</span>
+  <span class="badge">Transformer</span>
+  <span class="badge">Interview Prep</span>
+</header>
+
+<!-- ====== STRUCTURE ====== -->
+<section class="panel">
+  <h2>The Block</h2>
+  <p>One transformer block = <b>Self-Attention</b> + <b>FFN</b>, each wrapped in <b>pre-norm</b> + <b>residual</b>.</p>
+  <div class="diagram">
+x ─────────────────────────────┐
+│                              │ residual 1
+├─▶ LayerNorm ─▶ MHA ─────────┘
+│         (Q=K=V=x)
+x ─────────────────────────────┐
+│                              │ residual 2
+├─▶ LayerNorm ─▶ FFN ─────────┘
+│    (Linear → SiLU → Linear)
+x ─▶ out
+
+Shape through entire block: <span class="v">(B, T, D)</span> → <span class="v">(B, T, D)</span>  (never changes)</div>
+</section>
+
+<!-- ====== BURN-IN RULES ====== -->
+<section class="panel">
+  <h2>Burn-In Rules</h2>
+  <ul>
+    <li><code>super().__init__()</code> — always first line in <code>__init__</code></li>
+    <li><code>import torch.nn.functional as F</code> — <b>functional</b>, no 's', lowercase</li>
+    <li><code>self.mha(h, h, h)</code> — MHA needs Q, K, V explicitly. Returns <code>(output, weights)</code>, discard weights with <code>_</code></li>
+    <li><b>Two residuals</b>, each from its own sublayer. Second residual is from post-MHA, NOT from original x</li>
+    <li><b>Two norms</b>, one per sublayer. Don't reuse.</li>
+    <li>FFN: <code>d_model → d_ff (4x) → d_model</code>. Use <code>nn.Sequential</code></li>
+    <li><code>batch_first=True</code> on <code>nn.MultiheadAttention</code> for <code>(B, T, D)</code> input</li>
+  </ul>
+</section>
+
+<!-- ====== CODE ====== -->
+<section class="panel">
+  <h2>Complete Code</h2>
+<pre><span class="k">import</span> torch
+<span class="k">import</span> torch.nn <span class="k">as</span> nn
+<span class="k">import</span> torch.nn.functional <span class="k">as</span> F  <span class="c"># functional, no 's'</span>
+
+
+<span class="k">class</span> <span class="fn">MiniTransformerBlock</span>(nn.Module):
+    <span class="k">def</span> <span class="fn">__init__</span>(self, d_model, d_ff, n_head):
+        super().__init__()  <span class="c"># always first line</span>
+        self.mha = nn.MultiheadAttention(d_model, n_head, batch_first=<span class="k">True</span>)
+        self.mlp = nn.Sequential(
+            nn.Linear(d_model, d_ff),
+            nn.SiLU(),
+            nn.Linear(d_ff, d_model),
+        )
+        self.norm_1 = nn.LayerNorm(d_model)  <span class="c"># one norm per sublayer</span>
+        self.norm_2 = nn.LayerNorm(d_model)
+
+    <span class="k">def</span> <span class="fn">forward</span>(self, x):
+        <span class="c"># x: (B, T, D)</span>
+        h = self.norm_1(x)
+        h, _ = self.mha(h, h, h)  <span class="c"># self-attn: Q=K=V, discard weights</span>
+        x = x + h                  <span class="c"># residual 1</span>
+
+        h = self.norm_2(x)
+        h = self.mlp(h)
+        x = x + h                  <span class="c"># residual 2</span>
+        <span class="k">return</span> x</pre>
+</section>
+
+<!-- ====== GATED FFN VARIANT ====== -->
+<section class="panel">
+  <h2>Gated FFN Variant (LLaMA / SwiGLU)</h2>
+  <p>LLaMA uses 3 linear layers instead of 2. <code>gate</code> and <code>up</code> are parallel, then multiplied. Can't use <code>nn.Sequential</code> — needs a custom module.</p>
+<pre><span class="k">class</span> <span class="fn">GatedFFN</span>(nn.Module):
+    <span class="k">def</span> <span class="fn">__init__</span>(self, d_model, d_ff):
+        super().__init__()
+        self.gate = nn.Linear(d_model, d_ff)
+        self.up   = nn.Linear(d_model, d_ff)
+        self.down = nn.Linear(d_ff, d_model)
+
+    <span class="k">def</span> <span class="fn">forward</span>(self, x):
+        <span class="k">return</span> self.down(F.silu(self.gate(x)) * self.up(x))</pre>
+
+  <div class="callout">Use via composition, not inheritance: <code>self.mlp = GatedFFN(d_model, d_ff)</code></div>
+</section>
+
+<!-- ====== TRAINING LOOP ====== -->
+<section class="panel">
+  <h2>Training Loop on Random Data</h2>
+  <div class="callout">You need 3 things before the loop: <b>data</b>, <b>model</b>, <b>optimizer</b>. Loss is computed inside.</div>
+<pre><span class="c"># --- Setup ---</span>
+random_data = torch.randn(<span class="n">32</span>, <span class="n">128</span>, <span class="n">4096</span>)  <span class="c"># (B, T, D)</span>
+model = MiniTransformerBlock(<span class="n">4096</span>, <span class="n">16384</span>, <span class="n">16</span>)
+optimizer = torch.optim.Adam(model.parameters(), lr=<span class="n">1e-3</span>)
+
+<span class="c"># --- Loop ---</span>
+<span class="k">for</span> i <span class="k">in</span> range(<span class="n">20</span>):
+    optimizer.zero_grad()                          <span class="c"># clear grads</span>
+    idx = torch.randint(<span class="n">0</span>, <span class="n">32</span>, (<span class="n">4</span>,))               <span class="c"># sample mini-batch</span>
+    trn_x = random_data[idx]
+
+    trn_y = trn_x[:, <span class="n">1</span>:, :]                        <span class="c"># target: next token</span>
+    pred = model(trn_x[:, :-<span class="n">1</span>, :])                  <span class="c"># input: drop last</span>
+
+    loss = F.mse_loss(pred, trn_y)
+    loss.backward()                                 <span class="c"># compute grads</span>
+    optimizer.step()                                <span class="c"># update weights</span>
+
+    <span class="k">if</span> i % <span class="n">5</span> == <span class="n">0</span>:
+        print(f<span class="s">"step {i:3d} | loss {loss.item():.4f}"</span>)</pre>
+</section>
+
+<!-- ====== TRAINING LOOP RULES ====== -->
+<section class="panel">
+  <h2>Training Loop Rules</h2>
+  <table>
+    <tr><th>Step</th><th>Code</th><th>Why</th></tr>
+    <tr><td>1. Clear grads</td><td><code>optimizer.zero_grad()</code></td><td>PyTorch accumulates grads by default</td></tr>
+    <tr><td>2. Forward</td><td><code>pred = model(x)</code></td><td></td></tr>
+    <tr><td>3. Loss</td><td><code>loss = F.mse_loss(pred, y)</code></td><td>MSE for regression, no <code>dim</code> arg</td></tr>
+    <tr><td>4. Backward</td><td><code>loss.backward()</code></td><td>Computes gradients on all params</td></tr>
+    <tr><td>5. Step</td><td><code>optimizer.step()</code></td><td>Updates weights using grads</td></tr>
+  </table>
+  <div class="callout warn">Order: <b>zero_grad → forward → loss → backward → step</b>. Getting this wrong is an instant red flag.</div>
+</section>
+
+<!-- ====== GOTCHAS ====== -->
+<section class="panel">
+  <h2>Common Gotchas</h2>
+  <table>
+    <tr><th>Mistake</th><th>Fix</th></tr>
+    <tr><td>Missing <code>super().__init__()</code></td><td>Always first line. No exceptions.</td></tr>
+    <tr><td><code>self.mha(x)</code> — one arg</td><td><code>self.mha(x, x, x)</code> — Q, K, V. Unpack: <code>h, _ = ...</code></td></tr>
+    <tr><td>Reusing one LayerNorm</td><td>Two separate norms, one per sublayer</td></tr>
+    <tr><td>Second residual from original x</td><td>From post-MHA residual, not original</td></tr>
+    <tr><td>MLP = one Linear</td><td><code>d_model → 4*d_model → d_model</code>, two linears + activation</td></tr>
+    <tr><td><code>F.mse_loss(pred, y, dim=-1)</code></td><td>No <code>dim</code> arg. MSE reduces everything to scalar.</td></tr>
+    <tr><td><code>torch.randint(0, 32, 4)</code></td><td>Size must be tuple: <code>(4,)</code></td></tr>
+    <tr><td><code>import torch.nn.functionals</code></td><td><code>functional</code> — no 's'</td></tr>
+    <tr><td><code>np.random.rand</code></td><td><code>torch.randn</code> — stay in PyTorch</td></tr>
+    <tr><td>Shape mismatch in next-token</td><td>Input <code>[:, :-1, :]</code>, target <code>[:, 1:, :]</code></td></tr>
+  </table>
+</section>
+
+<!-- ====== QUICK REFERENCE ====== -->
+<section class="panel">
+  <h2>Quick Reference</h2>
+  <table>
+    <tr><th>Term</th><th>Value</th></tr>
+    <tr><td>d_ff</td><td>Feedforward dimension = 4 &times; d_model (standard)</td></tr>
+    <tr><td>d_k</td><td>Per-head dim = d_model / n_heads</td></tr>
+    <tr><td>Softmax needs <code>dim</code></td><td>Yes — which axis sums to 1</td></tr>
+    <tr><td>MSE needs <code>dim</code></td><td>No — reduces to scalar</td></tr>
+    <tr><td><code>nn.RMSNorm</code></td><td>Doesn't exist. Write it yourself (5 lines)</td></tr>
+    <tr><td>MHA input order</td><td>Default: <code>(T, B, D)</code>. Use <code>batch_first=True</code> for <code>(B, T, D)</code></td></tr>
+    <tr><td>Attention weights</td><td><code>(B, T, T)</code> — only for visualization, always discard</td></tr>
+  </table>
+</section>
+
+<div class="footer">Mini Transformer Block &middot; PyTorch Interview Prep &middot; March 2026</div>
+
+</div>
+</body>
+</html>

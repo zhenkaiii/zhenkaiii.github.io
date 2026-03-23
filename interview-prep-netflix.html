@@ -591,6 +591,203 @@ quantize the base weights, then run LoRA for
 <p><span class="r">While coding:</span> "First I build the graph and indegree from the edges. Now I seed the queue — these nodes have no dependencies, they're ready immediately. Now the BFS loop: pop from the left, add to order, for each neighbor decrement their indegree — if it hits zero, they're free to go. Finally, cycle check: if order length doesn't match node count, there's a cycle."</p>
 </div>
 
+<!-- ============================================ -->
+<h2>9. Coding — K-Way Merge + Sweep Line</h2>
+<!-- ============================================ -->
+
+<p>Two patterns combined. <span class="r">Heap merges K sorted lists. Sweep line counts peak overlap.</span></p>
+
+<!-- K-Way Merge -->
+<h3>K-Way Merge — min-heap of size K</h3>
+
+<p>Think of it as: <span class="r">K sorted piles of cards face up. Always pick the smallest visible card, then flip the next from that pile.</span> The heap makes "find the smallest" O(log K).</p>
+
+<pre style="background:#1a1a1a; color:#e0e0e0; padding:20px; border-radius:6px; font-size:15px; line-height:1.6; overflow-x:auto;"><span style="color:#cc7832;">import</span> heapq
+
+<span style="color:#cc7832;">def</span> <span style="color:#ffc66d;">merge_k_sorted</span>(tracks):
+    heap = []
+    <span style="color:#f07070;"># 1. SEED — push first segment from each track</span>
+    <span style="color:#888;"># heap entry: (start, end, track_index, segment_index)</span>
+    <span style="color:#cc7832;">for</span> i, track <span style="color:#cc7832;">in</span> enumerate(tracks):
+        <span style="color:#cc7832;">if</span> track:
+            heapq.heappush(heap, (track[<span style="color:#6897bb;">0</span>][<span style="color:#6897bb;">0</span>], track[<span style="color:#6897bb;">0</span>][<span style="color:#6897bb;">1</span>], i, <span style="color:#6897bb;">0</span>))
+
+    merged = []
+    <span style="color:#f07070;"># 2. POP smallest, PUSH next from same track</span>
+    <span style="color:#cc7832;">while</span> heap:
+        start, end, track_i, seg_i = heapq.heappop(heap)
+        merged.append((start, end))
+
+        <span style="color:#cc7832;">if</span> seg_i + <span style="color:#6897bb;">1</span> < len(tracks[track_i]):
+            nxt = tracks[track_i][seg_i + <span style="color:#6897bb;">1</span>]
+            heapq.heappush(heap, (nxt[<span style="color:#6897bb;">0</span>], nxt[<span style="color:#6897bb;">1</span>], track_i, seg_i + <span style="color:#6897bb;">1</span>))
+
+    <span style="color:#cc7832;">return</span> merged  <span style="color:#888;"># O(N log K)</span></pre>
+
+<!-- Sweep Line -->
+<h3>Sweep Line — explode into events, sort, sweep</h3>
+
+<p><span class="r">Every interval = two events: +1 at start, -1 at end.</span> Sort, walk, track running count.</p>
+
+<pre style="background:#1a1a1a; color:#e0e0e0; padding:20px; border-radius:6px; font-size:15px; line-height:1.6; overflow-x:auto;"><span style="color:#cc7832;">def</span> <span style="color:#ffc66d;">peak_overlap</span>(segments):
+    events = []
+    <span style="color:#cc7832;">for</span> start, end <span style="color:#cc7832;">in</span> segments:
+        events.append((start, <span style="color:#6897bb;">+1</span>))   <span style="color:#f07070;"># +1 = someone starts</span>
+        events.append((end,   <span style="color:#6897bb;">-1</span>))   <span style="color:#f07070;"># -1 = someone stops</span>
+
+    events.sort()                    <span style="color:#f07070;"># .sort() not .sorted()!</span>
+    <span style="color:#888;"># tie-break: (-1) before (+1) at same time — tuple sort handles this</span>
+
+    count = <span style="color:#6897bb;">0</span>
+    peak = <span style="color:#6897bb;">0</span>
+    <span style="color:#cc7832;">for</span> time, delta <span style="color:#cc7832;">in</span> events:
+        count += delta
+        peak = max(peak, count)
+
+    <span style="color:#cc7832;">return</span> peak  <span style="color:#888;"># O(N log N)</span></pre>
+
+<div class="tip"><code>.sort()</code> is the list method (in-place). <code>.sorted()</code> doesn't exist on lists — that was your bug. <code>sorted(list)</code> is the built-in that returns a new list.</div>
+
+<h3>Combined: full solution</h3>
+
+<pre style="background:#1a1a1a; color:#e0e0e0; padding:20px; border-radius:6px; font-size:15px; line-height:1.6; overflow-x:auto;"><span style="color:#cc7832;">def</span> <span style="color:#ffc66d;">solution</span>(tracks):
+    merged = merge_k_sorted(tracks)   <span style="color:#888;"># O(N log K)</span>
+    <span style="color:#cc7832;">return</span> peak_overlap(merged)         <span style="color:#888;"># O(N log N) — dominates</span></pre>
+
+<h3>Complexity</h3>
+<table>
+<tr><th>Part</th><th>Time</th><th>Space</th></tr>
+<tr><td>K-way merge</td><td>O(N log K)</td><td>O(K) heap</td></tr>
+<tr><td>Sweep line</td><td>O(N log N) sort</td><td>O(N) events</td></tr>
+<tr><td><span class="r">Overall</span></td><td><span class="r">O(N log N)</span></td><td>O(N)</td></tr>
+</table>
+
+<h3>How to narrate</h3>
+<div class="script">
+<p><span class="r">Before coding:</span> "This is two subproblems. First, merge K sorted lists using a min-heap — seed it with the first segment from each track, pop the smallest, push the next from that track. O(N log K). Second, sweep line for peak overlap — explode each segment into a +1 event at start and -1 at end, sort all events, sweep through tracking the running count. O(N log N) dominates overall."</p>
+<p><span class="r">If asked about tie-breaking:</span> "When a start and end happen at the same timestamp, -1 sorts before +1 in Python's tuple sort. So endings process before openings — the overlap count doesn't over-count at boundaries."</p>
+</div>
+
+<!-- ============================================ -->
+<h2>10. Gap Fill — From Interview Round 1</h2>
+<!-- ============================================ -->
+
+<p>Three topics you stumbled on. <span class="r">Nail these before round 2.</span></p>
+
+<!-- CFG -->
+<h3>Classifier-Free Guidance (CFG)</h3>
+
+<div class="qa">
+<div class="q">What is classifier-free guidance and why does it matter for generative models?</div>
+<div class="a">
+CFG is a <span class="r">training + inference trick</span> for conditional generation.
+During training, you <span class="r">randomly drop the conditioning signal</span> (e.g., text prompt)
+some percentage of the time — say 10–20%. This trains <span class="r">two models in one</span>:
+a conditional model and an unconditional model, sharing the same weights.<br><br>
+
+At inference, you run <span class="r">both forward passes</span> — one with the prompt, one without.
+Then you <span class="r">extrapolate away from the unconditional</span>:<br><br>
+
+<code style="background:#f0f0f0; padding:4px 8px; border-radius:4px;">output = unconditional + w * (conditional - unconditional)</code><br><br>
+
+where <span class="r">w > 1</span> amplifies the effect of the conditioning.
+Higher w → <span class="r">more faithful to the prompt but less diverse</span>.
+It's the standard knob in <span class="r">Stable Diffusion, DALL-E, audio diffusion</span>.
+For Netflix game audio (voice synthesis, SFX generation), CFG controls
+<span class="r">how closely the output follows the text/style prompt</span>.
+</div>
+</div>
+
+<div class="tip">Key insight: CFG replaces a separate classifier with dropout-based implicit conditioning. One model, two modes. The "guidance scale" w is the quality-diversity tradeoff knob.</div>
+
+<!-- VAE -->
+<h3>VAE Reparameterization Trick</h3>
+
+<div class="qa">
+<div class="q">How does the reparameterization trick work in a VAE?</div>
+<div class="a">
+A VAE encoder outputs <span class="r">μ and σ</span> (mean and std) of a latent distribution.
+To sample from it, you'd do <code>z = μ + σ * ε</code> where <code>ε ~ N(0,1)</code>.<br><br>
+
+The problem: <span class="r">sampling is not differentiable</span> — you can't backprop through a random draw.
+The trick: <span class="r">move the randomness outside the computation graph</span>.
+Instead of sampling z directly, you sample <code>ε</code> from a fixed N(0,1),
+then compute <code>z = μ + σ * ε</code>. Now <span class="r">z is a deterministic function of μ, σ, and ε</span>,
+and gradients flow through μ and σ normally.<br><br>
+
+<span class="r">The loss has two parts:</span><br>
+1. <span class="r">Reconstruction loss</span> — how well can the decoder reconstruct from z<br>
+2. <span class="r">KL divergence</span> — keeps the latent distribution close to N(0,1)<br><br>
+
+For Netflix: VAEs are the backbone of <span class="r">latent diffusion models</span>
+(Stable Diffusion uses a VAE to compress images to latent space).
+Any audio/image generation pipeline likely has a VAE encoder-decoder stage.
+</div>
+</div>
+
+<div class="tip">The reparameterization trick = separate the deterministic path (μ, σ) from the stochastic part (ε). Gradients flow through the deterministic path. ε is just noise — no gradients needed.</div>
+
+<!-- K-means -->
+<h3>K-Means — Complexity & Implementation</h3>
+
+<div class="qa">
+<div class="q">What's the time complexity of K-means? Walk through the algorithm.</div>
+<div class="a">
+<span class="r">O(T * N * K * D)</span> per run, where:<br>
+- T = number of iterations (typically 10–100)<br>
+- N = number of data points<br>
+- K = number of clusters<br>
+- D = dimensionality of each point<br><br>
+
+Each iteration does two steps:<br>
+1. <span class="r">Assignment:</span> for each of N points, compute distance to all K centroids → O(N * K * D)<br>
+2. <span class="r">Update:</span> recompute each centroid as mean of its assigned points → O(N * D)<br><br>
+
+Assignment dominates. Total per iteration: <span class="r">O(N * K * D)</span>. Over T iterations: <span class="r">O(T * N * K * D)</span>.
+</div>
+</div>
+
+<pre style="background:#1a1a1a; color:#e0e0e0; padding:20px; border-radius:6px; font-size:15px; line-height:1.6; overflow-x:auto;"><span style="color:#cc7832;">import</span> numpy <span style="color:#cc7832;">as</span> np
+
+<span style="color:#cc7832;">def</span> <span style="color:#ffc66d;">kmeans</span>(X, K, max_iter=<span style="color:#6897bb;">100</span>):
+    <span style="color:#888;"># X: (N, D) data points</span>
+    N, D = X.shape
+
+    <span style="color:#f07070;"># 1. INIT — pick K random points as centroids</span>
+    idx = np.random.choice(N, K, replace=<span style="color:#cc7832;">False</span>)
+    centroids = X[idx]  <span style="color:#888;"># (K, D)</span>
+
+    <span style="color:#cc7832;">for</span> _ <span style="color:#cc7832;">in</span> range(max_iter):
+        <span style="color:#f07070;"># 2. ASSIGN — each point to nearest centroid</span>
+        <span style="color:#888;"># dists: (N, K) — broadcast: (N,1,D) - (1,K,D) → sum over D</span>
+        dists = np.linalg.norm(X[:, <span style="color:#cc7832;">None</span>] - centroids[<span style="color:#cc7832;">None</span>, :], axis=<span style="color:#6897bb;">2</span>)
+        labels = np.argmin(dists, axis=<span style="color:#6897bb;">1</span>)  <span style="color:#888;"># (N,)</span>
+
+        <span style="color:#f07070;"># 3. UPDATE — recompute centroids</span>
+        new_centroids = np.array([
+            X[labels == k].mean(axis=<span style="color:#6897bb;">0</span>) <span style="color:#cc7832;">if</span> np.any(labels == k)
+            <span style="color:#cc7832;">else</span> centroids[k]            <span style="color:#888;"># keep old if empty cluster</span>
+            <span style="color:#cc7832;">for</span> k <span style="color:#cc7832;">in</span> range(K)
+        ])
+
+        <span style="color:#f07070;"># 4. CONVERGE? — centroids stopped moving</span>
+        <span style="color:#cc7832;">if</span> np.allclose(centroids, new_centroids):
+            <span style="color:#cc7832;">break</span>
+        centroids = new_centroids
+
+    <span style="color:#cc7832;">return</span> labels, centroids</pre>
+
+<h3>K-Means gotchas to mention</h3>
+<table>
+<tr><th>Issue</th><th>What to say</th></tr>
+<tr><td>Initialization sensitivity</td><td><span class="r">K-means++</span> picks initial centroids spread out to avoid bad local minima</td></tr>
+<tr><td>Empty clusters</td><td>Handle by keeping old centroid or reinitializing from the largest cluster</td></tr>
+<tr><td>Convergence</td><td>Guaranteed to converge (loss monotonically decreases) but <span class="r">to a local minimum, not global</span></td></tr>
+<tr><td>Choosing K</td><td><span class="r">Elbow method</span> (plot inertia vs K) or <span class="r">silhouette score</span></td></tr>
+</table>
+
+<div class="tip">Connection to your work: S8BQAT uses Lloyd-Max centroids — which IS K-means on weights, per kernel. So K-means isn't just a textbook algorithm for you — it's the foundation of your quantization method.</div>
+
 <hr class="divider">
 
 <p style="color:#999; font-size:13px; text-align:center; margin-top:32px;">

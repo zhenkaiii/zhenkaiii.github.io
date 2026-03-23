@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PyTorch Coding Prep — Nuance Labs ML Coding Round</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    max-width: 860px;
+    margin: 40px auto;
+    padding: 0 24px;
+    color: #222;
+    line-height: 1.7;
+    font-size: 16px;
+  }
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.5px; }
+  .subtitle { color: #888; font-size: 15px; margin-bottom: 40px; }
+  h2 {
+    font-size: 20px; font-weight: 700;
+    margin-top: 48px; margin-bottom: 16px;
+    padding-bottom: 8px; border-bottom: 2px solid #eee;
+  }
+  h3 { font-size: 17px; font-weight: 600; margin-top: 28px; margin-bottom: 8px; color: #444; }
+  .r { color: #cc0000; font-weight: 600; }
+  p { margin-bottom: 14px; }
+  pre {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    padding: 18px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: auto;
+    font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+    margin: 14px 0;
+  }
+  pre .kw { color: #c678dd; }
+  pre .fn { color: #61afef; }
+  pre .cm { color: #5c6370; font-style: italic; }
+  pre .st { color: #98c379; }
+  pre .num { color: #d19a66; }
+  pre .op { color: #56b6c2; }
+  .section-tag {
+    display: inline-block; background: #eee; color: #666;
+    font-size: 12px; font-weight: 600; padding: 2px 8px;
+    border-radius: 3px; margin-left: 6px;
+  }
+  .tip {
+    background: #fff8f0; border: 1px solid #f0e0c8;
+    padding: 14px 18px; border-radius: 6px;
+    font-size: 15px; margin: 16px 0;
+  }
+  .tip::before { content: "Tip: "; font-weight: 700; color: #b8860b; }
+  .warn {
+    background: #fff0f0; border: 1px solid #e8c8c8;
+    padding: 14px 18px; border-radius: 6px;
+    font-size: 15px; margin: 16px 0;
+  }
+  .warn::before { content: "Watch out: "; font-weight: 700; color: #cc0000; }
+  .pattern {
+    background: #f0fff0; border: 1px solid #c8e8c8;
+    padding: 14px 18px; border-radius: 6px;
+    font-size: 15px; margin: 16px 0;
+  }
+  .pattern::before { content: "Pattern: "; font-weight: 700; color: #2d8a2d; }
+  table {
+    width: 100%; border-collapse: collapse;
+    margin: 16px 0; font-size: 15px;
+  }
+  th {
+    background: #f5f5f5; font-weight: 600; text-align: left;
+    padding: 10px 14px; border-bottom: 2px solid #ddd;
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid #eee; }
+  .checklist { list-style: none; padding: 0; }
+  .checklist li { padding: 6px 0; font-size: 15px; }
+  .checklist li::before { content: "\2610 "; font-size: 18px; margin-right: 6px; }
+  @media print {
+    body { margin: 20px; font-size: 13px; }
+    pre { font-size: 12px; break-inside: avoid; }
+    h2 { break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>PyTorch Coding Prep</h1>
+<p class="subtitle">Nuance Labs &middot; ML Coding Round &middot; PyTorch literacy + generative AI foundations</p>
+
+<!-- ============================================ -->
+<h2>Warmup Checklist <span class="section-tag">Night before</span></h2>
+<!-- ============================================ -->
+
+<ul class="checklist">
+  <li>Write a 3-layer nn.Module with forward() from memory</li>
+  <li>Write multi-head attention from scratch (no nn.MultiheadAttention)</li>
+  <li>Write a training loop: forward, loss, backward, step, zero_grad</li>
+  <li>Reshape a tensor: view, permute, reshape, einsum</li>
+  <li>Write K-means in PyTorch (assignment + update, no sklearn)</li>
+  <li>Write a simple diffusion training step (add noise, predict noise, MSE loss)</li>
+</ul>
+
+<!-- ============================================ -->
+<h2>1. nn.Module — The Foundation <span class="section-tag">Must be instant</span></h2>
+<!-- ============================================ -->
+
+<h3>Basic pattern</h3>
+
+<pre>
+<span class="kw">import</span> torch
+<span class="kw">import</span> torch.nn <span class="kw">as</span> nn
+<span class="kw">import</span> torch.nn.functional <span class="kw">as</span> F
+
+<span class="kw">class</span> <span class="fn">MLP</span>(nn.Module):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, d_in, d_hidden, d_out, dropout=<span class="num">0.1</span>):
+        <span class="fn">super</span>().__init__()
+        self.fc1 = nn.Linear(d_in, d_hidden)
+        self.fc2 = nn.Linear(d_hidden, d_out)
+        self.dropout = nn.Dropout(dropout)
+        self.norm = nn.LayerNorm(d_hidden)
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x):
+        <span class="cm"># x: (B, T, d_in)</span>
+        x = self.fc1(x)           <span class="cm"># (B, T, d_hidden)</span>
+        x = F.gelu(x)
+        x = self.norm(x)
+        x = self.dropout(x)
+        x = self.fc2(x)           <span class="cm"># (B, T, d_out)</span>
+        <span class="kw">return</span> x
+</pre>
+
+<div class="pattern">Always: <code>super().__init__()</code>, define layers in <code>__init__</code>, compute in <code>forward</code>. Shapes in comments. Never call <code>.backward()</code> inside a Module.</div>
+
+<!-- ============================================ -->
+<h2>2. Multi-Head Self-Attention <span class="section-tag">High probability</span></h2>
+<!-- ============================================ -->
+
+<pre>
+<span class="kw">class</span> <span class="fn">MultiHeadSelfAttention</span>(nn.Module):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, d_model, n_heads, dropout=<span class="num">0.1</span>):
+        <span class="fn">super</span>().__init__()
+        <span class="kw">assert</span> d_model % n_heads == <span class="num">0</span>
+        self.d_model = d_model
+        self.n_heads = n_heads
+        self.d_k = d_model // n_heads
+
+        <span class="cm"># Single projection for Q, K, V (more efficient)</span>
+        self.qkv = nn.Linear(d_model, <span class="num">3</span> * d_model)
+        self.out = nn.Linear(d_model, d_model)
+        self.dropout = nn.Dropout(dropout)
+        self.scale = self.d_k ** <span class="num">-0.5</span>
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x, mask=<span class="kw">None</span>):
+        <span class="cm"># x: (B, T, D)</span>
+        B, T, D = x.shape
+
+        <span class="cm"># Project and split into heads</span>
+        qkv = self.qkv(x)                           <span class="cm"># (B, T, 3D)</span>
+        qkv = qkv.reshape(B, T, <span class="num">3</span>, self.n_heads, self.d_k)
+        qkv = qkv.permute(<span class="num">2</span>, <span class="num">0</span>, <span class="num">3</span>, <span class="num">1</span>, <span class="num">4</span>)          <span class="cm"># (3, B, H, T, d_k)</span>
+        q, k, v = qkv[<span class="num">0</span>], qkv[<span class="num">1</span>], qkv[<span class="num">2</span>]             <span class="cm"># each (B, H, T, d_k)</span>
+
+        <span class="cm"># Attention scores</span>
+        attn = (q @ k.transpose(<span class="num">-2</span>, <span class="num">-1</span>)) * self.scale  <span class="cm"># (B, H, T, T)</span>
+
+        <span class="kw">if</span> mask <span class="kw">is not None</span>:
+            attn = attn.masked_fill(mask == <span class="num">0</span>, <span class="kw">float</span>(<span class="st">'-inf'</span>))
+
+        attn = F.softmax(attn, dim=<span class="num">-1</span>)
+        attn = self.dropout(attn)
+
+        <span class="cm"># Weighted sum</span>
+        out = attn @ v                                <span class="cm"># (B, H, T, d_k)</span>
+        out = out.transpose(<span class="num">1</span>, <span class="num">2</span>).reshape(B, T, D)    <span class="cm"># (B, T, D)</span>
+        out = self.out(out)
+        <span class="kw">return</span> out
+</pre>
+
+<div class="warn"><strong>Common mistakes:</strong> (1) Forgetting <code>* self.scale</code> &mdash; scores explode, softmax saturates. (2) Wrong permute order &mdash; always trace shapes in comments. (3) Forgetting to reshape back after attention.</div>
+
+<!-- ============================================ -->
+<h2>3. Cross-Attention <span class="section-tag">Nuance-specific</span></h2>
+<!-- ============================================ -->
+
+<p><span class="r">Audio conditioning the video generator uses cross-attention.</span> Q comes from video features, K and V come from audio features.</p>
+
+<pre>
+<span class="kw">class</span> <span class="fn">CrossAttention</span>(nn.Module):
+    <span class="cm">"""Q from target modality, K/V from conditioning modality."""</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, d_model, d_cond, n_heads, dropout=<span class="num">0.1</span>):
+        <span class="fn">super</span>().__init__()
+        <span class="kw">assert</span> d_model % n_heads == <span class="num">0</span>
+        self.n_heads = n_heads
+        self.d_k = d_model // n_heads
+
+        self.q_proj = nn.Linear(d_model, d_model)
+        self.k_proj = nn.Linear(d_cond, d_model)    <span class="cm"># K from conditioning</span>
+        self.v_proj = nn.Linear(d_cond, d_model)    <span class="cm"># V from conditioning</span>
+        self.out = nn.Linear(d_model, d_model)
+        self.scale = self.d_k ** <span class="num">-0.5</span>
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x, cond):
+        <span class="cm"># x: (B, T_video, D)  &mdash; video features (query)</span>
+        <span class="cm"># cond: (B, T_audio, D_cond)  &mdash; audio features (key/value)</span>
+        B, T_v, D = x.shape
+        T_a = cond.shape[<span class="num">1</span>]
+
+        q = self.q_proj(x).reshape(B, T_v, self.n_heads, self.d_k).transpose(<span class="num">1</span>, <span class="num">2</span>)
+        k = self.k_proj(cond).reshape(B, T_a, self.n_heads, self.d_k).transpose(<span class="num">1</span>, <span class="num">2</span>)
+        v = self.v_proj(cond).reshape(B, T_a, self.n_heads, self.d_k).transpose(<span class="num">1</span>, <span class="num">2</span>)
+        <span class="cm"># q: (B, H, T_v, d_k), k/v: (B, H, T_a, d_k)</span>
+
+        attn = (q @ k.transpose(<span class="num">-2</span>, <span class="num">-1</span>)) * self.scale  <span class="cm"># (B, H, T_v, T_a)</span>
+        attn = F.softmax(attn, dim=<span class="num">-1</span>)
+
+        out = attn @ v                                  <span class="cm"># (B, H, T_v, d_k)</span>
+        out = out.transpose(<span class="num">1</span>, <span class="num">2</span>).reshape(B, T_v, D)
+        <span class="kw">return</span> self.out(out)
+</pre>
+
+<div class="tip"><strong>Self-attention vs cross-attention</strong> &mdash; the only difference is where K,V come from. Self: K,V from same input as Q. Cross: K,V from a different modality (audio conditioning video).</div>
+
+<!-- ============================================ -->
+<h2>4. DiT Block (Diffusion Transformer) <span class="section-tag">Nuance architecture</span></h2>
+<!-- ============================================ -->
+
+<p>Their model is a <span class="r">dual-tower DiT with 32-64 flow matching steps</span>. A DiT block = self-attention + cross-attention + FFN, conditioned on timestep via <span class="r">adaptive layer norm (adaLN)</span>.</p>
+
+<pre>
+<span class="kw">class</span> <span class="fn">AdaLayerNorm</span>(nn.Module):
+    <span class="cm">"""LayerNorm whose scale/shift are predicted from timestep embedding."""</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, d_model, d_cond):
+        <span class="fn">super</span>().__init__()
+        self.norm = nn.LayerNorm(d_model, elementwise_affine=<span class="kw">False</span>)
+        self.proj = nn.Linear(d_cond, <span class="num">2</span> * d_model)  <span class="cm"># predict scale and shift</span>
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x, t_emb):
+        <span class="cm"># x: (B, T, D), t_emb: (B, D_cond)</span>
+        scale_shift = self.proj(t_emb).unsqueeze(<span class="num">1</span>)  <span class="cm"># (B, 1, 2D)</span>
+        scale, shift = scale_shift.chunk(<span class="num">2</span>, dim=<span class="num">-1</span>)  <span class="cm"># each (B, 1, D)</span>
+        <span class="kw">return</span> self.norm(x) * (<span class="num">1</span> + scale) + shift
+
+
+<span class="kw">class</span> <span class="fn">DiTBlock</span>(nn.Module):
+    <span class="cm">"""One block of a Diffusion Transformer."""</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, d_model, n_heads, d_cond, d_audio, dropout=<span class="num">0.1</span>):
+        <span class="fn">super</span>().__init__()
+        <span class="cm"># AdaLN for timestep conditioning</span>
+        self.norm1 = AdaLayerNorm(d_model, d_cond)
+        self.norm2 = AdaLayerNorm(d_model, d_cond)
+        self.norm3 = AdaLayerNorm(d_model, d_cond)
+
+        <span class="cm"># Self-attention over spatial patches</span>
+        self.self_attn = MultiHeadSelfAttention(d_model, n_heads, dropout)
+
+        <span class="cm"># Cross-attention: video attends to audio</span>
+        self.cross_attn = CrossAttention(d_model, d_audio, n_heads, dropout)
+
+        <span class="cm"># FFN</span>
+        self.ffn = nn.Sequential(
+            nn.Linear(d_model, <span class="num">4</span> * d_model),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(<span class="num">4</span> * d_model, d_model),
+            nn.Dropout(dropout),
+        )
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x, t_emb, audio_cond):
+        <span class="cm"># x: (B, N_patches, D) &mdash; noisy video latent patches</span>
+        <span class="cm"># t_emb: (B, D_cond) &mdash; timestep embedding</span>
+        <span class="cm"># audio_cond: (B, T_audio, D_audio) &mdash; audio features</span>
+
+        x = x + self.self_attn(self.norm1(x, t_emb))
+        x = x + self.cross_attn(self.norm2(x, t_emb), audio_cond)
+        x = x + self.ffn(self.norm3(x, t_emb))
+        <span class="kw">return</span> x
+</pre>
+
+<div class="pattern"><strong>DiT key insight:</strong> x is a sequence of spatial patches (like ViT), NOT sequential frames. All patches processed in parallel per denoising step. The timestep t enters via adaLN, not concatenation.</div>
+
+<!-- ============================================ -->
+<h2>5. Training Loop <span class="section-tag">Must be instant</span></h2>
+<!-- ============================================ -->
+
+<pre>
+<span class="kw">def</span> <span class="fn">train_one_epoch</span>(model, dataloader, optimizer, device):
+    model.train()
+    total_loss = <span class="num">0.0</span>
+
+    <span class="kw">for</span> batch <span class="kw">in</span> dataloader:
+        x, y = batch
+        x, y = x.to(device), y.to(device)
+
+        <span class="cm"># Forward</span>
+        logits = model(x)
+        loss = F.cross_entropy(logits, y)
+
+        <span class="cm"># Backward</span>
+        optimizer.zero_grad()       <span class="cm"># MUST come before backward</span>
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=<span class="num">1.0</span>)
+        optimizer.step()
+
+        total_loss += loss.item()
+
+    <span class="kw">return</span> total_loss / len(dataloader)
+</pre>
+
+<div class="warn"><strong>Order matters:</strong> <code>zero_grad()</code> &rarr; <code>backward()</code> &rarr; <code>clip_grad</code> &rarr; <code>step()</code>. Getting this wrong is an instant red flag.</div>
+
+<h3>With mixed precision (AMP)</h3>
+
+<pre>
+<span class="kw">from</span> torch.amp <span class="kw">import</span> autocast, GradScaler
+
+scaler = GradScaler()
+
+<span class="kw">for</span> batch <span class="kw">in</span> dataloader:
+    x, y = batch[<span class="num">0</span>].to(device), batch[<span class="num">1</span>].to(device)
+    optimizer.zero_grad()
+
+    <span class="kw">with</span> autocast(device_type=<span class="st">'cuda'</span>, dtype=torch.float16):
+        logits = model(x)
+        loss = F.cross_entropy(logits, y)
+
+    scaler.scale(loss).backward()
+    scaler.unscale_(optimizer)
+    torch.nn.utils.clip_grad_norm_(model.parameters(), <span class="num">1.0</span>)
+    scaler.step(optimizer)
+    scaler.update()
+</pre>
+
+<div class="tip"><strong>Why AMP matters for Nuance:</strong> Their DiT is 1-5B params. FP16 training with GradScaler halves memory, doubles throughput. Mention this if they ask about training efficiency.</div>
+
+<!-- ============================================ -->
+<h2>6. Flow Matching Training Step <span class="section-tag">Their exact paradigm</span></h2>
+<!-- ============================================ -->
+
+<p>Nuance uses <span class="r">32-64 flow matching steps</span>. Flow matching learns a velocity field v(x_t, t) that transports noise to data along a straight path.</p>
+
+<pre>
+<span class="kw">def</span> <span class="fn">flow_matching_loss</span>(model, x_0, audio_cond):
+    <span class="cm">"""One training step for flow matching (conditional flow matching / rectified flow)."""</span>
+    B = x_0.shape[<span class="num">0</span>]
+    device = x_0.device
+
+    <span class="cm"># 1. Sample random timestep t ~ U(0, 1)</span>
+    t = torch.rand(B, device=device)                    <span class="cm"># (B,)</span>
+
+    <span class="cm"># 2. Sample noise</span>
+    noise = torch.randn_like(x_0)                        <span class="cm"># (B, ...)</span>
+
+    <span class="cm"># 3. Interpolate: x_t = (1-t)*noise + t*x_0  (straight path)</span>
+    t_expand = t.view(B, *([<span class="num">1</span>] * (x_0.dim() - <span class="num">1</span>)))    <span class="cm"># broadcast</span>
+    x_t = (<span class="num">1</span> - t_expand) * noise + t_expand * x_0
+
+    <span class="cm"># 4. Target velocity: v_target = x_0 - noise  (direction of the straight path)</span>
+    v_target = x_0 - noise
+
+    <span class="cm"># 5. Predict velocity</span>
+    v_pred = model(x_t, t, audio_cond)                   <span class="cm"># model predicts velocity</span>
+
+    <span class="cm"># 6. Loss: MSE between predicted and target velocity</span>
+    loss = F.mse_loss(v_pred, v_target)
+    <span class="kw">return</span> loss
+</pre>
+
+<h3>Flow matching inference (ODE solver)</h3>
+
+<pre>
+<span class="kw">@torch.no_grad</span>()
+<span class="kw">def</span> <span class="fn">flow_matching_sample</span>(model, shape, audio_cond, n_steps=<span class="num">32</span>):
+    <span class="cm">"""Generate samples by integrating the learned velocity field."""</span>
+    device = audio_cond.device
+
+    <span class="cm"># Start from pure noise (t=0)</span>
+    x = torch.randn(shape, device=device)
+
+    <span class="cm"># Euler integration from t=0 to t=1</span>
+    dt = <span class="num">1.0</span> / n_steps
+    <span class="kw">for</span> i <span class="kw">in</span> range(n_steps):
+        t = torch.full((shape[<span class="num">0</span>],), i * dt, device=device)
+        v = model(x, t, audio_cond)
+        x = x + v * dt
+
+    <span class="kw">return</span> x  <span class="cm"># clean sample at t=1</span>
+</pre>
+
+<div class="pattern"><strong>Flow matching vs diffusion in code:</strong> Flow matching: linear interpolation, velocity target, Euler ODE. Diffusion: noise schedule, noise prediction, iterative denoising. Flow matching is simpler code, fewer steps, straighter paths.</div>
+
+<!-- ============================================ -->
+<h2>7. Diffusion Training Step <span class="section-tag">Know both paradigms</span></h2>
+<!-- ============================================ -->
+
+<pre>
+<span class="kw">def</span> <span class="fn">diffusion_loss</span>(model, x_0, audio_cond, n_timesteps=<span class="num">1000</span>):
+    <span class="cm">"""DDPM-style diffusion training step."""</span>
+    B = x_0.shape[<span class="num">0</span>]
+    device = x_0.device
+
+    <span class="cm"># 1. Sample random integer timestep</span>
+    t = torch.randint(<span class="num">0</span>, n_timesteps, (B,), device=device)
+
+    <span class="cm"># 2. Noise schedule (simplified linear)</span>
+    beta = torch.linspace(<span class="num">1e-4</span>, <span class="num">0.02</span>, n_timesteps, device=device)
+    alpha = <span class="num">1.0</span> - beta
+    alpha_bar = torch.cumprod(alpha, dim=<span class="num">0</span>)            <span class="cm"># cumulative product</span>
+    alpha_bar_t = alpha_bar[t].view(B, *([<span class="num">1</span>] * (x_0.dim() - <span class="num">1</span>)))
+
+    <span class="cm"># 3. Add noise: x_t = sqrt(alpha_bar_t) * x_0 + sqrt(1 - alpha_bar_t) * noise</span>
+    noise = torch.randn_like(x_0)
+    x_t = alpha_bar_t.sqrt() * x_0 + (<span class="num">1</span> - alpha_bar_t).sqrt() * noise
+
+    <span class="cm"># 4. Predict the noise</span>
+    noise_pred = model(x_t, t, audio_cond)
+
+    <span class="cm"># 5. Loss: MSE between predicted and actual noise</span>
+    loss = F.mse_loss(noise_pred, noise)
+    <span class="kw">return</span> loss
+</pre>
+
+<!-- ============================================ -->
+<h2>8. K-Means in PyTorch <span class="section-tag">Proven interview question</span></h2>
+<!-- ============================================ -->
+
+<div class="warn">You got time-killed on this at Netflix after 50 min drain. The algorithm is simple &mdash; <strong>drill it until it's muscle memory</strong>. No sklearn, no sorting. Just assign + update.</div>
+
+<pre>
+<span class="kw">def</span> <span class="fn">kmeans</span>(data, k, max_iters=<span class="num">100</span>, tol=<span class="num">1e-4</span>):
+    <span class="cm">"""
+    K-means clustering in pure PyTorch.
+    data: (N, D) tensor
+    k: number of clusters
+    Returns: centroids (K, D), assignments (N,)
+    """</span>
+    N, D = data.shape
+
+    <span class="cm"># 1. Initialize: random selection from data</span>
+    indices = torch.randperm(N)[:k]
+    centroids = data[indices].clone()                <span class="cm"># (K, D)</span>
+
+    <span class="kw">for</span> _ <span class="kw">in</span> range(max_iters):
+        <span class="cm"># 2. ASSIGN: each point to nearest centroid</span>
+        <span class="cm">#    dist[i,j] = ||data[i] - centroids[j]||^2</span>
+        dists = torch.cdist(data, centroids)         <span class="cm"># (N, K)</span>
+        assignments = dists.argmin(dim=<span class="num">1</span>)            <span class="cm"># (N,) &mdash; NOT sort, argmin</span>
+
+        <span class="cm"># 3. UPDATE: new centroids = mean of assigned points</span>
+        new_centroids = torch.zeros_like(centroids)
+        <span class="kw">for</span> j <span class="kw">in</span> range(k):
+            mask = (assignments == j)
+            <span class="kw">if</span> mask.sum() > <span class="num">0</span>:
+                new_centroids[j] = data[mask].mean(dim=<span class="num">0</span>)
+            <span class="kw">else</span>:
+                new_centroids[j] = data[torch.randint(N, (<span class="num">1</span>,))]  <span class="cm"># reinit empty</span>
+
+        <span class="cm"># 4. CONVERGE: check if centroids moved</span>
+        shift = (new_centroids - centroids).norm()
+        centroids = new_centroids
+        <span class="kw">if</span> shift < tol:
+            <span class="kw">break</span>
+
+    <span class="kw">return</span> centroids, assignments
+</pre>
+
+<h3>Vectorized update (no loop over k)</h3>
+
+<pre>
+<span class="cm"># Replace the for-loop update with scatter:</span>
+<span class="kw">def</span> <span class="fn">update_centroids_vectorized</span>(data, assignments, k):
+    <span class="cm"># One-hot: (N, K)</span>
+    one_hot = F.one_hot(assignments, k).float()      <span class="cm"># (N, K)</span>
+    counts = one_hot.sum(dim=<span class="num">0</span>).clamp(min=<span class="num">1</span>)          <span class="cm"># (K,) avoid /0</span>
+    centroids = (one_hot.T @ data) / counts.unsqueeze(<span class="num">1</span>)  <span class="cm"># (K, D)</span>
+    <span class="kw">return</span> centroids
+</pre>
+
+<div class="tip"><strong>Complexity:</strong> O(iters &times; N &times; K &times; D). The key operations: <code>torch.cdist</code> for distances, <code>argmin</code> for assignment (NOT sort), mean for update. If asked about initialization: K-means++ picks centroids far apart, reduces bad local optima.</div>
+
+<!-- ============================================ -->
+<h2>9. Tensor Manipulation <span class="section-tag">Must be fluent</span></h2>
+<!-- ============================================ -->
+
+<table>
+<tr><th>Operation</th><th>Code</th><th>When to use</th></tr>
+<tr><td>Reshape</td><td><code>x.view(B, T, H, d_k)</code></td><td>Split heads, merge heads</td></tr>
+<tr><td>Permute</td><td><code>x.permute(0, 2, 1, 3)</code></td><td>Rearrange dims (e.g., B,T,H,d &rarr; B,H,T,d)</td></tr>
+<tr><td>Transpose</td><td><code>x.transpose(-2, -1)</code></td><td>Swap last two dims (for matmul)</td></tr>
+<tr><td>Unsqueeze</td><td><code>t.unsqueeze(1)</code></td><td>Add dim for broadcasting</td></tr>
+<tr><td>Expand</td><td><code>x.expand(B, -1, -1)</code></td><td>Broadcast without copying</td></tr>
+<tr><td>Einsum</td><td><code>torch.einsum('bhid,bhjd->bhij', q, k)</code></td><td>Attention scores, bilinear ops</td></tr>
+<tr><td>Chunk</td><td><code>x.chunk(3, dim=-1)</code></td><td>Split Q,K,V from fused projection</td></tr>
+<tr><td>Cat</td><td><code>torch.cat([a, b], dim=-1)</code></td><td>Concat features from different modalities</td></tr>
+</table>
+
+<h3>Einsum cheat sheet</h3>
+
+<pre>
+<span class="cm"># Attention scores: Q @ K^T</span>
+attn = torch.einsum(<span class="st">'bhid,bhjd->bhij'</span>, q, k)
+
+<span class="cm"># Weighted sum: attn @ V</span>
+out = torch.einsum(<span class="st">'bhij,bhjd->bhid'</span>, attn, v)
+
+<span class="cm"># Batch matrix multiply</span>
+c = torch.einsum(<span class="st">'bij,bjk->bik'</span>, a, b)
+
+<span class="cm"># Pairwise distances (squared)</span>
+<span class="cm"># ||a_i - b_j||^2 = ||a_i||^2 + ||b_j||^2 - 2*a_i.b_j</span>
+dists = (a**<span class="num">2</span>).sum(<span class="num">-1</span>, keepdim=<span class="kw">True</span>) + (b**<span class="num">2</span>).sum(<span class="num">-1</span>).unsqueeze(<span class="num">-2</span>) - <span class="num">2</span> * a @ b.T
+</pre>
+
+<!-- ============================================ -->
+<h2>10. Quantization in PyTorch <span class="section-tag">Your specialty</span></h2>
+<!-- ============================================ -->
+
+<h3>Post-training quantization (PTQ) — basic</h3>
+
+<pre>
+<span class="kw">def</span> <span class="fn">quantize_tensor</span>(x, n_bits=<span class="num">8</span>):
+    <span class="cm">"""Symmetric uniform quantization."""</span>
+    qmin = -(<span class="num">2</span> ** (n_bits - <span class="num">1</span>))
+    qmax = <span class="num">2</span> ** (n_bits - <span class="num">1</span>) - <span class="num">1</span>
+
+    <span class="cm"># Scale: maps float range to int range</span>
+    scale = x.abs().max() / qmax
+
+    <span class="cm"># Quantize: float -> int</span>
+    x_q = (x / scale).round().clamp(qmin, qmax)
+
+    <span class="cm"># Dequantize: int -> float (for computation)</span>
+    x_deq = x_q * scale
+    <span class="kw">return</span> x_deq, scale
+
+
+<span class="kw">def</span> <span class="fn">quantize_per_channel</span>(weight, n_bits=<span class="num">8</span>):
+    <span class="cm">"""Per-channel quantization (better accuracy than per-tensor)."""</span>
+    <span class="cm"># weight: (out_features, in_features)</span>
+    qmax = <span class="num">2</span> ** (n_bits - <span class="num">1</span>) - <span class="num">1</span>
+    scale = weight.abs().amax(dim=<span class="num">1</span>, keepdim=<span class="kw">True</span>) / qmax  <span class="cm"># (out, 1)</span>
+    w_q = (weight / scale).round().clamp(-qmax - <span class="num">1</span>, qmax)
+    <span class="kw">return</span> w_q * scale, scale
+</pre>
+
+<h3>Quantization-aware training (QAT) — your core</h3>
+
+<pre>
+<span class="kw">class</span> <span class="fn">StraightThroughQuantize</span>(torch.autograd.Function):
+    <span class="cm">"""STE: forward quantizes, backward passes gradient through."""</span>
+    <span class="op">@staticmethod</span>
+    <span class="kw">def</span> <span class="fn">forward</span>(ctx, x, scale, qmin, qmax):
+        x_q = (x / scale).round().clamp(qmin, qmax)
+        <span class="kw">return</span> x_q * scale
+
+    <span class="op">@staticmethod</span>
+    <span class="kw">def</span> <span class="fn">backward</span>(ctx, grad_output):
+        <span class="cm"># Straight-through: pass gradient unchanged</span>
+        <span class="kw">return</span> grad_output, <span class="kw">None</span>, <span class="kw">None</span>, <span class="kw">None</span>
+
+
+<span class="kw">class</span> <span class="fn">QuantizedLinear</span>(nn.Module):
+    <span class="cm">"""Linear layer with fake quantization during training."""</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, in_f, out_f, n_bits=<span class="num">8</span>):
+        <span class="fn">super</span>().__init__()
+        self.linear = nn.Linear(in_f, out_f)
+        self.n_bits = n_bits
+        self.qmax = <span class="num">2</span> ** (n_bits - <span class="num">1</span>) - <span class="num">1</span>
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x):
+        <span class="cm"># Quantize weights (fake quant with STE)</span>
+        scale = self.linear.weight.abs().max() / self.qmax
+        w_q = StraightThroughQuantize.apply(
+            self.linear.weight, scale, -self.qmax - <span class="num">1</span>, self.qmax
+        )
+        <span class="kw">return</span> F.linear(x, w_q, self.linear.bias)
+</pre>
+
+<div class="pattern"><strong>STE (Straight-Through Estimator)</strong> is the key trick for QAT. round() has zero gradient everywhere. STE pretends the gradient of round() is 1. This is the foundation of all quantization-aware training, including your S8BQAT and GQ.</div>
+
+<!-- ============================================ -->
+<h2>11. VAE Reparameterization <span class="section-tag">Foundation</span></h2>
+<!-- ============================================ -->
+
+<pre>
+<span class="kw">class</span> <span class="fn">VAE</span>(nn.Module):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, d_in, d_latent):
+        <span class="fn">super</span>().__init__()
+        self.encoder = nn.Linear(d_in, <span class="num">2</span> * d_latent)  <span class="cm"># outputs mu and log_var</span>
+        self.decoder = nn.Linear(d_latent, d_in)
+
+    <span class="kw">def</span> <span class="fn">encode</span>(self, x):
+        h = self.encoder(x)
+        mu, log_var = h.chunk(<span class="num">2</span>, dim=<span class="num">-1</span>)
+        <span class="kw">return</span> mu, log_var
+
+    <span class="kw">def</span> <span class="fn">reparameterize</span>(self, mu, log_var):
+        <span class="cm"># z = mu + sigma * epsilon, epsilon ~ N(0,1)</span>
+        std = (log_var * <span class="num">0.5</span>).exp()
+        eps = torch.randn_like(std)
+        <span class="kw">return</span> mu + std * eps   <span class="cm"># gradients flow through mu and std</span>
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x):
+        mu, log_var = self.encode(x)
+        z = self.reparameterize(mu, log_var)
+        recon = self.decoder(z)
+        <span class="kw">return</span> recon, mu, log_var
+
+
+<span class="kw">def</span> <span class="fn">vae_loss</span>(recon, x, mu, log_var):
+    <span class="cm"># Reconstruction loss</span>
+    recon_loss = F.mse_loss(recon, x, reduction=<span class="st">'sum'</span>)
+    <span class="cm"># KL divergence: D_KL(q(z|x) || p(z)) where p(z) = N(0,1)</span>
+    kl_loss = -<span class="num">0.5</span> * (1 + log_var - mu.pow(<span class="num">2</span>) - log_var.exp()).sum()
+    <span class="kw">return</span> recon_loss + kl_loss
+</pre>
+
+<!-- ============================================ -->
+<h2>12. Sinusoidal Timestep Embedding <span class="section-tag">Used in DiT/diffusion</span></h2>
+<!-- ============================================ -->
+
+<pre>
+<span class="kw">def</span> <span class="fn">sinusoidal_embedding</span>(t, d_model):
+    <span class="cm">"""
+    Sinusoidal positional/timestep embedding.
+    t: (B,) integer or float timesteps
+    Returns: (B, d_model)
+    """</span>
+    half = d_model // <span class="num">2</span>
+    freqs = torch.exp(
+        -torch.arange(half, device=t.device).float() * (torch.log(torch.tensor(<span class="num">10000.0</span>)) / half)
+    )  <span class="cm"># (d_model/2,)</span>
+
+    args = t.unsqueeze(<span class="num">1</span>).float() * freqs.unsqueeze(<span class="num">0</span>)   <span class="cm"># (B, d_model/2)</span>
+    emb = torch.cat([args.sin(), args.cos()], dim=<span class="num">-1</span>)    <span class="cm"># (B, d_model)</span>
+    <span class="kw">return</span> emb
+</pre>
+
+<div class="tip">Same formula as transformer positional encoding, but applied to timestep t instead of position. This is how the model knows which denoising step it's at.</div>
+
+<!-- ============================================ -->
+<h2>13. GQA (Grouped Query Attention) <span class="section-tag">Compression topic</span></h2>
+<!-- ============================================ -->
+
+<pre>
+<span class="kw">class</span> <span class="fn">GroupedQueryAttention</span>(nn.Module):
+    <span class="cm">"""GQA: G groups of heads share K,V. Reduces KV cache by n_heads/n_kv_heads."""</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, d_model, n_heads, n_kv_heads):
+        <span class="fn">super</span>().__init__()
+        <span class="kw">assert</span> n_heads % n_kv_heads == <span class="num">0</span>
+        self.n_heads = n_heads
+        self.n_kv_heads = n_kv_heads
+        self.group_size = n_heads // n_kv_heads
+        self.d_k = d_model // n_heads
+
+        self.q_proj = nn.Linear(d_model, d_model)                      <span class="cm"># full heads for Q</span>
+        self.k_proj = nn.Linear(d_model, self.n_kv_heads * self.d_k)   <span class="cm"># fewer heads for K</span>
+        self.v_proj = nn.Linear(d_model, self.n_kv_heads * self.d_k)   <span class="cm"># fewer heads for V</span>
+        self.out = nn.Linear(d_model, d_model)
+        self.scale = self.d_k ** <span class="num">-0.5</span>
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x):
+        B, T, D = x.shape
+
+        q = self.q_proj(x).reshape(B, T, self.n_heads, self.d_k).transpose(<span class="num">1</span>, <span class="num">2</span>)
+        k = self.k_proj(x).reshape(B, T, self.n_kv_heads, self.d_k).transpose(<span class="num">1</span>, <span class="num">2</span>)
+        v = self.v_proj(x).reshape(B, T, self.n_kv_heads, self.d_k).transpose(<span class="num">1</span>, <span class="num">2</span>)
+        <span class="cm"># q: (B, n_heads, T, d_k), k/v: (B, n_kv_heads, T, d_k)</span>
+
+        <span class="cm"># Expand K,V to match Q heads via repeat</span>
+        k = k.repeat_interleave(self.group_size, dim=<span class="num">1</span>)  <span class="cm"># (B, n_heads, T, d_k)</span>
+        v = v.repeat_interleave(self.group_size, dim=<span class="num">1</span>)
+
+        attn = (q @ k.transpose(<span class="num">-2</span>, <span class="num">-1</span>)) * self.scale
+        attn = F.softmax(attn, dim=<span class="num">-1</span>)
+        out = (attn @ v).transpose(<span class="num">1</span>, <span class="num">2</span>).reshape(B, T, D)
+        <span class="kw">return</span> self.out(out)
+</pre>
+
+<div class="tip"><strong>GQA ratio:</strong> n_heads=32, n_kv_heads=8 &rarr; 4x KV cache reduction. Llama 2 70B uses this. n_kv_heads=1 is MQA (Multi-Query Attention). The <code>repeat_interleave</code> is the key line &mdash; it broadcasts KV across query head groups.</div>
+
+<!-- ============================================ -->
+<h2>14. Normalization Variants <span class="section-tag">Quick reference</span></h2>
+<!-- ============================================ -->
+
+<pre>
+<span class="cm"># LayerNorm: normalize over feature dim (standard in transformers)</span>
+ln = nn.LayerNorm(d_model)        <span class="cm"># normalizes last dim</span>
+
+<span class="cm"># RMSNorm: LayerNorm without mean centering (Llama, modern LLMs)</span>
+<span class="kw">class</span> <span class="fn">RMSNorm</span>(nn.Module):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, d, eps=<span class="num">1e-6</span>):
+        <span class="fn">super</span>().__init__()
+        self.weight = nn.Parameter(torch.ones(d))
+        self.eps = eps
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x):
+        rms = (x.pow(<span class="num">2</span>).mean(dim=<span class="num">-1</span>, keepdim=<span class="kw">True</span>) + self.eps).rsqrt()
+        <span class="kw">return</span> x * rms * self.weight
+
+<span class="cm"># BatchNorm: normalize over batch dim (CNNs, NOT transformers)</span>
+bn = nn.BatchNorm1d(d_model)      <span class="cm"># breaks for AR inference (batch=1)</span>
+</pre>
+
+<!-- ============================================ -->
+<h2>15. Quick Patterns — Instant Recall</h2>
+<!-- ============================================ -->
+
+<table>
+<tr><th>Need</th><th>Code</th></tr>
+<tr><td>Causal mask</td><td><code>mask = torch.tril(torch.ones(T, T))</code></td></tr>
+<tr><td>Cosine schedule</td><td><code>lr = base_lr * 0.5 * (1 + cos(pi * step / total))</code></td></tr>
+<tr><td>Gradient accumulation</td><td><code>loss = loss / accum_steps</code>, step every N batches</td></tr>
+<tr><td>Freeze layers</td><td><code>for p in model.encoder.parameters(): p.requires_grad = False</code></td></tr>
+<tr><td>Count params</td><td><code>sum(p.numel() for p in model.parameters())</code></td></tr>
+<tr><td>Save/load</td><td><code>torch.save(model.state_dict(), path)</code><br><code>model.load_state_dict(torch.load(path))</code></td></tr>
+<tr><td>No grad inference</td><td><code>with torch.no_grad(): ...</code> or <code>@torch.no_grad()</code></td></tr>
+<tr><td>Move to GPU</td><td><code>model.to(device)</code>, <code>x = x.to(device)</code></td></tr>
+<tr><td>Detach for logging</td><td><code>loss.item()</code> or <code>x.detach().cpu().numpy()</code></td></tr>
+</table>
+
+<!-- ============================================ -->
+<h2>16. Likely Coding Prompts &mdash; What They'll Ask</h2>
+<!-- ============================================ -->
+
+<table>
+<tr><th>Prompt</th><th>What to write</th><th>Time</th></tr>
+<tr><td>"Implement multi-head attention"</td><td>Section 2 above. QKV projection, scale, mask, softmax, weighted sum.</td><td>10-15 min</td></tr>
+<tr><td>"Write a training loop"</td><td>Section 5. forward &rarr; loss &rarr; zero_grad &rarr; backward &rarr; clip &rarr; step.</td><td>5-8 min</td></tr>
+<tr><td>"Implement K-means"</td><td>Section 8. init &rarr; cdist &rarr; argmin &rarr; mean update &rarr; converge.</td><td>8-12 min</td></tr>
+<tr><td>"Write a flow matching training step"</td><td>Section 6. Sample t, interpolate, predict velocity, MSE loss.</td><td>8-10 min</td></tr>
+<tr><td>"Implement quantization"</td><td>Section 10. scale = max / qmax, round, clamp. STE for gradients.</td><td>8-10 min</td></tr>
+<tr><td>"Write cross-attention"</td><td>Section 3. Q from one modality, K/V from another. Same attention math.</td><td>10 min</td></tr>
+<tr><td>"Implement GQA"</td><td>Section 13. Fewer KV heads, repeat_interleave to broadcast.</td><td>10 min</td></tr>
+<tr><td>"Write a VAE with reparameterization"</td><td>Section 11. mu + std * eps. KL + reconstruction loss.</td><td>8-10 min</td></tr>
+</table>
+
+<div class="tip"><strong>Interview strategy:</strong> Start by writing the function signature and shape comments. Then fill in. Talk through your shapes &mdash; "this is B by T by D, after projection it becomes..." Shapes are how you show you know what you're doing.</div>
+
+<div class="warn"><strong>Same-week activation rule.</strong> You know all of these. You've built them before. The risk is not knowledge &mdash; it's recall under pressure. Write each one from scratch in the 48 hours before the interview. Not reading. Writing.</div>
+
+<hr style="border:none; border-top:1px solid #eee; margin:36px 0;">
+
+<p style="color:#999; font-size:13px; text-align:center; margin-top:32px;">
+  PyTorch coding prep &middot; Nuance Labs ML coding round &middot; Local reference only &middot; March 2026
+</p>
+
+</body>
+</html>

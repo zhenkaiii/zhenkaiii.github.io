@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stay Sharp — Interview Maintenance Routine</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 24px;
+    color: #222;
+    line-height: 1.7;
+    font-size: 17px;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .subtitle {
+    color: #888;
+    font-size: 15px;
+    margin-bottom: 40px;
+  }
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 48px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eee;
+  }
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-top: 28px;
+    margin-bottom: 8px;
+    color: #444;
+  }
+  .r { color: #cc0000; font-weight: 600; }
+  p { margin-bottom: 14px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 15px;
+  }
+  th {
+    background: #f5f5f5;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 2px solid #ddd;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+  }
+  .tip {
+    background: #fff8f0;
+    border: 1px solid #f0e0c8;
+    padding: 14px 18px;
+    border-radius: 6px;
+    font-size: 15px;
+    margin: 16px 0;
+  }
+  .tip::before {
+    content: "Why: ";
+    font-weight: 700;
+    color: #b8860b;
+  }
+  .rule {
+    background: #f0f0ff;
+    border: 1px solid #c8c8e8;
+    padding: 14px 18px;
+    border-radius: 6px;
+    font-size: 15px;
+    margin: 16px 0;
+  }
+  .rule::before {
+    content: "Rule: ";
+    font-weight: 700;
+    color: #4040a0;
+  }
+  .warn {
+    background: #fff0f0;
+    border: 1px solid #e8c8c8;
+    padding: 14px 18px;
+    border-radius: 6px;
+    font-size: 15px;
+    margin: 16px 0;
+  }
+  .warn::before {
+    content: "Lesson learned: ";
+    font-weight: 700;
+    color: #cc0000;
+  }
+  .checklist {
+    background: #fafafa;
+    padding: 18px 22px;
+    margin: 14px 0;
+    border-radius: 6px;
+    border-left: 3px solid #cc0000;
+  }
+  .checklist p { margin-bottom: 6px; }
+  .checklist p:last-child { margin-bottom: 0; }
+  code {
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 15px;
+  }
+  @media print {
+    body { margin: 20px; font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Stay Sharp — Interview Maintenance Routine</h1>
+<p class="subtitle">2 Saturdays / month &middot; ~10 hrs total &middot; Never start from zero again</p>
+
+<!-- ============================================ -->
+<h2>The Problem</h2>
+<!-- ============================================ -->
+
+<p>You built a 408KB PyTorch K-means notebook. You nailed it at LinkedIn and Meta. Three months later at Netflix, you couldn't finish the code in 15 minutes and said the complexity was N log N instead of N*K*D.</p>
+
+<div class="warn">Preparation builds the muscle. But muscle that hasn't been activated in 3 months is stiff. You don't need to rebuild it — you need to stretch it regularly. The notebook isn't wasted because you couldn't recall it 3 months later — it's the reason you'll only need 10 minutes to reactivate instead of hours.</div>
+
+<p><span class="r">Knowledge decays. Templates decay. Verbal fluency decays.</span> The only thing that doesn't decay is the infrastructure you've built (fundamentals pages, prep sheets, notebooks). But infrastructure without regular activation is a library you can't navigate in the dark.</p>
+
+<div class="rule">Don't trust past preparation. Trust same-week activation. The warmup window is days, not months.</div>
+
+<!-- ============================================ -->
+<h2>What You're Maintaining</h2>
+<!-- ============================================ -->
+
+<h3>Category 1: Coding Templates (8 patterns)</h3>
+<table>
+<tr><th>#</th><th>Pattern</th><th>Key rule</th><th>Reference</th></tr>
+<tr><td>1</td><td><span class="r">Sliding window</span></td><td><code>for right</code> always advances. Add, shrink, measure.</td><td>interview-prep-netflix.html &sect;6</td></tr>
+<tr><td>2</td><td><span class="r">Binary search</span></td><td>Return <code>lo</code> (leftmost true) or <code>hi</code> (rightmost false). Never <code>mid</code>.</td><td>interview-prep-netflix.html &sect;7, fundamentals/binary_search.html</td></tr>
+<tr><td>3</td><td><span class="r">BFS — shortest path</span></td><td>Deque + visited. Mark on enqueue, not dequeue.</td><td>interview-prep-netflix.html &sect;8</td></tr>
+<tr><td>4</td><td><span class="r">BFS — level order</span></td><td>Two-queue swap. <code>curr_queue = next_queue</code>.</td><td>interview-prep-netflix.html &sect;8</td></tr>
+<tr><td>5</td><td><span class="r">BFS — topo sort</span></td><td>Build, seed, BFS, cycle check. Two hashmaps.</td><td>interview-prep-netflix.html &sect;8</td></tr>
+<tr><td>6</td><td><span class="r">K-way merge</span></td><td>Min-heap size K. Seed, pop smallest, push next from same track.</td><td>interview-prep-netflix.html &sect;9</td></tr>
+<tr><td>7</td><td><span class="r">Sweep line</span></td><td>Explode into +1/-1 events. <code>.sort()</code> not <code>.sorted()</code>.</td><td>interview-prep-netflix.html &sect;9</td></tr>
+<tr><td>8</td><td><span class="r">K-means</span></td><td>Init, assign (argmin, no sorting), update (group mean), converge. O(T*N*K*D).</td><td>interview-prep-netflix-gaps.html &sect;3, fundamentals/pytorch-kmeans.html</td></tr>
+</table>
+
+<h3>Category 2: ML Concepts (10 topics)</h3>
+<table>
+<tr><th>#</th><th>Topic</th><th>20-second anchor</th><th>Reference</th></tr>
+<tr><td>1</td><td><span class="r">VAE reparameterization</span></td><td>z = &mu; + &sigma;&epsilon;. Gradients flow through &mu;,&sigma;. &epsilon; is just noise.</td><td>gaps.html &sect;2</td></tr>
+<tr><td>2</td><td><span class="r">CFG</span></td><td>Drop condition 10-20% in training. Inference: uncond + w*(cond - uncond).</td><td>gaps.html &sect;1</td></tr>
+<tr><td>3</td><td><span class="r">KV cache</span></td><td>Only matters for AR models. Non-AR (FastSpeech, CTC) = no cache.</td><td>gaps.html &sect;7</td></tr>
+<tr><td>4</td><td><span class="r">GQA</span></td><td>G groups share K,V. Ratio 4-8 = negligible quality loss, 4-8x cache reduction.</td><td>gaps.html &sect;7</td></tr>
+<tr><td>5</td><td><span class="r">BatchNorm / LayerNorm / RMSNorm</span></td><td>Batch dim / feature dim / feature dim minus mean. BN breaks for AR inference.</td><td>gaps.html bonus</td></tr>
+<tr><td>6</td><td><span class="r">TTS alignment</span></td><td>Attention (Tacotron), duration predictor (FastSpeech), MAS (VITS), codec LM bypasses.</td><td>gaps.html &sect;4</td></tr>
+<tr><td>7</td><td><span class="r">Speaker diarization + overlap</span></td><td>EEND (multi-label), TS-VAD (speaker query), separation+ASR. No beamforming for single-mic.</td><td>gaps.html &sect;5</td></tr>
+<tr><td>8</td><td><span class="r">FastSpeech flatness</span></td><td>L2 loss regresses to mean. Fix: probabilistic variance adaptor, VITS, or hybrid AR+flow.</td><td>gaps.html &sect;6</td></tr>
+<tr><td>9</td><td><span class="r">Diffusion vs flow matching</span></td><td>Diffusion: 20-50 steps. Flow matching: 5 ODE steps, distill to 2-3. Better for real-time.</td><td>gaps.html &sect;1 context</td></tr>
+<tr><td>10</td><td><span class="r">LoRA + quantization</span></td><td>Complementary. Quantize base weights, LoRA recovers gap. Both = parameter efficiency.</td><td>interview-prep-netflix.html &sect;2 Q10</td></tr>
+</table>
+
+<h3>Category 3: Project Story</h3>
+<table>
+<tr><th>What</th><th>Anchor</th></tr>
+<tr><td>90-second opening</td><td>3 years, sub-8-bit, Lloyd-Max, 30%/30%/zero loss, all Echo products, Interspeech + SLT + patent</td></tr>
+<tr><td>S8BQAT → GQ evolution</td><td>"S8BQAT taught me what mattered. GQ is the distilled, production-ready version."</td></tr>
+<tr><td>Key numbers</td><td>30% latency, 30% size, 37.5% bandwidth, 5.50 vs 5.74 WER, 6.4x compression</td></tr>
+</table>
+
+<!-- ============================================ -->
+<h2>The Routine: 2 Saturdays / Month</h2>
+<!-- ============================================ -->
+
+<h3>Saturday 1: Coding (3 hours)</h3>
+
+<p>Open a blank file. No references. Write from memory. Time yourself.</p>
+
+<table>
+<tr><th>Cycle</th><th>Templates to write</th><th>Target time</th></tr>
+<tr><td><span class="r">Month 1</span></td><td>Sliding window + binary search + K-means</td><td>30 min total</td></tr>
+<tr><td><span class="r">Month 2</span></td><td>BFS (all 3 patterns) + topo sort</td><td>30 min total</td></tr>
+<tr><td><span class="r">Month 3</span></td><td>K-way merge + sweep line + K-means</td><td>30 min total</td></tr>
+<tr><td><span class="r">Month 4</span></td><td>All 8 speed run — skeleton only</td><td>5 min each, 40 min total</td></tr>
+<tr><td colspan="3"><em>Repeat from Month 1. K-means appears every other cycle.</em></td></tr>
+</table>
+
+<p><strong>Remaining time:</strong> Pick one template that felt rusty. Trace through an example input by hand. Write edge cases. Update your fundamentals page if anything was wrong.</p>
+
+<h3>Saturday 2: Concepts + Story (2 hours)</h3>
+
+<table>
+<tr><th>Time</th><th>What</th><th>How</th></tr>
+<tr><td><span class="r">Hour 1</span></td><td>3 concepts from the ML list</td><td>Explain each out loud in 20 seconds. Record yourself. If you stumble, re-read gaps doc, redo. Rotate through all 10 over ~3 months.</td></tr>
+<tr><td><span class="r">Hour 2</span></td><td>Project story + 2 Q&A</td><td>Run opening script once. Pick 2 random questions from prep sheet, answer without reading. If rusty, re-read and redo.</td></tr>
+</table>
+
+<div class="tip">This gets faster. Month 1 you'll struggle through K-means in 15 min. By month 3 it takes 5. By month 6 the coding Saturday compresses to 90 minutes because you're confirming, not rebuilding.</div>
+
+<!-- ============================================ -->
+<h2>Night-Before Warmup (When Interview Is Scheduled)</h2>
+<!-- ============================================ -->
+
+<p><span class="r">1 hour total.</span> This is activation, not learning. If something feels unfamiliar, you skipped too many Saturdays.</p>
+
+<div class="checklist">
+<p><strong>Coding speed run (40 min)</strong></p>
+<p>&square; Sliding window — write skeleton, say "add, shrink, measure"</p>
+<p>&square; Binary search — write skeleton, say "return lo, never mid"</p>
+<p>&square; BFS topo sort — write skeleton, say "build, seed, BFS, cycle check"</p>
+<p>&square; K-way merge — write skeleton, say "seed heap, pop smallest, push next from same track"</p>
+<p>&square; Sweep line — write skeleton, say "explode, sort, sweep"</p>
+<p>&square; K-means — write full code, say "O(T*N*K*D), no sorting, argmin"</p>
+<p>&square; Binary search — one more time, cold</p>
+<p>&square; Sliding window — one more time, cold</p>
+</div>
+
+<div class="checklist">
+<p><strong>Concept drills (20 min)</strong></p>
+<p>&square; VAE — say the 20-second version out loud</p>
+<p>&square; CFG — say the 20-second version out loud</p>
+<p>&square; KV cache + GQA — say "only for AR, concurrent users, ratio 4-8"</p>
+<p>&square; TTS alignment — say "attention, duration predictor, MAS, codec LM"</p>
+<p>&square; Diarization — say "EEND, TS-VAD, separation+ASR, single-mic"</p>
+<p>&square; FastSpeech flatness — say "L2 regresses to mean, fix with probabilistic adaptor or VITS"</p>
+<p>&square; Normalization — say "batch dim, feature dim, RMS drops mean"</p>
+<p>&square; Opening script — run through once, hit the red highlights</p>
+</div>
+
+<!-- ============================================ -->
+<h2>The Contract</h2>
+<!-- ============================================ -->
+
+<table>
+<tr><th>Situation</th><th>Action</th></tr>
+<tr><td>No interview lined up</td><td><span class="r">2 Saturdays/month</span>, low pressure, building your own content</td></tr>
+<tr><td>Interview scheduled</td><td>Add the <span class="r">night-before warmup hour</span></td></tr>
+<tr><td>No interview for 3+ months</td><td><span class="r">Still do the Saturdays</span> — that's the whole point</td></tr>
+<tr><td>Routine feels easy</td><td>Add a new pattern or concept to your list. The list grows with your career.</td></tr>
+<tr><td>Routine feels painful</td><td>You skipped last month. That's the signal — the pain is the diagnostic.</td></tr>
+</table>
+
+<div class="rule">The routine keeps you at 7 so the night-before warmup pushes you to 8-9. Without the routine, you start from 4 every time.</div>
+
+<!-- ============================================ -->
+<h2>Diagnostic: Am I Sharp?</h2>
+<!-- ============================================ -->
+
+<p>Before any interview, run this 10-minute self-test. If you can do all of these without references, you're ready.</p>
+
+<table>
+<tr><th>Test</th><th>Pass criteria</th></tr>
+<tr><td>Write K-means from blank file</td><td>Under 8 minutes, correct complexity</td></tr>
+<tr><td>Write sliding window from blank file</td><td>Under 3 minutes, no off-by-one</td></tr>
+<tr><td>Explain VAE reparameterization out loud</td><td>Under 20 seconds, hit z = &mu; + &sigma;&epsilon;</td></tr>
+<tr><td>Explain CFG out loud</td><td>Under 20 seconds, hit the formula</td></tr>
+<tr><td>Say your opening script</td><td>Under 90 seconds, hit all red highlights</td></tr>
+</table>
+
+<p>If any of these fail: spend 30 minutes on that specific gap. If 3+ fail: you need a full Saturday, not just the warmup.</p>
+
+<!-- ============================================ -->
+<h2>Why This Works</h2>
+<!-- ============================================ -->
+
+<div class="warn">You went from intern to full-time conversion. You never did the cold interview grind. The Netflix round was your first real interview loop. Scoring ~7/10 at Netflix on your first real attempt is the starting point, not the ceiling.</div>
+
+<p>The people who seem effortlessly sharp in interviews have done this 5, 10, 20 times. They've bombed VAE questions before. They've run out of time on coding before. They just did it years ago and built the scar tissue.</p>
+
+<p>You're building that scar tissue now. The fundamentals pages, the gaps doc, the mock recordings, the PyTorch notebooks — that's your infrastructure. Most people don't build that. They cram for 2 weeks, interview, forget everything, and start from zero next time.</p>
+
+<p><span class="r">You won't start from zero next time.</span> You'll open your own pages, warm up for a day, and walk in sharper than R1.</p>
+
+<hr style="border:none; border-top:1px solid #eee; margin:36px 0;">
+
+<p style="color:#999; font-size:13px; text-align:center; margin-top:32px;">
+  Interview maintenance routine &middot; Local reference only &middot; March 2026
+</p>
+
+</body>
+</html>
