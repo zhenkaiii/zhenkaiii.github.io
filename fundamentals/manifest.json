@@ -103,5 +103,10 @@
     "file": "mini_transformer.html",
     "title": "Mini Transformer Block + Training Loop",
     "tags": ["AI Coding / PyTorch"]
+  },
+  {
+    "file": "mini_attention_diy.html",
+    "title": "Multi-Head Attention — DIY from Scratch",
+    "tags": ["AI Coding / PyTorch"]
   }
 ]

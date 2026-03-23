@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Multi-Head Attention DIY — ML/AI Fundamentals</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:28px 0 10px;font-size:20px}
+  h3{margin:20px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  .k{color:#c792ea} .fn{color:#82aaff} .s{color:#c3e88d} .c{color:#6b708c} .n{color:#f78c6c} .v{color:#ffcb6b}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .diagram{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:20px;margin:14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:14px;line-height:1.6;overflow-x:auto;white-space:pre}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Multi-Head Attention — DIY from Scratch</h1>
+  <span class="badge">PyTorch</span>
+  <span class="badge">Attention</span>
+  <span class="badge">Interview Prep</span>
+</header>
+
+<!-- ====== PROGRESSION ====== -->
+<section class="panel">
+  <h2>Progression: V1 → V2 → V3 → Cross-Attention</h2>
+  <p>Build it in layers. Master each before moving on.</p>
+  <table>
+    <tr><th>Level</th><th>Class</th><th>What changes</th></tr>
+    <tr><td>V1: Vanilla</td><td><code>MyMultiheadAttentionV1</code></td><td>No reshape. Single-head. Scale by <code>d_model</code>.</td></tr>
+    <tr><td>V2: Multi-head</td><td><code>MyMultiheadAttentionV2</code></td><td>Reshape into <code>(B, H, T, d_k)</code>. Scale by <code>d_k</code>.</td></tr>
+    <tr><td>V3: GQA</td><td><code>MyMultiheadAttentionV3</code></td><td>Fewer KV heads. <code>repeat_interleave</code> to expand.</td></tr>
+    <tr><td>Cross-attention</td><td><code>MyCrossAttention</code></td><td>Q from one modality, K/V from another.</td></tr>
+  </table>
+</section>
+
+<!-- ====== SHAPE STORY ====== -->
+<section class="panel">
+  <h2>The Shape Story (MHA)</h2>
+  <p>This is how you talk through it in an interview. Trace every shape.</p>
+  <div class="diagram">
+Input:    x             <span class="v">(B, T, D)</span>
+
+Project:  q = W_q(x)    <span class="v">(B, T, D)</span>        ← init doesn't split heads!
+          k = W_k(x)    <span class="v">(B, T, D)</span>
+          v = W_v(x)    <span class="v">(B, T, D)</span>
+
+Split:    q.reshape      <span class="v">(B, T, H, d_k)</span>
+          q.transpose    <span class="v">(B, H, T, d_k)</span>   ← swap T and H
+
+Logits:   q @ k.T        <span class="v">(B, H, T, d_k) @ (B, H, d_k, T) → (B, H, T, T)</span>
+                         <span class="c">d_k disappears! logits are raw, unnormalized.</span>
+
+Weights:  softmax(logits / √d_k, dim=-1)  <span class="v">(B, H, T, T)</span>
+                         <span class="c">Now probabilities — each row sums to 1.</span>
+
+Context:  weights @ v    <span class="v">(B, H, T, T) @ (B, H, T, d_k) → (B, H, T, d_k)</span>
+                         <span class="c">d_k is back! q, k, v, context all share (B, H, T, d_k).</span>
+
+Merge:    .transpose     <span class="v">(B, T, H, d_k)</span>
+          .reshape       <span class="v">(B, T, D)</span>        ← heads merged back
+
+Output:   W_o(context)   <span class="v">(B, T, D)</span></div>
+</section>
+
+<!-- ====== V1: VANILLA ====== -->
+<section class="panel">
+  <h2>V1: Vanilla Single-Head Attention</h2>
+<pre><span class="k">class</span> <span class="fn">MyMultiheadAttentionV1</span>(nn.Module):
+    <span class="c"># Most vanilla attention — single head, no reshape!</span>
+    <span class="k">def</span> <span class="fn">__init__</span>(self, d_model):
+        super().__init__()
+        self.q = nn.Linear(d_model, d_model)
+        self.k = nn.Linear(d_model, d_model)
+        self.v = nn.Linear(d_model, d_model)
+        self.o = nn.Linear(d_model, d_model)
+
+        self.d_model = d_model
+
+    <span class="k">def</span> <span class="fn">forward</span>(self, x):
+        q_val = self.q(x)                          <span class="c"># (B, T, D)</span>
+        k_val = self.k(x)                          <span class="c"># (B, T, D)</span>
+        v_val = self.v(x)                          <span class="c"># (B, T, D)</span>
+
+        <span class="c"># (B, T, D) @ (B, D, T) → (B, T, T)  — these are logits (raw, pre-softmax)</span>
+        logits = (q_val @ k_val.transpose(-<span class="n">1</span>, -<span class="n">2</span>)) / self.d_model ** <span class="n">0.5</span>
+        attn_weights = F.softmax(logits, dim=-<span class="n">1</span>)  <span class="c"># now probabilities</span>
+
+        <span class="k">return</span> self.o(attn_weights @ v_val)</pre>
+
+  <div class="callout warn">Works but wastes capacity. Every position uses full <code>d_model</code> for one attention pattern. Multi-head lets you attend to different things in parallel.</div>
+</section>
+
+<!-- ====== V2: MULTI-HEAD ====== -->
+<section class="panel">
+  <h2>V2: Multi-Head Attention</h2>
+<pre><span class="k">class</span> <span class="fn">MyMultiheadAttentionV2</span>(nn.Module):
+    <span class="c"># MHA — split into heads in forward, not init!</span>
+    <span class="k">def</span> <span class="fn">__init__</span>(self, d_model, n_head):
+        super().__init__()
+        <span class="c"># Init doesn't split heads! Full d_model projections.</span>
+        self.q = nn.Linear(d_model, d_model)
+        self.k = nn.Linear(d_model, d_model)
+        self.v = nn.Linear(d_model, d_model)
+        self.o = nn.Linear(d_model, d_model)
+
+        self.n_head = n_head
+        self.d_k = d_model // n_head
+
+    <span class="k">def</span> <span class="fn">forward</span>(self, x):
+        q_val = self.q(x)                          <span class="c"># (B, T, D)</span>
+        k_val = self.k(x)
+        v_val = self.v(x)
+
+        <span class="c"># Split heads on all three Q, K, V</span>
+        B, T, D = q_val.size()
+
+        q_val = q_val.reshape(B, T, self.n_head, self.d_k).transpose(<span class="n">1</span>, <span class="n">2</span>)
+        k_val = k_val.reshape(B, T, self.n_head, self.d_k).transpose(<span class="n">1</span>, <span class="n">2</span>)
+        v_val = v_val.reshape(B, T, self.n_head, self.d_k).transpose(<span class="n">1</span>, <span class="n">2</span>)
+        <span class="c"># All three: (B, H, T, d_k)</span>
+
+        <span class="c"># (B, H, T, d_k) @ (B, H, d_k, T) → (B, H, T, T): d_k dropped!</span>
+        logits = (q_val @ k_val.transpose(-<span class="n">1</span>, -<span class="n">2</span>)) / self.d_k ** <span class="n">0.5</span>
+        attn_weights = F.softmax(logits, dim=-<span class="n">1</span>)  <span class="c"># logits → probabilities</span>
+        <span class="c"># (B, H, T, T) @ (B, H, T, d_k) → (B, H, T, d_k): d_k back!</span>
+        <span class="c"># Except for attn_weights, q/k/v/context all share (B, H, T, d_k).</span>
+        context = attn_weights @ v_val
+
+        <span class="c"># Merge heads back: reverse of split</span>
+        context = context.transpose(<span class="n">1</span>, <span class="n">2</span>).reshape(B, T, D)
+        <span class="k">return</span> self.o(context)</pre>
+</section>
+
+<!-- ====== V3: GQA ====== -->
+<section class="panel">
+  <h2>V3: Grouped Query Attention (GQA)</h2>
+  <p>Fewer KV heads than Q heads. Saves KV cache memory. Used in LLaMA 2 70B, Mistral, etc.</p>
+  <div class="callout">Example: 32 Q heads, 8 KV heads → each KV head is shared by 4 Q heads → <b>4x KV cache reduction</b>.</div>
+
+  <h3>GQA Shape Story</h3>
+  <div class="diagram">
+Project:  q = W_q(x)    <span class="v">(B, T, D)</span>             ← full size, same as MHA
+          k = W_k(x)    <span class="v">(B, T, n_kv * d_k)</span>    ← <span class="n">smaller!</span>
+          v = W_v(x)    <span class="v">(B, T, n_kv * d_k)</span>    ← <span class="n">smaller!</span>
+
+Split:    q.reshape      <span class="v">(B, H, T, d_k)</span>        ← H = n_head (e.g. 32)
+          k.reshape      <span class="v">(B, H', T, d_k)</span>       ← H' = n_kv_heads (e.g. 8)
+
+Expand:   k.repeat       <span class="v">(B, H, T, d_k)</span>        ← repeat each KV head H/H' times
+          <span class="c">This is the key line! Now K,V match Q's head count.</span>
+
+<span class="c">Rest is identical to MHA.</span></div>
+
+<pre><span class="k">class</span> <span class="fn">MyMultiheadAttentionV3</span>(nn.Module):
+    <span class="c"># GQA — fewer KV heads, Q heads grouped and shared</span>
+    <span class="k">def</span> <span class="fn">__init__</span>(self, d_model, n_head, n_kv_heads):
+        super().__init__()
+        <span class="c"># n_kv_heads: the new hyperparam!</span>
+        <span class="c"># e.g. n_head=32, n_kv_heads=8 → 4 Q heads share each KV head</span>
+        self.n_kv_heads = n_kv_heads
+        self.n_head = n_head
+        self.d_k = d_model // n_head
+        self.d_model = d_model
+
+        <span class="c"># Q stays full size. K, V shrink!</span>
+        self.q = nn.Linear(d_model, d_model)
+        self.k = nn.Linear(d_model, self.n_kv_heads * self.d_k)  <span class="c"># smaller</span>
+        self.v = nn.Linear(d_model, self.n_kv_heads * self.d_k)  <span class="c"># smaller</span>
+        self.o = nn.Linear(d_model, d_model)
+
+    <span class="k">def</span> <span class="fn">forward</span>(self, x):
+        q_val = self.q(x)                          <span class="c"># (B, T, D)</span>
+        k_val = self.k(x)                          <span class="c"># (B, T, n_kv * d_k) — smaller!</span>
+        v_val = self.v(x)                          <span class="c"># (B, T, n_kv * d_k) — smaller!</span>
+
+        B, T, D = q_val.size()
+
+        <span class="c"># Q splits into full n_head, K/V split into n_kv_heads</span>
+        q_val = q_val.reshape(B, T, self.n_head, self.d_k).transpose(<span class="n">1</span>, <span class="n">2</span>)        <span class="c"># (B, H, T, d_k)</span>
+        k_val = k_val.reshape(B, T, self.n_kv_heads, self.d_k).transpose(<span class="n">1</span>, <span class="n">2</span>)   <span class="c"># (B, H', T, d_k)</span>
+        v_val = v_val.reshape(B, T, self.n_kv_heads, self.d_k).transpose(<span class="n">1</span>, <span class="n">2</span>)   <span class="c"># (B, H', T, d_k)</span>
+
+        <span class="c"># THE KEY LINE: expand KV heads to match Q heads</span>
+        <span class="c"># repeat_interleave on dim=1 (head dim). Tensor method, NOT F.!</span>
+        <span class="c"># n_head // n_kv_heads = group size (how many Q heads share one KV head)</span>
+        k_val = k_val.repeat_interleave(self.n_head // self.n_kv_heads, dim=<span class="n">1</span>)   <span class="c"># (B, H, T, d_k)</span>
+        v_val = v_val.repeat_interleave(self.n_head // self.n_kv_heads, dim=<span class="n">1</span>)   <span class="c"># (B, H, T, d_k)</span>
+
+        <span class="c"># From here, identical to MHA</span>
+        <span class="c"># (B, H, T, d_k) @ (B, H, d_k, T) → (B, H, T, T): d_k dropped!</span>
+        logits = (q_val @ k_val.transpose(-<span class="n">1</span>, -<span class="n">2</span>)) / self.d_k ** <span class="n">0.5</span>
+        attn_weights = F.softmax(logits, dim=-<span class="n">1</span>)  <span class="c"># logits → probabilities</span>
+        <span class="c"># (B, H, T, T) @ (B, H, T, d_k) → (B, H, T, d_k): d_k back!</span>
+        context = attn_weights @ v_val
+
+        context = context.transpose(<span class="n">1</span>, <span class="n">2</span>).reshape(B, T, D)
+        <span class="k">return</span> self.o(context)</pre>
+
+  <div class="callout ok"><b>V2 → V3 diff is only 3 things:</b> (1) K,V projections shrink in init. (2) K,V reshape uses <code>n_kv_heads</code> not <code>n_head</code>. (3) <code>repeat_interleave</code> to expand back. Everything else is identical.</div>
+</section>
+
+<!-- ====== GQA vs MHA vs MQA ====== -->
+<section class="panel">
+  <h2>GQA vs MHA vs MQA</h2>
+  <table>
+    <tr><th>Method</th><th>n_kv_heads</th><th>KV cache size</th><th>Used in</th></tr>
+    <tr><td>MHA</td><td>= n_heads (e.g. 32)</td><td>Full</td><td>GPT-2, BERT, original transformer</td></tr>
+    <tr><td>GQA</td><td>&lt; n_heads (e.g. 8)</td><td>n_heads/n_kv_heads reduction (4x)</td><td>LLaMA 2 70B, Mistral</td></tr>
+    <tr><td>MQA</td><td>= 1</td><td>n_heads reduction (32x)</td><td>PaLM, Falcon</td></tr>
+  </table>
+  <div class="callout">MQA is just GQA with <code>n_kv_heads=1</code>. Your V3 code handles all three — just change the argument.</div>
+</section>
+
+<!-- ====== CROSS-ATTENTION ====== -->
+<section class="panel">
+  <h2>Level 4: Cross-Attention</h2>
+  <p>Q from target modality (e.g., video), K/V from conditioning modality (e.g., audio). Only change: K and V project from <code>cond</code>, not <code>x</code>.</p>
+<pre><span class="k">class</span> <span class="fn">MyCrossAttention</span>(nn.Module):
+    <span class="k">def</span> <span class="fn">__init__</span>(self, d_model, d_cond, n_head):
+        super().__init__()
+        self.q = nn.Linear(d_model, d_model)
+        self.k = nn.Linear(d_cond, d_model)       <span class="c"># K from conditioning!</span>
+        self.v = nn.Linear(d_cond, d_model)       <span class="c"># V from conditioning!</span>
+        self.o = nn.Linear(d_model, d_model)
+
+        self.n_head = n_head
+        self.d_k = d_model // n_head
+
+    <span class="k">def</span> <span class="fn">forward</span>(self, x, cond):
+        <span class="c"># x: (B, T_video, D)   cond: (B, T_audio, D_cond)</span>
+        q_val = self.q(x)                          <span class="c"># (B, T_video, D)</span>
+        k_val = self.k(cond)                       <span class="c"># (B, T_audio, D)</span>
+        v_val = self.v(cond)                       <span class="c"># (B, T_audio, D)</span>
+
+        B, T_v, D = q_val.size()
+        T_a = k_val.size(<span class="n">1</span>)
+
+        q_val = q_val.reshape(B, T_v, self.n_head, self.d_k).transpose(<span class="n">1</span>, <span class="n">2</span>)
+        k_val = k_val.reshape(B, T_a, self.n_head, self.d_k).transpose(<span class="n">1</span>, <span class="n">2</span>)
+        v_val = v_val.reshape(B, T_a, self.n_head, self.d_k).transpose(<span class="n">1</span>, <span class="n">2</span>)
+
+        <span class="c"># (B, H, T_v, d_k) @ (B, H, d_k, T_a) → (B, H, T_v, T_a)</span>
+        logits = (q_val @ k_val.transpose(-<span class="n">1</span>, -<span class="n">2</span>)) / self.d_k ** <span class="n">0.5</span>
+        attn_weights = F.softmax(logits, dim=-<span class="n">1</span>)  <span class="c"># logits → probabilities</span>
+        <span class="c"># (B, H, T_v, T_a) @ (B, H, T_a, d_k) → (B, H, T_v, d_k)</span>
+        context = attn_weights @ v_val
+
+        context = context.transpose(<span class="n">1</span>, <span class="n">2</span>).reshape(B, T_v, D)
+        <span class="k">return</span> self.o(context)</pre>
+
+  <div class="callout ok"><b>Self-attn vs cross-attn:</b> the only code diff is where K and V come from. The attention math is identical.</div>
+</section>
+
+<!-- ====== BURN-IN RULES ====== -->
+<section class="panel">
+  <h2>Burn-In Rules</h2>
+  <ul>
+    <li><b>Init doesn't split heads.</b> Projections are full <code>d_model &rarr; d_model</code>. Splitting happens in forward via reshape.</li>
+    <li><b>All three Q, K, V get reshaped</b> &mdash; not just Q and K.</li>
+    <li><b><code>reshape</code> to split, <code>transpose</code> to swap.</b> Don't mix them up. <code>reshape(B, T, H, d_k)</code> then <code>transpose(1, 2)</code>.</li>
+    <li><b>Scale by <code>&radic;d_k</code></b>, not <code>&radic;d_model</code>. Each head has dimension <code>d_k</code>.</li>
+    <li><b><code>@</code> for matmul</b>, not <code>*</code>. <code>*</code> is element-wise.</li>
+    <li><b><code>.transpose(-1, -2)</code></b> for K, not <code>.T</code>. <code>.T</code> flips all dims.</li>
+    <li><b>Unmerge = reverse of split:</b> <code>transpose(1, 2)</code> then <code>reshape(B, T, D)</code>.</li>
+    <li><b>Naming:</b> before softmax = <code>logits</code> (raw). After softmax = <code>attn_weights</code> (probabilities).</li>
+    <li><b>Logits/weights shape <code>(B, H, T, T)</code></b> &mdash; d_k disappears. Context brings it back.</li>
+    <li><b><code>repeat_interleave</code> is a tensor method</b>, not <code>F.</code> &mdash; call it on the tensor directly.</li>
+    <li><b>GQA repeat count = <code>n_head // n_kv_heads</code></b>, not <code>n_kv_heads</code> or <code>d_model // n_kv_heads</code>.</li>
+  </ul>
+</section>
+
+<!-- ====== GOTCHAS ====== -->
+<section class="panel">
+  <h2>Common Gotchas</h2>
+  <table>
+    <tr><th>Mistake</th><th>Fix</th></tr>
+    <tr><td><code>q * k.T</code></td><td><code>q @ k.transpose(-1, -2)</code></td></tr>
+    <tr><td>Scale by <code>d_model</code></td><td>Scale by <code>d_k ** 0.5</code> (per-head dim)</td></tr>
+    <tr><td><code>.transpose(B, T, H, d_k)</code></td><td>That's <code>.reshape</code>. Transpose takes dim indices, not sizes.</td></tr>
+    <tr><td>Forget to store <code>n_head</code>, <code>d_k</code></td><td>Store in <code>__init__</code>, use <code>self.d_k</code> in forward</td></tr>
+    <tr><td>Output projection on score</td><td>Output projection on context: <code>self.o(score @ v_val)</code></td></tr>
+    <tr><td>GQA: <code>F.repeat_interleave</code></td><td>Tensor method: <code>k_val.repeat_interleave(...)</code></td></tr>
+    <tr><td>GQA: repeat by <code>n_kv_heads</code></td><td>Repeat by <code>n_head // n_kv_heads</code> (group size)</td></tr>
+    <tr><td>GQA: reshape K,V with <code>n_head</code></td><td>Reshape with <code>n_kv_heads</code> &mdash; they have fewer heads</td></tr>
+  </table>
+</section>
+
+<!-- ====== CAUSAL MASK ====== -->
+<section class="panel">
+  <h2>Bonus: Adding a Causal Mask</h2>
+  <p>For autoregressive models (LLMs), prevent attending to future tokens.</p>
+<pre><span class="c"># Create mask: lower triangular = 1, upper = 0</span>
+mask = torch.tril(torch.ones(T, T, device=x.device))   <span class="c"># (T, T)</span>
+
+<span class="c"># Apply before softmax: -inf where mask is 0</span>
+logits = logits.masked_fill(mask == <span class="n">0</span>, <span class="k">float</span>(<span class="s">'-inf'</span>))
+attn_weights = F.softmax(logits, dim=-<span class="n">1</span>)</pre>
+  <div class="callout">After softmax, <code>-inf</code> becomes 0 &mdash; future tokens get zero attention weight.</div>
+</section>
+
+<div class="footer">Multi-Head Attention DIY &middot; V1 → V2 → V3 (GQA) → Cross &middot; March 2026</div>
+
+</div>
+</body>
+</html>
