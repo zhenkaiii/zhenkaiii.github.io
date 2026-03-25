@@ -108,5 +108,25 @@
     "file": "mini_attention_diy.html",
     "title": "Multi-Head Attention — DIY from Scratch",
     "tags": ["AI Coding / PyTorch"]
+  },
+  {
+    "file": "loss_functions_diy.html",
+    "title": "Loss Functions + Normalization — DIY from Scratch",
+    "tags": ["AI Coding / PyTorch"]
+  },
+  {
+    "file": "pytorch_drills_wed.html",
+    "title": "PyTorch Drills — Wednesday: Loss Functions + Norms + Tensor Ops",
+    "tags": ["AI Coding / PyTorch"]
+  },
+  {
+    "file": "pytorch_drills_thu.html",
+    "title": "PyTorch Drills — Thursday: K-Means, Flow Matching, AMP",
+    "tags": ["AI Coding / PyTorch"]
+  },
+  {
+    "file": "pytorch_drills_fri.html",
+    "title": "PyTorch Drills — Friday: Cold Activation + Interview Warmup",
+    "tags": ["AI Coding / PyTorch"]
   }
 ]

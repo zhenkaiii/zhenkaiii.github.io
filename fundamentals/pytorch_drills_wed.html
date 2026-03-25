@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PyTorch Drills — Wednesday Sessions</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:36px 0 10px;font-size:22px;border-bottom:2px solid var(--code-border);padding-bottom:8px}
+  h3{margin:24px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  .k{color:#c792ea} .fn{color:#82aaff} .s{color:#c3e88d} .c{color:#6b708c} .n{color:#f78c6c} .v{color:#ffcb6b}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  .prompt{background:#1a1a2e;border:2px solid var(--accent);border-radius:14px;padding:20px;margin:16px 0}
+  .prompt-label{color:var(--accent);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+  .prompt-text{font-size:16px;line-height:1.6}
+  .timer{display:inline-block;background:var(--warn);color:#000;font-weight:700;font-size:12px;padding:2px 8px;border-radius:999px;margin-left:8px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .check{list-style:none;padding:0}
+  .check li{padding:8px 0;font-size:15px;border-bottom:1px solid var(--code-border)}
+  .check li::before{content:"\2610 ";font-size:18px;margin-right:8px}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Wednesday PyTorch Drills</h1>
+  <span class="badge">Session 1: Loss Functions</span>
+  <span class="badge">Session 2: Norms + Tensor Ops</span>
+  <span class="badge">Session 3: Masking + Gathering + Sampling</span>
+</header>
+
+<!-- ============================================================ -->
+<h2>Session 1: Loss Functions from Scratch <span class="timer">~90 min</span></h2>
+<!-- ============================================================ -->
+
+<p>Rules: no <code>F.softmax</code>, no <code>F.cross_entropy</code>, no <code>F.mse_loss</code>. Pure tensor ops. Verify each by comparing against PyTorch's built-in.</p>
+
+<!-- ---- PROMPT 1 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 1 <span class="timer">5 min</span></div>
+<div class="prompt-text">
+Implement <code>my_softmax(x, dim)</code> that works on any tensor shape.<br><br>
+<b>Requirements:</b><br>
+&bull; Must handle numerical stability (subtract max before exp)<br>
+&bull; Must work for any <code>dim</code> argument<br>
+&bull; Verify: <code>torch.allclose(my_softmax(x, dim=-1), F.softmax(x, dim=-1))</code>
+</div>
+</div>
+
+<div class="panel">
+<h3>What you need to know</h3>
+<ul>
+  <li><b>Naive softmax blows up.</b> <code>exp(1000)</code> = inf. Subtracting max doesn't change the result but prevents overflow.</li>
+  <li><code>keepdim=True</code> is critical for broadcasting — the max/sum must stay the same rank as x.</li>
+  <li><code>dim</code> tells softmax which axis the probabilities should sum to 1 across.</li>
+</ul>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">def</span> <span class="fn">my_softmax</span>(x, dim=-<span class="n">1</span>):
+    <span class="c"># 1. Subtract max for numerical stability</span>
+    x_max = x.max(dim=dim, keepdim=<span class="k">True</span>).values
+    x_stable = x - x_max
+
+    <span class="c"># 2. Exp</span>
+    e = x_stable.exp()
+
+    <span class="c"># 3. Normalize</span>
+    <span class="k">return</span> e / e.sum(dim=dim, keepdim=<span class="k">True</span>)
+
+
+<span class="c"># Verify</span>
+x = torch.randn(<span class="n">4</span>, <span class="n">8</span>)
+<span class="k">assert</span> torch.allclose(my_softmax(x, dim=-<span class="n">1</span>), F.softmax(x, dim=-<span class="n">1</span>))
+<span class="k">assert</span> torch.allclose(my_softmax(x, dim=<span class="n">0</span>), F.softmax(x, dim=<span class="n">0</span>))
+print(<span class="s">"softmax: PASS"</span>)</pre>
+</details>
+
+<!-- ---- PROMPT 2 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 2 <span class="timer">10 min</span></div>
+<div class="prompt-text">
+Implement <code>my_cross_entropy(logits, targets)</code> for classification.<br><br>
+<b>Requirements:</b><br>
+&bull; <code>logits</code>: <code>(B, C)</code> — raw model output, <b>not</b> softmaxed<br>
+&bull; <code>targets</code>: <code>(B,)</code> — integer class labels<br>
+&bull; Use log-softmax + NLL. No loops over the batch.<br>
+&bull; Return a scalar (mean over batch).<br>
+&bull; Verify: <code>torch.allclose(my_cross_entropy(logits, targets), F.cross_entropy(logits, targets))</code>
+</div>
+</div>
+
+<div class="panel">
+<h3>What you need to know</h3>
+<ul>
+  <li><b>Cross-entropy = log-softmax + NLL.</b> <code>-log(softmax(logits))[target_class]</code></li>
+  <li><b>Log-softmax trick:</b> <code>log_softmax = x - max - log(sum(exp(x - max)))</code>. More numerically stable than <code>log(softmax(x))</code>.</li>
+  <li><b>Gather the target class:</b> use <code>torch.gather</code> or advanced indexing <code>log_probs[range(B), targets]</code>.</li>
+</ul>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">def</span> <span class="fn">my_cross_entropy</span>(logits, targets):
+    <span class="c"># logits: (B, C), targets: (B,)</span>
+    B, C = logits.shape
+
+    <span class="c"># 1. Log-softmax (stable)</span>
+    x_max = logits.max(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>).values
+    log_probs = logits - x_max - (logits - x_max).exp().sum(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>).log()
+    <span class="c"># log_probs: (B, C)</span>
+
+    <span class="c"># 2. Pick the log-prob of the target class (NLL)</span>
+    nll = -log_probs[torch.arange(B), targets]    <span class="c"># (B,)</span>
+
+    <span class="c"># 3. Mean over batch</span>
+    <span class="k">return</span> nll.mean()
+
+
+<span class="c"># Verify</span>
+logits = torch.randn(<span class="n">8</span>, <span class="n">5</span>)
+targets = torch.randint(<span class="n">0</span>, <span class="n">5</span>, (<span class="n">8</span>,))
+<span class="k">assert</span> torch.allclose(my_cross_entropy(logits, targets), F.cross_entropy(logits, targets))
+print(<span class="s">"cross_entropy: PASS"</span>)</pre>
+</details>
+
+<!-- ---- PROMPT 3 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 3 <span class="timer">3 min</span></div>
+<div class="prompt-text">
+Implement <code>my_mse_loss(pred, target)</code>.<br><br>
+<b>Requirements:</b><br>
+&bull; Element-wise squared difference, then mean over everything.<br>
+&bull; Verify: <code>torch.allclose(my_mse_loss(pred, target), F.mse_loss(pred, target))</code>
+</div>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">def</span> <span class="fn">my_mse_loss</span>(pred, target):
+    <span class="k">return</span> (pred - target).pow(<span class="n">2</span>).mean()
+
+
+<span class="c"># Verify</span>
+pred = torch.randn(<span class="n">4</span>, <span class="n">8</span>)
+target = torch.randn(<span class="n">4</span>, <span class="n">8</span>)
+<span class="k">assert</span> torch.allclose(my_mse_loss(pred, target), F.mse_loss(pred, target))
+print(<span class="s">"mse_loss: PASS"</span>)</pre>
+</details>
+
+<!-- ---- PROMPT 4 ---- -->
+<div class="prompt">
+<div class="prompt-label">Bonus Prompt <span class="timer">5 min</span></div>
+<div class="prompt-text">
+Implement <code>my_bce_with_logits(logits, targets)</code>.<br><br>
+<b>Requirements:</b><br>
+&bull; <code>logits</code>: <code>(B,)</code> — raw model output, <b>not</b> sigmoided<br>
+&bull; <code>targets</code>: <code>(B,)</code> — binary labels (0 or 1), float<br>
+&bull; Formula: <code>-[y * log(σ(x)) + (1-y) * log(1-σ(x))]</code><br>
+&bull; Use the numerically stable form, not naive sigmoid + log.<br>
+&bull; Verify against <code>F.binary_cross_entropy_with_logits</code>
+</div>
+</div>
+
+<div class="panel">
+<h3>What you need to know</h3>
+<ul>
+  <li><b>Stable BCE:</b> <code>max(x, 0) - x*y + log(1 + exp(-|x|))</code>. Avoids log(0) and exp overflow.</li>
+  <li>This is how PyTorch implements it internally.</li>
+</ul>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">def</span> <span class="fn">my_bce_with_logits</span>(logits, targets):
+    <span class="c"># Numerically stable: max(x,0) - x*y + log(1 + exp(-|x|))</span>
+    <span class="k">return</span> (logits.clamp(min=<span class="n">0</span>) - logits * targets + (<span class="n">1</span> + (-logits.abs()).exp()).log()).mean()
+
+
+<span class="c"># Verify</span>
+logits = torch.randn(<span class="n">8</span>)
+targets = torch.randint(<span class="n">0</span>, <span class="n">2</span>, (<span class="n">8</span>,)).float()
+<span class="k">assert</span> torch.allclose(my_bce_with_logits(logits, targets), F.binary_cross_entropy_with_logits(logits, targets))
+print(<span class="s">"bce_with_logits: PASS"</span>)</pre>
+</details>
+
+<!-- ============================================================ -->
+<h2>Session 2: Normalization + Tensor Ops <span class="timer">~90 min</span></h2>
+<!-- ============================================================ -->
+
+<!-- ---- PROMPT 5 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 5 <span class="timer">8 min</span></div>
+<div class="prompt-text">
+Implement <code>MyLayerNorm</code> as an <code>nn.Module</code>.<br><br>
+<b>Requirements:</b><br>
+&bull; Input: <code>(B, T, D)</code>. Normalize over the last dimension.<br>
+&bull; Learnable <code>weight</code> (scale) and <code>bias</code> (shift), both shape <code>(D,)</code><br>
+&bull; Use <code>eps=1e-5</code> for numerical stability in the denominator.<br>
+&bull; Verify against <code>nn.LayerNorm(D)</code>: copy the weight/bias, check outputs match.
+</div>
+</div>
+
+<div class="panel">
+<h3>What you need to know</h3>
+<ul>
+  <li><b>LayerNorm formula:</b> <code>(x - mean) / sqrt(var + eps) * weight + bias</code></li>
+  <li>Mean and var computed over the <b>last dimension</b> (features), not batch.</li>
+  <li><code>keepdim=True</code> for broadcasting.</li>
+  <li><code>weight</code> and <code>bias</code> are <code>nn.Parameter</code> — initialized to ones and zeros.</li>
+</ul>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">class</span> <span class="fn">MyLayerNorm</span>(nn.Module):
+    <span class="k">def</span> <span class="fn">__init__</span>(self, d, eps=<span class="n">1e-5</span>):
+        super().__init__()
+        self.weight = nn.Parameter(torch.ones(d))
+        self.bias = nn.Parameter(torch.zeros(d))
+        self.eps = eps
+
+    <span class="k">def</span> <span class="fn">forward</span>(self, x):
+        <span class="c"># x: (B, T, D) — normalize over last dim</span>
+        mean = x.mean(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>)
+        var = x.var(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>, unbiased=<span class="k">False</span>)
+        x_norm = (x - mean) / (var + self.eps).sqrt()
+        <span class="k">return</span> x_norm * self.weight + self.bias
+
+
+<span class="c"># Verify</span>
+D = <span class="n">64</span>
+x = torch.randn(<span class="n">4</span>, <span class="n">8</span>, D)
+my_ln = MyLayerNorm(D)
+ref_ln = nn.LayerNorm(D)
+<span class="c"># Copy weights so they match</span>
+my_ln.weight.data = ref_ln.weight.data.clone()
+my_ln.bias.data = ref_ln.bias.data.clone()
+<span class="k">assert</span> torch.allclose(my_ln(x), ref_ln(x), atol=<span class="n">1e-5</span>)
+print(<span class="s">"LayerNorm: PASS"</span>)</pre>
+
+<div class="callout warn"><b>Gotcha:</b> <code>x.var()</code> uses Bessel's correction (unbiased=True) by default. PyTorch's <code>nn.LayerNorm</code> uses <code>unbiased=False</code>. You must match it or the verify will fail.</div>
+</details>
+
+<!-- ---- PROMPT 6 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 6 <span class="timer">5 min</span></div>
+<div class="prompt-text">
+Implement <code>MyRMSNorm</code> as an <code>nn.Module</code>.<br><br>
+<b>Requirements:</b><br>
+&bull; Like LayerNorm but <b>no mean centering, no bias</b>. Only scale.<br>
+&bull; <code>RMS(x) = sqrt(mean(x^2))</code><br>
+&bull; Output: <code>x / RMS(x) * weight</code><br>
+&bull; Learnable <code>weight</code> shape <code>(D,)</code>, initialized to ones.
+</div>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">class</span> <span class="fn">MyRMSNorm</span>(nn.Module):
+    <span class="k">def</span> <span class="fn">__init__</span>(self, d, eps=<span class="n">1e-6</span>):
+        super().__init__()
+        self.weight = nn.Parameter(torch.ones(d))
+        self.eps = eps
+
+    <span class="k">def</span> <span class="fn">forward</span>(self, x):
+        <span class="c"># RMS = sqrt(mean(x^2))</span>
+        rms = (x.pow(<span class="n">2</span>).mean(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>) + self.eps).rsqrt()
+        <span class="k">return</span> x * rms * self.weight
+
+
+<span class="c"># Verify (no built-in to compare — just check output shape and scale)</span>
+x = torch.randn(<span class="n">4</span>, <span class="n">8</span>, <span class="n">64</span>)
+rms = MyRMSNorm(<span class="n">64</span>)
+out = rms(x)
+<span class="k">assert</span> out.shape == x.shape
+<span class="c"># After RMSNorm, RMS of output ≈ 1</span>
+out_rms = out.pow(<span class="n">2</span>).mean(dim=-<span class="n">1</span>).sqrt().mean()
+print(f<span class="s">"RMSNorm output RMS: {out_rms:.3f} (should be ~1.0)"</span>)
+print(<span class="s">"RMSNorm: PASS"</span>)</pre>
+</details>
+
+<!-- ---- PROMPT 7 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 7 <span class="timer">15 min</span></div>
+<div class="prompt-text">
+Tensor manipulation drill. Solve each in 1-2 lines. No loops.<br><br>
+
+<b>7a.</b> Given <code>x = torch.randn(4, 8, 64)</code> and <code>idx = torch.tensor([2, 0, 5, 3])</code> (one index per batch), extract the token at position <code>idx[b]</code> for each batch element. Result shape: <code>(4, 64)</code>.<br><br>
+
+<b>7b.</b> Given <code>logits = torch.randn(4, 1000)</code>, get the top-5 values and their indices for each batch element.<br><br>
+
+<b>7c.</b> Given <code>x = torch.randn(4, 8, 64)</code> and a boolean mask <code>mask = torch.tensor([True, True, False, True, False, False, True, True])</code>, zero out all positions where mask is False.<br><br>
+
+<b>7d.</b> Given <code>x = torch.randn(4, 8)</code>, replace all negative values with 0 (like ReLU, but use <code>where</code> or <code>clamp</code>).<br><br>
+
+<b>7e.</b> Given <code>src = torch.randn(4, 8, 64)</code> and <code>index = torch.randint(0, 3, (4, 8))</code>, use <code>scatter</code> to one-hot encode the index into shape <code>(4, 8, 3)</code>.
+</div>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solutions after attempting</summary>
+<pre><span class="c"># 7a. Advanced indexing — pick one token per batch</span>
+x = torch.randn(<span class="n">4</span>, <span class="n">8</span>, <span class="n">64</span>)
+idx = torch.tensor([<span class="n">2</span>, <span class="n">0</span>, <span class="n">5</span>, <span class="n">3</span>])
+result = x[torch.arange(<span class="n">4</span>), idx]          <span class="c"># (4, 64)</span>
+<span class="c"># Alt: x[range(4), idx]  or  torch.gather</span>
+
+
+<span class="c"># 7b. Top-k</span>
+logits = torch.randn(<span class="n">4</span>, <span class="n">1000</span>)
+values, indices = torch.topk(logits, k=<span class="n">5</span>, dim=-<span class="n">1</span>)
+<span class="c"># values: (4, 5), indices: (4, 5)</span>
+
+
+<span class="c"># 7c. Boolean mask — zero out positions</span>
+x = torch.randn(<span class="n">4</span>, <span class="n">8</span>, <span class="n">64</span>)
+mask = torch.tensor([<span class="k">True</span>, <span class="k">True</span>, <span class="k">False</span>, <span class="k">True</span>, <span class="k">False</span>, <span class="k">False</span>, <span class="k">True</span>, <span class="k">True</span>])
+x[:, ~mask, :] = <span class="n">0</span>                        <span class="c"># zero out where False</span>
+<span class="c"># Alt: x * mask.unsqueeze(0).unsqueeze(-1)   (broadcast)</span>
+
+
+<span class="c"># 7d. ReLU via where/clamp</span>
+x = torch.randn(<span class="n">4</span>, <span class="n">8</span>)
+result_where = torch.where(x > <span class="n">0</span>, x, torch.zeros_like(x))
+result_clamp = x.clamp(min=<span class="n">0</span>)
+<span class="c"># Both equivalent to F.relu(x)</span>
+
+
+<span class="c"># 7e. One-hot via scatter</span>
+index = torch.randint(<span class="n">0</span>, <span class="n">3</span>, (<span class="n">4</span>, <span class="n">8</span>))
+one_hot = torch.zeros(<span class="n">4</span>, <span class="n">8</span>, <span class="n">3</span>)
+one_hot.scatter_(<span class="n">2</span>, index.unsqueeze(-<span class="n">1</span>), <span class="n">1.0</span>)   <span class="c"># (4, 8, 3)</span>
+<span class="c"># Alt: F.one_hot(index, num_classes=3).float()</span></pre>
+</details>
+
+<!-- ---- PROMPT 8 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 8 <span class="timer">10 min</span></div>
+<div class="prompt-text">
+Broadcasting drill. For each pair, predict: will it broadcast? If yes, what's the output shape? If no, why not?<br><br>
+
+<b>8a.</b> <code>(4, 3) + (3,)</code><br>
+<b>8b.</b> <code>(4, 3) + (4, 1)</code><br>
+<b>8c.</b> <code>(4, 3) + (5, 3)</code><br>
+<b>8d.</b> <code>(2, 1, 8) + (1, 4, 8)</code><br>
+<b>8e.</b> <code>(B, T, 1) * (1, 1, D)</code><br>
+<b>8f.</b> <code>(B, H, T, d_k) @ (B, H, d_k, T)</code> — is this broadcasting or batched matmul?
+</div>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show answers after attempting</summary>
+<div class="panel">
+<table>
+<tr><th>Pair</th><th>Result</th><th>Why</th></tr>
+<tr><td><code>(4,3) + (3,)</code></td><td><span style="color:var(--ok)">YES → (4, 3)</span></td><td>(3,) broadcasts to (1, 3) → (4, 3)</td></tr>
+<tr><td><code>(4,3) + (4,1)</code></td><td><span style="color:var(--ok)">YES → (4, 3)</span></td><td>dim 1: 1 broadcasts to 3</td></tr>
+<tr><td><code>(4,3) + (5,3)</code></td><td><span style="color:var(--bad)">NO</span></td><td>dim 0: 4 vs 5, neither is 1</td></tr>
+<tr><td><code>(2,1,8) + (1,4,8)</code></td><td><span style="color:var(--ok)">YES → (2, 4, 8)</span></td><td>dim 0: 1→2, dim 1: 1→4, dim 2: match</td></tr>
+<tr><td><code>(B,T,1) * (1,1,D)</code></td><td><span style="color:var(--ok)">YES → (B, T, D)</span></td><td>All dims broadcast. This is how you expand a scalar per-token to full features.</td></tr>
+<tr><td><code>(B,H,T,dk) @ (B,H,dk,T)</code></td><td><span style="color:var(--ok)">Batched matmul → (B, H, T, T)</span></td><td>First 2 dims are batch dims, last 2 are the matrix. <code>@</code> does batched matmul, not broadcasting.</td></tr>
+</table>
+
+<div class="callout"><b>Broadcasting rule:</b> align dims from the right. Each pair must be equal or one must be 1. If neither, it fails.</div>
+</div>
+</details>
+
+<!-- ---- PROMPT 9 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 9 <span class="timer">10 min</span></div>
+<div class="prompt-text">
+<code>gather</code> drill — the trickiest PyTorch op.<br><br>
+
+<b>9a.</b> Given <code>probs = torch.randn(4, 10)</code> (batch of distributions over 10 classes) and <code>labels = torch.tensor([3, 7, 1, 5])</code>, use <code>torch.gather</code> to pick the probability of the correct class for each batch element. Result shape: <code>(4, 1)</code>.<br><br>
+
+<b>9b.</b> Same task but using advanced indexing <code>probs[range(B), labels]</code>. Which do you prefer?<br><br>
+
+<b>9c.</b> Given <code>x = torch.randn(4, 8, 64)</code> and <code>idx = torch.tensor([[2], [0], [5], [3]])</code> shape <code>(4, 1)</code>, use gather to select one token per batch. Result shape: <code>(4, 1, 64)</code>.
+</div>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solutions after attempting</summary>
+<pre><span class="c"># 9a. gather to pick class probabilities</span>
+probs = torch.randn(<span class="n">4</span>, <span class="n">10</span>)
+labels = torch.tensor([<span class="n">3</span>, <span class="n">7</span>, <span class="n">1</span>, <span class="n">5</span>])
+picked = torch.gather(probs, dim=<span class="n">1</span>, index=labels.unsqueeze(<span class="n">1</span>))  <span class="c"># (4, 1)</span>
+
+
+<span class="c"># 9b. Advanced indexing — simpler, preferred for this case</span>
+picked_v2 = probs[torch.arange(<span class="n">4</span>), labels]                       <span class="c"># (4,)</span>
+<span class="c"># Advanced indexing is cleaner for 2D. gather shines in higher dims.</span>
+
+
+<span class="c"># 9c. gather on 3D — select one token per batch</span>
+x = torch.randn(<span class="n">4</span>, <span class="n">8</span>, <span class="n">64</span>)
+idx = torch.tensor([[<span class="n">2</span>], [<span class="n">0</span>], [<span class="n">5</span>], [<span class="n">3</span>]])                      <span class="c"># (4, 1)</span>
+idx_expanded = idx.unsqueeze(-<span class="n">1</span>).expand(-<span class="n">1</span>, -<span class="n">1</span>, <span class="n">64</span>)             <span class="c"># (4, 1, 64)</span>
+result = torch.gather(x, dim=<span class="n">1</span>, index=idx_expanded)             <span class="c"># (4, 1, 64)</span>
+
+<span class="c"># gather rule: index must match x in all dims except the gathered one.
+# So for dim=1 on (4,8,64), index must be (4,?,64) — you expand the last dim.</span></pre>
+</details>
+
+<!-- ============================================================ -->
+<h2>Session 3: Masking, Gathering & Sampling (from Meta prep) <span class="timer">~90 min</span></h2>
+<!-- ============================================================ -->
+
+<p>These are real interview patterns. They all drill <b>masking with unsqueeze</b> and <b>gather/arange indexing</b> — your weak spots.</p>
+
+<!-- ---- MASKING CHEAT SHEET ---- -->
+<section class="panel">
+  <h3>Masking Cheat Sheet</h3>
+  <p>Given <code>scores: (B, T, T)</code> and <code>mask: (B, T)</code> where 1 = valid, 0 = padded:</p>
+<div class="diagram">
+<span class="v">mask.unsqueeze(1)</span>  → (B, <span class="n">1</span>, T) → <b>column mask</b>
+  "Forbid EVERY query from attending to padded keys"
+  Use: <span class="fn">scores.masked_fill(mask.unsqueeze(1) == 0, -inf)</span>
+
+<span class="v">mask.unsqueeze(2)</span>  → (B, T, <span class="n">1</span>) → <b>row mask</b>
+  "Zero out entire output rows for padded queries"
+  Use: <span class="fn">output * mask.unsqueeze(2)</span></div>
+  <div class="callout warn"><b>Column mask kills logits BEFORE softmax.</b> Row mask zeros output AFTER softmax. Don't mix them up.</div>
+</section>
+
+<!-- ---- PROMPT 10 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 10 <span class="timer">15 min</span></div>
+<div class="prompt-text">
+Implement <code>masked_softmax(scores, mask, tau)</code>.<br><br>
+<b>Inputs:</b><br>
+&bull; <code>scores</code>: <code>(B, T, T)</code> — unnormalized attention weights<br>
+&bull; <code>mask</code>: <code>(B, T)</code> — 1 = valid token, 0 = padded<br>
+&bull; <code>tau</code>: float, temperature &gt; 0<br><br>
+<b>Requirements:</b><br>
+&bull; Scale by temperature: <code>scores / tau</code><br>
+&bull; If <code>mask[b, j] == 0</code>, column j must get <code>-inf</code> BEFORE softmax (no probability on padded keys)<br>
+&bull; If <code>mask[b, i] == 0</code>, entire output row i must be zero<br>
+&bull; Use stable softmax (subtract max). Output shape: <code>(B, T, T)</code>.
+</div>
+</div>
+
+<div class="panel">
+<h3>What you need to know</h3>
+<ul>
+  <li><b>Column mask</b>: <code>mask.unsqueeze(1)</code> → <code>(B, 1, T)</code>. Broadcasts across all query rows.</li>
+  <li><b><code>masked_fill</code></b>: <code>x.masked_fill(condition, value)</code> — where condition is <b>True</b>, fill with value. So <code>mask == 0</code> is the condition.</li>
+  <li><b>Row mask</b>: <code>mask.unsqueeze(2)</code> → <code>(B, T, 1)</code>. Multiply output to zero out padded query rows.</li>
+  <li>Add <code>1e-10</code> to denominator to handle all-<code>-inf</code> rows.</li>
+</ul>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">def</span> <span class="fn">masked_softmax</span>(scores, mask, tau):
+    <span class="c"># scores: (B, T, T), mask: (B, T), tau: float</span>
+
+    <span class="c"># 1. Scale</span>
+    scaled = scores / tau                                  <span class="c"># (B, T, T)</span>
+
+    <span class="c"># 2. Column mask: invalid keys → -inf</span>
+    col_mask = (mask.unsqueeze(<span class="n">1</span>) == <span class="n">0</span>)                    <span class="c"># (B, 1, T)</span>
+    scaled = scaled.masked_fill(col_mask, float(<span class="s">'-inf'</span>))
+
+    <span class="c"># 3. Stable softmax</span>
+    stable = scaled - scaled.max(-<span class="n">1</span>, keepdim=<span class="k">True</span>).values  <span class="c"># (B, T, T)</span>
+    num = torch.exp(stable)
+    den = num.sum(-<span class="n">1</span>, keepdim=<span class="k">True</span>) + <span class="n">1e-10</span>
+    out = num / den                                        <span class="c"># (B, T, T)</span>
+
+    <span class="c"># 4. Row mask: invalid queries → zero output</span>
+    out = out * mask.unsqueeze(<span class="n">2</span>)                           <span class="c"># (B, T, 1)</span>
+
+    <span class="k">return</span> out</pre>
+</details>
+
+<!-- ---- PROMPT 11 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 11 <span class="timer">12 min</span></div>
+<div class="prompt-text">
+Implement <code>masked_seq_ce(logits, targets, mask)</code> — masked sequence-level cross-entropy.<br><br>
+<b>Inputs:</b><br>
+&bull; <code>logits</code>: <code>(B, T, C)</code> — unnormalized scores<br>
+&bull; <code>targets</code>: <code>(B, T)</code> — integer class labels<br>
+&bull; <code>mask</code>: <code>(B, T)</code> — 1 = valid token, 0 = ignore<br><br>
+<b>Requirements:</b><br>
+&bull; Compute per-token CE using <code>logsumexp - x_correct</code> (no softmax)<br>
+&bull; Use <code>gather</code> to pick the target logit<br>
+&bull; Final loss: <code>sum(CE * mask) / sum(mask)</code> — average only over valid tokens.
+</div>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">def</span> <span class="fn">masked_seq_ce</span>(logits, targets, mask):
+    <span class="c"># logits: (B, T, C), targets: (B, T), mask: (B, T)</span>
+
+    <span class="c"># 1. Stability</span>
+    stable = logits - logits.max(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>).values
+
+    <span class="c"># 2. logsumexp (manual since we already subtracted max)</span>
+    lse = torch.log(torch.exp(stable).sum(dim=-<span class="n">1</span>) + <span class="n">1e-10</span>)   <span class="c"># (B, T)</span>
+
+    <span class="c"># 3. Pick target logit via gather</span>
+    right = torch.gather(stable, dim=<span class="n">2</span>, index=targets.unsqueeze(-<span class="n">1</span>)).squeeze(-<span class="n">1</span>)  <span class="c"># (B, T)</span>
+
+    <span class="c"># 4. Per-token CE</span>
+    ce = lse - right                                        <span class="c"># (B, T)</span>
+
+    <span class="c"># 5. Masked average</span>
+    <span class="k">return</span> (ce * mask).sum() / mask.sum()</pre>
+
+<div class="callout ok"><b>Pattern:</b> <code>sum(loss * mask) / sum(mask)</code> — the standard way to average loss over variable-length sequences. You'll use this everywhere in NLP/speech.</div>
+</details>
+
+<!-- ---- PROMPT 12 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 12 <span class="timer">12 min</span></div>
+<div class="prompt-text">
+Implement <code>gathered_embed_proj(emb, ids, proj)</code>.<br><br>
+<b>Inputs:</b><br>
+&bull; <code>emb</code>: <code>(B, T, D)</code> — embedding table per batch<br>
+&bull; <code>ids</code>: <code>(B, K)</code> — indices to gather from emb<br>
+&bull; <code>proj</code>: <code>(D, E)</code> — projection matrix<br><br>
+<b>Goal:</b> For each batch b and index k: <code>out[b, k] = emb[b, ids[b, k]] @ proj</code><br>
+<b>Output:</b> <code>(B, K, E)</code><br><br>
+<b>Two approaches — implement both:</b><br>
+&bull; <b>A.</b> <code>torch.arange(B).unsqueeze(-1)</code> + advanced indexing<br>
+&bull; <b>B.</b> <code>gather</code> with <code>unsqueeze</code> + <code>expand</code>
+</div>
+</div>
+
+<div class="panel">
+<h3>What you need to know</h3>
+<ul>
+  <li><b>Advanced indexing for 3D:</b> <code>emb[torch.arange(B).unsqueeze(-1), ids, :]</code></li>
+  <li><code>torch.arange(B)</code> is <code>(B,)</code>. <code>.unsqueeze(-1)</code> makes it <code>(B, 1)</code>. With <code>ids</code> as <code>(B, K)</code>, they broadcast to select <code>(B, K)</code> entries.</li>
+  <li><b>Gather for 3D:</b> index must match all dims except gathered one. For dim=1 on <code>(B, T, D)</code>, index must be <code>(B, K, D)</code> — expand the last dim.</li>
+</ul>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">def</span> <span class="fn">gathered_embed_proj</span>(emb, ids, proj):
+    <span class="c"># emb: (B, T, D), ids: (B, K), proj: (D, E)</span>
+    B, T, D = emb.shape
+
+    <span class="c"># --- Approach A: arange + advanced indexing ---</span>
+    fetched = emb[torch.arange(B).unsqueeze(-<span class="n">1</span>), ids, :]  <span class="c"># (B, K, D)</span>
+    <span class="c">#   arange(B).unsqueeze(-1): (B, 1)</span>
+    <span class="c">#   ids:                     (B, K)</span>
+    <span class="c">#   broadcasts to:           (B, K)  → picks B*K entries</span>
+
+    <span class="c"># --- Approach B: gather ---</span>
+    <span class="c"># ids_expanded = ids.unsqueeze(-1).expand(-1, -1, D)  # (B, K, D)</span>
+    <span class="c"># fetched = torch.gather(emb, dim=1, index=ids_expanded)  # (B, K, D)</span>
+
+    <span class="c"># Project</span>
+    <span class="k">return</span> fetched @ proj                                   <span class="c"># (B, K, E)</span></pre>
+
+<div class="callout warn"><b>arange pattern for 3D:</b> <code>tensor[arange(B).unsqueeze(-1), ids]</code> — the unsqueeze makes <code>(B,1)</code> which broadcasts with <code>(B,K)</code> to produce <code>(B,K)</code> selections. This is the key pattern to memorize.</div>
+</details>
+
+<!-- ---- PROMPT 13 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 13 <span class="timer">12 min</span></div>
+<div class="prompt-text">
+Implement <code>top_k_sample(logits, k)</code> — top-k sampling for autoregressive generation.<br><br>
+<b>Inputs:</b><br>
+&bull; <code>logits</code>: <code>(B, V)</code> — raw logits over vocabulary<br>
+&bull; <code>k</code>: int — number of top candidates<br><br>
+<b>Requirements:</b><br>
+&bull; Keep only top-k logits, set everything else to <code>-inf</code><br>
+&bull; Apply stable softmax to get probabilities<br>
+&bull; Sample one token per batch using <code>torch.multinomial</code><br>
+&bull; Return: <code>(B, 1)</code> — sampled token indices<br>
+&bull; Hint: <code>topk</code> gives you values and indices. <code>scatter_</code> puts values back.
+</div>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">def</span> <span class="fn">top_k_sample</span>(logits, k):
+    <span class="c"># logits: (B, V)</span>
+    vals, idx = logits.topk(k, dim=-<span class="n">1</span>)                <span class="c"># (B, k), (B, k)</span>
+
+    <span class="c"># Create -inf mask, scatter top-k values back</span>
+    mask = torch.full_like(logits, float(<span class="s">'-inf'</span>))
+    mask.scatter_(<span class="n">1</span>, idx, vals)                         <span class="c"># (B, V) with top-k restored</span>
+
+    <span class="c"># Stable softmax</span>
+    stable = mask - mask.max(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>).values
+    probs = torch.exp(stable)
+    probs = probs / (probs.sum(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>) + <span class="n">1e-10</span>)
+
+    <span class="c"># Sample</span>
+    <span class="k">return</span> torch.multinomial(probs, <span class="n">1</span>)                  <span class="c"># (B, 1)</span></pre>
+
+<div class="callout"><b>scatter_ pattern:</b> <code>target.scatter_(dim, indices, values)</code> — the reverse of gather. Puts <code>values</code> into <code>target</code> at positions given by <code>indices</code>.</div>
+</details>
+
+<!-- ============================================================ -->
+<h2>Wednesday Checklist</h2>
+<!-- ============================================================ -->
+
+<ul class="check">
+  <li><b>Session 1:</b> my_softmax — subtract max, exp, divide</li>
+  <li><b>Session 1:</b> my_cross_entropy — log-softmax + NLL via advanced indexing</li>
+  <li><b>Session 1:</b> my_mse_loss — one-liner</li>
+  <li><b>Session 1:</b> my_bce_with_logits — stable formula</li>
+  <li><b>Session 2:</b> MyLayerNorm — mean, var (unbiased=False!), scale + shift</li>
+  <li><b>Session 2:</b> MyRMSNorm — no mean, just RMS + scale</li>
+  <li><b>Session 2:</b> Tensor ops: advanced indexing, topk, boolean mask, where/clamp, scatter</li>
+  <li><b>Session 2:</b> Broadcasting rules — align from right, must be equal or 1</li>
+  <li><b>Session 2:</b> gather — index must match x in all dims except gathered one</li>
+  <li><b>Session 3:</b> Masking cheat sheet — unsqueeze(1) = col mask, unsqueeze(2) = row mask</li>
+  <li><b>Session 3:</b> masked_softmax — col mask -inf before softmax, row mask zero after</li>
+  <li><b>Session 3:</b> masked_seq_ce — sum(CE * mask) / sum(mask)</li>
+  <li><b>Session 3:</b> gathered_embed_proj — arange(B).unsqueeze(-1) for 3D indexing</li>
+  <li><b>Session 3:</b> top_k_sample — topk → scatter_ → softmax → multinomial</li>
+</ul>
+
+<div class="footer">Wednesday PyTorch Drills &middot; Nuance Labs prep &middot; March 2026</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PyTorch Drills — Thursday Sessions</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:36px 0 10px;font-size:22px;border-bottom:2px solid var(--code-border);padding-bottom:8px}
+  h3{margin:24px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  .k{color:#c792ea} .fn{color:#82aaff} .s{color:#c3e88d} .c{color:#6b708c} .n{color:#f78c6c} .v{color:#ffcb6b}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  .prompt{background:#1a1a2e;border:2px solid var(--accent);border-radius:14px;padding:20px;margin:16px 0}
+  .prompt-label{color:var(--accent);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+  .prompt-text{font-size:16px;line-height:1.6}
+  .timer{display:inline-block;background:var(--warn);color:#000;font-weight:700;font-size:12px;padding:2px 8px;border-radius:999px;margin-left:8px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .check{list-style:none;padding:0}
+  .check li{padding:8px 0;font-size:15px;border-bottom:1px solid var(--code-border)}
+  .check li::before{content:"\2610 ";font-size:18px;margin-right:8px}
+  .diagram{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:20px;margin:14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:14px;line-height:1.6;overflow-x:auto;white-space:pre}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Thursday PyTorch Drills</h1>
+  <span class="badge">Session 3: K-Means + Distance Ops</span>
+  <span class="badge">Session 4: Flow Matching + AMP</span>
+</header>
+
+<!-- ============================================================ -->
+<h2>Session 3: K-Means from Scratch <span class="timer">~90 min</span></h2>
+<!-- ============================================================ -->
+
+<p>The goal: implement K-means clustering using <b>only PyTorch tensor ops</b>. No sklearn, no loops over data points. This drills <code>cdist</code>, <code>argmin</code>, <code>scatter</code>/<code>index</code> masking, and in-place accumulation.</p>
+
+<!-- ---- PROMPT 1 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 1 <span class="timer">8 min</span></div>
+<div class="prompt-text">
+Implement <code>my_cdist(A, B)</code> that computes pairwise L2 distances.<br><br>
+<b>Requirements:</b><br>
+&bull; <code>A</code>: <code>(N, D)</code>, <code>B</code>: <code>(M, D)</code><br>
+&bull; Return: <code>(N, M)</code> where <code>[i, j] = ||A[i] - B[j]||_2</code><br>
+&bull; No loops. Use the expansion trick: <code>||a-b||^2 = ||a||^2 + ||b||^2 - 2*a.b</code><br>
+&bull; Verify: <code>torch.allclose(my_cdist(A, B), torch.cdist(A, B), atol=1e-4)</code>
+</div>
+</div>
+
+<div class="panel">
+<h3>What you need to know</h3>
+<ul>
+  <li><b>Expansion trick</b> avoids materializing an <code>(N, M, D)</code> difference tensor.</li>
+  <li><code>||a||^2</code> = <code>(A ** 2).sum(dim=-1)</code>, keep shape for broadcasting.</li>
+  <li>Cross-term: <code>A @ B.T</code> gives <code>(N, M)</code>.</li>
+  <li><code>.clamp(min=0)</code> before <code>.sqrt()</code> — floating point can give tiny negatives.</li>
+</ul>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">def</span> <span class="fn">my_cdist</span>(A, B):
+    <span class="c"># A: (N, D), B: (M, D) → (N, M)</span>
+    a_sq = (A ** <span class="n">2</span>).sum(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>)   <span class="c"># (N, 1)</span>
+    b_sq = (B ** <span class="n">2</span>).sum(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>)   <span class="c"># (M, 1)</span>
+    cross = A @ B.T                               <span class="c"># (N, M)</span>
+    dist_sq = a_sq + b_sq.T - <span class="n">2</span> * cross           <span class="c"># (N, M)</span>
+    <span class="k">return</span> dist_sq.clamp(min=<span class="n">0</span>).sqrt()
+
+
+<span class="c"># Verify</span>
+A = torch.randn(<span class="n">100</span>, <span class="n">64</span>)
+B = torch.randn(<span class="n">10</span>, <span class="n">64</span>)
+<span class="k">assert</span> torch.allclose(my_cdist(A, B), torch.cdist(A, B), atol=<span class="n">1e-4</span>)
+print(<span class="s">"cdist: PASS"</span>)</pre>
+</details>
+
+<!-- ---- PROMPT 2 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 2 <span class="timer">20 min</span></div>
+<div class="prompt-text">
+Implement K-means clustering: <code>kmeans(data, K, n_iter=20)</code>.<br><br>
+<b>Requirements:</b><br>
+&bull; <code>data</code>: <code>(N, D)</code><br>
+&bull; Initialize centroids by randomly picking K data points (no <code>randperm</code> — use <code>torch.randint</code> or <code>randperm</code>, your choice)<br>
+&bull; Each iteration: (1) assign each point to nearest centroid, (2) recompute centroids as mean of assigned points<br>
+&bull; <b>No loops over data points</b> — only loop over iterations.<br>
+&bull; Use <code>torch.cdist</code> (or your <code>my_cdist</code>) for distances.<br>
+&bull; Return: <code>(centroids, assignments)</code> — centroids <code>(K, D)</code>, assignments <code>(N,)</code>
+</div>
+</div>
+
+<div class="panel">
+<h3>What you need to know</h3>
+<ul>
+  <li><b>Assign step:</b> <code>dists = torch.cdist(data, centroids)</code> → <code>(N, K)</code>, then <code>assignments = dists.argmin(dim=1)</code>.</li>
+  <li><b>Update step:</b> For each cluster k, new centroid = mean of all points assigned to k.</li>
+  <li>The tricky part: computing cluster means <b>without a for-loop over K</b>. Two options:
+    <ul>
+      <li><code>scatter_add</code> + count: accumulate sums per cluster, then divide.</li>
+      <li>Boolean mask per cluster: <code>data[assignments == k].mean(0)</code> — this loops over K (simpler, acceptable for interview).</li>
+    </ul>
+  </li>
+</ul>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">def</span> <span class="fn">kmeans</span>(data, K, n_iter=<span class="n">20</span>):
+    N, D = data.shape
+
+    <span class="c"># Initialize: pick K random data points</span>
+    idx = torch.randperm(N)[:K]
+    centroids = data[idx].clone()                  <span class="c"># (K, D)</span>
+
+    <span class="k">for</span> i <span class="k">in</span> range(n_iter):
+        <span class="c"># 1. Assign: nearest centroid for each point</span>
+        dists = torch.cdist(data, centroids)       <span class="c"># (N, K)</span>
+        assignments = dists.argmin(dim=<span class="n">1</span>)          <span class="c"># (N,)</span>
+
+        <span class="c"># 2. Update: mean of each cluster</span>
+        new_centroids = torch.zeros_like(centroids)
+        <span class="k">for</span> k <span class="k">in</span> range(K):
+            mask = assignments == k
+            <span class="k">if</span> mask.sum() > <span class="n">0</span>:
+                new_centroids[k] = data[mask].mean(dim=<span class="n">0</span>)
+            <span class="k">else</span>:
+                new_centroids[k] = centroids[k]    <span class="c"># keep dead centroid</span>
+        centroids = new_centroids
+
+    <span class="k">return</span> centroids, assignments
+
+
+<span class="c"># Test on blobs</span>
+blob1 = torch.randn(<span class="n">50</span>, <span class="n">2</span>) + torch.tensor([<span class="n">5.0</span>, <span class="n">0.0</span>])
+blob2 = torch.randn(<span class="n">50</span>, <span class="n">2</span>) + torch.tensor([-<span class="n">5.0</span>, <span class="n">0.0</span>])
+blob3 = torch.randn(<span class="n">50</span>, <span class="n">2</span>) + torch.tensor([<span class="n">0.0</span>, <span class="n">5.0</span>])
+data = torch.cat([blob1, blob2, blob3], dim=<span class="n">0</span>)    <span class="c"># (150, 2)</span>
+
+centroids, assigns = kmeans(data, K=<span class="n">3</span>, n_iter=<span class="n">20</span>)
+print(f<span class="s">"Centroids:\n{centroids}"</span>)
+print(f<span class="s">"Cluster sizes: {[(assigns == k).sum().item() for k in range(3)]}"</span>)</pre>
+
+<div class="callout ok"><b>Scatter-based (loop-free update):</b></div>
+<pre><span class="c"># Fully vectorized update (advanced — bonus points in interview)</span>
+<span class="k">def</span> <span class="fn">kmeans_vectorized</span>(data, K, n_iter=<span class="n">20</span>):
+    N, D = data.shape
+    idx = torch.randperm(N)[:K]
+    centroids = data[idx].clone()
+
+    <span class="k">for</span> _ <span class="k">in</span> range(n_iter):
+        dists = torch.cdist(data, centroids)
+        assignments = dists.argmin(dim=<span class="n">1</span>)            <span class="c"># (N,)</span>
+
+        <span class="c"># scatter_add: sum all points per cluster</span>
+        sums = torch.zeros(K, D)
+        sums.scatter_add_(<span class="n">0</span>, assignments.unsqueeze(<span class="n">1</span>).expand(-<span class="n">1</span>, D), data)
+        counts = torch.zeros(K)
+        counts.scatter_add_(<span class="n">0</span>, assignments, torch.ones(N))
+
+        <span class="c"># Avoid division by zero for empty clusters</span>
+        mask = counts > <span class="n">0</span>
+        centroids[mask] = sums[mask] / counts[mask].unsqueeze(<span class="n">1</span>)
+
+    <span class="k">return</span> centroids, assignments</pre>
+</details>
+
+<!-- ---- PROMPT 3 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 3 <span class="timer">10 min</span></div>
+<div class="prompt-text">
+Implement cosine similarity from scratch: <code>my_cosine_sim(A, B)</code>.<br><br>
+<b>Requirements:</b><br>
+&bull; <code>A</code>: <code>(N, D)</code>, <code>B</code>: <code>(M, D)</code><br>
+&bull; Return: <code>(N, M)</code> where <code>[i, j] = A[i] . B[j] / (||A[i]|| * ||B[j]||)</code><br>
+&bull; Handle the zero-norm edge case (use <code>eps=1e-8</code>).<br>
+&bull; Verify: <code>torch.allclose(my_cosine_sim(A, B), F.cosine_similarity(A.unsqueeze(1), B.unsqueeze(0), dim=-1), atol=1e-5)</code>
+</div>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">def</span> <span class="fn">my_cosine_sim</span>(A, B, eps=<span class="n">1e-8</span>):
+    <span class="c"># Normalize each row to unit length</span>
+    A_norm = A / A.norm(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>).clamp(min=eps)
+    B_norm = B / B.norm(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>).clamp(min=eps)
+    <span class="k">return</span> A_norm @ B_norm.T                    <span class="c"># (N, M)</span>
+
+
+<span class="c"># Verify</span>
+A = torch.randn(<span class="n">8</span>, <span class="n">64</span>)
+B = torch.randn(<span class="n">5</span>, <span class="n">64</span>)
+mine = my_cosine_sim(A, B)
+ref = F.cosine_similarity(A.unsqueeze(<span class="n">1</span>), B.unsqueeze(<span class="n">0</span>), dim=-<span class="n">1</span>)
+<span class="k">assert</span> torch.allclose(mine, ref, atol=<span class="n">1e-5</span>)
+print(<span class="s">"cosine_sim: PASS"</span>)</pre>
+
+<div class="callout"><b>Pattern:</b> normalize → matmul. This is the core of all embedding similarity search (CLIP, retrieval, etc).</div>
+</details>
+
+<!-- ---- PROMPT 4 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 4 <span class="timer">10 min</span></div>
+<div class="prompt-text">
+Implement sinusoidal positional encoding: <code>sinusoidal_pe(T, D)</code>.<br><br>
+<b>Requirements:</b><br>
+&bull; Return: <code>(T, D)</code> positional encoding matrix<br>
+&bull; Even indices: <code>sin(pos / 10000^(2i/D))</code><br>
+&bull; Odd indices: <code>cos(pos / 10000^(2i/D))</code><br>
+&bull; No loops. Use broadcasting and <code>torch.arange</code>.
+</div>
+</div>
+
+<div class="panel">
+<h3>What you need to know</h3>
+<ul>
+  <li><b>pos</b> is a column vector <code>(T, 1)</code>. <b>div_term</b> is a row vector <code>(1, D//2)</code>. Broadcasting gives you <code>(T, D//2)</code>.</li>
+  <li><code>div_term = exp(-arange(0, D, 2) * log(10000) / D)</code> — compute in log space to avoid huge numbers.</li>
+  <li>Stack sin and cos, then interleave or concatenate.</li>
+</ul>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">def</span> <span class="fn">sinusoidal_pe</span>(T, D):
+    pos = torch.arange(T).unsqueeze(<span class="n">1</span>).float()      <span class="c"># (T, 1)</span>
+    div = torch.exp(
+        torch.arange(<span class="n">0</span>, D, <span class="n">2</span>).float() * (-torch.log(torch.tensor(<span class="n">10000.0</span>)) / D)
+    )                                                  <span class="c"># (D//2,)</span>
+    angles = pos * div                                 <span class="c"># (T, D//2)</span>
+
+    pe = torch.zeros(T, D)
+    pe[:, <span class="n">0</span>::<span class="n">2</span>] = torch.sin(angles)                  <span class="c"># even indices</span>
+    pe[:, <span class="n">1</span>::<span class="n">2</span>] = torch.cos(angles)                  <span class="c"># odd indices</span>
+    <span class="k">return</span> pe
+
+
+pe = sinusoidal_pe(<span class="n">128</span>, <span class="n">64</span>)
+print(f<span class="s">"PE shape: {pe.shape}"</span>)          <span class="c"># (128, 64)</span>
+print(f<span class="s">"Row 0 norm: {pe[0].norm():.3f}"</span>) <span class="c"># should be ~sqrt(D/2)</span></pre>
+</details>
+
+<!-- ============================================================ -->
+<h2>Session 4: Flow Matching + Training with AMP <span class="timer">~90 min</span></h2>
+<!-- ============================================================ -->
+
+<p>This session combines two critical skills: understanding conditional flow matching (the loss behind modern TTS like CosyVoice), and writing production-grade training loops with mixed precision.</p>
+
+<!-- ---- PROMPT 5 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 5 <span class="timer">15 min</span></div>
+<div class="prompt-text">
+Implement the <b>conditional flow matching</b> training step.<br><br>
+<b>Setup:</b> A simple MLP "velocity network" <code>v_net(x_t, t)</code> that predicts the velocity field.<br><br>
+<b>Requirements:</b><br>
+&bull; Sample noise <code>x_0 ~ N(0, I)</code> and target <code>x_1</code> from your data<br>
+&bull; Sample <code>t ~ Uniform(0, 1)</code> for each batch element: shape <code>(B, 1)</code><br>
+&bull; Interpolate: <code>x_t = (1 - t) * x_0 + t * x_1</code><br>
+&bull; Ground truth velocity: <code>v_gt = x_1 - x_0</code> (optimal transport path)<br>
+&bull; Prediction: <code>v_pred = model(x_t, t)</code><br>
+&bull; Loss: <code>MSE(v_pred, v_gt)</code><br>
+&bull; Implement both the model and one training step.
+</div>
+</div>
+
+<div class="panel">
+<h3>What you need to know</h3>
+<ul>
+  <li><b>Flow matching</b> learns a velocity field that pushes noise → data along a straight OT path.</li>
+  <li>The interpolation <code>x_t = (1-t)*x_0 + t*x_1</code> defines the path. <code>t=0</code> is noise, <code>t=1</code> is data.</li>
+  <li>The network only needs to predict <code>x_1 - x_0</code> (the displacement). Simpler than diffusion's noise prediction.</li>
+  <li>Conditioning on <code>t</code>: concat it, add it, or use it to modulate. Simplest: concat.</li>
+</ul>
+<div class="diagram">
+x_0 (noise)  ────────────────────▶  x_1 (data)
+     ·                                  ·
+     ·      x_t = (1-t)*x_0 + t*x_1    ·
+     ·            ↑                     ·
+     ·        model predicts            ·
+     ·        v = x_1 - x_0            ·
+     ·        (constant along path)     ·</div>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">class</span> <span class="fn">VelocityNet</span>(nn.Module):
+    <span class="c">"""Simple MLP that predicts velocity given (x_t, t)."""</span>
+    <span class="k">def</span> <span class="fn">__init__</span>(self, d_data, d_hidden=<span class="n">256</span>):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(d_data + <span class="n">1</span>, d_hidden),   <span class="c"># +1 for t</span>
+            nn.SiLU(),
+            nn.Linear(d_hidden, d_hidden),
+            nn.SiLU(),
+            nn.Linear(d_hidden, d_data),
+        )
+
+    <span class="k">def</span> <span class="fn">forward</span>(self, x_t, t):
+        <span class="c"># x_t: (B, D), t: (B, 1)</span>
+        <span class="k">return</span> self.net(torch.cat([x_t, t], dim=-<span class="n">1</span>))
+
+
+<span class="c"># --- One training step ---</span>
+d_data = <span class="n">64</span>
+model = VelocityNet(d_data)
+optimizer = torch.optim.Adam(model.parameters(), lr=<span class="n">1e-3</span>)
+
+<span class="c"># Fake data: 2D Gaussian mixture</span>
+x_1 = torch.randn(<span class="n">32</span>, d_data)                     <span class="c"># target data</span>
+
+optimizer.zero_grad()
+
+<span class="c"># 1. Sample noise and time</span>
+x_0 = torch.randn_like(x_1)                          <span class="c"># (B, D)</span>
+t = torch.rand(<span class="n">32</span>, <span class="n">1</span>)                                <span class="c"># (B, 1)</span>
+
+<span class="c"># 2. Interpolate along OT path</span>
+x_t = (<span class="n">1</span> - t) * x_0 + t * x_1                       <span class="c"># (B, D)</span>
+
+<span class="c"># 3. Ground truth velocity</span>
+v_gt = x_1 - x_0                                     <span class="c"># (B, D)</span>
+
+<span class="c"># 4. Predict</span>
+v_pred = model(x_t, t)                                <span class="c"># (B, D)</span>
+
+<span class="c"># 5. Loss + backward</span>
+loss = F.mse_loss(v_pred, v_gt)
+loss.backward()
+optimizer.step()
+
+print(f<span class="s">"loss: {loss.item():.4f}"</span>)</pre>
+</details>
+
+<!-- ---- PROMPT 6 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 6 <span class="timer">12 min</span></div>
+<div class="prompt-text">
+Implement flow matching <b>inference</b> (ODE integration) using Euler method.<br><br>
+<b>Requirements:</b><br>
+&bull; Start from <code>x_0 ~ N(0, I)</code><br>
+&bull; Take <code>N</code> Euler steps from <code>t=0</code> to <code>t=1</code><br>
+&bull; Each step: <code>x_{t+dt} = x_t + dt * v_net(x_t, t)</code><br>
+&bull; Return the final <code>x_1</code> (generated sample)<br>
+&bull; No gradients needed — wrap in <code>torch.no_grad()</code>
+</div>
+</div>
+
+<div class="panel">
+<h3>What you need to know</h3>
+<ul>
+  <li><b>Euler method:</b> simplest ODE solver. Step size <code>dt = 1/N</code>.</li>
+  <li>More steps = better quality but slower. Typical: 10-100 steps for good generation.</li>
+  <li><code>@torch.no_grad()</code> — inference doesn't need gradients. Saves memory.</li>
+  <li>The time input to the model must be <code>(B, 1)</code> — use <code>torch.full((B, 1), t_val)</code>.</li>
+</ul>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">@torch.no_grad</span>()
+<span class="k">def</span> <span class="fn">euler_sample</span>(model, shape, n_steps=<span class="n">50</span>):
+    <span class="c">"""Generate samples by integrating the learned velocity field."""</span>
+    B = shape[<span class="n">0</span>]
+    dt = <span class="n">1.0</span> / n_steps
+    x = torch.randn(shape)                            <span class="c"># x_0 ~ N(0, I)</span>
+
+    <span class="k">for</span> i <span class="k">in</span> range(n_steps):
+        t_val = i * dt
+        t = torch.full((B, <span class="n">1</span>), t_val)               <span class="c"># (B, 1)</span>
+        v = model(x, t)                                <span class="c"># predicted velocity</span>
+        x = x + dt * v                                 <span class="c"># Euler step</span>
+
+    <span class="k">return</span> x                                           <span class="c"># x_1 ≈ generated data</span>
+
+
+<span class="c"># Generate</span>
+samples = euler_sample(model, shape=(<span class="n">16</span>, d_data), n_steps=<span class="n">50</span>)
+print(f<span class="s">"Generated shape: {samples.shape}"</span>)  <span class="c"># (16, 64)</span></pre>
+</details>
+
+<!-- ---- PROMPT 7 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 7 <span class="timer">15 min</span></div>
+<div class="prompt-text">
+Add <b>mixed precision (AMP)</b> to a training loop.<br><br>
+<b>Requirements:</b><br>
+&bull; Use <code>torch.amp.autocast('cuda')</code> around forward + loss<br>
+&bull; Use <code>torch.amp.GradScaler('cuda')</code> for loss scaling<br>
+&bull; Correct order: <code>scaler.scale(loss).backward()</code> → <code>scaler.step(optimizer)</code> → <code>scaler.update()</code><br>
+&bull; Add gradient clipping with <code>scaler.unscale_(optimizer)</code> before <code>torch.nn.utils.clip_grad_norm_</code><br>
+&bull; Write a full 20-step loop using the MiniTransformerBlock from Tuesday.
+</div>
+</div>
+
+<div class="panel">
+<h3>What you need to know</h3>
+<ul>
+  <li><b>AMP = Automatic Mixed Precision.</b> Forward pass runs in FP16 (faster, less memory). Backward stays FP32 where needed.</li>
+  <li><b>GradScaler</b> prevents FP16 gradients from underflowing to zero. It scales the loss up before backward, then unscales grads before optimizer step.</li>
+  <li><b>Gradient clipping</b> goes between <code>unscale_</code> and <code>step</code>. You must unscale first so the clip threshold is in FP32 units.</li>
+  <li><b>Order:</b> zero_grad → autocast(forward + loss) → scaler.scale(loss).backward() → scaler.unscale_(opt) → clip_grad → scaler.step(opt) → scaler.update()</li>
+</ul>
+<div class="diagram">
+optimizer.zero_grad()
+     │
+     ▼
+with autocast('cuda'):
+  pred = model(x)          ← FP16 forward
+  loss = F.mse_loss(...)   ← FP16 loss
+     │
+     ▼
+scaler.scale(loss).backward()   ← scaled FP16 grads
+     │
+     ▼
+scaler.unscale_(optimizer)      ← back to FP32 grads
+     │
+     ▼
+clip_grad_norm_(...)             ← clip in FP32
+     │
+     ▼
+scaler.step(optimizer)           ← update weights (skips if inf/nan)
+     │
+     ▼
+scaler.update()                  ← adjust scale factor</div>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="c"># Assumes CUDA is available. On CPU, autocast still works but no speedup.</span>
+<span class="k">import</span> torch
+<span class="k">import</span> torch.nn <span class="k">as</span> nn
+<span class="k">import</span> torch.nn.functional <span class="k">as</span> F
+
+
+<span class="k">class</span> <span class="fn">MiniTransformerBlock</span>(nn.Module):
+    <span class="k">def</span> <span class="fn">__init__</span>(self, d_model, d_ff, n_head):
+        super().__init__()
+        self.mha = nn.MultiheadAttention(d_model, n_head, batch_first=<span class="k">True</span>)
+        self.mlp = nn.Sequential(
+            nn.Linear(d_model, d_ff), nn.SiLU(), nn.Linear(d_ff, d_model),
+        )
+        self.norm_1 = nn.LayerNorm(d_model)
+        self.norm_2 = nn.LayerNorm(d_model)
+
+    <span class="k">def</span> <span class="fn">forward</span>(self, x):
+        h = self.norm_1(x)
+        h, _ = self.mha(h, h, h)
+        x = x + h
+        h = self.norm_2(x)
+        h = self.mlp(h)
+        x = x + h
+        <span class="k">return</span> x
+
+
+device = <span class="s">"cuda"</span> <span class="k">if</span> torch.cuda.is_available() <span class="k">else</span> <span class="s">"cpu"</span>
+
+<span class="c"># --- Setup ---</span>
+data = torch.randn(<span class="n">32</span>, <span class="n">128</span>, <span class="n">512</span>, device=device)
+model = MiniTransformerBlock(<span class="n">512</span>, <span class="n">2048</span>, <span class="n">8</span>).to(device)
+optimizer = torch.optim.Adam(model.parameters(), lr=<span class="n">1e-3</span>)
+scaler = torch.amp.GradScaler(<span class="s">"cuda"</span>)
+
+<span class="c"># --- Training loop with AMP ---</span>
+<span class="k">for</span> i <span class="k">in</span> range(<span class="n">20</span>):
+    optimizer.zero_grad()
+
+    idx = torch.randint(<span class="n">0</span>, <span class="n">32</span>, (<span class="n">4</span>,))
+    x = data[idx]
+    y = x[:, <span class="n">1</span>:, :]
+
+    <span class="c"># Forward + loss in autocast</span>
+    <span class="k">with</span> torch.amp.autocast(<span class="s">"cuda"</span>):
+        pred = model(x[:, :-<span class="n">1</span>, :])
+        loss = F.mse_loss(pred, y)
+
+    <span class="c"># Backward with scaled loss</span>
+    scaler.scale(loss).backward()
+
+    <span class="c"># Unscale → clip → step → update</span>
+    scaler.unscale_(optimizer)
+    torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=<span class="n">1.0</span>)
+    scaler.step(optimizer)
+    scaler.update()
+
+    <span class="k">if</span> i % <span class="n">5</span> == <span class="n">0</span>:
+        print(f<span class="s">"step {i:3d} | loss {loss.item():.4f}"</span>)</pre>
+
+<div class="callout warn"><b>Common mistakes:</b><br>
+&bull; Calling <code>loss.backward()</code> instead of <code>scaler.scale(loss).backward()</code><br>
+&bull; Clipping grads before <code>scaler.unscale_()</code> — clip values would be wrong<br>
+&bull; Forgetting <code>scaler.update()</code> at the end — scale factor never adjusts<br>
+&bull; Putting <code>optimizer.step()</code> instead of <code>scaler.step(optimizer)</code></div>
+</details>
+
+<!-- ---- PROMPT 8 ---- -->
+<div class="prompt">
+<div class="prompt-label">Prompt 8 <span class="timer">10 min</span></div>
+<div class="prompt-text">
+Implement <b>gradient clipping</b> from scratch: <code>my_clip_grad_norm_(parameters, max_norm)</code>.<br><br>
+<b>Requirements:</b><br>
+&bull; Compute the global L2 norm of all gradients concatenated<br>
+&bull; If total norm > max_norm, scale all grads down by <code>max_norm / total_norm</code><br>
+&bull; Modify gradients in-place<br>
+&bull; Return the total norm (before clipping)<br>
+&bull; Verify against <code>torch.nn.utils.clip_grad_norm_</code>
+</div>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
+<pre><span class="k">def</span> <span class="fn">my_clip_grad_norm_</span>(parameters, max_norm):
+    <span class="c"># 1. Compute total L2 norm of all grads</span>
+    params = [p <span class="k">for</span> p <span class="k">in</span> parameters <span class="k">if</span> p.grad <span class="k">is not</span> <span class="k">None</span>]
+    total_norm = torch.sqrt(
+        sum(p.grad.data.norm() ** <span class="n">2</span> <span class="k">for</span> p <span class="k">in</span> params)
+    )
+
+    <span class="c"># 2. Scale down if needed</span>
+    clip_coef = max_norm / (total_norm + <span class="n">1e-6</span>)
+    <span class="k">if</span> clip_coef < <span class="n">1.0</span>:
+        <span class="k">for</span> p <span class="k">in</span> params:
+            p.grad.data.mul_(clip_coef)
+
+    <span class="k">return</span> total_norm
+
+
+<span class="c"># Verify</span>
+model = nn.Linear(<span class="n">64</span>, <span class="n">32</span>)
+x = torch.randn(<span class="n">4</span>, <span class="n">64</span>)
+loss = model(x).sum()
+loss.backward()
+
+<span class="c"># Compare</span>
+norm_mine = my_clip_grad_norm_(model.parameters(), max_norm=<span class="n">1.0</span>)
+print(f<span class="s">"Total norm: {norm_mine:.4f}"</span>)</pre>
+</details>
+
+<!-- ============================================================ -->
+<h2>Thursday Checklist</h2>
+<!-- ============================================================ -->
+
+<ul class="check">
+  <li><b>Session 3:</b> my_cdist — expansion trick, clamp(min=0) before sqrt</li>
+  <li><b>Session 3:</b> K-means — cdist → argmin → recompute means. Bonus: scatter_add</li>
+  <li><b>Session 3:</b> Cosine similarity — normalize → matmul</li>
+  <li><b>Session 3:</b> Sinusoidal PE — pos column * div_term row, sin/cos interleave</li>
+  <li><b>Session 4:</b> Flow matching — interpolate x_t, predict velocity v = x_1 - x_0</li>
+  <li><b>Session 4:</b> Euler sampling — x += dt * v_net(x, t), no_grad</li>
+  <li><b>Session 4:</b> AMP — autocast → scaler.scale().backward() → unscale_ → clip → step → update</li>
+  <li><b>Session 4:</b> Gradient clipping — global L2 norm, scale down if > max_norm</li>
+</ul>
+
+<div class="footer">Thursday PyTorch Drills &middot; Nuance Labs prep &middot; March 2026</div>
+
+</div>
+</body>
+</html>

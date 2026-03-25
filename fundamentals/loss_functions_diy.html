@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Loss Functions + Normalization — DIY from Scratch</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:28px 0 10px;font-size:20px}
+  h3{margin:20px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  .k{color:#c792ea} .fn{color:#82aaff} .s{color:#c3e88d} .c{color:#6b708c} .n{color:#f78c6c} .v{color:#ffcb6b}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .diagram{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:20px;margin:14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:14px;line-height:1.6;overflow-x:auto;white-space:pre}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Loss Functions + Normalization — DIY from Scratch</h1>
+  <span class="badge">PyTorch</span>
+  <span class="badge">Interview Prep</span>
+  <span class="badge">Tuesday–Wednesday Drills</span>
+</header>
+
+<!-- ====== THE GIST ====== -->
+<section class="panel">
+  <h2>The Gist</h2>
+  <table>
+    <tr><th>Loss</th><th>One-sentence intuition</th></tr>
+    <tr><td>MSE</td><td>How far off is each number? Square it, average everything.</td></tr>
+    <tr><td>Softmax</td><td>Convert raw logits into a probability vector that sums to 1.</td></tr>
+    <tr><td>Cross-Entropy</td><td>How much probability did you put on the <b>right answer</b>? <code>logsumexp(x) - x_correct</code>. No softmax anywhere.</td></tr>
+    <tr><td>RMSNorm</td><td>Divide by root-mean-square of the features. Scale by gamma. No centering.</td></tr>
+    <tr><td>LayerNorm</td><td>Subtract mean, divide by std, scale by gamma, shift by beta. The full treatment.</td></tr>
+  </table>
+</section>
+
+<!-- ====== MSE ====== -->
+<section class="panel">
+  <h2>MSE Loss</h2>
+  <p>Error → square → mean over all dimensions → scalar.</p>
+<pre><span class="k">def</span> <span class="fn">mse_loss</span>(pred, target):
+    <span class="c"># pred: (B, S, D), target: (B, S, D) → scalar</span>
+    <span class="k">return</span> ((pred - target) ** <span class="n">2</span>).mean()</pre>
+  <div class="callout ok"><code>.mean()</code> with no dim → reduces everything to scalar. No <code>dim</code> argument. No <code>keepdim</code>.</div>
+</section>
+
+<!-- ====== SOFTMAX ====== -->
+<section class="panel">
+  <h2>Softmax</h2>
+  <p>Convert logits to probabilities: subtract max (stability), exp, normalize.</p>
+<pre><span class="k">def</span> <span class="fn">softmax</span>(logit):
+    <span class="c"># logit: (B, S, D) → (B, S, D) probabilities summing to 1 along D</span>
+    logit = logit - logit.max(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>).values
+    nom = torch.exp(logit)                         <span class="c"># element-wise, no dim</span>
+    denom = nom.sum(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>)
+    <span class="k">return</span> nom / denom</pre>
+</section>
+
+<!-- ====== KEEPDIM RULE ====== -->
+<section class="panel">
+  <h2>The <code>keepdim</code> Rule</h2>
+  <div class="callout warn"><b>Use <code>keepdim=True</code> whenever you reduce a dim and then broadcast back against the original tensor.</b></div>
+  <p>Mental check: <i>"Am I about to do math between this result and the original tensor?"</i> If yes → <code>keepdim=True</code>.</p>
+  <table>
+    <tr><th>In softmax</th><th>Why keepdim?</th></tr>
+    <tr><td><code>logit.max(dim=-1, keepdim=True).values</code></td><td>Subtracting from <code>(B,S,D)</code> → needs <code>(B,S,1)</code> not <code>(B,S)</code></td></tr>
+    <tr><td><code>nom.sum(dim=-1, keepdim=True)</code></td><td>Dividing into <code>(B,S,D)</code> → needs <code>(B,S,1)</code></td></tr>
+  </table>
+  <p><b>When you DON'T need it:</b></p>
+  <ul>
+    <li>Final scalar: <code>.mean()</code> in MSE — done, no broadcasting after</li>
+    <li>Both sides lose the same dim: cross-entropy's <code>logsumexp(dim=-1)</code> and <code>gather</code> both produce <code>(B,S)</code></li>
+  </ul>
+  <p><b>Ops that reduce (and might need keepdim):</b> <code>.max(dim=)</code>, <code>.min(dim=)</code>, <code>.sum(dim=)</code>, <code>.mean(dim=)</code>, <code>.var(dim=)</code>, <code>.norm(dim=)</code></p>
+  <div class="callout warn"><b>Gotcha:</b> <code>.max(dim=)</code> returns a <b>named tuple</b> <code>(values, indices)</code>. You must write <code>.max(dim=-1, keepdim=True).values</code> — forgetting <code>.values</code> is a common bug.</div>
+</section>
+
+<!-- ====== CROSS-ENTROPY ====== -->
+<section class="panel">
+  <h2>Cross-Entropy</h2>
+  <h3>The derivation that avoids softmax entirely</h3>
+  <div class="diagram">
+Naive: -log(softmax(x)[correct])
+     = -log( exp(x_c) / sum(exp(x)) )
+     = -( x_c - log(sum(exp(x))) )        ← log and exp cancel on numerator!
+     = log(sum(exp(x))) - x_c
+     = <span class="v">logsumexp(x) - x_correct</span>             ← final formula, no softmax</div>
+
+<pre><span class="k">def</span> <span class="fn">xentropy</span>(logit, label):
+    <span class="c"># logit: (B, S, D), label: (B, S) → (B, S)</span>
+    right_logit = torch.gather(logit, dim=-<span class="n">1</span>, index=label.unsqueeze(-<span class="n">1</span>)).squeeze(-<span class="n">1</span>)
+    <span class="k">return</span> torch.logsumexp(logit, dim=-<span class="n">1</span>) - right_logit</pre>
+
+  <p>Add <code>.mean()</code> at the end to match <code>F.cross_entropy</code>'s scalar output.</p>
+</section>
+
+<!-- ====== GATHER ====== -->
+<section class="panel">
+  <h2><code>gather</code> — The Indexing Pattern</h2>
+  <p><code>gather</code> requires the index to have the <b>same number of dimensions</b> as the input.</p>
+  <div class="diagram">
+logit:  (B, S, <span class="v">D</span>)   ← 3D
+label:  (B, S)       ← 2D  →  gather refuses!
+
+label.unsqueeze(-1):  (B, S, <span class="v">1</span>)  ← 3D  →  gather works
+result:               (B, S, <span class="v">1</span>)  ← 3D
+.squeeze(-1):         (B, S)     ← clean</div>
+  <p>Pattern: <code>unsqueeze</code> to satisfy gather's dim requirement, <code>squeeze</code> to clean up.</p>
+  <div class="callout"><b><code>dim=-1</code></b> in gather tells it which dimension to index into (the class dimension D).</div>
+
+  <h3>Why not <code>torch.arange</code> for 3D?</h3>
+  <p>For 2D <code>(B, C)</code>: <code>logit[torch.arange(B), label]</code> works cleanly — both indices have length B.</p>
+  <p>For 3D <code>(B, S, D)</code>: you'd need <code>arange(B)</code> and <code>arange(S)</code> paired into B*S combinations — messy. Use <code>gather</code> instead.</p>
+</section>
+
+<!-- ====== LOGSUMEXP ====== -->
+<section class="panel">
+  <h2><code>torch.logsumexp</code> — Stability for Free</h2>
+  <p><code>torch.logsumexp</code> internally does the max-subtraction trick. You don't need to subtract max yourself.</p>
+  <p>If you wrote <code>log(sum(exp(x)))</code> by hand → yes, you'd need <code>x - x.max()</code>. But with <code>torch.logsumexp</code> → free.</p>
+  <div class="callout">No <code>keepdim</code> needed on logsumexp here — both logsumexp and gather collapse the D dimension, so <code>(B,S) - (B,S)</code> matches.</div>
+</section>
+
+<!-- ====== NORMALIZATION ====== -->
+<section class="panel">
+  <h2>Activation Normalization: RMSNorm &amp; LayerNorm</h2>
+  <p>Both normalize <b>activations</b> (not weights) along the <b>feature dimension D</b>. For each <code>(b, s)</code> position, they normalize the D-dimensional vector.</p>
+  <table>
+    <tr><th></th><th>RMSNorm</th><th>LayerNorm</th></tr>
+    <tr><td>Center (subtract mean)?</td><td>No</td><td>Yes</td></tr>
+    <tr><td>Learnable params</td><td><code>gamma (D,)</code></td><td><code>gamma (D,)</code> + <code>beta (D,)</code></td></tr>
+    <tr><td>Denominator</td><td>RMS = <code>sqrt(mean(x^2))</code></td><td>std = <code>sqrt(mean((x-mu)^2))</code></td></tr>
+    <tr><td>Used by</td><td>LLaMA, modern LLMs</td><td>Original Transformer, GPT-2</td></tr>
+  </table>
+</section>
+
+<!-- ====== RMSNORM ====== -->
+<section class="panel">
+  <h2>RMSNorm</h2>
+  <p>Divide by root-mean-square, then scale. No mean centering, no bias.</p>
+<pre><span class="k">def</span> <span class="fn">rmsnorm</span>(x, gamma, eps=<span class="n">1e-8</span>):
+    <span class="c"># x: (B, S, D), gamma: (D,)</span>
+    x_rms = ((x ** <span class="n">2</span>).mean(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>) + eps).sqrt()
+    <span class="k">return</span> (x / x_rms) * gamma</pre>
+
+  <h3>What I got wrong</h3>
+  <ul>
+    <li><b><code>torch.sqrt</code> is element-wise</b> — no <code>dim</code> arg, just like <code>torch.exp</code>. Compute RMS manually: <code>(x**2).mean(...).sqrt()</code></li>
+    <li><b>Lost the original x</b> — computed RMS but then assigned it to x instead of dividing x by it</li>
+    <li><b><code>.sum()</code> instead of <code>.mean()</code></b> — root <i>mean</i> square, not root sum square</li>
+    <li><b>Normalize first, scale second</b> — <code>(x / x_rms) * gamma</code>, not <code>(x * gamma) / x_rms</code></li>
+  </ul>
+</section>
+
+<!-- ====== LAYERNORM ====== -->
+<section class="panel">
+  <h2>LayerNorm</h2>
+  <p>Subtract mean, divide by std, then scale + shift. Save <code>mu</code> once — it's used in both numerator and denominator.</p>
+<pre><span class="k">def</span> <span class="fn">layernorm</span>(x, gamma, beta, eps=<span class="n">1e-8</span>):
+    <span class="c"># x: (B, S, D), gamma: (D,), beta: (D,)</span>
+    mu = x.mean(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>)
+    x_std = (((x - mu) ** <span class="n">2</span>).mean(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>) + eps).sqrt()
+    <span class="k">return</span> ((x - mu) / x_std) * gamma + beta</pre>
+
+  <h3>What I got wrong</h3>
+  <ul>
+    <li><b>Forgot to subtract mean in the numerator</b> — wrote <code>x / denom</code> instead of <code>(x - mu) / denom</code>. The whole point is zero-centering first.</li>
+    <li><b>Parenthesis bug:</b> wrote <code>x - mu ** 2</code> (squares the mean) instead of <code>(x - mu) ** 2</code> (squares the difference)</li>
+    <li><b>Dropped <code>eps</code></b> during rewrites — always add it before <code>.sqrt()</code></li>
+    <li><b>Computed <code>mu</code> multiple times</b> — save it to a variable, reuse in numerator and denominator</li>
+  </ul>
+
+  <div class="callout warn"><b><code>unbiased</code> gotcha:</b> <code>.mean()</code> on squared diffs divides by N (population variance). This matches <code>nn.LayerNorm</code>. If you ever use <code>.var()</code> instead, you must pass <code>unbiased=False</code> — PyTorch defaults to <code>unbiased=True</code> (divides by N-1), which won't match.</div>
+</section>
+
+<!-- ====== ELEMENT-WISE OPS RULE ====== -->
+<section class="panel">
+  <h2>Element-wise Ops — No <code>dim</code>!</h2>
+  <div class="callout warn">These ops are purely element-wise. They do <b>not</b> take a <code>dim</code> argument:</div>
+  <p><code>torch.exp</code>, <code>torch.sqrt</code>, <code>torch.log</code>, <code>torch.abs</code>, <code>torch.clamp</code>, <code>** 2</code></p>
+  <p>If you need to reduce along a dimension, combine with <code>.mean(dim=)</code> or <code>.sum(dim=)</code> first, <i>then</i> apply the element-wise op.</p>
+</section>
+
+<!-- ====== GOTCHAS ====== -->
+<section class="panel">
+  <h2>Common Gotchas</h2>
+  <table>
+    <tr><th>Mistake</th><th>Fix</th></tr>
+    <tr><td>Softmax without max subtraction</td><td><code>logit - logit.max(dim=-1, keepdim=True).values</code> first</td></tr>
+    <tr><td><code>.max(dim=-1)</code> returns tuple</td><td>Append <code>.values</code> — it returns <code>(values, indices)</code></td></tr>
+    <tr><td>Missing <code>keepdim=True</code></td><td>Need it when broadcasting back: <code>(B,S,1)</code> vs <code>(B,S,D)</code></td></tr>
+    <tr><td>Computing softmax inside cross-entropy</td><td>Don't. Use <code>logsumexp(x) - x_correct</code> directly.</td></tr>
+    <tr><td><code>torch.gather(logit, index=label)</code></td><td>Missing <code>dim=-1</code>. Also index must match ndim: <code>unsqueeze(-1)</code></td></tr>
+    <tr><td><code>torch.arange</code> for 3D indexing</td><td>Messy. Use <code>gather</code> for 3D tensors.</td></tr>
+    <tr><td><code>F.mse_loss(pred, target, dim=-1)</code></td><td>No <code>dim</code> arg. MSE reduces everything to scalar.</td></tr>
+    <tr><td><code>torch.exp</code> with <code>dim</code></td><td><code>exp</code> is purely element-wise. No <code>dim</code>. Same for <code>sqrt</code>, <code>log</code>, <code>abs</code>.</td></tr>
+    <tr><td><code>x / x_rms * gamma</code> (RMSNorm)</td><td>Normalize first: <code>(x / x_rms) * gamma</code>. Order matters.</td></tr>
+    <tr><td><code>.sum()</code> in RMS</td><td><code>.mean()</code> — root <i>mean</i> square</td></tr>
+    <tr><td><code>x / denom</code> (LayerNorm)</td><td><code>(x - mu) / denom</code> — must subtract mean in numerator too</td></tr>
+    <tr><td><code>x - mu ** 2</code></td><td><code>(x - mu) ** 2</code> — square the difference, not the mean</td></tr>
+    <tr><td><code>x.var()</code> default</td><td>Divides by N-1. Use <code>unbiased=False</code> to match <code>nn.LayerNorm</code></td></tr>
+  </table>
+</section>
+
+<!-- ====== QUICK REFERENCE ====== -->
+<section class="panel">
+  <h2>Quick Reference</h2>
+  <table>
+    <tr><th>Loss</th><th>Formula</th><th>Returns</th></tr>
+    <tr><td>MSE</td><td><code>((pred - target)**2).mean()</code></td><td>scalar</td></tr>
+    <tr><td>Softmax</td><td><code>exp(x - max) / sum(exp(x - max))</code></td><td>same shape as input</td></tr>
+    <tr><td>Cross-Entropy</td><td><code>logsumexp(x, dim=-1) - x_correct</code></td><td><code>(B, S)</code> or scalar with <code>.mean()</code></td></tr>
+    <tr><td>RMSNorm</td><td><code>(x / sqrt(mean(x^2) + eps)) * gamma</code></td><td>same shape as input</td></tr>
+    <tr><td>LayerNorm</td><td><code>((x - mu) / sqrt(mean((x-mu)^2) + eps)) * gamma + beta</code></td><td>same shape as input</td></tr>
+  </table>
+</section>
+
+<div class="footer">Loss Functions + Normalization DIY &middot; PyTorch Interview Prep &middot; March 2026</div>
+
+</div>
+</body>
+</html>

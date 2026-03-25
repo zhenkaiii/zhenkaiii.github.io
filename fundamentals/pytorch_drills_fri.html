@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PyTorch Drills — Friday: Cold Activation + Interview Warmup</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:36px 0 10px;font-size:22px;border-bottom:2px solid var(--code-border);padding-bottom:8px}
+  h3{margin:24px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  .k{color:#c792ea} .fn{color:#82aaff} .s{color:#c3e88d} .c{color:#6b708c} .n{color:#f78c6c} .v{color:#ffcb6b}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  .prompt{background:#1a1a2e;border:2px solid var(--accent);border-radius:14px;padding:20px;margin:16px 0}
+  .prompt-label{color:var(--accent);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+  .prompt-text{font-size:16px;line-height:1.6}
+  .timer{display:inline-block;background:var(--warn);color:#000;font-weight:700;font-size:12px;padding:2px 8px;border-radius:999px;margin-left:8px}
+  .timer.red{background:var(--bad)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .check{list-style:none;padding:0}
+  .check li{padding:8px 0;font-size:15px;border-bottom:1px solid var(--code-border)}
+  .check li::before{content:"\2610 ";font-size:18px;margin-right:8px}
+  .speedrun{background:linear-gradient(135deg,#1a1a2e,#2a1a3e);border:2px solid var(--bad);border-radius:14px;padding:20px;margin:16px 0}
+  .speedrun-label{color:var(--bad);font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Friday: Cold Activation + Interview Warmup</h1>
+  <span class="badge">Thursday Night</span>
+  <span class="badge">Friday Morning</span>
+  <span class="badge">Interview Day</span>
+</header>
+
+<div class="callout warn">
+<b>Thursday night = cold activation.</b> Write everything from scratch, timed, no peeking. Friday morning = light warmup. You should feel <i>fast</i> by interview time.
+</div>
+
+<!-- ============================================================ -->
+<h2>Thursday Night: Cold Activation <span class="timer red">~60 min strict</span></h2>
+<!-- ============================================================ -->
+
+<p>Close all tabs. Open a blank Python file. Set a timer. Go.</p>
+
+<!-- ---- SPEEDRUN 1 ---- -->
+<div class="speedrun">
+<div class="speedrun-label">Speedrun 1: Transformer Block <span class="timer red">8 min</span></div>
+<p>Write from scratch — no peeking:</p>
+<ul>
+  <li><code>MiniTransformerBlock(d_model, d_ff, n_head)</code></li>
+  <li>Pre-norm, two residuals, MHA + FFN</li>
+  <li>Training loop: random data, 20 steps, mini-batch, MSE loss</li>
+  <li>Next-token prediction: input <code>[:, :-1, :]</code>, target <code>[:, 1:, :]</code></li>
+</ul>
+<p style="color:var(--bad)"><b>Target: under 8 minutes, zero bugs.</b></p>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Self-check (don't peek before writing!)</summary>
+<div class="panel">
+<table>
+<tr><th>Checkpoint</th><th>Pass?</th></tr>
+<tr><td><code>super().__init__()</code> is first line</td><td></td></tr>
+<tr><td><code>batch_first=True</code> on MHA</td><td></td></tr>
+<tr><td><code>self.mha(h, h, h)</code> — three args, unpack with <code>_</code></td><td></td></tr>
+<tr><td>Two separate <code>LayerNorm</code>s</td><td></td></tr>
+<tr><td>FFN: <code>d_model → d_ff → d_model</code> with SiLU</td><td></td></tr>
+<tr><td>Second residual from post-MHA x, not original</td><td></td></tr>
+<tr><td>Training loop order: zero_grad → forward → loss → backward → step</td><td></td></tr>
+<tr><td><code>torch.randint(0, N, (B,))</code> — size is a tuple</td><td></td></tr>
+<tr><td><code>F.mse_loss</code> — no dim argument</td><td></td></tr>
+<tr><td>Input/target shapes match after slicing</td><td></td></tr>
+</table>
+</div>
+</details>
+
+<!-- ---- SPEEDRUN 2 ---- -->
+<div class="speedrun">
+<div class="speedrun-label">Speedrun 2: Multi-Head Attention <span class="timer red">10 min</span></div>
+<p>Write from scratch — no peeking:</p>
+<ul>
+  <li><code>MyMHA(d_model, n_head)</code> — full multi-head attention from raw linears</li>
+  <li>Q, K, V projections → reshape → transpose → scaled dot-product → concat → output projection</li>
+  <li>All shapes must be correct: <code>(B,T,D)</code> → <code>(B,H,T,d_k)</code> → <code>(B,T,D)</code></li>
+</ul>
+<p style="color:var(--bad)"><b>Target: under 10 minutes. Shape story must be airtight.</b></p>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Shape checklist</summary>
+<div class="panel">
+<table>
+<tr><th>Step</th><th>Shape</th></tr>
+<tr><td>Input x</td><td><code>(B, T, D)</code></td></tr>
+<tr><td>After Q/K/V projection</td><td><code>(B, T, D)</code></td></tr>
+<tr><td>After reshape</td><td><code>(B, T, H, d_k)</code></td></tr>
+<tr><td>After transpose(1,2)</td><td><code>(B, H, T, d_k)</code></td></tr>
+<tr><td>logits = Q @ K^T</td><td><code>(B, H, T, T)</code> — d_k disappears</td></tr>
+<tr><td>attn_weights = softmax(logits)</td><td><code>(B, H, T, T)</code></td></tr>
+<tr><td>context = weights @ V</td><td><code>(B, H, T, d_k)</code> — d_k comes back</td></tr>
+<tr><td>After transpose(1,2) + reshape</td><td><code>(B, T, D)</code></td></tr>
+<tr><td>After output projection</td><td><code>(B, T, D)</code></td></tr>
+</table>
+<div class="callout">Scale by <code>d_k ** 0.5</code>, NOT <code>d_model</code>. <code>d_k = d_model // n_head</code>.</div>
+</div>
+</details>
+
+<!-- ---- SPEEDRUN 3 ---- -->
+<div class="speedrun">
+<div class="speedrun-label">Speedrun 3: Loss Functions <span class="timer red">8 min</span></div>
+<p>Write from scratch — no peeking:</p>
+<ul>
+  <li><code>my_softmax(x, dim)</code> — max subtraction, exp, normalize</li>
+  <li><code>my_cross_entropy(logits, targets)</code> — log-softmax + NLL</li>
+  <li><code>my_mse_loss(pred, target)</code> — one-liner</li>
+</ul>
+<p style="color:var(--bad)"><b>Target: all three under 8 minutes total.</b></p>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Key gotchas to check</summary>
+<div class="panel">
+<ul>
+  <li><code>keepdim=True</code> in softmax for broadcasting</li>
+  <li>Log-softmax: <code>x - max - log(sum(exp(x - max)))</code></li>
+  <li>NLL pick: <code>log_probs[torch.arange(B), targets]</code></li>
+  <li>MSE: <code>.mean()</code> over everything — no dim arg</li>
+</ul>
+</div>
+</details>
+
+<!-- ---- SPEEDRUN 4 ---- -->
+<div class="speedrun">
+<div class="speedrun-label">Speedrun 4: LayerNorm + RMSNorm <span class="timer red">6 min</span></div>
+<p>Write from scratch — no peeking:</p>
+<ul>
+  <li><code>MyLayerNorm(d)</code> — mean, var (<code>unbiased=False</code>!), scale + shift</li>
+  <li><code>MyRMSNorm(d)</code> — no mean centering, just RMS + scale</li>
+  <li>Both as <code>nn.Module</code> with <code>nn.Parameter</code></li>
+</ul>
+<p style="color:var(--bad)"><b>Target: both under 6 minutes.</b></p>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Key gotchas to check</summary>
+<div class="panel">
+<ul>
+  <li><code>nn.Parameter(torch.ones(d))</code> for weight, <code>torch.zeros(d)</code> for bias</li>
+  <li><code>var(dim=-1, keepdim=True, unbiased=False)</code> — Bessel's correction off!</li>
+  <li>RMSNorm: <code>(x.pow(2).mean(dim=-1, keepdim=True) + eps).rsqrt()</code></li>
+  <li><code>rsqrt()</code> = <code>1 / sqrt()</code> — faster on GPU, same result</li>
+</ul>
+</div>
+</details>
+
+<!-- ---- SPEEDRUN 5 ---- -->
+<div class="speedrun">
+<div class="speedrun-label">Speedrun 5: GQA Attention <span class="timer red">12 min</span></div>
+<p>Write from scratch — no peeking:</p>
+<ul>
+  <li><code>MyGQA(d_model, n_head, n_kv_heads)</code></li>
+  <li>K/V projections: <code>d_model → n_kv_heads * d_k</code> (smaller!)</li>
+  <li><code>repeat_interleave(n_head // n_kv_heads, dim=1)</code> to expand KV heads</li>
+  <li>Rest is same as MHA</li>
+</ul>
+<p style="color:var(--bad)"><b>Target: under 12 minutes. Repeat count must be right.</b></p>
+</div>
+
+<details>
+<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Key gotchas to check</summary>
+<div class="panel">
+<ul>
+  <li>Init: <code>self.k = nn.Linear(d_model, n_kv_heads * d_k)</code> — not <code>d_model</code></li>
+  <li>Reshape KV: <code>(B, T, n_kv_heads, d_k)</code> then transpose</li>
+  <li>Repeat: <code>.repeat_interleave(n_head // n_kv_heads, dim=1)</code></li>
+  <li>Group size = <code>n_head // n_kv_heads</code>, NOT <code>n_kv_heads</code></li>
+  <li>After repeat, KV has shape <code>(B, n_head, T, d_k)</code> — same as Q</li>
+  <li>Output reshape uses <code>D = n_head * d_k = d_model</code></li>
+</ul>
+</div>
+</details>
+
+<!-- ---- SCORECARD ---- -->
+<div class="panel">
+<h3>Thursday Night Scorecard</h3>
+<table>
+<tr><th>Drill</th><th>Target</th><th>Your Time</th><th>Bugs?</th></tr>
+<tr><td>Transformer Block + Loop</td><td>8 min</td><td></td><td></td></tr>
+<tr><td>Multi-Head Attention</td><td>10 min</td><td></td><td></td></tr>
+<tr><td>3 Loss Functions</td><td>8 min</td><td></td><td></td></tr>
+<tr><td>LayerNorm + RMSNorm</td><td>6 min</td><td></td><td></td></tr>
+<tr><td>GQA</td><td>12 min</td><td></td><td></td></tr>
+<tr><td><b>Total</b></td><td><b>44 min</b></td><td></td><td></td></tr>
+</table>
+<div class="callout ok">If total &lt; 44 min with zero bugs: you're ready. If any drill has bugs, do it again tomorrow morning.</div>
+</div>
+
+<!-- ============================================================ -->
+<h2>Friday Morning: Light Warmup <span class="timer">~30 min</span></h2>
+<!-- ============================================================ -->
+
+<div class="callout">
+<b>Goal: activate neural pathways, not exhaust them.</b> Don't drill new material. Just confirm that Thursday night's muscle memory is still there.
+</div>
+
+<!-- ---- WARMUP 1 ---- -->
+<div class="prompt">
+<div class="prompt-label">Warmup 1 <span class="timer">5 min</span></div>
+<div class="prompt-text">
+Write <code>MiniTransformerBlock</code> one more time. This should feel automatic.<br>
+If it takes more than 5 minutes or you make a bug, do it again immediately.
+</div>
+</div>
+
+<!-- ---- WARMUP 2 ---- -->
+<div class="prompt">
+<div class="prompt-label">Warmup 2 <span class="timer">5 min</span></div>
+<div class="prompt-text">
+Write <code>my_softmax</code> and <code>my_cross_entropy</code>. Fast.<br>
+Verify both with <code>torch.allclose</code>.
+</div>
+</div>
+
+<!-- ---- WARMUP 3 ---- -->
+<div class="prompt">
+<div class="prompt-label">Warmup 3 <span class="timer">3 min</span></div>
+<div class="prompt-text">
+Write a 10-step training loop with gradient clipping. No AMP — keep it simple.<br>
+Just model + optimizer + zero_grad → forward → loss → backward → clip → step.
+</div>
+</div>
+
+<!-- ---- WILDCARD ---- -->
+<div class="prompt">
+<div class="prompt-label">Wildcard Practice <span class="timer">10 min</span></div>
+<div class="prompt-text">
+Pick ONE of these — whatever you feel least confident about:<br><br>
+<b>A.</b> GQA from scratch<br>
+<b>B.</b> Flow matching training step<br>
+<b>C.</b> K-means with cdist + argmin<br>
+<b>D.</b> Sinusoidal positional encoding
+</div>
+</div>
+
+<!-- ============================================================ -->
+<h2>Interview Mental Model</h2>
+<!-- ============================================================ -->
+
+<div class="panel">
+<h3>What Claudia is likely testing</h3>
+<ul>
+  <li><b>Can you write correct PyTorch from scratch?</b> — nn.Module, forward, training loop</li>
+  <li><b>Do you understand shapes?</b> — "What shape is this tensor after this operation?"</li>
+  <li><b>Do you know the gotchas?</b> — batch_first, keepdim, unbiased, three MHA args</li>
+  <li><b>Can you debug?</b> — "Why is the loss not decreasing?" "Why shape mismatch?"</li>
+  <li><b>Do you know the ecosystem?</b> — AMP, grad clipping, DataLoader basics</li>
+</ul>
+</div>
+
+<div class="panel">
+<h3>When stuck during interview</h3>
+<ul>
+  <li><b>Say the shapes out loud.</b> "This is (B, T, D), I need (B, H, T, d_k), so I reshape then transpose."</li>
+  <li><b>Write the signature first.</b> <code>def forward(self, x):</code> with a shape comment.</li>
+  <li><b>Build incrementally.</b> Get one sublayer working before adding the second.</li>
+  <li><b>Use print debugging.</b> <code>print(x.shape)</code> is completely acceptable in an interview.</li>
+  <li><b>Don't panic about syntax.</b> If you forget the exact API, describe what you need: "I need a function that picks elements along dim=1 using these indices" → that's <code>gather</code>.</li>
+</ul>
+</div>
+
+<div class="panel">
+<h3>Quick Reference — Things You Always Forget</h3>
+<table>
+<tr><th>Thing</th><th>Correct</th></tr>
+<tr><td>Functional import</td><td><code>import torch.nn.functional as F</code> — no 's'</td></tr>
+<tr><td>MHA call</td><td><code>self.mha(q, k, v)</code> — three args, returns <code>(out, weights)</code></td></tr>
+<tr><td>randint size</td><td><code>torch.randint(0, N, (B,))</code> — tuple for size</td></tr>
+<tr><td>MSE loss</td><td><code>F.mse_loss(pred, target)</code> — no dim argument</td></tr>
+<tr><td>Softmax</td><td><code>F.softmax(x, dim=-1)</code> — dim is required</td></tr>
+<tr><td>LayerNorm var</td><td><code>x.var(dim=-1, keepdim=True, unbiased=False)</code></td></tr>
+<tr><td>Scale factor</td><td><code>d_k ** 0.5</code> not <code>d_model</code></td></tr>
+<tr><td>GQA repeat</td><td><code>k.repeat_interleave(n_head // n_kv_heads, dim=1)</code></td></tr>
+<tr><td>Matmul transpose</td><td><code>q @ k.transpose(-1, -2)</code> not <code>.T</code></td></tr>
+<tr><td>Euler step</td><td><code>x = x + dt * v_net(x, t)</code></td></tr>
+<tr><td>AMP order</td><td>autocast → scaler.scale().backward() → unscale_ → clip → step → update</td></tr>
+</table>
+</div>
+
+<!-- ============================================================ -->
+<h2>Final Checklist — Before You Join the Call</h2>
+<!-- ============================================================ -->
+
+<ul class="check">
+  <li>Can write MiniTransformerBlock from scratch in under 5 min</li>
+  <li>Can write MHA from scratch with correct shapes</li>
+  <li>Can write training loop with correct order</li>
+  <li>Know softmax, cross_entropy, MSE from scratch</li>
+  <li>Know LayerNorm vs RMSNorm</li>
+  <li>Can explain GQA vs MHA vs MQA</li>
+  <li>Know AMP workflow (autocast + GradScaler)</li>
+  <li>IDE/editor ready, Python environment working</li>
+  <li>Quiet room, water, webcam tested</li>
+</ul>
+
+<div class="callout ok"><b>You've done the reps. Trust the muscle memory. Go crush it.</b></div>
+
+<div class="footer">Friday Interview Warmup &middot; Nuance Labs prep &middot; March 2026</div>
+
+</div>
+</body>
+</html>
