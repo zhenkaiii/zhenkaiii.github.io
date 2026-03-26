@@ -90,6 +90,11 @@
     "tags": ["Speech & Audio", "AI Coding / PyTorch"]
   },
   {
+    "file": "flow_matching_mnist.html",
+    "title": "Flow Matching — Hands-On MNIST with GPU",
+    "tags": ["AI Coding / PyTorch", "Generative Models"]
+  },
+  {
     "file": "llm_training_memory.html",
     "title": "LLM Training: GPU Memory Math & Parallelism",
     "tags": ["Efficiency / Co-Design"]

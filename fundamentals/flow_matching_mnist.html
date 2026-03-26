@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Flow Matching — Hands-On with GPU</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:28px 0 10px;font-size:20px}
+  h3{margin:20px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  .k{color:#c792ea} .fn{color:#82aaff} .s{color:#c3e88d} .c{color:#6b708c} .n{color:#f78c6c} .v{color:#ffcb6b}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .diagram{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:20px;margin:14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:14px;line-height:1.6;overflow-x:auto;white-space:pre}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+  .loss-table td:nth-child(2){font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Flow Matching — Hands-On with GPU</h1>
+  <span class="badge">Flow Matching</span>
+  <span class="badge">MNIST</span>
+  <span class="badge">B200</span>
+</header>
+
+<p style="color:var(--muted)">A hands-on tutorial from actually training flow matching on a p6 B200 node.
+Not theory-first — we ran it, broke it, fixed it, and asked "but why?" along the way.</p>
+
+<!-- ====== THE ENTIRE ALGORITHM ====== -->
+<section class="panel">
+  <h2>The Entire Algorithm in 5 Lines</h2>
+  <p>This is everything. No noise schedule, no score function, no reverse SDE. Just regression on velocities.</p>
+<pre>
+<span class="v">x0</span>     = torch.randn_like(<span class="v">x1</span>)                          <span class="c"># sample noise</span>
+<span class="v">t</span>      = torch.rand(<span class="v">b</span>, device=<span class="v">device</span>)                   <span class="c"># random timestep ~ U(0,1)</span>
+<span class="v">x_t</span>    = (<span class="n">1</span> - <span class="v">t</span>) * <span class="v">x0</span> + <span class="v">t</span> * <span class="v">x1</span>                        <span class="c"># straight line interpolation</span>
+<span class="v">target</span> = <span class="v">x1</span> - <span class="v">x0</span>                                       <span class="c"># velocity (constant!)</span>
+<span class="v">loss</span>   = F.mse_loss(<span class="fn">model</span>(<span class="v">x_t</span>, <span class="v">t</span>), <span class="v">target</span>)              <span class="c"># regress on velocity</span>
+</pre>
+  <p>Sampling is just Euler integration from noise to data:</p>
+<pre>
+<span class="v">x</span> = torch.randn(<span class="v">n</span>, <span class="n">1</span>, <span class="n">28</span>, <span class="n">28</span>)                           <span class="c"># start from pure noise</span>
+<span class="k">for</span> <span class="v">i</span> <span class="k">in</span> range(<span class="v">steps</span>):
+    <span class="v">t</span> = torch.full((<span class="v">n</span>,), <span class="v">i</span> / <span class="v">steps</span>)
+    <span class="v">x</span> = <span class="v">x</span> + <span class="fn">model</span>(<span class="v">x</span>, <span class="v">t</span>) * (<span class="n">1</span> / <span class="v">steps</span>)                   <span class="c"># Euler step</span>
+</pre>
+</section>
+
+<!-- ====== WHAT THE TRAINING DOES ====== -->
+<section class="panel">
+  <h2>What Does Training Actually Do?</h2>
+  <p>Not denoising. It's learning a <b>velocity field</b>.</p>
+
+  <table>
+    <tr><th></th><th>DDPM (Denoising)</th><th>Flow Matching (Ours)</th></tr>
+    <tr><td>Input to model</td><td>Noisy image x_t</td><td>Interpolated point x_t</td></tr>
+    <tr><td>Model predicts</td><td>"What noise is in this image?"</td><td>"Which direction should I move?"</td></tr>
+    <tr><td>Target</td><td>The noise ε that was added</td><td>The velocity x1 - x0</td></tr>
+    <tr><td>Loss</td><td>MSE(pred, ε)</td><td>MSE(pred, x1 - x0)</td></tr>
+    <tr><td>Sampling</td><td>Iteratively subtract noise</td><td>Follow velocity field forward</td></tr>
+  </table>
+
+  <div class="diagram">
+DDPM:     x_T (noise) ←←←← remove noise step by step ←←←← x_0 (data)
+          Model predicts: "here's the noise to subtract"
+
+Flow:     x_0 (noise) ——→——→ follow velocity field ——→——→ x_1 (data)
+          Model predicts: "here's the direction to go"</div>
+</section>
+
+<!-- ====== WHAT THE MODEL SEES ====== -->
+<section class="panel">
+  <h2>What the Model Sees During Training</h2>
+  <p>The model input is NOT pure noise. It's the interpolated mix at a random timestep:</p>
+  <div class="diagram">
+x_t = (1-t)*noise + t*digit
+
+t=0.0 → pure noise          (model sees garbage)
+t=0.3 → mostly noise        (model sees vague shape)
+t=0.7 → mostly digit        (model sees blurry digit)
+t=1.0 → pure digit          (model sees clean digit)</div>
+  <p>The model takes <code>(x_t, t)</code> and outputs the velocity — same shape, 28×28.
+  It's saying "nudge each pixel this much toward the data."</p>
+  <p>Over millions of samples at random t values, the model learns the velocity everywhere
+  along the noise→data path. But it <b>never sequentially walks</b> from 0 to 1 during training.</p>
+</section>
+
+<!-- ====== THE BIG QUESTION ====== -->
+<section class="panel">
+  <h2>How Does It Know If Noise Becomes a 1 or a 9?</h2>
+  <p>It doesn't decide upfront. <b>The noise itself determines the digit.</b></p>
+  <p>The model learned a velocity field that covers the entire space.
+  Different regions of noise space flow to different digits:</p>
+  <div class="diagram">
+Noise space                          Data space
+
+  region A  ────velocity field────▶    "1"
+  region B  ────velocity field────▶    "7"
+  region C  ────velocity field────▶    "9"
+  region D  ────velocity field────▶    "3"
+  ...</div>
+
+  <p>The model doesn't look at noise and think "this is a 9." It just says
+  "given this input at this timestep, nudge the pixels this direction."
+  Then at the next step, "ok now nudge this direction." Purely local — one step at a time, no planning.</p>
+
+  <div class="diagram">
+Step 0:  model sees noise.       Has no idea it'll be a 9.
+Step 10: model sees vague blob.  Still no idea.
+Step 25: model sees something round-ish with a tail. Starting to commit.
+Step 40: clearly a 9 now.        Model is just refining details.
+Step 50: done.</div>
+
+  <p>It's like a ball rolling downhill. The ball doesn't "know" where it'll end up.
+  The landscape (velocity field) determines the path. The starting position (noise)
+  determines which valley it rolls into. <b>The digit emerges. It's not chosen.</b></p>
+
+  <div class="callout">
+    <p>If you run the same noise twice with the same model, you get the <b>exact same digit</b> every time.
+    Different noise → different digit. The randomness is only in your initial sample.</p>
+  </div>
+</section>
+
+<!-- ====== FROM NOISE TO 10 DIGITS ====== -->
+<section class="panel">
+  <h2>From Noise to 10 Digits</h2>
+  <p>The velocity field partitions noise space into basins — one flowing toward each digit.
+  And not just 10 — infinitely many variations within each. Different 7s with different slants,
+  different 3s with different curves.</p>
+  <p>The model learned the <b>entire distribution</b> of MNIST, not just 10 templates.
+  Each noise vector flows to a unique handwritten digit that looks like it could've been
+  in the training set, but never was.</p>
+  <p>That's generative modeling. From one simple distribution (Gaussian noise) to a complex one
+  (handwritten digits), connected by a learned velocity field.</p>
+</section>
+
+<!-- ====== CONDITIONING ====== -->
+<section class="panel">
+  <h2>What Makes It Useful: Conditioning</h2>
+  <p>The unconditional version (what we trained) generates random digits nobody asked for.
+  The power comes when you <b>condition</b> it:</p>
+
+  <table>
+    <tr><th>Domain</th><th>Condition</th><th>Output</th><th>Examples</th></tr>
+    <tr><td>Image</td><td>Text prompt</td><td>That exact image</td><td>Stable Diffusion, FLUX, DALL-E 3</td></tr>
+    <tr><td>Speech / TTS</td><td>Text + reference voice</td><td>That sentence in that voice</td><td>F5-TTS, VoiceBox</td></tr>
+    <tr><td>Video</td><td>Text description</td><td>Video clip</td><td>HunyuanVideo, Sora</td></tr>
+    <tr><td>Music</td><td>"upbeat jazz, 120 BPM"</td><td>Audio clip</td><td>Stable Audio</td></tr>
+    <tr><td>Drug discovery</td><td>Target protein</td><td>Molecule 3D structure</td><td>Flow matching over conformations</td></tr>
+    <tr><td>Super-resolution</td><td>Low-res image</td><td>High-res version</td><td>Treat low-res as "structured noise"</td></tr>
+  </table>
+
+  <p>The pattern is always the same:</p>
+  <div class="diagram">
+Random noise + condition → desired output
+
+Unconditional:  pred = model(x_t, t)              "go wherever the noise takes you"
+Conditional:    pred = model(x_t, t, label=9)     "go toward a 9 specifically"</div>
+  <p>Our MNIST demo is the engine — conditioning is the steering wheel.</p>
+</section>
+
+<!-- ====== REAL TRAINING RUN ====== -->
+<section class="panel">
+  <h2>Real Training Run: MNIST on B200</h2>
+  <p>Trained on a single p6 B200 node. 60,000 MNIST images, 3.6M parameter U-Net, 100 epochs.</p>
+
+  <h3>Loss curve</h3>
+  <table class="loss-table">
+    <tr><th>Epoch</th><th>Loss</th><th>What you see</th></tr>
+    <tr><td>1</td><td>0.3714</td><td>Pure noise output</td></tr>
+    <tr><td>10</td><td>0.1884</td><td>Blurry blobs, vaguely digit-shaped</td></tr>
+    <tr><td>20</td><td>0.1790</td><td>Recognizable digits, fuzzy edges</td></tr>
+    <tr><td>30</td><td>0.1755</td><td>Clean digits, occasional artifacts</td></tr>
+    <tr><td>50</td><td>0.1717</td><td>Sharp digits, good variety</td></tr>
+    <tr><td>100</td><td>0.1688</td><td>Crystal clear handwritten digits</td></tr>
+  </table>
+
+  <div class="callout ok">
+    <p><b>Key observation:</b> Loss plateaus around epoch 30-40. Visual quality converges faster than the loss —
+    the last 0.01 of MSE is sub-pixel refinement you can barely see. In real systems, people often stop
+    training earlier and spend compute on scaling the model or data instead.</p>
+  </div>
+
+  <h3>What the progression shows</h3>
+  <div class="diagram">
+Epoch 10:  Blurry blobs     → velocity predictions are noisy,
+                               ODE paths wander → blurry results
+
+Epoch 30:  Clean digits     → velocities are accurate,
+                               paths go straight from noise → digit
+
+Epoch 100: Crystal clear    → velocity field is well-learned,
+                               Euler integration traces clean paths</div>
+  <p>This progression directly visualizes what flow matching is doing:
+  as the velocity field gets more accurate, the ODE paths straighten out and the generated samples sharpen.</p>
+</section>
+
+<!-- ====== DIFFUSION VS FLOW MATCHING ====== -->
+<section class="panel">
+  <h2>Flow Matching vs Diffusion (DDPM)</h2>
+  <div class="diagram">
+Diffusion (SDE):                  Flow Matching (ODE):
+  noise ·                           noise ·
+        \                                 \
+         \  curved,                        \  straight,
+          \ stochastic                      \ deterministic
+           \                                 \
+            · data                            · data
+
+  20-1000 steps needed             10-50 steps sufficient</div>
+
+  <table>
+    <tr><th></th><th>DDPM</th><th>Flow Matching</th></tr>
+    <tr><td>Forward process</td><td><code>x_t = √ᾱ_t x0 + √(1-ᾱ_t) ε</code></td><td><code>x_t = (1-t) x0 + t x1</code></td></tr>
+    <tr><td>Training target</td><td>Noise ε</td><td>Velocity x1 - x0</td></tr>
+    <tr><td>Noise schedule</td><td>Required (β_t)</td><td>Not needed</td></tr>
+    <tr><td>Sampling</td><td>Reverse SDE/ODE</td><td>Forward ODE integration</td></tr>
+    <tr><td>Steps needed</td><td>20-1000</td><td>10-50 (straighter paths)</td></tr>
+  </table>
+
+  <p>Flow matching needs fewer steps because the paths are approximately straight lines.
+  Even a crude Euler integrator with 50 steps gets you there.
+  DDPM's paths are curved (following a noise schedule), requiring more steps to trace accurately.</p>
+</section>
+
+<!-- ====== THE FULL TRAINING SCRIPT ====== -->
+<section class="panel">
+  <h2>Full Training Script</h2>
+  <p>Zero dependencies beyond <code>torch</code> and <code>numpy</code>. Loads MNIST from raw gzipped files,
+  writes PNG grids using pure Python. Runs on air-gapped GPU nodes.</p>
+
+<pre>
+<span class="c"># ── Flow Matching core ────────────────────────────────────</span>
+
+<span class="k">def</span> <span class="fn">flow_matching_loss</span>(model, x1):
+    b = x1.shape[<span class="n">0</span>]
+    x0 = torch.randn_like(x1)
+    t = torch.rand(b, device=x1.device)
+    t_ = t[:, None, None, None]
+    x_t = (<span class="n">1</span> - t_) * x0 + t_ * x1
+    <span class="k">return</span> F.mse_loss(model(x_t, t), x1 - x0)
+
+
+<span class="c"># ── Sampling (Euler integration) ──────────────────────────</span>
+
+@torch.no_grad()
+<span class="k">def</span> <span class="fn">sample</span>(model, n=<span class="n">64</span>, steps=<span class="n">50</span>, device=<span class="s">"cuda"</span>):
+    x = torch.randn(n, <span class="n">1</span>, <span class="n">28</span>, <span class="n">28</span>, device=device)
+    dt = <span class="n">1.0</span> / steps
+    <span class="k">for</span> i <span class="k">in</span> range(steps):
+        t = torch.full((n,), i * dt, device=device)
+        x = x + model(x, t) * dt
+    <span class="k">return</span> x.clamp(-<span class="n">1</span>, <span class="n">1</span>)
+
+
+<span class="c"># ── Training loop ─────────────────────────────────────────</span>
+
+model = <span class="fn">UNet</span>(in_ch=<span class="n">1</span>, base_ch=<span class="n">64</span>).to(device)       <span class="c"># ~3.6M params</span>
+opt = torch.optim.AdamW(model.parameters(), lr=<span class="n">3e-4</span>)
+
+<span class="k">for</span> epoch <span class="k">in</span> range(<span class="n">100</span>):
+    <span class="k">for</span> (x1,) <span class="k">in</span> dataloader:
+        x1 = x1.to(device)
+        loss = <span class="fn">flow_matching_loss</span>(model, x1)
+        opt.zero_grad()
+        loss.backward()
+        opt.step()
+
+    <span class="k">if</span> (epoch + <span class="n">1</span>) % <span class="n">10</span> == <span class="n">0</span>:
+        imgs = <span class="fn">sample</span>(model, n=<span class="n">64</span>, steps=<span class="n">50</span>)
+        <span class="fn">save_grid_png</span>(imgs, f<span class="s">"epoch{epoch+1:03d}.png"</span>)
+</pre>
+
+  <div class="callout">
+    <p>The U-Net is a standard encoder-decoder with ResBlocks and sinusoidal timestep embeddings.
+    Nothing diffusion-specific — any architecture that takes <code>(x_t, t)</code> and outputs same-shape works.
+    In production: replace with a DiT (Diffusion Transformer) for better scaling.</p>
+  </div>
+</section>
+
+<!-- ====== PRACTICAL NOTES ====== -->
+<section class="panel">
+  <h2>Practical Notes from the Run</h2>
+
+  <h3>Air-gapped GPU nodes</h3>
+  <p>Training nodes often have no internet. Download data locally, <code>kubectl cp</code> to the pod.
+  MNIST is 11MB — trivial to sync. Avoid any dependency that phones home (torchvision downloads, HuggingFace hub).</p>
+
+  <h3>No torchvision on Megatron containers</h3>
+  <p>LLM training images don't ship torchvision. Load MNIST from raw <code>.gz</code> files with <code>gzip</code> + <code>struct</code>.
+  Write PNGs with pure Python (<code>zlib</code> + minimal PNG chunk format). Zero external dependencies.</p>
+
+  <h3>GroupNorm gotcha</h3>
+  <p><code>nn.GroupNorm(8, 3)</code> fails because 3 isn't divisible by 8.
+  Fix: <code>nn.GroupNorm(min(8, in_ch), in_ch)</code>. The first ResBlock gets <code>in_ch=3</code> (or 1 for MNIST).</p>
+
+  <h3>Convergence</h3>
+  <p>MNIST converges fast — loss plateaus by epoch 30-40. The model has excess capacity
+  (3.6M params for 28×28 grayscale). For harder tasks, you'd need more capacity and data, not more epochs.</p>
+</section>
+
+<!-- ====== NEXT STEPS ====== -->
+<section class="panel">
+  <h2>What to Try Next</h2>
+
+  <h3>On the same node, today</h3>
+  <ul>
+    <li><b>More ODE steps at sampling</b> — change <code>steps=50</code> to 100 or 200. Compare quality. Flow matching with straighter paths should need fewer steps.</li>
+    <li><b>Optimal transport paths</b> — pair noise to data by nearest neighbor in each mini-batch. Makes paths even straighter.</li>
+    <li><b>Class-conditional generation</b> — feed the digit label as an extra input. Now you can ask for a specific digit.</li>
+    <li><b>Replace U-Net with DiT</b> — transformer with AdaLN conditioning on timestep. That's what F5-TTS and modern video models use.</li>
+  </ul>
+
+  <h3>Scaling up</h3>
+  <ul>
+    <li><b>Speech</b>: Clone <a href="https://github.com/SWivid/F5-TTS">F5-TTS</a> — production-quality speech flow matching. DiT backbone, text conditioning, proper vocoder. Single p6 node is enough for a conference paper.</li>
+    <li><b>Video</b>: Clone <a href="https://github.com/PKU-YuanGroup/Open-Sora-Plan">Open-Sora-Plan</a> — most complete open training pipeline for video DiT.</li>
+    <li><b>Meta's library</b>: <a href="https://github.com/facebookresearch/flow_matching">facebookresearch/flow_matching</a> — OT paths, Riemannian FM, discrete FM for text.</li>
+    <li><b>Theory</b>: <a href="https://arxiv.org/abs/2412.06264">Flow Matching Guide and Code</a> (Lipman et al.) — the definitive reference.</li>
+  </ul>
+</section>
+
+<!-- ====== SCALE THIS UP ====== -->
+<section class="panel">
+  <h2>From MNIST to Real Applications</h2>
+  <table>
+    <tr><th>MNIST demo</th><th>Real system (F5-TTS, Stable Diffusion)</th></tr>
+    <tr><td>28×28 grayscale</td><td>80×T mel spectrograms or 256×256 RGB latents</td></tr>
+    <tr><td>U-Net (3.6M params)</td><td>DiT (300M-1B params)</td></tr>
+    <tr><td>No conditioning</td><td>Text + speaker + timestep embeddings</td></tr>
+    <tr><td>Euler solver, 50 steps</td><td>Midpoint/RK4, 6-10 steps (distilled to 1-4)</td></tr>
+    <tr><td>60K images</td><td>100K+ hours of speech or millions of images</td></tr>
+    <tr><td>Single GPU, minutes</td><td>8 GPUs, days to weeks</td></tr>
+  </table>
+
+  <div class="callout ok">
+    <p><b>The flow matching logic doesn't change.</b> The 5 training lines and 4 sampling lines stay identical.
+    All complexity lives in the model architecture and conditioning — not in the generative framework itself.
+    You now understand the engine. Everything else is engineering.</p>
+  </div>
+</section>
+
+<div class="footer">
+  Flow Matching — Hands-On with GPU &middot; Trained on p6 B200 &middot; March 2026
+</div>
+
+</div>
+</body>
+</html>
