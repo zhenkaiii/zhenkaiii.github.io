@@ -18,6 +18,12 @@ mock-*.srt
 mock-*.tsv
 mock-*.txt
 mock-*.vtt
+interview-*.m4a
+interview-*.json
+interview-*.srt
+interview-*.tsv
+interview-*.txt
+interview-*.vtt
 
 # Interview prep (local only)
 interview-prep-*.html
