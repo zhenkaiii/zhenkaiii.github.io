@@ -16,7 +16,7 @@
   },
   {
     "file": "pytorch-kmeans.html",
-    "title": "Tasting the Power of PyTorch Ops via Kmeans Clustering",
+    "title": "Vectorized K-Means Clustering",
     "tags": ["AI Coding / PyTorch"]
   },
   {
@@ -116,17 +116,17 @@
   },
   {
     "file": "loss_functions_diy.html",
-    "title": "Loss Functions + Normalization — DIY from Scratch",
+    "title": "Primitive Loss Functions + Normalization",
     "tags": ["AI Coding / PyTorch"]
   },
   {
     "file": "pytorch_drills_wed.html",
-    "title": "PyTorch Drills — Wednesday: Loss Functions + Norms + Tensor Ops",
+    "title": "PyTorch Drills: Loss Functions + Norms + Tensor Ops",
     "tags": ["AI Coding / PyTorch"]
   },
   {
     "file": "pytorch_drills_thu.html",
-    "title": "PyTorch Drills — Thursday: K-Means, Flow Matching, AMP",
+    "title": "PyTorch Drills: K-Means, Flow Matching",
     "tags": ["AI Coding / PyTorch"]
   },
   {

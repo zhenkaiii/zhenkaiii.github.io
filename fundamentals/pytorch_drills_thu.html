@@ -49,7 +49,7 @@
 <header>
   <h1>Thursday PyTorch Drills</h1>
   <span class="badge">Session 3: K-Means + Distance Ops</span>
-  <span class="badge">Session 4: Flow Matching + AMP</span>
+  <span class="badge">Session 4: Flow Matching</span>
 </header>
 
 <!-- ============================================================ -->
@@ -265,10 +265,10 @@ print(f<span class="s">"Row 0 norm: {pe[0].norm():.3f}"</span>) <span class="c">
 </details>
 
 <!-- ============================================================ -->
-<h2>Session 4: Flow Matching + Training with AMP <span class="timer">~90 min</span></h2>
+<h2>Session 4: Flow Matching <span class="timer">~60 min</span></h2>
 <!-- ============================================================ -->
 
-<p>This session combines two critical skills: understanding conditional flow matching (the loss behind modern TTS like CosyVoice), and writing production-grade training loops with mixed precision.</p>
+<p>Understanding conditional flow matching — the loss behind modern TTS like CosyVoice and generative models.</p>
 
 <!-- ---- PROMPT 5 ---- -->
 <div class="prompt">
@@ -404,121 +404,7 @@ print(f<span class="s">"Generated shape: {samples.shape}"</span>)  <span class="
 
 <!-- ---- PROMPT 7 ---- -->
 <div class="prompt">
-<div class="prompt-label">Prompt 7 <span class="timer">15 min</span></div>
-<div class="prompt-text">
-Add <b>mixed precision (AMP)</b> to a training loop.<br><br>
-<b>Requirements:</b><br>
-&bull; Use <code>torch.amp.autocast('cuda')</code> around forward + loss<br>
-&bull; Use <code>torch.amp.GradScaler('cuda')</code> for loss scaling<br>
-&bull; Correct order: <code>scaler.scale(loss).backward()</code> → <code>scaler.step(optimizer)</code> → <code>scaler.update()</code><br>
-&bull; Add gradient clipping with <code>scaler.unscale_(optimizer)</code> before <code>torch.nn.utils.clip_grad_norm_</code><br>
-&bull; Write a full 20-step loop using the MiniTransformerBlock from Tuesday.
-</div>
-</div>
-
-<div class="panel">
-<h3>What you need to know</h3>
-<ul>
-  <li><b>AMP = Automatic Mixed Precision.</b> Forward pass runs in FP16 (faster, less memory). Backward stays FP32 where needed.</li>
-  <li><b>GradScaler</b> prevents FP16 gradients from underflowing to zero. It scales the loss up before backward, then unscales grads before optimizer step.</li>
-  <li><b>Gradient clipping</b> goes between <code>unscale_</code> and <code>step</code>. You must unscale first so the clip threshold is in FP32 units.</li>
-  <li><b>Order:</b> zero_grad → autocast(forward + loss) → scaler.scale(loss).backward() → scaler.unscale_(opt) → clip_grad → scaler.step(opt) → scaler.update()</li>
-</ul>
-<div class="diagram">
-optimizer.zero_grad()
-     │
-     ▼
-with autocast('cuda'):
-  pred = model(x)          ← FP16 forward
-  loss = F.mse_loss(...)   ← FP16 loss
-     │
-     ▼
-scaler.scale(loss).backward()   ← scaled FP16 grads
-     │
-     ▼
-scaler.unscale_(optimizer)      ← back to FP32 grads
-     │
-     ▼
-clip_grad_norm_(...)             ← clip in FP32
-     │
-     ▼
-scaler.step(optimizer)           ← update weights (skips if inf/nan)
-     │
-     ▼
-scaler.update()                  ← adjust scale factor</div>
-</div>
-
-<details>
-<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Show solution after attempting</summary>
-<pre><span class="c"># Assumes CUDA is available. On CPU, autocast still works but no speedup.</span>
-<span class="k">import</span> torch
-<span class="k">import</span> torch.nn <span class="k">as</span> nn
-<span class="k">import</span> torch.nn.functional <span class="k">as</span> F
-
-
-<span class="k">class</span> <span class="fn">MiniTransformerBlock</span>(nn.Module):
-    <span class="k">def</span> <span class="fn">__init__</span>(self, d_model, d_ff, n_head):
-        super().__init__()
-        self.mha = nn.MultiheadAttention(d_model, n_head, batch_first=<span class="k">True</span>)
-        self.mlp = nn.Sequential(
-            nn.Linear(d_model, d_ff), nn.SiLU(), nn.Linear(d_ff, d_model),
-        )
-        self.norm_1 = nn.LayerNorm(d_model)
-        self.norm_2 = nn.LayerNorm(d_model)
-
-    <span class="k">def</span> <span class="fn">forward</span>(self, x):
-        h = self.norm_1(x)
-        h, _ = self.mha(h, h, h)
-        x = x + h
-        h = self.norm_2(x)
-        h = self.mlp(h)
-        x = x + h
-        <span class="k">return</span> x
-
-
-device = <span class="s">"cuda"</span> <span class="k">if</span> torch.cuda.is_available() <span class="k">else</span> <span class="s">"cpu"</span>
-
-<span class="c"># --- Setup ---</span>
-data = torch.randn(<span class="n">32</span>, <span class="n">128</span>, <span class="n">512</span>, device=device)
-model = MiniTransformerBlock(<span class="n">512</span>, <span class="n">2048</span>, <span class="n">8</span>).to(device)
-optimizer = torch.optim.Adam(model.parameters(), lr=<span class="n">1e-3</span>)
-scaler = torch.amp.GradScaler(<span class="s">"cuda"</span>)
-
-<span class="c"># --- Training loop with AMP ---</span>
-<span class="k">for</span> i <span class="k">in</span> range(<span class="n">20</span>):
-    optimizer.zero_grad()
-
-    idx = torch.randint(<span class="n">0</span>, <span class="n">32</span>, (<span class="n">4</span>,))
-    x = data[idx]
-    y = x[:, <span class="n">1</span>:, :]
-
-    <span class="c"># Forward + loss in autocast</span>
-    <span class="k">with</span> torch.amp.autocast(<span class="s">"cuda"</span>):
-        pred = model(x[:, :-<span class="n">1</span>, :])
-        loss = F.mse_loss(pred, y)
-
-    <span class="c"># Backward with scaled loss</span>
-    scaler.scale(loss).backward()
-
-    <span class="c"># Unscale → clip → step → update</span>
-    scaler.unscale_(optimizer)
-    torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=<span class="n">1.0</span>)
-    scaler.step(optimizer)
-    scaler.update()
-
-    <span class="k">if</span> i % <span class="n">5</span> == <span class="n">0</span>:
-        print(f<span class="s">"step {i:3d} | loss {loss.item():.4f}"</span>)</pre>
-
-<div class="callout warn"><b>Common mistakes:</b><br>
-&bull; Calling <code>loss.backward()</code> instead of <code>scaler.scale(loss).backward()</code><br>
-&bull; Clipping grads before <code>scaler.unscale_()</code> — clip values would be wrong<br>
-&bull; Forgetting <code>scaler.update()</code> at the end — scale factor never adjusts<br>
-&bull; Putting <code>optimizer.step()</code> instead of <code>scaler.step(optimizer)</code></div>
-</details>
-
-<!-- ---- PROMPT 8 ---- -->
-<div class="prompt">
-<div class="prompt-label">Prompt 8 <span class="timer">10 min</span></div>
+<div class="prompt-label">Prompt 7 <span class="timer">10 min</span></div>
 <div class="prompt-text">
 Implement <b>gradient clipping</b> from scratch: <code>my_clip_grad_norm_(parameters, max_norm)</code>.<br><br>
 <b>Requirements:</b><br>
@@ -570,7 +456,6 @@ print(f<span class="s">"Total norm: {norm_mine:.4f}"</span>)</pre>
   <li><b>Session 3:</b> Sinusoidal PE — pos column * div_term row, sin/cos interleave</li>
   <li><b>Session 4:</b> Flow matching — interpolate x_t, predict velocity v = x_1 - x_0</li>
   <li><b>Session 4:</b> Euler sampling — x += dt * v_net(x, t), no_grad</li>
-  <li><b>Session 4:</b> AMP — autocast → scaler.scale().backward() → unscale_ → clip → step → update</li>
   <li><b>Session 4:</b> Gradient clipping — global L2 norm, scale down if > max_norm</li>
 </ul>
 
