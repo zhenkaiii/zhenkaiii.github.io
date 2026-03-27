@@ -422,6 +422,36 @@ self.fc1 = nn.Linear(data_dim + <span class="n">1</span>, hidden)  <span class="
   </div>
 </section>
 
+<!-- ============================================================ -->
+<h2>Golden 1 Min</h2>
+<!-- ============================================================ -->
+
+<section class="panel">
+<p>Flow matching is just five lines of training code:</p>
+<pre>
+<span class="v">x0</span>     = torch.randn_like(<span class="v">x1</span>)              <span class="c"># pure noise</span>
+<span class="v">target</span> = <span class="v">x1</span> - <span class="v">x0</span>                           <span class="c"># ground truth velocity</span>
+<span class="v">t</span>      = torch.rand(<span class="v">bs</span>)                    <span class="c"># random snapshot in [0, 1]</span>
+<span class="v">x_t</span>    = (<span class="n">1</span> - <span class="v">t</span>) * <span class="v">x0</span> + <span class="v">t</span> * <span class="v">x1</span>            <span class="c"># linear interpolation</span>
+<span class="v">loss</span>   = F.mse_loss(<span class="fn">model</span>(<span class="v">x_t</span>, <span class="v">t</span>), <span class="v">target</span>)  <span class="c"># predict velocity from any snapshot</span>
+</pre>
+
+<p>You're learning a model to predict the velocity field that approximates the ground truth velocity, which is x1 minus x0. x0 is the noise, x1 is the destination. Assume the shortest path &mdash; the velocity gives you the direction and how fast to move there. During training, at any arbitrary snapshot, the model learns to predict the move that gets you to the North Star.</p>
+
+<p>For flow matching, training and inference behave differently. During training, there's no concept of steps &mdash; it just learns to predict the velocity from any arbitrary snapshot. But during inference, you specify a number of steps first, then use iterative Euler steps to integrate the velocity the model gives you at each step. You always start from pure noise with a predefined number of steps. If the model is well trained, it gives you the velocity to move toward the real data, one step at a time.</p>
+
+<pre>
+<span class="c"># Inference: Euler integration</span>
+<span class="v">x</span> = torch.randn(<span class="v">B</span>, <span class="v">D</span>)
+<span class="v">n_step</span> = <span class="n">20</span>
+<span class="v">dt</span> = <span class="n">1.0</span> / <span class="v">n_step</span>
+<span class="k">for</span> <span class="v">i</span> <span class="k">in</span> range(<span class="v">n_step</span>):
+    <span class="v">t</span> = torch.full((<span class="v">B</span>, <span class="n">1</span>), <span class="v">i</span> * <span class="v">dt</span>)
+    <span class="v">v</span> = <span class="fn">model</span>(<span class="v">x</span>, <span class="v">t</span>)
+    <span class="v">x</span> += <span class="v">dt</span> * <span class="v">v</span>
+</pre>
+</section>
+
 <div class="footer">Flow Matching — Hands-On &middot; p6 B200 + Jupyter &middot; March 2026</div>
 </div>
 </body>

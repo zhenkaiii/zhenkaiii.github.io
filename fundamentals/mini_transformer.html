@@ -202,6 +202,40 @@ optimizer = torch.optim.Adam(model.parameters(), lr=<span class="n">1e-3</span>)
   </table>
 </section>
 
+<!-- ====== GOLDEN 1 MIN ====== -->
+<section class="panel">
+  <h2>Golden 1 Min</h2>
+
+<pre><span class="k">class</span> <span class="fn">Model</span>(nn.Module):
+    <span class="k">def</span> <span class="fn">__init__</span>(self, feat_dim, hidden_dim):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(feat_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, feat_dim),
+        )
+    <span class="k">def</span> <span class="fn">forward</span>(self, x):
+        <span class="k">return</span> self.net(x)
+
+<span class="v">model</span> = Model(<span class="n">10</span>, <span class="n">20</span>)
+<span class="v">x</span> = Data(bs=<span class="n">128</span>)
+<span class="v">op</span> = torch.optim.Adam(model.parameters(), lr=<span class="n">1e-3</span>)
+
+<span class="k">for</span> i <span class="k">in</span> range(<span class="n">1000</span>):
+    op.zero_grad()
+    pred = model(x)
+    loss = F.mse_loss(pred, y)
+    loss.backward()
+    print(loss.item())
+    op.step()</pre>
+
+  <p>The most primitive example of designing a model and writing a training loop looks like this. Here I have a simple MLP &mdash; two linear layers with a ReLU activation in between. These three modules are chained together using <code>nn.Sequential</code>, and I call it <code>net</code>. That's the architecture.</p>
+
+  <p>The forward pass is straightforward &mdash; the input <code>x</code> goes through the net, and whatever comes out is the model's output.</p>
+
+  <p>For the training loop, you define three things: the model, the data, and the optimizer. Inside the for loop, you first call <code>zero_grad</code> to clear the gradients from the previous iteration &mdash; so each iteration starts with a clean slate. Then you feed the input through the model to get a prediction, compute the loss against the ground truth using MSE, and call <code>backward</code> to compute gradients. Finally, <code>optimizer.step</code> updates the model parameters. That's it &mdash; that's the entire training loop.</p>
+</section>
+
 <div class="footer">Mini Transformer Block &middot; PyTorch Interview Prep &middot; March 2026</div>
 
 </div>

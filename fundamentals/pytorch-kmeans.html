@@ -155,6 +155,24 @@ prototypes = sums / counts.unsqueeze(1)  <span class="c"># (K,2) / (K,1) — uns
 
 <div class="callout ok"><b>This is a 10-minute problem. Don't overthink it.</b> Generate data, sample prototypes, broadcast for distances, argmin for assignment, mean for update. Done.</div>
 
+<!-- ============================================================ -->
+<h2>Golden 1 Min</h2>
+<!-- ============================================================ -->
+
+<div class="panel">
+<p>The reason you'd be tested on implementing K-means in PyTorch is twofold. First, they want to test whether you understand vectorization, which is the whole point of using PyTorch. Instead of writing for loops over indices, you should think dimension-wise.</p>
+
+<p>Second, they want to test your understanding of this classic machine learning algorithm. You should know it's Lloyd's algorithm &mdash; it's iterative, and each iteration has two steps: assign and update. The complexity is mostly from the assign step, which is O(NK). The update step is just O(N).</p>
+
+<p>For the implementation, first you generate the data &mdash; say, 100,000 samples in 2D for easy visualization. The initial prototypes can be randomly selected from the dataset. Say you want K equals 8 &mdash; you just randomly pick 8 data points from your 1,000 samples.</p>
+
+<p>Then you loop over, say, 20 iterations. First you compute the pairwise distance between every data point and every prototype. This is where broadcasting comes in &mdash; you need to expand the dimensions to comply with broadcasting rules to get pairwise distances. You end up with a 3D tensor for 2D data, then reduce along the last dimension to get scalar distances.</p>
+
+<p>Then you argmin over the prototype dimension. Each data point has 8 distances, one per prototype, and you take the argmin to find the closest one.</p>
+
+<p>After that comes the update step. You loop over each of the K clusters, gather all the data points assigned to that prototype, and take the mean along dimension zero to get the new prototype location.</p>
+</div>
+
 <div class="footer">PyTorch K-Means Drill &middot; March 2026</div>
 
 </div>
