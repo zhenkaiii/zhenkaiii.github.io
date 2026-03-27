@@ -326,6 +326,63 @@ attn_weights = F.softmax(logits, dim=-<span class="n">1</span>)</pre>
   <div class="callout">After softmax, <code>-inf</code> becomes 0 &mdash; future tokens get zero attention weight.</div>
 </section>
 
+<!-- ====== GOLDEN 1 MIN ====== -->
+<section class="panel">
+  <h2>Golden 1 Min</h2>
+
+  <h3>MHA Walkthrough</h3>
+  <p>For multi-head self-attention, like most PyTorch modules, you need <code>__init__</code> and <code>forward</code>. I like to think through the forward logic first, then figure out what needs to be initialized.</p>
+
+  <p>Attention has four weight matrices: Q, K, V, and O. O is just the output projection &mdash; straightforward. Q, K, and V are the core components used to compute the attention score and context. For self-attention, the same input goes into all three.</p>
+
+  <p>So in forward, the input goes through the Q, K, and V linear layers to get three activations. For multi-head, you reshape each one to split out the heads, then transpose so the shape becomes batch, heads, sequence length, head dimension.</p>
+
+  <p>Now the attention score: Q times K-transpose, divided by the square root of the head dimension for scaling. That goes through softmax along the last dimension to get the attention weights &mdash; shape is batch, heads, S, S. The head dimension is gone because Q and K-transpose contracted over it.</p>
+
+  <p>Multiply the score by V to get the context. Transpose the heads and sequence dimensions back, reshape to the original shape, and pass through the output projection. That's it.</p>
+
+  <p>In <code>__init__</code>, you just need four linear layers for Q, K, V, O, and store the number of heads and the per-head dimension.</p>
+
+<pre><span class="k">class</span> <span class="fn">MHA</span>(nn.Module):
+    <span class="k">def</span> <span class="fn">__init__</span>(self, dim, n_heads):
+        super().__init__()
+        self.q = nn.Linear(dim, dim)
+        self.k = nn.Linear(dim, dim)
+        self.v = nn.Linear(dim, dim)
+        self.o = nn.Linear(dim, dim)
+
+        self.n_heads = n_heads
+        self.d_k = dim // self.n_heads
+
+    <span class="k">def</span> <span class="fn">forward</span>(self, x):
+        q = self.q(x)
+        k = self.k(x)
+        v = self.v(x)
+
+        B, S, _ = q.size()
+
+        q = q.reshape(B, S, self.n_heads, self.d_k).transpose(<span class="n">1</span>, <span class="n">2</span>)  <span class="c"># B, H, S, K</span>
+        k = k.reshape(B, S, self.n_heads, self.d_k).transpose(<span class="n">1</span>, <span class="n">2</span>)  <span class="c"># B, H, S, K</span>
+        v = v.reshape(B, S, self.n_heads, self.d_k).transpose(<span class="n">1</span>, <span class="n">2</span>)  <span class="c"># B, H, S, K</span>
+
+        score = F.softmax((q @ k.transpose(-<span class="n">1</span>, -<span class="n">2</span>)) / self.d_k ** <span class="n">0.5</span>, dim=-<span class="n">1</span>)  <span class="c"># B, H, S, S</span>
+
+        context = score @ v
+
+        context = context.transpose(<span class="n">1</span>, <span class="n">2</span>).reshape(B, S, -<span class="n">1</span>)
+
+        <span class="k">return</span> self.o(context)  <span class="c"># B, S, D</span></pre>
+
+  <h3>Why Q, K, V &mdash; and Why KV Cache</h3>
+  <p>Q is always about the current token &mdash; it's the query being asked right now. There's no caching Q because it changes every step during autoregressive decoding.</p>
+
+  <p>K and V are the database. K is the index &mdash; what each past token advertises for matching. V is the content &mdash; what actually gets passed along when matched. During inference, this database grows by one entry every step, and it never changes for past tokens. That's why we cache it.</p>
+
+  <p>All the major inference optimizations target K and V because that's where the memory bottleneck is. KV cache quantization compresses the stored entries. GQA reduces the number of KV heads so there are fewer entries to store per layer. Sliding window attention caps the database size so it doesn't grow forever. They all share the same purpose: shrink the KV database that accumulates during autoregressive decoding.</p>
+
+  <p>Q stays untouched by all of this &mdash; it's just one token's question, computed fresh every step.</p>
+</section>
+
 <div class="footer">Multi-Head Attention DIY &middot; V1 → V2 → V3 (GQA) → Cross &middot; March 2026</div>
 
 </div>

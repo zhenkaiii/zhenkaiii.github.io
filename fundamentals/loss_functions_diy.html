@@ -165,10 +165,10 @@ result:               (B, S, <span class="v">1</span>)  ← 3D
 <section class="panel">
   <h2>RMSNorm</h2>
   <p>Divide by root-mean-square, then scale. No mean centering, no bias.</p>
-<pre><span class="k">def</span> <span class="fn">rmsnorm</span>(x, gamma, eps=<span class="n">1e-8</span>):
+<pre><span class="k">def</span> <span class="fn">rmsnorm</span>(x, gamma):
     <span class="c"># x: (B, S, D), gamma: (D,)</span>
-    x_rms = ((x ** <span class="n">2</span>).mean(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>) + eps).sqrt()
-    <span class="k">return</span> (x / x_rms) * gamma</pre>
+    x_rms = x / torch.sqrt(torch.mean(x ** <span class="n">2</span>, dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>))
+    <span class="k">return</span> x_rms * gamma</pre>
 
   <h3>What I got wrong</h3>
   <ul>
@@ -183,11 +183,11 @@ result:               (B, S, <span class="v">1</span>)  ← 3D
 <section class="panel">
   <h2>LayerNorm</h2>
   <p>Subtract mean, divide by std, then scale + shift. Save <code>mu</code> once — it's used in both numerator and denominator.</p>
-<pre><span class="k">def</span> <span class="fn">layernorm</span>(x, gamma, beta, eps=<span class="n">1e-8</span>):
+<pre><span class="k">def</span> <span class="fn">layernorm</span>(x, gamma, beta):
     <span class="c"># x: (B, S, D), gamma: (D,), beta: (D,)</span>
     mu = x.mean(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>)
-    x_std = (((x - mu) ** <span class="n">2</span>).mean(dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>) + eps).sqrt()
-    <span class="k">return</span> ((x - mu) / x_std) * gamma + beta</pre>
+    x_ln = (x - mu) / torch.sqrt(torch.mean((x - mu) ** <span class="n">2</span>, dim=-<span class="n">1</span>, keepdim=<span class="k">True</span>))
+    <span class="k">return</span> x_ln * gamma + beta</pre>
 
   <h3>What I got wrong</h3>
   <ul>
@@ -198,6 +198,26 @@ result:               (B, S, <span class="v">1</span>)  ← 3D
   </ul>
 
   <div class="callout warn"><b><code>unbiased</code> gotcha:</b> <code>.mean()</code> on squared diffs divides by N (population variance). This matches <code>nn.LayerNorm</code>. If you ever use <code>.var()</code> instead, you must pass <code>unbiased=False</code> — PyTorch defaults to <code>unbiased=True</code> (divides by N-1), which won't match.</div>
+</section>
+
+<!-- ====== STATS FOUNDATION ====== -->
+<section class="panel">
+  <h2>Stats Foundation: Variance, Std, RMS, Scale</h2>
+  <div class="diagram">
+SSE      = sum((xi - x_mean)**2)                  <span class="c">subtract, square, sum</span>
+variance = SSE / N                                 <span class="c">average the squared deviations</span>
+std      = sqrt(variance)                          <span class="c">= sqrt(mean((x - x_mean)**2))</span>
+scale    = mean(x**2)                              <span class="c">average squared values (no centering)</span>
+RMS      = sqrt(scale)                             <span class="c">= sqrt(mean(x**2))</span></div>
+
+  <p><b>std</b> = <code>sqrt(mean((x - x_mean)**2))</code> &mdash; spread around the <b>mean</b></p>
+  <p><b>RMS</b> = <code>sqrt(mean(x**2))</code> &mdash; spread around <b>zero</b></p>
+
+  <div class="callout ok">
+    <p>LayerNorm divides by <b>std</b> &rarr; unit std (exact zero mean + unit variance).</p>
+    <p>RMSNorm divides by <b>RMS</b> &rarr; unit scale (<code>mean(x**2) = 1</code> after normalization).</p>
+    <p>If the mean is zero, std = RMS. Otherwise RMS is slightly larger.</p>
+  </div>
 </section>
 
 <!-- ====== ELEMENT-WISE OPS RULE ====== -->
