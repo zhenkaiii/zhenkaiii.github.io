@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nuance Labs Onsite Prep — Thursday</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:36px 0 10px;font-size:22px;border-bottom:2px solid var(--code-border);padding-bottom:8px}
+  h3{margin:24px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  pre code{background:none;padding:0}
+  .c{color:#6b708c}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  .callout.bad{border-left-color:var(--bad)}
+  .check{list-style:none;padding:0}
+  .check li{padding:10px 0;font-size:15px;border-bottom:1px solid var(--code-border)}
+  .check li::before{content:"\2610 ";font-size:18px;margin-right:8px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .timer{display:inline-block;background:var(--warn);color:#000;font-weight:700;font-size:12px;padding:2px 8px;border-radius:999px;margin-left:8px}
+  .timer.red{background:var(--bad)}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div id="gate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0f1220">
+  <div style="text-align:center">
+    <p style="color:#aab0d5;font-family:system-ui;margin-bottom:12px">This page is private.</p>
+    <input id="pw" type="password" placeholder="passphrase" autofocus
+      style="padding:10px 16px;border-radius:8px;border:1px solid #252a45;background:#171a2b;color:#e7e9f7;font-size:16px;font-family:system-ui;outline:none;width:220px"
+      onkeydown="if(event.key==='Enter')unlock()">
+    <br><button onclick="unlock()"
+      style="margin-top:10px;padding:8px 24px;border-radius:8px;border:none;background:#7c9cff;color:#0f1220;font-weight:700;cursor:pointer;font-family:system-ui">Enter</button>
+    <p id="err" style="color:#ff6b6b;font-family:system-ui;margin-top:8px;display:none">Wrong passphrase</p>
+  </div>
+</div>
+<script>
+async function unlock(){
+  const v=document.getElementById('pw').value;
+  const h=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)))).map(b=>b.toString(16).padStart(2,'0')).join('');
+  if(h==='ee3fc9b775bf5d504a5b0c68ffd7aa71d3f79fdc6d2ae1e6d4fb41817c364cbf'){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('content-wrap').style.display='block';
+    sessionStorage.setItem('k_auth','1');
+  }else{document.getElementById('err').style.display='block'}
+}
+if(sessionStorage.getItem('k_auth')==='1'){document.addEventListener('DOMContentLoaded',()=>{document.getElementById('gate').style.display='none';document.getElementById('content-wrap').style.display='block'})}
+</script>
+<div id="content-wrap" style="display:none">
+<div class="wrap">
+
+<header>
+  <h1>Nuance Labs Onsite Prep</h1>
+  <span class="badge">Smith Tower, Seattle</span>
+  <span class="badge">Thursday 9AM–2:30PM</span>
+</header>
+
+<!-- ============================================================ -->
+<h2>Onsite Format</h2>
+<!-- ============================================================ -->
+
+<table>
+  <tr><th>Block</th><th>What</th><th>Your Goal</th></tr>
+  <tr><td>Whiteboard (you)</td><td>Present your best work</td><td>LLM pretraining at Amazon. 20-25 min.</td></tr>
+  <tr><td>Whiteboard (them)</td><td>Walk you through Nuance's ML design</td><td>Ask sharp questions. Show you already know their architecture.</td></tr>
+  <tr><td>1:1s</td><td>Meet each founder</td><td>Different angle per person. See below.</td></tr>
+  <tr><td>Team lunch</td><td>Casual</td><td>Be human. Don't pitch.</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>Tuesday — Technical Prep</h2>
+<!-- ============================================================ -->
+
+<h3>1. Contrastive Loss / CLIP from Scratch <span class="timer red">Priority #1</span></h3>
+
+<div class="callout bad">
+<b>This is the gap Claudia exposed.</b> She gave you two tasks: (1) train an MLP to predict text embedding from image embedding with MSE loss — you nailed this in 35 min. (2) Map both modalities into a shared space where matching pairs are close. You correctly identified that naive MSE collapses to constant output (zero loss but meaningless), and you knew contrastive/triplet loss was the fix, but admitted you haven't implemented it. Fix that today.
+</div>
+
+<ul class="check">
+  <li>Implement two MLP encoders mapping image/text embeddings to shared space</li>
+  <li>Compute cosine similarity matrix (B, B) between image and text outputs</li>
+  <li>InfoNCE loss: cross-entropy where correct pairs are on the diagonal</li>
+  <li>Know cold: why MSE collapses (constant output gets zero loss), why contrastive doesn't (negative pairs prevent collapse)</li>
+  <li>Know the difference: <b>CLIP/InfoNCE</b> = whole batch, (B,B) similarity matrix, cross-entropy on diagonal. <b>Triplet loss</b> = anchor + positive + negative, one pair at a time. CLIP is the modern standard.</li>
+</ul>
+
+<div class="panel">
+<h3>CLIP Loss in 10 Lines</h3>
+<pre><code><span class="c"># img_emb, txt_emb: (B, D) — outputs from two encoders</span>
+img_emb = F.normalize(img_emb, dim=-1)
+txt_emb = F.normalize(txt_emb, dim=-1)
+
+<span class="c"># similarity matrix: (B, B) — each row is one image vs all texts</span>
+logits = img_emb @ txt_emb.T / temperature    <span class="c"># scale by temperature</span>
+
+<span class="c"># labels: correct pair is on the diagonal — index i matches index i</span>
+labels = torch.arange(B, device=logits.device)
+
+<span class="c"># symmetric loss: image→text + text→image</span>
+loss = (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2</code></pre>
+<p>That's it. The diagonal of the similarity matrix should be highest. Cross-entropy pushes correct pairs up, all other pairs down. No collapse possible because pushing everything to constant makes the off-diagonal just as high as the diagonal.</p>
+</div>
+
+<h3>2. Whiteboard Presentation — LLM Pretraining at Amazon <span class="timer">20-25 min</span></h3>
+
+<div class="panel">
+<p>This is the most important part of the onsite. You present your best, most relevant work on a whiteboard. Pick LLM pretraining — it's the rarest experience you have and shows you build from zero at scale.</p>
+<p><b>Narrative arc:</b> We needed to train Amazon's Nova foundation model (MoE architecture, competitor to Gemini). I was hands-on, training 100+ models across different scales up to 1k+ GPUs.</p>
+<p><b>Draw on the whiteboard:</b> MoE architecture diagram, data pipeline flow, distributed training setup (DDP across nodes).</p>
+<p><b>Key lessons to highlight:</b></p>
+<ul>
+  <li><b>Data quality > architecture.</b> Fixing deduplication and format issues gave bigger marginal gain than tuning hyperparameters or enabling fancy tricks like block masking.</li>
+  <li><b>Small dense models for ablation.</b> Don't waste 1k GPUs testing a hypothesis. Use a 1-2B dense model to validate data quality, then scale up. Faster iteration, cheaper.</li>
+  <li><b>Block masking + data packing</b> for efficient pretraining — pack multiple sequences into one context window, mask attention so they don't attend to each other.</li>
+  <li><b>Experiment velocity matters most.</b> The team that runs more experiments wins. Infra, logging, reproducibility, leaderboards — all of this accelerates learning.</li>
+</ul>
+<p><b>Practice:</b> On paper/whiteboard, not slides. Out loud. Twice. Time it — cut anything over 25 min.</p>
+</div>
+
+<h3>3. Light Tech Stack Review</h3>
+
+<div class="panel">
+<p>Their JD lists these. You don't need to be an expert, but should speak fluently about what each does and trade-offs.</p>
+<ul>
+  <li><b>vLLM</b> — open-source LLM serving engine. Key feature: PagedAttention (manages KV cache like virtual memory pages, avoids fragmentation). High throughput for batched LLM inference. Use when serving a standard LLM. TensorRT-LLM is NVIDIA's alternative — faster but less flexible, harder to customize.</li>
+  <li><b>Triton Inference Server</b> — NVIDIA's model serving framework. Handles batching, model versioning, multi-model serving on same GPU. Think of it as the orchestration layer for deploying models in production.</li>
+  <li><b>WebRTC</b> — real-time audio/video streaming protocol. Peer-to-peer, sub-200ms latency. This is how user's webcam/mic connects to their system. The constraint: everything downstream (ASR, LLM, DiT) must fit within WebRTC's latency budget or the conversation feels laggy.</li>
+  <li><b>Kubernetes</b> — container orchestration. For them: scheduling GPU pods, scaling inference replicas, managing model deployments. Know the basics: pods, deployments, services, GPU resource requests.</li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2>Wednesday — Polish and Rest</h2>
+<!-- ============================================================ -->
+
+<ul class="check">
+  <li><b>Dry run presentation</b> one more time. Time it. Cut anything over 25 min. Focus on transitions between sections — don't ramble on any one point.</li>
+  <li><b>Review this page's product section</b> — the three stages, the DiT architecture, the orchestration problem. All sourced from Claudia's call. This is what they'll walk through on the whiteboard. Key quotes from Claudia:
+    <div class="panel" style="margin-top:8px">
+    <ul>
+      <li>"We are exploring a full duplex model that takes in the user's audiovisual and outputs audiovisual. There's no text to speech in that system."</li>
+      <li>"If we don't want to train our own LLM, we might make an API call to an external LLM. Then our system needs to handle the correct way to respond to the user's expressions and emotions, but also modulate the text that it's going to say."</li>
+      <li>"We'll need a system that can generate stuff in the meantime. We might have a filler phrase like 'oh, that's interesting, let me think about that.'"</li>
+      <li>On the model: "Half a billion" params. "We have to keep the model pretty small, otherwise we won't achieve the latency requirements for real-time interaction."</li>
+      <li>"It's almost like we're building a robotic system, a real-time robotic system, or a small game engine."</li>
+    </ul>
+    </div>
+  </li>
+  <li><b>Prepare questions for each founder</b> (see table below). Have 2 per person memorized, not written down.</li>
+  <li><b>Stop by 6pm.</b> Rest. You know the material.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>What You Know About Their Product (from Claudia)</h2>
+<!-- ============================================================ -->
+
+<h3>The Three Stages</h3>
+
+<div class="panel">
+<pre><code>Stage 1 (NOW — demo works):
+  You type text ──→ DiT 500M ──→ avatar audio + face
+                    60 flow matching steps
+                    dual-tower: audio tower + video tower
+                    speech tokenizer ≈ video tokenizer size (face only)
+
+Stage 2 (NEXT — what they're hiring for):
+  user speaks ──→ ASR ──→ text ──→ External LLM ──→ response text
+                                                        │
+                                                        ▼
+                                                   DiT 500M ──→ avatar audio + face
+  Meanwhile: orchestration generates filler while waiting for LLM
+
+Stage 3 (FUTURE — research goal, years away):
+  user audio + face ──→ one model ──→ avatar audio + face
+  No ASR. No LLM. No text. Full duplex.
+  (Even OpenAI/Anthropic can't do this yet)</code></pre>
+</div>
+
+<h3>Architecture Details (from Claudia + Karren)</h3>
+
+<div class="panel">
+<ul>
+  <li><b>DiT (Diffusion/Flow Transformer)</b> — dual tower, ~500M params. Text in, audiovisual out.</li>
+  <li><b>Flow matching at 60 steps</b> — generates audio and face tokens in parallel.</li>
+  <li><b>Matched tokenizer sizes:</b> speech tokenizer vocab ≈ video tokenizer vocab, because it's only facial expression (not full body/scene). This keeps the dual towers balanced.</li>
+  <li><b>No LLM inside.</b> Intelligence deferred to external LLM via API (Claude/GPT). The DiT doesn't reason — it renders.</li>
+  <li><b>Orchestration is a big unsolved problem:</b> generating filler ("that's interesting, let me think") while waiting ~500ms for LLM response. They compare it to a real-time robotic system / game engine.</li>
+  <li>The demo was generated from <b>Claudia's own face/voice.</b></li>
+  <li>TTS is currently off-the-shelf, but exploring training their own.</li>
+</ul>
+</div>
+
+<div class="callout ok">
+<b>The killer line for the whiteboard session:</b> "So your DiT takes text in and generates audio + face tokens via flow matching at 60 steps, and the next step is wiring that into a live pipeline with ASR and an external LLM, where the hard part is orchestration and latency." Show you already understand their system before they explain it.
+</div>
+
+<h3>Where You Fit (Stage 2)</h3>
+
+<div class="panel">
+<ul>
+  <li>Making the modular pipeline (ASR + LLM + DiT) work end-to-end with acceptable latency</li>
+  <li>Orchestration layer — what to generate while waiting for LLM, how to handle interruptions</li>
+  <li>Serving the DiT at real-time speed — can 60 flow matching steps be fast enough? Distillation? Fewer steps?</li>
+  <li>GPU cluster management, data pipelines for training, experiment velocity</li>
+  <li>This is infra + modeling combined — exactly your profile</li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2>1:1 Questions by Founder</h2>
+<!-- ============================================================ -->
+
+<table>
+  <tr><th>Person</th><th>Role</th><th>Background</th><th>Questions</th></tr>
+  <tr>
+    <td><b>Fangchang Ma</b></td>
+    <td>CEO</td>
+    <td>MIT PhD Robotics/ML. Ex-Apple Research Manager, ex-DJI. 2400+ citations.</td>
+    <td>Where is Nuance in 2 years — consumer product, API platform, or acquired? What's the first real revenue use case? He comes from robotics — ask how that informs the real-time systems approach.</td>
+  </tr>
+  <tr>
+    <td><b>Edward Zhang</b></td>
+    <td>CTO</td>
+    <td>UW PhD Computer Graphics. Ex-Apple Senior Research Scientist, ex-Google, ex-Microsoft.</td>
+    <td>What's the hardest unsolved infra problem right now? How do you handle the latency budget — if WebRTC needs sub-200ms round trip and the external LLM takes 500ms, what's the strategy? This is where your infra experience connects directly.</td>
+  </tr>
+  <tr>
+    <td><b>Karren Yang</b></td>
+    <td>Research Scientist</td>
+    <td>MIT PhD Audio-Visual Synthesis. Ex-Apple, ex-Meta Reality Labs, ex-Adobe Research. 1800+ citations.</td>
+    <td>How do you handle emotion/expression when the external LLM only gives you text? Does the DiT model infer emotion from text alone, or is there a separate emotion signal? What's the research roadmap for full duplex — is it one model or still modular?</td>
+  </tr>
+  <tr>
+    <td><b>Claudia Vanea</b></td>
+    <td>Research Scientist</td>
+    <td>Oxford PhD in AI. Ex-founder at South Park Commons. The demo avatar is her face/voice.</td>
+    <td>Already met. Be warm. Reference the contrastive loss discussion — tell her you went and implemented CLIP-style InfoNCE loss after the call. Ask about the shared embedding space in their actual system — does it use contrastive training?</td>
+  </tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>Your Edge</h2>
+<!-- ============================================================ -->
+
+<div class="panel">
+<ul>
+  <li><b>They posted an infra role. You're showing up as full-stack.</b> Prove infra competence (distributed training, GPU clusters, serving) so they trust you can do the JD, then show modeling depth (MoE, flow matching, codecs, contrastive learning) so they realize they're getting more than they asked for.</li>
+  <li><b>Pretraining at 1k+ GPUs</b> — nobody else interviewing has this. Their team is 8 people, mostly research PhDs. They need someone who can actually make things run at scale. That's you.</li>
+  <li><b>Audio/speech is your PhD domain.</b> Their core product is audiovisual generation. You understand speech tokenizers, flow matching, codecs — you speak their language natively, not as someone who read a paper last week.</li>
+  <li><b>You already know their architecture</b> from Claudia. When they whiteboard it, don't just listen — ask "is this where the orchestration bottleneck is?" or "how many flow matching steps can you afford within the WebRTC latency budget?" That's the difference between a candidate and a colleague.</li>
+  <li><b>Claudia already likes you.</b> She said your implementation was "one of the better" she's seen. That's a strong internal advocate going into the onsite.</li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2>Thursday Morning — Before You Walk In</h2>
+<!-- ============================================================ -->
+
+<ul class="check">
+  <li>Skim this page one more time</li>
+  <li>Review CLIP loss code — be able to write it cold</li>
+  <li>Have your presentation narrative in your head, not memorized word for word</li>
+  <li>Bring a notebook and pen for whiteboard notes</li>
+  <li>Arrive 10 min early. Smith Tower, Downtown Seattle.</li>
+</ul>
+
+<div class="callout ok"><b>You solved Claudia's task in 35 minutes and she said it was "one of the better implementations." You know the material. Go show them the full package.</b></div>
+
+<div class="footer">Nuance Labs Onsite Prep &middot; March 2026</div>
+
+</div>
+</div><!-- /content-wrap -->
+</body>
+</html>

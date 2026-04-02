@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Story / Project-Based Narratives — Interview Ready</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:10px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:28px 0 10px;font-size:20px}
+  h3{margin:20px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  .callout.bad{border-left-color:var(--bad)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .diagram{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:20px;margin:14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:14px;line-height:1.6;overflow-x:auto;white-space:pre}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+  .subtitle{color:var(--muted);font-size:14px;margin:4px 0 24px}
+  .story-header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+  .story-num{background:var(--accent);color:var(--bg);font-weight:700;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+  .story-meta{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}
+  .tag{font-size:11px;padding:2px 8px;border-radius:999px;font-weight:600}
+  .tag.time{background:rgba(87,211,155,.15);color:var(--ok)}
+  .tag.domain{background:rgba(124,156,255,.15);color:var(--accent)}
+  .tag.use{background:rgba(255,209,102,.15);color:var(--warn)}
+  .spoken{font-style:italic;color:var(--ink);opacity:.88;line-height:1.8}
+  .section-label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px;margin:18px 0 6px}
+</style>
+</head>
+<body>
+<div id="gate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0f1220">
+  <div style="text-align:center">
+    <p style="color:#aab0d5;font-family:system-ui;margin-bottom:12px">This page is private.</p>
+    <input id="pw" type="password" placeholder="passphrase" autofocus
+      style="padding:10px 16px;border-radius:8px;border:1px solid #252a45;background:#171a2b;color:#e7e9f7;font-size:16px;font-family:system-ui;outline:none;width:220px"
+      onkeydown="if(event.key==='Enter')unlock()">
+    <br><button onclick="unlock()"
+      style="margin-top:10px;padding:8px 24px;border-radius:8px;border:none;background:#7c9cff;color:#0f1220;font-weight:700;cursor:pointer;font-family:system-ui">Enter</button>
+    <p id="err" style="color:#ff6b6b;font-family:system-ui;margin-top:8px;display:none">Wrong passphrase</p>
+  </div>
+</div>
+<script>
+async function unlock(){
+  const v=document.getElementById('pw').value;
+  const h=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)))).map(b=>b.toString(16).padStart(2,'0')).join('');
+  if(h==='ee3fc9b775bf5d504a5b0c68ffd7aa71d3f79fdc6d2ae1e6d4fb41817c364cbf'){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('content-wrap').style.display='block';
+    sessionStorage.setItem('k_auth','1');
+  }else{document.getElementById('err').style.display='block'}
+}
+if(sessionStorage.getItem('k_auth')==='1'){document.addEventListener('DOMContentLoaded',()=>{document.getElementById('gate').style.display='none';document.getElementById('content-wrap').style.display='block'})}
+</script>
+<div id="content-wrap" style="display:none">
+<div class="wrap">
+
+<header>
+  <h1>Story / Project-Based Narratives</h1>
+  <span class="badge">Interview Ready</span>
+  <span class="badge">Whiteboard</span>
+  <span class="badge">1:1 Conversations</span>
+</header>
+<p class="subtitle">3&ndash;5 polished narratives from real work — ready to deploy for any intro, on-site, or whiteboard session. Written to be spoken, not read.</p>
+
+<!-- ========================================================= -->
+<!-- STORY 1: LLM Pre-Training at Scale                        -->
+<!-- ========================================================= -->
+<section class="panel">
+  <div class="story-header">
+    <span class="story-num">1</span>
+    <h2 style="margin:0">LLM Pre-Training at Amazon AGI — It's the Data, Not the Model</h2>
+  </div>
+  <div class="story-meta">
+    <span class="tag time">~10 min</span>
+    <span class="tag domain">Distributed Training</span>
+    <span class="tag domain">Systems</span>
+    <span class="tag use">Whiteboard Presentation</span>
+  </div>
+
+  <div class="callout ok">
+    <p><b>Core message:</b> You can train an 8B LLM on a single machine. Thousands of GPUs aren't for the model — they're for the data throughput. I ran exactly these runs last week.</p>
+  </div>
+  <div class="callout warn">
+    <p><b>Identity to project:</b> "I'm the person who questions conventional wisdom and verifies it with first-principles reasoning — not a calculator."</p>
+  </div>
+
+  <!-- Opening -->
+  <p class="section-label">Opening (~1 min)</p>
+  <p class="spoken">Thank you all for having me. The last time I gave a formal oral presentation was my PhD defense. I've been meaning to brush up, and honestly, I'd feel a little sad if after all these years someone said, "Hey Kai, give a talk," and the first thing I do is fetch my old dissertation papers.</p>
+  <p class="spoken">So instead, I thought it'd be more natural to share what I've been learning over just the past two to three weeks in my day-to-day job at Amazon. That way, you get a clear picture of what I'm actually doing right now.</p>
+  <p class="spoken">Fair warning: the content is empirical, not polished research. You'll find holes — feel free to punch them. But I think it's fun to share, because I'm on the team that trains Amazon's Nova foundation models. We have thousands of P5 nodes. I'm one of those who get hands dirty.</p>
+  <p class="spoken">Since I only have 20 to 25 minutes, I want to keep this informal and sharing-oriented — not a dense technical tutorial.</p>
+
+  <!-- The Contrarian Claim -->
+  <h3>The Contrarian Claim (~2 min)</h3>
+  <p class="spoken">Everyone says LLM training is expensive. Even my father the other day asked me, "How many GPU nodes do you use to train your model?" People are under the impression that training a large language model means you need a huge amount of GPUs. Which is not wrong — but not accurate either.</p>
+  <p class="spoken">I like to verify claims myself rather than follow buzzwords. And what I found is: you can train a reasonably large LLM — 8 billion parameters — on a single machine. One P5 node. No out-of-memory issues.</p>
+  <p class="spoken">8 billion is a real size. For real-time speech or multimodal processing, the model probably won't go beyond this. Even OpenAI and Anthropic — their streaming models aren't hundreds of billions of parameters.</p>
+  <p class="spoken">So then why do people use thousands of GPUs? It's not because the model doesn't fit. It's because the data is enormous and you need throughput. The model fits. The schedule doesn't.</p>
+
+  <!-- The Quick Proof -->
+  <h3>The Quick Proof (~3 min)</h3>
+  <p class="spoken">Let me show you why. For each parameter during training, what sits on the GPU?</p>
+  <p class="spoken">Not just the weight. You also need the gradient for backprop. And the Adam optimizer keeps two running averages — m and v — that must be in FP32 because they accumulate tiny updates over thousands of steps. In BF16 those updates would round to zero.</p>
+
+  <div class="callout">
+    <p><b>Whiteboard — write just three lines:</b></p>
+  </div>
+  <div class="diagram">  1 param = 12 bytes  (weight 2 + grad 2 + Adam m 4 + Adam v 4)
+  8B × 12 = 96 GB    ← doesn't fit on one 80 GB H100
+  TP=2 → 48 GB/GPU   ← fits, with room for activations (~12-16 GB)</div>
+
+  <p class="spoken">That's it. With tensor parallelism of 2 — split each weight matrix across two GPUs — you're at 48 gig. Activations add roughly 12 to 16 gig. Still under 80. It fits on one node.</p>
+  <p class="spoken">And since one node has 8 GPUs and TP only uses 2, you get 4 data-parallel replicas for free. You're already doing distributed data parallelism within a single machine.</p>
+
+  <!-- The Scaling Punchline -->
+  <h3>It's the Data, Not the Model (~3 min)</h3>
+  <p class="spoken">So the model fits on one node. But with one node, you process maybe 10 sequences per second. Each sequence is 8K tokens — that's 80,000 tokens per second. Actually impressive for a single machine.</p>
+  <p class="spoken">But if you want to train on all of human knowledge, that's 20 trillion tokens. On one node, that takes about a year.</p>
+  <p class="spoken">Now give me 120 nodes. Throughput jumps to about 1,200 sequences per second. I ran exactly this last week — one week consumes 4 trillion tokens.</p>
+  <p class="spoken">Throughout human history, all the books, the internet, Wikipedia, everything — if you deduplicate the tokens, the total is roughly 20 trillion. With 120 nodes, it takes about <b>5 weeks to visit every single token ever created in human history</b>.</p>
+
+  <div class="callout ok">
+    <p><b>Stop here.</b> That's the closing. Don't add a trailing summary — "5 weeks for all of human history" IS the punchline.</p>
+  </div>
+
+  <!-- Landing -->
+  <p class="section-label">The Landing (~1 min)</p>
+  <p class="spoken">So the thousands of GPUs aren't for the model — the model fits on two GPUs. They're for the data. It's a throughput problem, not a memory problem. And I think that distinction matters, because it changes how you plan your compute budget — especially for a smaller team.</p>
+</section>
+
+<!-- ========================================================= -->
+<!-- STORY 2: Block Masking                                    -->
+<!-- ========================================================= -->
+<section class="panel">
+  <div class="story-header">
+    <span class="story-num">2</span>
+    <h2 style="margin:0">Block Masking — Full-Stack Co-Design from Data Pipeline to Training Objective</h2>
+  </div>
+  <div class="story-meta">
+    <span class="tag time">~10 min</span>
+    <span class="tag domain">Attention</span>
+    <span class="tag domain">Data Pipeline</span>
+    <span class="tag domain">Multimodal</span>
+    <span class="tag use">Whiteboard Presentation</span>
+  </div>
+
+  <div class="callout ok">
+    <p><b>Core message:</b> Four systems must agree perfectly or the model silently degrades — no crash, no error, just worse loss. That's what makes this a co-design problem, not just a modeling problem.</p>
+  </div>
+  <div class="callout warn">
+    <p><b>Identity to project:</b> "I don't just train models — I co-design across the full stack from data pipeline to attention kernel to training objective."</p>
+  </div>
+
+  <!-- The Packing Problem -->
+  <h3>When Packing Meets Attention (~2 min)</h3>
+  <p class="spoken">In Part 1, I mentioned we process sequences at 8K tokens. But most documents in your training corpus are much shorter than 8K — maybe 500 words. If you pad every document to 8K, you're wasting a huge amount of compute on padding tokens.</p>
+  <p class="spoken">So we pack — concatenate multiple documents into a single 8K sequence. Maybe three or four documents fit into one context window. This dramatically improves GPU utilization.</p>
+  <p class="spoken">But packing creates a problem. In standard causal attention, every token attends to all previous tokens. So now a <code>print</code> token from your Python snippet is attending to a question mark from Shakespeare's sonnet. That's cross-document attention leakage. The model learns spurious correlations across unrelated documents.</p>
+  <p class="spoken">The fix is block masking. Instead of one big causal triangle, you create a block-diagonal causal mask — each document gets its own causal block, and attention across document boundaries is zeroed out.</p>
+
+  <div class="diagram">  Naive causal mask         Block-diagonal mask
+  (leaks across docs)       (no cross-doc attention)
+
+  ┌──────────────┐          ┌──────────────┐
+  │▓▓            │          │▓▓            │
+  │▓▓▓           │          │▓▓▓           │
+  │▓▓▓▓  Doc A   │          │▓▓▓▓  Doc A   │
+  │▓▓▓▓▓ leaks → │          │▓▓▓▓▓         │
+  │▓▓▓▓▓▓▓       │          │     ▓▓       │
+  │▓▓▓▓▓▓▓▓Doc B │          │     ▓▓▓Doc B │
+  │▓▓▓▓▓▓▓▓▓     │          │     ▓▓▓▓     │
+  │▓▓▓▓▓▓▓▓▓▓▓   │          │         ▓▓   │
+  │▓▓▓▓▓▓▓▓▓▓▓▓C │          │         ▓▓▓C │
+  └──────────────┘          └──────────────┘</div>
+
+  <!-- The Co-Design Argument -->
+  <h3>Four Systems That Must Agree — Or It Silently Breaks (~4 min)</h3>
+  <p class="spoken">Here's what makes block masking interesting. It's not hard conceptually — anyone can say "just mask across document boundaries." The hard part is that four separate systems need to agree perfectly. And if any one of them is wrong, you get no crash, no error — just slightly worse loss that's almost impossible to debug.</p>
+
+  <div class="callout">
+    <p><b>Whiteboard — draw as a chain:</b></p>
+  </div>
+  <div class="diagram">  tokenizer ──→ data packer ──→ collator ──→ flash attention kernel
+     │              │              │                │
+  &lt;DOC&gt; token    pack docs      cu_seqlen       block-diagonal
+  must survive   emit doc       boundary         mask per tile
+  preprocessing  index array    metadata         in SRAM</div>
+
+  <p class="spoken"><b>The tokenizer</b> inserts a <code>&lt;DOC&gt;</code> boundary token. But that token has to survive deduplication, shuffling, and packing. If it gets dropped or corrupted during preprocessing — silent leakage. No error. You just see the loss plateau a bit higher, and you have no idea why.</p>
+
+  <p class="spoken"><b>The data packer</b> builds the <code>cu_seqlen</code> array — it tells you exactly where each document starts and ends. Something like [0, 1000, 3000, 5000, 8192]. If these offsets are off by even one token — again, silent leakage.</p>
+
+  <p class="spoken"><b>The collator</b> passes that metadata alongside the token IDs to the GPU. If this handoff drops the boundary information, the kernel never knows documents were separate.</p>
+
+  <p class="spoken"><b>Flash attention</b> uses the <code>cu_seqlen</code> to build a block-diagonal mask, evaluated tile by tile in SRAM. Almost zero overhead — the mask is applied per tile, not per element. But it's only as correct as the metadata it receives.</p>
+
+  <p class="spoken">If any link in this chain is broken, the model still trains. The loss still goes down. You'll never see a crash. That's what makes it a co-design problem, not just a modeling problem. You need the tokenizer, the data pipeline, the collator, and the attention kernel to speak the same language.</p>
+
+  <!-- Multimodal: Wrong / Right / Better -->
+  <h3>Extending to Multimodal — Wrong, Right, and Better (~4 min)</h3>
+  <p class="spoken">Now, I've been describing this for text pre-training. But here's where it gets really interesting for multimodal.</p>
+  <p class="spoken">Say you're training a model that takes text, speech tokens, and video frame tokens — facial expressions. You need a sequence builder to pack them into training sequences.</p>
+
+  <p class="section-label">The wrong way</p>
+  <p class="spoken">The naive approach: just concatenate text + speech + video tokens into one sequence with standard causal attention. Every speech token attends to all previous text tokens and all previous video tokens. You get cross-modal leakage everywhere. The model takes shortcuts — the speech tokens learn to just copy information from the text instead of learning an independent representation. Your embeddings collapse.</p>
+
+  <p class="section-label">The right way</p>
+  <p class="spoken">Use block masking to isolate modalities within the same sample. Text block, speech block, video block — each with its own causal mask. No cross-modal attention during the forward pass. Then you compare their embeddings with a contrastive objective like InfoNCE. This forces each modality to learn its own representation before they're compared in a shared space.</p>
+
+  <p class="section-label">The even better way</p>
+  <p class="spoken">But maybe full isolation is too restrictive. Think about it — prosody depends on word content. You probably want speech tokens to attend to text. But you don't want video tokens to attend to text — because then the face just mimics the text instead of learning expression from speech. Now your block mask isn't block-diagonal. It's an asymmetric cross-modal attention pattern.</p>
+
+  <div class="diagram">  Asymmetric cross-modal attention mask:
+
+                text      speech    video
+  text          causal      ✗         ✗      ← text is self-contained
+  speech        attend    causal      ✗      ← speech sees text (prosody needs words)
+  video           ✗         ✗      causal    ← video is isolated for contrastive</div>
+
+  <p class="spoken">This is exactly the kind of design decision you face when training a multimodal avatar model. And the answer isn't in a paper. It's in the block mask configuration of your sequence builder.</p>
+
+  <p class="spoken">That's what I mean by co-design. The data pipeline, the tokenizer, the attention kernel, and the training objective — they all have to be co-designed. Infra and modeling aren't separate concerns. And when they're aligned, you get both efficiency and correctness for free.</p>
+</section>
+
+<!-- ========================================================= -->
+<!-- STORY 3: Psychovisual Masking                             -->
+<!-- ========================================================= -->
+<section class="panel">
+  <div class="story-header">
+    <span class="story-num">3</span>
+    <h2 style="margin:0">Psychovisual Masking — Playing with the Human Mind</h2>
+  </div>
+  <div class="story-meta">
+    <span class="tag time">~5 min</span>
+    <span class="tag domain">Psychoacoustics</span>
+    <span class="tag domain">Video Codec</span>
+    <span class="tag domain">Perception</span>
+    <span class="tag use">1:1 Conversation Starter</span>
+  </div>
+
+  <div class="callout ok">
+    <p><b>Core message:</b> You don't need to generate every frame in real time — you just need humans to think you did. My PhD proved this for audio. The same trick applies to video.</p>
+  </div>
+
+  <!-- The Idea -->
+  <h3>The Idea</h3>
+  <p class="spoken">I have an interesting idea I'd like to share. When we talk about streaming video for a talking avatar, we always jump to: "Oh, the bottleneck is on the inference side, it's gonna eat up however many milliseconds." And the frame rate is, what, 75 frames per second? So we don't have much buffer to run LLM inference on top of generation.</p>
+  <p class="spoken">But here's the question. Among those 75 frames — how many can you swap out without bringing down the perceived quality of the talking head?</p>
+  <p class="spoken">Think about it. You have a video of a synthesized avatar responding to a user. The avatar nods, maybe smiles, or goes "whoa, gotcha." Is it possible to replace 30% of those frames — with interpolated or repeated frames — and then hire 10 human viewers to judge it in an A/B test? And they can't tell the difference?</p>
+  <p class="spoken">If that works, that's gold. Because now you've got extra buffer room to run LLM inference, to call the API, to handle orchestration — all within the same latency budget.</p>
+  <p class="spoken">And this study is a lower-hanging fruit than you'd think, because it has nothing to do with model training. It's closer to psychology research.</p>
+
+  <!-- Psychoacoustics Connection -->
+  <h3>The Psychoacoustics Connection</h3>
+  <p class="spoken">I actually did something similar for audio in my PhD. When you compress audio with a lossy codec, there's going to be some noise — that's inevitable. But here's the thing: if the noise is distributed in a way that gets masked by the raw signal, the human ear can't tell the difference. The noise is there, but it's harmless — because we only care about how humans perceive the sound.</p>
+  <p class="spoken">Oh yes, technically the SNR is not as high. But who cares? When you make a phone call, when you play music from a Dolby speaker, the sound quality is still great. People will pay for it. That's the whole trick.</p>
+  <p class="spoken">In audio, this field is called <b>psychoacoustics</b>. There's a well-studied concept called the <b>global masking threshold</b> — it tells you at every frequency, below what level is distortion inaudible. In my PhD work, I derived loss functions directly from this masking threshold. Instead of penalizing all reconstruction error equally, I only penalized the error a human would actually hear. The result: a smaller model using 36% fewer bits per second matched the quality of a model with twice the parameters.</p>
+
+  <!-- Video Analog -->
+  <h3>The Video Analog</h3>
+  <p class="spoken">I believe there's a corresponding framework for video. In video coding, it's called <b>JND — Just Noticeable Difference</b>. Same idea: it tells you the maximum distortion at each pixel that the human visual system can't detect. It's driven by luminance masking, texture masking, and temporal masking — which is especially relevant because after a sudden motion like a nod or a smile, the human eye needs 30 to 100 milliseconds to adjust. During that window, you can get away with dropped or degraded frames.</p>
+  <p class="spoken">A talking head has very favorable properties for this. The viewer stares at the eyes and lips — those need full quality. But the forehead, cheeks, hair? High texture, low attention. Temporal masking kicks in during every expression change.</p>
+  <p class="spoken">My point is: for a video-audio dual-modality talking avatar, the innovation isn't limited to modeling itself. Sometimes it's the trick of playing with the human mind.</p>
+
+  <div class="diagram">  Audio (PhD)                    Video (proposed)
+  ─────────────                    ────────────────
+  Psychoacoustics                  Psychovisual / JND
+  Global masking threshold         Just Noticeable Difference
+  Loud signal masks quiet noise    Texture/motion masks frame drops
+  Loss penalizes audible error     Loss penalizes visible error
+  Result: 2× smaller model,        Result: 20-30% fewer frames,
+          36% fewer bits                    same perceived quality
+          same perceived quality            free latency headroom</div>
+</section>
+
+<!-- ========================================================= -->
+<!-- PLACEHOLDER STORIES 4 & 5                                 -->
+<!-- ========================================================= -->
+<section class="panel" style="opacity:.5">
+  <div class="story-header">
+    <span class="story-num">4</span>
+    <h2 style="margin:0">TBD — Next Story</h2>
+  </div>
+  <div class="story-meta">
+    <span class="tag domain">Candidates: QAT 4-bit/5-bit, FP8 quantization, MoE architecture, speech tokenizer design</span>
+  </div>
+  <p style="color:var(--muted)">Slot reserved. Add your next polished narrative here.</p>
+</section>
+
+<section class="panel" style="opacity:.5">
+  <div class="story-header">
+    <span class="story-num">5</span>
+    <h2 style="margin:0">TBD — Next Story</h2>
+  </div>
+  <div class="story-meta">
+    <span class="tag domain">Candidates: CLIP/contrastive learning, flow matching, scaling laws, data quality &gt; architecture</span>
+  </div>
+  <p style="color:var(--muted)">Slot reserved. Add your next polished narrative here.</p>
+</section>
+
+<!-- ========================================================= -->
+<!-- FOOTER                                                    -->
+<!-- ========================================================= -->
+<div class="footer">
+  Story / Project-Based Narratives &mdash; Kai Zhen &mdash; Last updated March 2026
+</div>
+
+</div>
+</div><!-- /content-wrap -->
+</body>
+</html>

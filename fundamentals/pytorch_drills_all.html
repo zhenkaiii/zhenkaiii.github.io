@@ -53,6 +53,30 @@
 </style>
 </head>
 <body>
+<div id="gate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0f1220">
+  <div style="text-align:center">
+    <p style="color:#aab0d5;font-family:system-ui;margin-bottom:12px">This page is private.</p>
+    <input id="pw" type="password" placeholder="passphrase" autofocus
+      style="padding:10px 16px;border-radius:8px;border:1px solid #252a45;background:#171a2b;color:#e7e9f7;font-size:16px;font-family:system-ui;outline:none;width:220px"
+      onkeydown="if(event.key==='Enter')unlock()">
+    <br><button onclick="unlock()"
+      style="margin-top:10px;padding:8px 24px;border-radius:8px;border:none;background:#7c9cff;color:#0f1220;font-weight:700;cursor:pointer;font-family:system-ui">Enter</button>
+    <p id="err" style="color:#ff6b6b;font-family:system-ui;margin-top:8px;display:none">Wrong passphrase</p>
+  </div>
+</div>
+<script>
+async function unlock(){
+  const v=document.getElementById('pw').value;
+  const h=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)))).map(b=>b.toString(16).padStart(2,'0')).join('');
+  if(h==='ee3fc9b775bf5d504a5b0c68ffd7aa71d3f79fdc6d2ae1e6d4fb41817c364cbf'){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('content-wrap').style.display='block';
+    sessionStorage.setItem('k_auth','1');
+  }else{document.getElementById('err').style.display='block'}
+}
+if(sessionStorage.getItem('k_auth')==='1'){document.addEventListener('DOMContentLoaded',()=>{document.getElementById('gate').style.display='none';document.getElementById('content-wrap').style.display='block'})}
+</script>
+<div id="content-wrap" style="display:none">
 <div class="wrap">
 
 <header>
@@ -1534,5 +1558,6 @@ Pick ONE of these — whatever you feel least confident about:<br><br>
 <div class="footer">PyTorch Interview Drills — Mon to Fri &middot; March 2026</div>
 
 </div>
+</div><!-- /content-wrap -->
 </body>
 </html>

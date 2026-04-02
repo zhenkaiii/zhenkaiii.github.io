@@ -40,7 +40,8 @@ fetch("manifest.json")
       byTag[tag].forEach(it => {
         const a = document.createElement("a");
         a.href = it.file;
-        a.textContent = it.title;
+        a.textContent = (it.private ? "\u{1F512} " : "") + it.title;
+        if (it.private) a.style.opacity = "0.6";
         root.appendChild(a);
       });
     });

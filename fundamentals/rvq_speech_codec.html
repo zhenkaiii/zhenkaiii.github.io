@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RVQ Speech/Audio Codec — From Scalar Quantization to SoundStream</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:36px 0 10px;font-size:22px;border-bottom:2px solid var(--code-border);padding-bottom:8px}
+  h3{margin:24px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  pre code{background:none;padding:0}
+  .c{color:#6b708c} .n{color:#f78c6c}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>RVQ Speech/Audio Codec</h1>
+  <span class="badge">SoundStream / EnCodec</span>
+  <span class="badge">Fundamental</span>
+</header>
+
+<!-- ============================================================ -->
+<h2>The Lineage</h2>
+<!-- ============================================================ -->
+
+<div class="panel">
+<pre><code>AE (foundation)
+├── VAE (2013) — continuous latent, sample from Gaussian, KL + reconstruction loss
+│   └── VQ-VAE (2017) — replace Gaussian with discrete codebook, drop KL
+│       └── SoundStream (2021) — multi-level codebook (RVQ) + GAN discriminator losses
+│           └── EnCodec, DAC (2022-23) — same recipe, minor improvements
+│
+├── GAN (2014) — sharp outputs via adversarial training, no encoder
+│   └── HiFi-GAN (2020) — best vocoder, discriminator reused in all codecs above</code></pre>
+<p>Modern neural audio codec = <b>AE backbone + RVQ bottleneck + GAN losses.</b> VAE contributed the idea that the bottleneck should have structure. GAN contributed the discriminator for perceptual quality. Neither survived in pure form.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>Scalar Quantization vs Vector Quantization</h2>
+<!-- ============================================================ -->
+
+<div class="panel">
+<p><b>Scalar (what I did in my PhD):</b> Each of the D features gets its own bin index independently. D=128 means 128 indices per frame.</p>
+<p><b>Vector:</b> The entire D-dimensional vector gets <b>one index</b>. One codebook lookup replaces 128 independent lookups.</p>
+<pre><code>Scalar: (B, 75, 128) → 128 indices per frame
+VQ:     (B, 75, 128) → 1 index per frame
+RVQ:    (B, 75, 128) → Q indices per frame (e.g. 8)</code></pre>
+<p>Same bottleneck, 16x fewer indices with 8-level RVQ vs scalar. The gist: <b>you don't transmit the features, you only transmit the codebook indices.</b> Those indices are token IDs in today's LLM pipelines.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>Bitrate Math</h2>
+<!-- ============================================================ -->
+
+<div class="panel">
+<p>Two chains of math:</p>
+<pre><code><span class="c"># Chain 1: frame rate</span>
+sample_rate / receptive_field = frame_rate
+24000 / 320 = 75 fps
+
+<span class="c"># Chain 2: bitrate</span>
+log2(codebook_size) × num_rvq_levels × frame_rate = bitrate
+10 bits × 8 levels × 75 fps = 6000 bps = 6 kbps</code></pre>
+<p>Raw 24kHz 16-bit audio = 384 kbps. So 6 kbps = <b>64x compression.</b></p>
+<p>Two knobs: number of RVQ levels (quality vs compression) and codebook size (bits per level). Frame rate is fixed by encoder architecture.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>The Pipeline</h2>
+<!-- ============================================================ -->
+
+<pre><code>(B, 1, 24000)  →  (B, 75, 128)  →  (B, 75, 8)
+  waveform          encoder          RVQ indices
+
+<span class="c"># 320 samples → 1 vector of dim 128 → 8 codebook indices</span>
+<span class="c"># 1 second of 24kHz audio → 75 frames → 600 integers → 6 kbps</span></code></pre>
+
+<!-- ============================================================ -->
+<h2>Encoder (SoundStream-style)</h2>
+<!-- ============================================================ -->
+
+<p>Fully convolutional. No frame-by-frame feeding. Strides 2 &times; 4 &times; 5 &times; 8 = 320x downsampling.</p>
+
+<div class="callout">
+<b>Standard encoder design pattern:</b> Channels go up as time goes down. You trade temporal resolution for feature richness. Early layers capture simple patterns (waveform edges) with few channels. Deeper layers capture complex patterns (phonemes, timbre) with many channels over a compressed time axis. Strides also increase deeper in the network — early layers use small strides (2, 4) because the signal is still raw; later layers use bigger strides (5, 8) because the representation is already abstract. Same pattern in ResNet, U-Net, WaveNet encoders.
+</div>
+
+<pre><code>class SoundStreamEncoder(nn.Module):
+    def __init__(self, dim=128):
+        super().__init__()
+        <span class="c"># Input: (B, 1, T) raw waveform</span>
+        <span class="c"># Strides: 2, 4, 5, 8 → total 320x downsampling</span>
+        self.net = nn.Sequential(
+            nn.Conv1d(1, dim // 8, kernel_size=7, padding=3),
+
+            nn.Conv1d(dim // 8, dim // 4, kernel_size=4, stride=2, padding=1),
+            nn.SiLU(),
+
+            nn.Conv1d(dim // 4, dim // 2, kernel_size=8, stride=4, padding=2),
+            nn.SiLU(),
+
+            nn.Conv1d(dim // 2, dim, kernel_size=10, stride=5, padding=3),
+            nn.SiLU(),
+
+            nn.Conv1d(dim, dim, kernel_size=16, stride=8, padding=4),
+            nn.SiLU(),
+        )
+
+    def forward(self, x):
+        <span class="c">"""x: (B, 1, T) → (B, T//320, 128)"""</span>
+        return self.net(x).transpose(1, 2)</code></pre>
+
+<!-- ============================================================ -->
+<h2>RVQ Quantizer</h2>
+<!-- ============================================================ -->
+
+<p>Each level quantizes the residual error from the previous level. Coarse to fine.</p>
+
+<pre><code>class RVQ(nn.Module):
+    def __init__(self, num_quantizers, codebook_size, dim):
+        super().__init__()
+        self.num_quantizers = num_quantizers
+        self.codebooks = nn.ParameterList([
+            nn.Parameter(torch.randn(codebook_size, dim))
+            for _ in range(num_quantizers)
+        ])
+
+    def forward(self, x):
+        <span class="c">"""x: (B, T, D) → quantized (B, T, D), indices (B, T, Q)"""</span>
+        residual = x
+        quantized = torch.zeros_like(x)
+        all_indices = []
+
+        for i in range(self.num_quantizers):
+            <span class="c"># distance to each codebook entry</span>
+            dist = torch.cdist(residual, self.codebooks[i].unsqueeze(0))
+            indices = dist.argmin(dim=-1)        <span class="c"># (B, T)</span>
+            all_indices.append(indices)
+
+            z_q = self.codebooks[i][indices]      <span class="c"># (B, T, D)</span>
+
+            <span class="c"># straight-through: forward = z_q, backward = gradient to residual</span>
+            z_q_st = residual + (z_q - residual).detach()
+
+            quantized = quantized + z_q_st
+            residual = residual - z_q.detach()    <span class="c"># next level encodes the leftover</span>
+
+        indices = torch.stack(all_indices, dim=-1) <span class="c"># (B, T, Q)</span>
+        return quantized, indices</code></pre>
+
+<div class="callout warn">
+<b>Straight-through estimator:</b> <code>z_q_st = residual + (z_q - residual).detach()</code>. Forward pass this equals <code>z_q</code>. Backward pass gradient flows to <code>residual</code>, skipping the non-differentiable argmin. This is the VQ equivalent of the soft-to-hard annealing trick from scalar quantization.
+</div>
+
+<!-- ============================================================ -->
+<h2>RVQ Intuition</h2>
+<!-- ============================================================ -->
+
+<div class="panel">
+<pre><code><span class="c"># Level 1: coarse approximation</span>
+z1 = codebook_1[nearest(x)]
+residual_1 = x - z1
+
+<span class="c"># Level 2: encode what level 1 missed</span>
+z2 = codebook_2[nearest(residual_1)]
+residual_2 = residual_1 - z2
+
+<span class="c"># Level 3: encode what level 2 missed</span>
+z3 = codebook_3[nearest(residual_2)]
+
+<span class="c"># Reconstruction = sum of all levels</span>
+x_hat = z1 + z2 + z3</code></pre>
+<p>Each level captures finer detail. Like JPEG progressive loading but for audio vectors.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>Key Insights</h2>
+<!-- ============================================================ -->
+
+<table>
+  <tr><th>#</th><th>Insight</th></tr>
+  <tr><td>1</td><td>No frame-by-frame feeding. Encoder is fully convolutional, takes whole waveform. What matters is <b>receptive field</b> (320 samples), not frame size.</td></tr>
+  <tr><td>2</td><td>320 samples → 1 vector of 128-D. That vector gets quantized, not the raw samples.</td></tr>
+  <tr><td>3</td><td>You don't transmit features. You transmit <b>codebook indices</b>. Those indices = token IDs for downstream LLMs.</td></tr>
+  <tr><td>4</td><td>Scalar quantization: 128 indices per frame. RVQ with 8 levels: 8 indices per frame. 16x fewer.</td></tr>
+  <tr><td>5</td><td>Bitrate = log2(K) &times; Q &times; frame_rate. Two knobs: codebook size K and number of RVQ levels Q.</td></tr>
+  <tr><td>6</td><td>Straight-through estimator handles the non-differentiable argmin. Same problem as soft-to-hard annealing, different solution.</td></tr>
+</table>
+
+<div class="footer">RVQ Speech/Audio Codec &middot; March 2026</div>
+
+</div>
+</body>
+</html>

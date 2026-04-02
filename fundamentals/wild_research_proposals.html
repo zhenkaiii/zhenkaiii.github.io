@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wild Research Proposals — Ideas Too Good to Lose</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+    --wild:#e879f9;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:10px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  .badge.wild{border-color:var(--wild);color:var(--wild)}
+  h1{font-size:28px;margin:0}
+  h2{margin:28px 0 10px;font-size:20px}
+  h3{margin:20px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  .callout.bad{border-left-color:var(--bad)}
+  .callout.wild{border-left-color:var(--wild);background:rgba(232,121,249,.08)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .diagram{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:20px;margin:14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:14px;line-height:1.6;overflow-x:auto;white-space:pre}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+  .subtitle{color:var(--muted);font-size:14px;margin:4px 0 24px}
+  .story-header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+  .story-num{background:var(--wild);color:var(--bg);font-weight:700;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+  .story-meta{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}
+  .tag{font-size:11px;padding:2px 8px;border-radius:999px;font-weight:600}
+  .tag.domain{background:rgba(124,156,255,.15);color:var(--accent)}
+  .tag.status{background:rgba(232,121,249,.15);color:var(--wild)}
+  .tag.origin{background:rgba(255,209,102,.15);color:var(--warn)}
+  .spoken{font-style:italic;color:var(--ink);opacity:.88;line-height:1.8}
+  .section-label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px;margin:18px 0 6px}
+</style>
+</head>
+<body>
+<div id="gate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0f1220">
+  <div style="text-align:center">
+    <p style="color:#aab0d5;font-family:system-ui;margin-bottom:12px">This page is private.</p>
+    <input id="pw" type="password" placeholder="passphrase" autofocus
+      style="padding:10px 16px;border-radius:8px;border:1px solid #252a45;background:#171a2b;color:#e7e9f7;font-size:16px;font-family:system-ui;outline:none;width:220px"
+      onkeydown="if(event.key==='Enter')unlock()">
+    <br><button onclick="unlock()"
+      style="margin-top:10px;padding:8px 24px;border-radius:8px;border:none;background:#7c9cff;color:#0f1220;font-weight:700;cursor:pointer;font-family:system-ui">Enter</button>
+    <p id="err" style="color:#ff6b6b;font-family:system-ui;margin-top:8px;display:none">Wrong passphrase</p>
+  </div>
+</div>
+<script>
+async function unlock(){
+  const v=document.getElementById('pw').value;
+  const h=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)))).map(b=>b.toString(16).padStart(2,'0')).join('');
+  if(h==='ee3fc9b775bf5d504a5b0c68ffd7aa71d3f79fdc6d2ae1e6d4fb41817c364cbf'){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('content-wrap').style.display='block';
+    sessionStorage.setItem('k_auth','1');
+  }else{document.getElementById('err').style.display='block'}
+}
+if(sessionStorage.getItem('k_auth')==='1'){document.addEventListener('DOMContentLoaded',()=>{document.getElementById('gate').style.display='none';document.getElementById('content-wrap').style.display='block'})}
+</script>
+<div id="content-wrap" style="display:none">
+<div class="wrap">
+
+<header>
+  <h1>Wild Research Proposals</h1>
+  <span class="badge wild">Ideas Too Good to Lose</span>
+</header>
+<p class="subtitle">Half-baked, unpolished, possibly brilliant. Captured here so the mind doesn't lose what the mind produced.</p>
+
+<!-- ========================================================= -->
+<!-- PROPOSAL 1: JND-Driven Frame Budgeting                    -->
+<!-- ========================================================= -->
+<section class="panel">
+  <div class="story-header">
+    <span class="story-num">1</span>
+    <h2 style="margin:0">JND-Driven Frame Budgeting for Real-Time Talking Avatars</h2>
+  </div>
+  <div class="story-meta">
+    <span class="tag status">Idea stage</span>
+    <span class="tag origin">Born: March 2026, Nuance Labs onsite prep</span>
+    <span class="tag domain">Psychoacoustics</span>
+    <span class="tag domain">Video Generation</span>
+    <span class="tag domain">Perception Science</span>
+    <span class="tag domain">Latency Optimization</span>
+  </div>
+
+  <!-- The raw idea, in your voice -->
+  <h3>The Raw Idea</h3>
+  <p class="spoken">When we talk about streaming video for a talking avatar, we always jump to: "Oh, the bottleneck is on the inference side, it's gonna eat up however many milliseconds." And the frame rate is, what, 75 frames per second? So we don't have much buffer to run LLM inference on top of generation.</p>
+  <p class="spoken">But here's the question. Among those 75 frames — how many can you swap out without bringing down the perceived quality of the talking head?</p>
+  <p class="spoken">Think about it. You have a video of a synthesized avatar responding to a user. The avatar nods, maybe smiles, or goes "whoa, gotcha." Is it possible to replace 30% of those frames — with interpolated or repeated frames — and then hire 10 human viewers to judge it in an A/B test? And they can't tell the difference?</p>
+  <p class="spoken">If that works, that's gold. Because now you've got extra buffer room to run LLM inference, to call the API, to handle orchestration — all within the same latency budget. And this study is a lower-hanging fruit than you'd think, because it has nothing to do with model training. It's closer to psychology research.</p>
+  <p class="spoken">For a video-audio dual-modality talking avatar, the innovation isn't limited to modeling itself. Sometimes it's the trick of playing with the human mind.</p>
+
+  <!-- The PhD precedent -->
+  <h3>Why I Believe This — The Psychoacoustics Precedent</h3>
+  <p class="spoken">In my PhD, I worked on neural audio codecs. The standard approach trains an autoencoder with MSE loss. But MSE treats every sample equally — it doesn't know that a quiet distortion buried under a loud vowel is inaudible, while the same distortion during silence is painfully obvious.</p>
+  <p class="spoken">In psychoacoustics, there's a concept called the <b>global masking threshold</b> — a frequency-dependent curve that tells you below what level distortion is inaudible. I derived loss functions directly from this threshold. Instead of penalizing all error equally, I only penalized the error a human would actually hear. Result: a smaller model using 36% fewer bits per second matched the quality of a model with twice the parameters.</p>
+  <p class="spoken">Oh yes, technically the SNR is not as high. But who cares? When you make a phone call, when you play music from a Dolby speaker, the sound quality is still great. People will pay for it.</p>
+
+  <!-- The video extension -->
+  <h3>The Video Analog: JND</h3>
+  <p>In video coding, the equivalent of the auditory masking threshold is called <b>JND — Just Noticeable Difference</b>. It tells you the maximum distortion at each pixel/region that the human visual system can't detect. Governed by three masking effects:</p>
+  <table>
+    <tr><th>Masking Effect</th><th>Audio Analog</th><th>What It Means for Talking Heads</th></tr>
+    <tr><td><b>Luminance masking</b></td><td>Low-level signal masking</td><td>Distortion in very bright/dark face regions (jaw shadows, highlights) is harder to see</td></tr>
+    <tr><td><b>Texture masking</b></td><td>Loud signal masks nearby noise</td><td>Hair, background, skin texture — busy regions tolerate dropped frames</td></tr>
+    <tr><td><b>Temporal masking</b></td><td>Pre/post-masking around transients</td><td>After a nod, smile, or gaze shift, the eye needs 30-100ms to reset — dropped frames go unnoticed</td></tr>
+  </table>
+  <p>A talking head has <b>extremely favorable JND properties</b>. Viewer fixates on eyes and lips (need full fidelity). Everything else — forehead, cheeks, ears, hair — is high-texture, low-saliency, temporally redundant.</p>
+
+  <!-- The deeper question -->
+  <h3>The Deeper Question — What Does This Mean for Token Prediction?</h3>
+  <p>If psychovisual masking tells us which frames are perceptually redundant, what does that translate to in a multimodal LLM? Instead of next-token prediction for every frame, could we do <b>next-important-token prediction</b> — generate 10 perceptually critical tokens that cover 50 token positions, and interpolate the rest?</p>
+
+  <div class="callout wild">
+    <p><b>This is the wild part.</b> The idea sits at the intersection of three active research threads, but nobody has combined them with a perceptual prior:</p>
+  </div>
+
+  <table>
+    <tr><th>Research Thread</th><th>What It Does</th><th>What's Missing</th></tr>
+    <tr>
+      <td><b>Keyframe generation + interpolation</b><br><span style="color:var(--muted);font-size:13px">KeyVID, hierarchical video gen</span></td>
+      <td>Generate sparse keyframes, interpolate the rest. Active and well-established.</td>
+      <td>Keyframe selection is model-driven (optical flow, audio cues), not perception-driven (JND)</td>
+    </tr>
+    <tr>
+      <td><b>MaskGIT / MAGVIT</b><br><span style="color:var(--muted);font-size:13px">Non-autoregressive masked prediction</span></td>
+      <td>Predict all tokens in parallel, keep most confident, re-mask the rest. 60x faster than autoregressive.</td>
+      <td>Importance = model confidence. Not perceptual importance.</td>
+    </tr>
+    <tr>
+      <td><b>L-MTP</b><br><span style="color:var(--muted);font-size:13px">Leap Multi-Token Prediction, NeurIPS 2025</span></td>
+      <td>Predict non-adjacent tokens (positions 1, 3, 5, 7). Skip intermediate tokens, fill in later.</td>
+      <td>Fixed skip stride. Not adaptive. Text-only.</td>
+    </tr>
+  </table>
+
+  <div class="callout warn">
+    <p><b>The honest gap:</b> JND models exist for <b>compression</b> (evaluating distortion in existing frames). This idea requires a <b>predictive JND</b> — estimating which future frames will be perceptually redundant before they're generated. That's harder, because you're judging importance of frames that don't exist yet.</p>
+  </div>
+
+  <!-- The pitch -->
+  <h3>How to Pitch It (Without Overreaching)</h3>
+  <p class="spoken">"Keyframe-based video generation already exists — generate sparse keyframes, interpolate the rest. What I'm proposing is using a JND-informed frame budget to decide which frames are keyframes. Instead of fixed intervals or model confidence, the selection is driven by perceptual science — temporal masking, texture masking, saliency. The same way psychoacoustic models tell audio codecs where to hide noise, a psychovisual model can tell the generation pipeline where to skip frames. The nice part is you can validate this before building anything — just take existing generated video, drop frames according to a JND model, and A/B test."</p>
+
+  <!-- Validation plan -->
+  <h3>Quick Validation (No Training Required)</h3>
+  <ol>
+    <li>Take a generated talking-head video (e.g., from Nuance's own DiT)</li>
+    <li>Compute per-frame JND scores using an off-the-shelf model (temporal masking + texture masking + saliency)</li>
+    <li>Drop/interpolate the N% lowest-importance frames (try 10%, 20%, 30%)</li>
+    <li>A/B test with 10 human raters — can they tell the difference?</li>
+    <li>If not: you've quantified the free latency headroom</li>
+  </ol>
+
+  <div class="diagram">  The pipeline (if validated):
+
+  Text ──→ JND-aware LLM ──→ salient frame tokens only
+                │                       │
+                │                  DiT generates
+                │                  keyframes only
+                │                  (full fidelity)
+                │                       │
+                │               filler frames interpolated
+                │               (cheap — no DiT, no flow matching)
+                │                       │
+                └───────────────→ final video stream
+                               (same perceived quality,
+                                20-30% less DiT compute)
+
+  Key insight: the JND prior lives in the LLM, not after the DiT.
+  Don't generate then discard — know what to skip before spending FLOPs.</div>
+
+  <!-- References -->
+  <h3>Related Work (Anchors)</h3>
+  <ul>
+    <li><a href="https://arxiv.org/abs/2212.05199">MAGVIT — Masked Generative Video Transformer (CVPR 2023)</a> — non-autoregressive, confidence-based token selection</li>
+    <li><a href="https://openaccess.thecvf.com/content/CVPR2022/papers/Chang_MaskGIT_Masked_Generative_Image_Transformer_CVPR_2022_paper.pdf">MaskGIT (CVPR 2022)</a> — predict all, keep confident, re-mask</li>
+    <li><a href="https://arxiv.org/abs/2505.17505">L-MTP — Leap Multi-Token Prediction (NeurIPS 2025)</a> — non-adjacent token prediction</li>
+    <li><a href="https://arxiv.org/html/2504.09656">KeyVID — Keyframe-Aware Video Diffusion</a> — audio-guided keyframe selection for avatars</li>
+    <li><a href="https://arxiv.org/html/2603.14331v2">AvatarForcing (2026)</a> — streaming talking avatar at 34ms/frame</li>
+    <li><a href="https://arxiv.org/pdf/2112.12284">Survey on Perceptually Optimized Video Coding</a> — JND models, temporal/texture/luminance masking</li>
+    <li><a href="https://www.researchgate.net/publication/262999205_Visually_lossless_coding_based_on_temporal_masking_in_human_vision">Visually Lossless Coding via Temporal Masking</a> — 10% bitrate savings from temporal masking alone</li>
+  </ul>
+
+</section>
+
+<!-- ========================================================= -->
+<!-- PLACEHOLDER                                               -->
+<!-- ========================================================= -->
+<section class="panel" style="opacity:.4">
+  <div class="story-header">
+    <span class="story-num">2</span>
+    <h2 style="margin:0">TBD — Next Wild Idea</h2>
+  </div>
+  <p style="color:var(--muted)">Slot reserved. The mind will produce more gold.</p>
+</section>
+
+<section class="panel" style="opacity:.4">
+  <div class="story-header">
+    <span class="story-num">3</span>
+    <h2 style="margin:0">TBD — Next Wild Idea</h2>
+  </div>
+  <p style="color:var(--muted)">Slot reserved.</p>
+</section>
+
+<!-- ========================================================= -->
+<!-- FOOTER                                                    -->
+<!-- ========================================================= -->
+<div class="footer">
+  Wild Research Proposals &mdash; Kai Zhen &mdash; Last updated March 2026
+</div>
+
+</div>
+</div><!-- /content-wrap -->
+</body>
+</html>
