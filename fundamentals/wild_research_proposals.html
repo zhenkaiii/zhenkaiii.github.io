@@ -52,9 +52,10 @@
 </style>
 </head>
 <body>
+
 <div id="gate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0f1220">
   <div style="text-align:center">
-    <p style="color:#aab0d5;font-family:system-ui;margin-bottom:12px">This page is private.</p>
+    <p style="color:#aab0d5;font-family:system-ui;margin-bottom:12px">This page is encrypted.</p>
     <input id="pw" type="password" placeholder="passphrase" autofocus
       style="padding:10px 16px;border-radius:8px;border:1px solid #252a45;background:#171a2b;color:#e7e9f7;font-size:16px;font-family:system-ui;outline:none;width:220px"
       onkeydown="if(event.key==='Enter')unlock()">
@@ -63,173 +64,34 @@
     <p id="err" style="color:#ff6b6b;font-family:system-ui;margin-top:8px;display:none">Wrong passphrase</p>
   </div>
 </div>
+<div id="content-wrap"></div>
 <script>
 async function unlock(){
-  const v=document.getElementById('pw').value;
-  const h=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)))).map(b=>b.toString(16).padStart(2,'0')).join('');
-  if(h==='ee3fc9b775bf5d504a5b0c68ffd7aa71d3f79fdc6d2ae1e6d4fb41817c364cbf'){
+  try{
+    const pw=document.getElementById('pw').value;
+    const blob=document.getElementById('enc-blob').textContent.trim();
+    const raw=Uint8Array.from(atob(blob),c=>c.charCodeAt(0));
+    const salt=raw.slice(0,16);
+    const iv=raw.slice(16,28);
+    const ct=raw.slice(28);
+    const enc=new TextEncoder();
+    const keyMaterial=await crypto.subtle.importKey('raw',enc.encode(pw),{name:'PBKDF2'},false,['deriveKey']);
+    const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:100000,hash:'SHA-256'},keyMaterial,{name:'AES-GCM',length:256},false,['decrypt']);
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,ct);
+    const html=new TextDecoder().decode(pt);
     document.getElementById('gate').style.display='none';
+    document.getElementById('content-wrap').innerHTML=html;
     document.getElementById('content-wrap').style.display='block';
-    sessionStorage.setItem('k_auth','1');
-  }else{document.getElementById('err').style.display='block'}
+    sessionStorage.setItem('k_auth_v2',btoa(pw));
+  }catch(e){document.getElementById('err').style.display='block'}
 }
-if(sessionStorage.getItem('k_auth')==='1'){document.addEventListener('DOMContentLoaded',()=>{document.getElementById('gate').style.display='none';document.getElementById('content-wrap').style.display='block'})}
+(async()=>{
+  const cached=sessionStorage.getItem('k_auth_v2');
+  if(cached){document.getElementById('pw').value=atob(cached);await unlock()}
+})();
 </script>
-<div id="content-wrap" style="display:none">
-<div class="wrap">
-
-<header>
-  <h1>Wild Research Proposals</h1>
-  <span class="badge wild">Ideas Too Good to Lose</span>
-</header>
-<p class="subtitle">Half-baked, unpolished, possibly brilliant. Captured here so the mind doesn't lose what the mind produced.</p>
-
-<!-- ========================================================= -->
-<!-- PROPOSAL 1: JND-Driven Frame Budgeting                    -->
-<!-- ========================================================= -->
-<section class="panel">
-  <div class="story-header">
-    <span class="story-num">1</span>
-    <h2 style="margin:0">JND-Driven Frame Budgeting for Real-Time Talking Avatars</h2>
-  </div>
-  <div class="story-meta">
-    <span class="tag status">Idea stage</span>
-    <span class="tag origin">Born: March 2026, Nuance Labs onsite prep</span>
-    <span class="tag domain">Psychoacoustics</span>
-    <span class="tag domain">Video Generation</span>
-    <span class="tag domain">Perception Science</span>
-    <span class="tag domain">Latency Optimization</span>
-  </div>
-
-  <!-- The raw idea, in your voice -->
-  <h3>The Raw Idea</h3>
-  <p class="spoken">When we talk about streaming video for a talking avatar, we always jump to: "Oh, the bottleneck is on the inference side, it's gonna eat up however many milliseconds." And the frame rate is, what, 75 frames per second? So we don't have much buffer to run LLM inference on top of generation.</p>
-  <p class="spoken">But here's the question. Among those 75 frames — how many can you swap out without bringing down the perceived quality of the talking head?</p>
-  <p class="spoken">Think about it. You have a video of a synthesized avatar responding to a user. The avatar nods, maybe smiles, or goes "whoa, gotcha." Is it possible to replace 30% of those frames — with interpolated or repeated frames — and then hire 10 human viewers to judge it in an A/B test? And they can't tell the difference?</p>
-  <p class="spoken">If that works, that's gold. Because now you've got extra buffer room to run LLM inference, to call the API, to handle orchestration — all within the same latency budget. And this study is a lower-hanging fruit than you'd think, because it has nothing to do with model training. It's closer to psychology research.</p>
-  <p class="spoken">For a video-audio dual-modality talking avatar, the innovation isn't limited to modeling itself. Sometimes it's the trick of playing with the human mind.</p>
-
-  <!-- The PhD precedent -->
-  <h3>Why I Believe This — The Psychoacoustics Precedent</h3>
-  <p class="spoken">In my PhD, I worked on neural audio codecs. The standard approach trains an autoencoder with MSE loss. But MSE treats every sample equally — it doesn't know that a quiet distortion buried under a loud vowel is inaudible, while the same distortion during silence is painfully obvious.</p>
-  <p class="spoken">In psychoacoustics, there's a concept called the <b>global masking threshold</b> — a frequency-dependent curve that tells you below what level distortion is inaudible. I derived loss functions directly from this threshold. Instead of penalizing all error equally, I only penalized the error a human would actually hear. Result: a smaller model using 36% fewer bits per second matched the quality of a model with twice the parameters.</p>
-  <p class="spoken">Oh yes, technically the SNR is not as high. But who cares? When you make a phone call, when you play music from a Dolby speaker, the sound quality is still great. People will pay for it.</p>
-
-  <!-- The video extension -->
-  <h3>The Video Analog: JND</h3>
-  <p>In video coding, the equivalent of the auditory masking threshold is called <b>JND — Just Noticeable Difference</b>. It tells you the maximum distortion at each pixel/region that the human visual system can't detect. Governed by three masking effects:</p>
-  <table>
-    <tr><th>Masking Effect</th><th>Audio Analog</th><th>What It Means for Talking Heads</th></tr>
-    <tr><td><b>Luminance masking</b></td><td>Low-level signal masking</td><td>Distortion in very bright/dark face regions (jaw shadows, highlights) is harder to see</td></tr>
-    <tr><td><b>Texture masking</b></td><td>Loud signal masks nearby noise</td><td>Hair, background, skin texture — busy regions tolerate dropped frames</td></tr>
-    <tr><td><b>Temporal masking</b></td><td>Pre/post-masking around transients</td><td>After a nod, smile, or gaze shift, the eye needs 30-100ms to reset — dropped frames go unnoticed</td></tr>
-  </table>
-  <p>A talking head has <b>extremely favorable JND properties</b>. Viewer fixates on eyes and lips (need full fidelity). Everything else — forehead, cheeks, ears, hair — is high-texture, low-saliency, temporally redundant.</p>
-
-  <!-- The deeper question -->
-  <h3>The Deeper Question — What Does This Mean for Token Prediction?</h3>
-  <p>If psychovisual masking tells us which frames are perceptually redundant, what does that translate to in a multimodal LLM? Instead of next-token prediction for every frame, could we do <b>next-important-token prediction</b> — generate 10 perceptually critical tokens that cover 50 token positions, and interpolate the rest?</p>
-
-  <div class="callout wild">
-    <p><b>This is the wild part.</b> The idea sits at the intersection of three active research threads, but nobody has combined them with a perceptual prior:</p>
-  </div>
-
-  <table>
-    <tr><th>Research Thread</th><th>What It Does</th><th>What's Missing</th></tr>
-    <tr>
-      <td><b>Keyframe generation + interpolation</b><br><span style="color:var(--muted);font-size:13px">KeyVID, hierarchical video gen</span></td>
-      <td>Generate sparse keyframes, interpolate the rest. Active and well-established.</td>
-      <td>Keyframe selection is model-driven (optical flow, audio cues), not perception-driven (JND)</td>
-    </tr>
-    <tr>
-      <td><b>MaskGIT / MAGVIT</b><br><span style="color:var(--muted);font-size:13px">Non-autoregressive masked prediction</span></td>
-      <td>Predict all tokens in parallel, keep most confident, re-mask the rest. 60x faster than autoregressive.</td>
-      <td>Importance = model confidence. Not perceptual importance.</td>
-    </tr>
-    <tr>
-      <td><b>L-MTP</b><br><span style="color:var(--muted);font-size:13px">Leap Multi-Token Prediction, NeurIPS 2025</span></td>
-      <td>Predict non-adjacent tokens (positions 1, 3, 5, 7). Skip intermediate tokens, fill in later.</td>
-      <td>Fixed skip stride. Not adaptive. Text-only.</td>
-    </tr>
-  </table>
-
-  <div class="callout warn">
-    <p><b>The honest gap:</b> JND models exist for <b>compression</b> (evaluating distortion in existing frames). This idea requires a <b>predictive JND</b> — estimating which future frames will be perceptually redundant before they're generated. That's harder, because you're judging importance of frames that don't exist yet.</p>
-  </div>
-
-  <!-- The pitch -->
-  <h3>How to Pitch It (Without Overreaching)</h3>
-  <p class="spoken">"Keyframe-based video generation already exists — generate sparse keyframes, interpolate the rest. What I'm proposing is using a JND-informed frame budget to decide which frames are keyframes. Instead of fixed intervals or model confidence, the selection is driven by perceptual science — temporal masking, texture masking, saliency. The same way psychoacoustic models tell audio codecs where to hide noise, a psychovisual model can tell the generation pipeline where to skip frames. The nice part is you can validate this before building anything — just take existing generated video, drop frames according to a JND model, and A/B test."</p>
-
-  <!-- Validation plan -->
-  <h3>Quick Validation (No Training Required)</h3>
-  <ol>
-    <li>Take a generated talking-head video (e.g., from Nuance's own DiT)</li>
-    <li>Compute per-frame JND scores using an off-the-shelf model (temporal masking + texture masking + saliency)</li>
-    <li>Drop/interpolate the N% lowest-importance frames (try 10%, 20%, 30%)</li>
-    <li>A/B test with 10 human raters — can they tell the difference?</li>
-    <li>If not: you've quantified the free latency headroom</li>
-  </ol>
-
-  <div class="diagram">  The pipeline (if validated):
-
-  Text ──→ JND-aware LLM ──→ salient frame tokens only
-                │                       │
-                │                  DiT generates
-                │                  keyframes only
-                │                  (full fidelity)
-                │                       │
-                │               filler frames interpolated
-                │               (cheap — no DiT, no flow matching)
-                │                       │
-                └───────────────→ final video stream
-                               (same perceived quality,
-                                20-30% less DiT compute)
-
-  Key insight: the JND prior lives in the LLM, not after the DiT.
-  Don't generate then discard — know what to skip before spending FLOPs.</div>
-
-  <!-- References -->
-  <h3>Related Work (Anchors)</h3>
-  <ul>
-    <li><a href="https://arxiv.org/abs/2212.05199">MAGVIT — Masked Generative Video Transformer (CVPR 2023)</a> — non-autoregressive, confidence-based token selection</li>
-    <li><a href="https://openaccess.thecvf.com/content/CVPR2022/papers/Chang_MaskGIT_Masked_Generative_Image_Transformer_CVPR_2022_paper.pdf">MaskGIT (CVPR 2022)</a> — predict all, keep confident, re-mask</li>
-    <li><a href="https://arxiv.org/abs/2505.17505">L-MTP — Leap Multi-Token Prediction (NeurIPS 2025)</a> — non-adjacent token prediction</li>
-    <li><a href="https://arxiv.org/html/2504.09656">KeyVID — Keyframe-Aware Video Diffusion</a> — audio-guided keyframe selection for avatars</li>
-    <li><a href="https://arxiv.org/html/2603.14331v2">AvatarForcing (2026)</a> — streaming talking avatar at 34ms/frame</li>
-    <li><a href="https://arxiv.org/pdf/2112.12284">Survey on Perceptually Optimized Video Coding</a> — JND models, temporal/texture/luminance masking</li>
-    <li><a href="https://www.researchgate.net/publication/262999205_Visually_lossless_coding_based_on_temporal_masking_in_human_vision">Visually Lossless Coding via Temporal Masking</a> — 10% bitrate savings from temporal masking alone</li>
-  </ul>
-
-</section>
-
-<!-- ========================================================= -->
-<!-- PLACEHOLDER                                               -->
-<!-- ========================================================= -->
-<section class="panel" style="opacity:.4">
-  <div class="story-header">
-    <span class="story-num">2</span>
-    <h2 style="margin:0">TBD — Next Wild Idea</h2>
-  </div>
-  <p style="color:var(--muted)">Slot reserved. The mind will produce more gold.</p>
-</section>
-
-<section class="panel" style="opacity:.4">
-  <div class="story-header">
-    <span class="story-num">3</span>
-    <h2 style="margin:0">TBD — Next Wild Idea</h2>
-  </div>
-  <p style="color:var(--muted)">Slot reserved.</p>
-</section>
-
-<!-- ========================================================= -->
-<!-- FOOTER                                                    -->
-<!-- ========================================================= -->
-<div class="footer">
-  Wild Research Proposals &mdash; Kai Zhen &mdash; Last updated March 2026
-</div>
-
-</div>
-</div><!-- /content-wrap -->
+<script id="enc-blob" type="text/plain">
+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
+</script>
 </body>
 </html>

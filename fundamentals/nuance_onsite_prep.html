@@ -43,9 +43,10 @@
 </style>
 </head>
 <body>
+
 <div id="gate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0f1220">
   <div style="text-align:center">
-    <p style="color:#aab0d5;font-family:system-ui;margin-bottom:12px">This page is private.</p>
+    <p style="color:#aab0d5;font-family:system-ui;margin-bottom:12px">This page is encrypted.</p>
     <input id="pw" type="password" placeholder="passphrase" autofocus
       style="padding:10px 16px;border-radius:8px;border:1px solid #252a45;background:#171a2b;color:#e7e9f7;font-size:16px;font-family:system-ui;outline:none;width:220px"
       onkeydown="if(event.key==='Enter')unlock()">
@@ -54,242 +55,34 @@
     <p id="err" style="color:#ff6b6b;font-family:system-ui;margin-top:8px;display:none">Wrong passphrase</p>
   </div>
 </div>
+<div id="content-wrap"></div>
 <script>
 async function unlock(){
-  const v=document.getElementById('pw').value;
-  const h=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)))).map(b=>b.toString(16).padStart(2,'0')).join('');
-  if(h==='ee3fc9b775bf5d504a5b0c68ffd7aa71d3f79fdc6d2ae1e6d4fb41817c364cbf'){
+  try{
+    const pw=document.getElementById('pw').value;
+    const blob=document.getElementById('enc-blob').textContent.trim();
+    const raw=Uint8Array.from(atob(blob),c=>c.charCodeAt(0));
+    const salt=raw.slice(0,16);
+    const iv=raw.slice(16,28);
+    const ct=raw.slice(28);
+    const enc=new TextEncoder();
+    const keyMaterial=await crypto.subtle.importKey('raw',enc.encode(pw),{name:'PBKDF2'},false,['deriveKey']);
+    const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:100000,hash:'SHA-256'},keyMaterial,{name:'AES-GCM',length:256},false,['decrypt']);
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,ct);
+    const html=new TextDecoder().decode(pt);
     document.getElementById('gate').style.display='none';
+    document.getElementById('content-wrap').innerHTML=html;
     document.getElementById('content-wrap').style.display='block';
-    sessionStorage.setItem('k_auth','1');
-  }else{document.getElementById('err').style.display='block'}
+    sessionStorage.setItem('k_auth_v2',btoa(pw));
+  }catch(e){document.getElementById('err').style.display='block'}
 }
-if(sessionStorage.getItem('k_auth')==='1'){document.addEventListener('DOMContentLoaded',()=>{document.getElementById('gate').style.display='none';document.getElementById('content-wrap').style.display='block'})}
+(async()=>{
+  const cached=sessionStorage.getItem('k_auth_v2');
+  if(cached){document.getElementById('pw').value=atob(cached);await unlock()}
+})();
 </script>
-<div id="content-wrap" style="display:none">
-<div class="wrap">
-
-<header>
-  <h1>Nuance Labs Onsite Prep</h1>
-  <span class="badge">Smith Tower, Seattle</span>
-  <span class="badge">Thursday 9AM–2:30PM</span>
-</header>
-
-<!-- ============================================================ -->
-<h2>Onsite Format</h2>
-<!-- ============================================================ -->
-
-<table>
-  <tr><th>Block</th><th>What</th><th>Your Goal</th></tr>
-  <tr><td>Whiteboard (you)</td><td>Present your best work</td><td>LLM pretraining at Amazon. 20-25 min.</td></tr>
-  <tr><td>Whiteboard (them)</td><td>Walk you through Nuance's ML design</td><td>Ask sharp questions. Show you already know their architecture.</td></tr>
-  <tr><td>1:1s</td><td>Meet each founder</td><td>Different angle per person. See below.</td></tr>
-  <tr><td>Team lunch</td><td>Casual</td><td>Be human. Don't pitch.</td></tr>
-</table>
-
-<!-- ============================================================ -->
-<h2>Tuesday — Technical Prep</h2>
-<!-- ============================================================ -->
-
-<h3>1. Contrastive Loss / CLIP from Scratch <span class="timer red">Priority #1</span></h3>
-
-<div class="callout bad">
-<b>This is the gap Claudia exposed.</b> She gave you two tasks: (1) train an MLP to predict text embedding from image embedding with MSE loss — you nailed this in 35 min. (2) Map both modalities into a shared space where matching pairs are close. You correctly identified that naive MSE collapses to constant output (zero loss but meaningless), and you knew contrastive/triplet loss was the fix, but admitted you haven't implemented it. Fix that today.
-</div>
-
-<ul class="check">
-  <li>Implement two MLP encoders mapping image/text embeddings to shared space</li>
-  <li>Compute cosine similarity matrix (B, B) between image and text outputs</li>
-  <li>InfoNCE loss: cross-entropy where correct pairs are on the diagonal</li>
-  <li>Know cold: why MSE collapses (constant output gets zero loss), why contrastive doesn't (negative pairs prevent collapse)</li>
-  <li>Know the difference: <b>CLIP/InfoNCE</b> = whole batch, (B,B) similarity matrix, cross-entropy on diagonal. <b>Triplet loss</b> = anchor + positive + negative, one pair at a time. CLIP is the modern standard.</li>
-</ul>
-
-<div class="panel">
-<h3>CLIP Loss in 10 Lines</h3>
-<pre><code><span class="c"># img_emb, txt_emb: (B, D) — outputs from two encoders</span>
-img_emb = F.normalize(img_emb, dim=-1)
-txt_emb = F.normalize(txt_emb, dim=-1)
-
-<span class="c"># similarity matrix: (B, B) — each row is one image vs all texts</span>
-logits = img_emb @ txt_emb.T / temperature    <span class="c"># scale by temperature</span>
-
-<span class="c"># labels: correct pair is on the diagonal — index i matches index i</span>
-labels = torch.arange(B, device=logits.device)
-
-<span class="c"># symmetric loss: image→text + text→image</span>
-loss = (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2</code></pre>
-<p>That's it. The diagonal of the similarity matrix should be highest. Cross-entropy pushes correct pairs up, all other pairs down. No collapse possible because pushing everything to constant makes the off-diagonal just as high as the diagonal.</p>
-</div>
-
-<h3>2. Whiteboard Presentation — LLM Pretraining at Amazon <span class="timer">20-25 min</span></h3>
-
-<div class="panel">
-<p>This is the most important part of the onsite. You present your best, most relevant work on a whiteboard. Pick LLM pretraining — it's the rarest experience you have and shows you build from zero at scale.</p>
-<p><b>Narrative arc:</b> We needed to train Amazon's Nova foundation model (MoE architecture, competitor to Gemini). I was hands-on, training 100+ models across different scales up to 1k+ GPUs.</p>
-<p><b>Draw on the whiteboard:</b> MoE architecture diagram, data pipeline flow, distributed training setup (DDP across nodes).</p>
-<p><b>Key lessons to highlight:</b></p>
-<ul>
-  <li><b>Data quality > architecture.</b> Fixing deduplication and format issues gave bigger marginal gain than tuning hyperparameters or enabling fancy tricks like block masking.</li>
-  <li><b>Small dense models for ablation.</b> Don't waste 1k GPUs testing a hypothesis. Use a 1-2B dense model to validate data quality, then scale up. Faster iteration, cheaper.</li>
-  <li><b>Block masking + data packing</b> for efficient pretraining — pack multiple sequences into one context window, mask attention so they don't attend to each other.</li>
-  <li><b>Experiment velocity matters most.</b> The team that runs more experiments wins. Infra, logging, reproducibility, leaderboards — all of this accelerates learning.</li>
-</ul>
-<p><b>Practice:</b> On paper/whiteboard, not slides. Out loud. Twice. Time it — cut anything over 25 min.</p>
-</div>
-
-<h3>3. Light Tech Stack Review</h3>
-
-<div class="panel">
-<p>Their JD lists these. You don't need to be an expert, but should speak fluently about what each does and trade-offs.</p>
-<ul>
-  <li><b>vLLM</b> — open-source LLM serving engine. Key feature: PagedAttention (manages KV cache like virtual memory pages, avoids fragmentation). High throughput for batched LLM inference. Use when serving a standard LLM. TensorRT-LLM is NVIDIA's alternative — faster but less flexible, harder to customize.</li>
-  <li><b>Triton Inference Server</b> — NVIDIA's model serving framework. Handles batching, model versioning, multi-model serving on same GPU. Think of it as the orchestration layer for deploying models in production.</li>
-  <li><b>WebRTC</b> — real-time audio/video streaming protocol. Peer-to-peer, sub-200ms latency. This is how user's webcam/mic connects to their system. The constraint: everything downstream (ASR, LLM, DiT) must fit within WebRTC's latency budget or the conversation feels laggy.</li>
-  <li><b>Kubernetes</b> — container orchestration. For them: scheduling GPU pods, scaling inference replicas, managing model deployments. Know the basics: pods, deployments, services, GPU resource requests.</li>
-</ul>
-</div>
-
-<!-- ============================================================ -->
-<h2>Wednesday — Polish and Rest</h2>
-<!-- ============================================================ -->
-
-<ul class="check">
-  <li><b>Dry run presentation</b> one more time. Time it. Cut anything over 25 min. Focus on transitions between sections — don't ramble on any one point.</li>
-  <li><b>Review this page's product section</b> — the three stages, the DiT architecture, the orchestration problem. All sourced from Claudia's call. This is what they'll walk through on the whiteboard. Key quotes from Claudia:
-    <div class="panel" style="margin-top:8px">
-    <ul>
-      <li>"We are exploring a full duplex model that takes in the user's audiovisual and outputs audiovisual. There's no text to speech in that system."</li>
-      <li>"If we don't want to train our own LLM, we might make an API call to an external LLM. Then our system needs to handle the correct way to respond to the user's expressions and emotions, but also modulate the text that it's going to say."</li>
-      <li>"We'll need a system that can generate stuff in the meantime. We might have a filler phrase like 'oh, that's interesting, let me think about that.'"</li>
-      <li>On the model: "Half a billion" params. "We have to keep the model pretty small, otherwise we won't achieve the latency requirements for real-time interaction."</li>
-      <li>"It's almost like we're building a robotic system, a real-time robotic system, or a small game engine."</li>
-    </ul>
-    </div>
-  </li>
-  <li><b>Prepare questions for each founder</b> (see table below). Have 2 per person memorized, not written down.</li>
-  <li><b>Stop by 6pm.</b> Rest. You know the material.</li>
-</ul>
-
-<!-- ============================================================ -->
-<h2>What You Know About Their Product (from Claudia)</h2>
-<!-- ============================================================ -->
-
-<h3>The Three Stages</h3>
-
-<div class="panel">
-<pre><code>Stage 1 (NOW — demo works):
-  You type text ──→ DiT 500M ──→ avatar audio + face
-                    60 flow matching steps
-                    dual-tower: audio tower + video tower
-                    speech tokenizer ≈ video tokenizer size (face only)
-
-Stage 2 (NEXT — what they're hiring for):
-  user speaks ──→ ASR ──→ text ──→ External LLM ──→ response text
-                                                        │
-                                                        ▼
-                                                   DiT 500M ──→ avatar audio + face
-  Meanwhile: orchestration generates filler while waiting for LLM
-
-Stage 3 (FUTURE — research goal, years away):
-  user audio + face ──→ one model ──→ avatar audio + face
-  No ASR. No LLM. No text. Full duplex.
-  (Even OpenAI/Anthropic can't do this yet)</code></pre>
-</div>
-
-<h3>Architecture Details (from Claudia + Karren)</h3>
-
-<div class="panel">
-<ul>
-  <li><b>DiT (Diffusion/Flow Transformer)</b> — dual tower, ~500M params. Text in, audiovisual out.</li>
-  <li><b>Flow matching at 60 steps</b> — generates audio and face tokens in parallel.</li>
-  <li><b>Matched tokenizer sizes:</b> speech tokenizer vocab ≈ video tokenizer vocab, because it's only facial expression (not full body/scene). This keeps the dual towers balanced.</li>
-  <li><b>No LLM inside.</b> Intelligence deferred to external LLM via API (Claude/GPT). The DiT doesn't reason — it renders.</li>
-  <li><b>Orchestration is a big unsolved problem:</b> generating filler ("that's interesting, let me think") while waiting ~500ms for LLM response. They compare it to a real-time robotic system / game engine.</li>
-  <li>The demo was generated from <b>Claudia's own face/voice.</b></li>
-  <li>TTS is currently off-the-shelf, but exploring training their own.</li>
-</ul>
-</div>
-
-<div class="callout ok">
-<b>The killer line for the whiteboard session:</b> "So your DiT takes text in and generates audio + face tokens via flow matching at 60 steps, and the next step is wiring that into a live pipeline with ASR and an external LLM, where the hard part is orchestration and latency." Show you already understand their system before they explain it.
-</div>
-
-<h3>Where You Fit (Stage 2)</h3>
-
-<div class="panel">
-<ul>
-  <li>Making the modular pipeline (ASR + LLM + DiT) work end-to-end with acceptable latency</li>
-  <li>Orchestration layer — what to generate while waiting for LLM, how to handle interruptions</li>
-  <li>Serving the DiT at real-time speed — can 60 flow matching steps be fast enough? Distillation? Fewer steps?</li>
-  <li>GPU cluster management, data pipelines for training, experiment velocity</li>
-  <li>This is infra + modeling combined — exactly your profile</li>
-</ul>
-</div>
-
-<!-- ============================================================ -->
-<h2>1:1 Questions by Founder</h2>
-<!-- ============================================================ -->
-
-<table>
-  <tr><th>Person</th><th>Role</th><th>Background</th><th>Questions</th></tr>
-  <tr>
-    <td><b>Fangchang Ma</b></td>
-    <td>CEO</td>
-    <td>MIT PhD Robotics/ML. Ex-Apple Research Manager, ex-DJI. 2400+ citations.</td>
-    <td>Where is Nuance in 2 years — consumer product, API platform, or acquired? What's the first real revenue use case? He comes from robotics — ask how that informs the real-time systems approach.</td>
-  </tr>
-  <tr>
-    <td><b>Edward Zhang</b></td>
-    <td>CTO</td>
-    <td>UW PhD Computer Graphics. Ex-Apple Senior Research Scientist, ex-Google, ex-Microsoft.</td>
-    <td>What's the hardest unsolved infra problem right now? How do you handle the latency budget — if WebRTC needs sub-200ms round trip and the external LLM takes 500ms, what's the strategy? This is where your infra experience connects directly.</td>
-  </tr>
-  <tr>
-    <td><b>Karren Yang</b></td>
-    <td>Research Scientist</td>
-    <td>MIT PhD Audio-Visual Synthesis. Ex-Apple, ex-Meta Reality Labs, ex-Adobe Research. 1800+ citations.</td>
-    <td>How do you handle emotion/expression when the external LLM only gives you text? Does the DiT model infer emotion from text alone, or is there a separate emotion signal? What's the research roadmap for full duplex — is it one model or still modular?</td>
-  </tr>
-  <tr>
-    <td><b>Claudia Vanea</b></td>
-    <td>Research Scientist</td>
-    <td>Oxford PhD in AI. Ex-founder at South Park Commons. The demo avatar is her face/voice.</td>
-    <td>Already met. Be warm. Reference the contrastive loss discussion — tell her you went and implemented CLIP-style InfoNCE loss after the call. Ask about the shared embedding space in their actual system — does it use contrastive training?</td>
-  </tr>
-</table>
-
-<!-- ============================================================ -->
-<h2>Your Edge</h2>
-<!-- ============================================================ -->
-
-<div class="panel">
-<ul>
-  <li><b>They posted an infra role. You're showing up as full-stack.</b> Prove infra competence (distributed training, GPU clusters, serving) so they trust you can do the JD, then show modeling depth (MoE, flow matching, codecs, contrastive learning) so they realize they're getting more than they asked for.</li>
-  <li><b>Pretraining at 1k+ GPUs</b> — nobody else interviewing has this. Their team is 8 people, mostly research PhDs. They need someone who can actually make things run at scale. That's you.</li>
-  <li><b>Audio/speech is your PhD domain.</b> Their core product is audiovisual generation. You understand speech tokenizers, flow matching, codecs — you speak their language natively, not as someone who read a paper last week.</li>
-  <li><b>You already know their architecture</b> from Claudia. When they whiteboard it, don't just listen — ask "is this where the orchestration bottleneck is?" or "how many flow matching steps can you afford within the WebRTC latency budget?" That's the difference between a candidate and a colleague.</li>
-  <li><b>Claudia already likes you.</b> She said your implementation was "one of the better" she's seen. That's a strong internal advocate going into the onsite.</li>
-</ul>
-</div>
-
-<!-- ============================================================ -->
-<h2>Thursday Morning — Before You Walk In</h2>
-<!-- ============================================================ -->
-
-<ul class="check">
-  <li>Skim this page one more time</li>
-  <li>Review CLIP loss code — be able to write it cold</li>
-  <li>Have your presentation narrative in your head, not memorized word for word</li>
-  <li>Bring a notebook and pen for whiteboard notes</li>
-  <li>Arrive 10 min early. Smith Tower, Downtown Seattle.</li>
-</ul>
-
-<div class="callout ok"><b>You solved Claudia's task in 35 minutes and she said it was "one of the better implementations." You know the material. Go show them the full package.</b></div>
-
-<div class="footer">Nuance Labs Onsite Prep &middot; March 2026</div>
-
-</div>
-</div><!-- /content-wrap -->
+<script id="enc-blob" type="text/plain">
+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
+</script>
 </body>
 </html>

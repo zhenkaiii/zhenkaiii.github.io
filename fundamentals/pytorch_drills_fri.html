@@ -46,9 +46,10 @@
 </style>
 </head>
 <body>
+
 <div id="gate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0f1220">
   <div style="text-align:center">
-    <p style="color:#aab0d5;font-family:system-ui;margin-bottom:12px">This page is private.</p>
+    <p style="color:#aab0d5;font-family:system-ui;margin-bottom:12px">This page is encrypted.</p>
     <input id="pw" type="password" placeholder="passphrase" autofocus
       style="padding:10px 16px;border-radius:8px;border:1px solid #252a45;background:#171a2b;color:#e7e9f7;font-size:16px;font-family:system-ui;outline:none;width:220px"
       onkeydown="if(event.key==='Enter')unlock()">
@@ -57,303 +58,34 @@
     <p id="err" style="color:#ff6b6b;font-family:system-ui;margin-top:8px;display:none">Wrong passphrase</p>
   </div>
 </div>
+<div id="content-wrap"></div>
 <script>
 async function unlock(){
-  const v=document.getElementById('pw').value;
-  const h=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)))).map(b=>b.toString(16).padStart(2,'0')).join('');
-  if(h==='ee3fc9b775bf5d504a5b0c68ffd7aa71d3f79fdc6d2ae1e6d4fb41817c364cbf'){
+  try{
+    const pw=document.getElementById('pw').value;
+    const blob=document.getElementById('enc-blob').textContent.trim();
+    const raw=Uint8Array.from(atob(blob),c=>c.charCodeAt(0));
+    const salt=raw.slice(0,16);
+    const iv=raw.slice(16,28);
+    const ct=raw.slice(28);
+    const enc=new TextEncoder();
+    const keyMaterial=await crypto.subtle.importKey('raw',enc.encode(pw),{name:'PBKDF2'},false,['deriveKey']);
+    const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:100000,hash:'SHA-256'},keyMaterial,{name:'AES-GCM',length:256},false,['decrypt']);
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,ct);
+    const html=new TextDecoder().decode(pt);
     document.getElementById('gate').style.display='none';
+    document.getElementById('content-wrap').innerHTML=html;
     document.getElementById('content-wrap').style.display='block';
-    sessionStorage.setItem('k_auth','1');
-  }else{document.getElementById('err').style.display='block'}
+    sessionStorage.setItem('k_auth_v2',btoa(pw));
+  }catch(e){document.getElementById('err').style.display='block'}
 }
-if(sessionStorage.getItem('k_auth')==='1'){document.addEventListener('DOMContentLoaded',()=>{document.getElementById('gate').style.display='none';document.getElementById('content-wrap').style.display='block'})}
+(async()=>{
+  const cached=sessionStorage.getItem('k_auth_v2');
+  if(cached){document.getElementById('pw').value=atob(cached);await unlock()}
+})();
 </script>
-<div id="content-wrap" style="display:none">
-<div class="wrap">
-
-<header>
-  <h1>Friday: Cold Activation + Interview Warmup</h1>
-  <span class="badge">Thursday Night</span>
-  <span class="badge">Friday Morning</span>
-  <span class="badge">Interview Day</span>
-</header>
-
-<div class="callout warn">
-<b>Thursday night = cold activation.</b> Write everything from scratch, timed, no peeking. Friday morning = light warmup. You should feel <i>fast</i> by interview time.
-</div>
-
-<!-- ============================================================ -->
-<h2>Thursday Night: Cold Activation <span class="timer red">~60 min strict</span></h2>
-<!-- ============================================================ -->
-
-<p>Close all tabs. Open a blank Python file. Set a timer. Go.</p>
-
-<!-- ---- SPEEDRUN 1 ---- -->
-<div class="speedrun">
-<div class="speedrun-label">Speedrun 1: Transformer Block <span class="timer red">8 min</span></div>
-<p>Write from scratch — no peeking:</p>
-<ul>
-  <li><code>MiniTransformerBlock(d_model, d_ff, n_head)</code></li>
-  <li>Pre-norm, two residuals, MHA + FFN</li>
-  <li>Training loop: random data, 20 steps, mini-batch, MSE loss</li>
-  <li>Next-token prediction: input <code>[:, :-1, :]</code>, target <code>[:, 1:, :]</code></li>
-</ul>
-<p style="color:var(--bad)"><b>Target: under 8 minutes, zero bugs.</b></p>
-</div>
-
-<details>
-<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Self-check (don't peek before writing!)</summary>
-<div class="panel">
-<table>
-<tr><th>Checkpoint</th><th>Pass?</th></tr>
-<tr><td><code>super().__init__()</code> is first line</td><td></td></tr>
-<tr><td><code>batch_first=True</code> on MHA</td><td></td></tr>
-<tr><td><code>self.mha(h, h, h)</code> — three args, unpack with <code>_</code></td><td></td></tr>
-<tr><td>Two separate <code>LayerNorm</code>s</td><td></td></tr>
-<tr><td>FFN: <code>d_model → d_ff → d_model</code> with SiLU</td><td></td></tr>
-<tr><td>Second residual from post-MHA x, not original</td><td></td></tr>
-<tr><td>Training loop order: zero_grad → forward → loss → backward → step</td><td></td></tr>
-<tr><td><code>torch.randint(0, N, (B,))</code> — size is a tuple</td><td></td></tr>
-<tr><td><code>F.mse_loss</code> — no dim argument</td><td></td></tr>
-<tr><td>Input/target shapes match after slicing</td><td></td></tr>
-</table>
-</div>
-</details>
-
-<!-- ---- SPEEDRUN 2 ---- -->
-<div class="speedrun">
-<div class="speedrun-label">Speedrun 2: Multi-Head Attention <span class="timer red">10 min</span></div>
-<p>Write from scratch — no peeking:</p>
-<ul>
-  <li><code>MyMHA(d_model, n_head)</code> — full multi-head attention from raw linears</li>
-  <li>Q, K, V projections → reshape → transpose → scaled dot-product → concat → output projection</li>
-  <li>All shapes must be correct: <code>(B,T,D)</code> → <code>(B,H,T,d_k)</code> → <code>(B,T,D)</code></li>
-</ul>
-<p style="color:var(--bad)"><b>Target: under 10 minutes. Shape story must be airtight.</b></p>
-</div>
-
-<details>
-<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Shape checklist</summary>
-<div class="panel">
-<table>
-<tr><th>Step</th><th>Shape</th></tr>
-<tr><td>Input x</td><td><code>(B, T, D)</code></td></tr>
-<tr><td>After Q/K/V projection</td><td><code>(B, T, D)</code></td></tr>
-<tr><td>After reshape</td><td><code>(B, T, H, d_k)</code></td></tr>
-<tr><td>After transpose(1,2)</td><td><code>(B, H, T, d_k)</code></td></tr>
-<tr><td>logits = Q @ K^T</td><td><code>(B, H, T, T)</code> — d_k disappears</td></tr>
-<tr><td>attn_weights = softmax(logits)</td><td><code>(B, H, T, T)</code></td></tr>
-<tr><td>context = weights @ V</td><td><code>(B, H, T, d_k)</code> — d_k comes back</td></tr>
-<tr><td>After transpose(1,2) + reshape</td><td><code>(B, T, D)</code></td></tr>
-<tr><td>After output projection</td><td><code>(B, T, D)</code></td></tr>
-</table>
-<div class="callout">Scale by <code>d_k ** 0.5</code>, NOT <code>d_model</code>. <code>d_k = d_model // n_head</code>.</div>
-</div>
-</details>
-
-<!-- ---- SPEEDRUN 3 ---- -->
-<div class="speedrun">
-<div class="speedrun-label">Speedrun 3: Loss Functions <span class="timer red">8 min</span></div>
-<p>Write from scratch — no peeking:</p>
-<ul>
-  <li><code>my_softmax(x, dim)</code> — max subtraction, exp, normalize</li>
-  <li><code>my_cross_entropy(logits, targets)</code> — log-softmax + NLL</li>
-  <li><code>my_mse_loss(pred, target)</code> — one-liner</li>
-</ul>
-<p style="color:var(--bad)"><b>Target: all three under 8 minutes total.</b></p>
-</div>
-
-<details>
-<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Key gotchas to check</summary>
-<div class="panel">
-<ul>
-  <li><code>keepdim=True</code> in softmax for broadcasting</li>
-  <li>Log-softmax: <code>x - max - log(sum(exp(x - max)))</code></li>
-  <li>NLL pick: <code>log_probs[torch.arange(B), targets]</code></li>
-  <li>MSE: <code>.mean()</code> over everything — no dim arg</li>
-</ul>
-</div>
-</details>
-
-<!-- ---- SPEEDRUN 4 ---- -->
-<div class="speedrun">
-<div class="speedrun-label">Speedrun 4: LayerNorm + RMSNorm <span class="timer red">6 min</span></div>
-<p>Write from scratch — no peeking:</p>
-<ul>
-  <li><code>MyLayerNorm(d)</code> — mean, var (<code>unbiased=False</code>!), scale + shift</li>
-  <li><code>MyRMSNorm(d)</code> — no mean centering, just RMS + scale</li>
-  <li>Both as <code>nn.Module</code> with <code>nn.Parameter</code></li>
-</ul>
-<p style="color:var(--bad)"><b>Target: both under 6 minutes.</b></p>
-</div>
-
-<details>
-<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Key gotchas to check</summary>
-<div class="panel">
-<ul>
-  <li><code>nn.Parameter(torch.ones(d))</code> for weight, <code>torch.zeros(d)</code> for bias</li>
-  <li><code>var(dim=-1, keepdim=True, unbiased=False)</code> — Bessel's correction off!</li>
-  <li>RMSNorm: <code>(x.pow(2).mean(dim=-1, keepdim=True) + eps).rsqrt()</code></li>
-  <li><code>rsqrt()</code> = <code>1 / sqrt()</code> — faster on GPU, same result</li>
-</ul>
-</div>
-</details>
-
-<!-- ---- SPEEDRUN 5 ---- -->
-<div class="speedrun">
-<div class="speedrun-label">Speedrun 5: GQA Attention <span class="timer red">12 min</span></div>
-<p>Write from scratch — no peeking:</p>
-<ul>
-  <li><code>MyGQA(d_model, n_head, n_kv_heads)</code></li>
-  <li>K/V projections: <code>d_model → n_kv_heads * d_k</code> (smaller!)</li>
-  <li><code>repeat_interleave(n_head // n_kv_heads, dim=1)</code> to expand KV heads</li>
-  <li>Rest is same as MHA</li>
-</ul>
-<p style="color:var(--bad)"><b>Target: under 12 minutes. Repeat count must be right.</b></p>
-</div>
-
-<details>
-<summary style="cursor:pointer;color:var(--accent);font-weight:600;margin:12px 0">Key gotchas to check</summary>
-<div class="panel">
-<ul>
-  <li>Init: <code>self.k = nn.Linear(d_model, n_kv_heads * d_k)</code> — not <code>d_model</code></li>
-  <li>Reshape KV: <code>(B, T, n_kv_heads, d_k)</code> then transpose</li>
-  <li>Repeat: <code>.repeat_interleave(n_head // n_kv_heads, dim=1)</code></li>
-  <li>Group size = <code>n_head // n_kv_heads</code>, NOT <code>n_kv_heads</code></li>
-  <li>After repeat, KV has shape <code>(B, n_head, T, d_k)</code> — same as Q</li>
-  <li>Output reshape uses <code>D = n_head * d_k = d_model</code></li>
-</ul>
-</div>
-</details>
-
-<!-- ---- SCORECARD ---- -->
-<div class="panel">
-<h3>Thursday Night Scorecard</h3>
-<table>
-<tr><th>Drill</th><th>Target</th><th>Your Time</th><th>Bugs?</th></tr>
-<tr><td>Transformer Block + Loop</td><td>8 min</td><td></td><td></td></tr>
-<tr><td>Multi-Head Attention</td><td>10 min</td><td></td><td></td></tr>
-<tr><td>3 Loss Functions</td><td>8 min</td><td></td><td></td></tr>
-<tr><td>LayerNorm + RMSNorm</td><td>6 min</td><td></td><td></td></tr>
-<tr><td>GQA</td><td>12 min</td><td></td><td></td></tr>
-<tr><td><b>Total</b></td><td><b>44 min</b></td><td></td><td></td></tr>
-</table>
-<div class="callout ok">If total &lt; 44 min with zero bugs: you're ready. If any drill has bugs, do it again tomorrow morning.</div>
-</div>
-
-<!-- ============================================================ -->
-<h2>Friday Morning: Light Warmup <span class="timer">~30 min</span></h2>
-<!-- ============================================================ -->
-
-<div class="callout">
-<b>Goal: activate neural pathways, not exhaust them.</b> Don't drill new material. Just confirm that Thursday night's muscle memory is still there.
-</div>
-
-<!-- ---- WARMUP 1 ---- -->
-<div class="prompt">
-<div class="prompt-label">Warmup 1 <span class="timer">5 min</span></div>
-<div class="prompt-text">
-Write <code>MiniTransformerBlock</code> one more time. This should feel automatic.<br>
-If it takes more than 5 minutes or you make a bug, do it again immediately.
-</div>
-</div>
-
-<!-- ---- WARMUP 2 ---- -->
-<div class="prompt">
-<div class="prompt-label">Warmup 2 <span class="timer">5 min</span></div>
-<div class="prompt-text">
-Write <code>my_softmax</code> and <code>my_cross_entropy</code>. Fast.<br>
-Verify both with <code>torch.allclose</code>.
-</div>
-</div>
-
-<!-- ---- WARMUP 3 ---- -->
-<div class="prompt">
-<div class="prompt-label">Warmup 3 <span class="timer">3 min</span></div>
-<div class="prompt-text">
-Write a 10-step training loop with gradient clipping. No AMP — keep it simple.<br>
-Just model + optimizer + zero_grad → forward → loss → backward → clip → step.
-</div>
-</div>
-
-<!-- ---- WILDCARD ---- -->
-<div class="prompt">
-<div class="prompt-label">Wildcard Practice <span class="timer">10 min</span></div>
-<div class="prompt-text">
-Pick ONE of these — whatever you feel least confident about:<br><br>
-<b>A.</b> GQA from scratch<br>
-<b>B.</b> Flow matching training step<br>
-<b>C.</b> K-means with cdist + argmin<br>
-<b>D.</b> Sinusoidal positional encoding
-</div>
-</div>
-
-<!-- ============================================================ -->
-<h2>Interview Mental Model</h2>
-<!-- ============================================================ -->
-
-<div class="panel">
-<h3>What Claudia is likely testing</h3>
-<ul>
-  <li><b>Can you write correct PyTorch from scratch?</b> — nn.Module, forward, training loop</li>
-  <li><b>Do you understand shapes?</b> — "What shape is this tensor after this operation?"</li>
-  <li><b>Do you know the gotchas?</b> — batch_first, keepdim, unbiased, three MHA args</li>
-  <li><b>Can you debug?</b> — "Why is the loss not decreasing?" "Why shape mismatch?"</li>
-  <li><b>Do you know the ecosystem?</b> — AMP, grad clipping, DataLoader basics</li>
-</ul>
-</div>
-
-<div class="panel">
-<h3>When stuck during interview</h3>
-<ul>
-  <li><b>Say the shapes out loud.</b> "This is (B, T, D), I need (B, H, T, d_k), so I reshape then transpose."</li>
-  <li><b>Write the signature first.</b> <code>def forward(self, x):</code> with a shape comment.</li>
-  <li><b>Build incrementally.</b> Get one sublayer working before adding the second.</li>
-  <li><b>Use print debugging.</b> <code>print(x.shape)</code> is completely acceptable in an interview.</li>
-  <li><b>Don't panic about syntax.</b> If you forget the exact API, describe what you need: "I need a function that picks elements along dim=1 using these indices" → that's <code>gather</code>.</li>
-</ul>
-</div>
-
-<div class="panel">
-<h3>Quick Reference — Things You Always Forget</h3>
-<table>
-<tr><th>Thing</th><th>Correct</th></tr>
-<tr><td>Functional import</td><td><code>import torch.nn.functional as F</code> — no 's'</td></tr>
-<tr><td>MHA call</td><td><code>self.mha(q, k, v)</code> — three args, returns <code>(out, weights)</code></td></tr>
-<tr><td>randint size</td><td><code>torch.randint(0, N, (B,))</code> — tuple for size</td></tr>
-<tr><td>MSE loss</td><td><code>F.mse_loss(pred, target)</code> — no dim argument</td></tr>
-<tr><td>Softmax</td><td><code>F.softmax(x, dim=-1)</code> — dim is required</td></tr>
-<tr><td>LayerNorm var</td><td><code>x.var(dim=-1, keepdim=True, unbiased=False)</code></td></tr>
-<tr><td>Scale factor</td><td><code>d_k ** 0.5</code> not <code>d_model</code></td></tr>
-<tr><td>GQA repeat</td><td><code>k.repeat_interleave(n_head // n_kv_heads, dim=1)</code></td></tr>
-<tr><td>Matmul transpose</td><td><code>q @ k.transpose(-1, -2)</code> not <code>.T</code></td></tr>
-<tr><td>Euler step</td><td><code>x = x + dt * v_net(x, t)</code></td></tr>
-<tr><td>AMP order</td><td>autocast → scaler.scale().backward() → unscale_ → clip → step → update</td></tr>
-</table>
-</div>
-
-<!-- ============================================================ -->
-<h2>Final Checklist — Before You Join the Call</h2>
-<!-- ============================================================ -->
-
-<ul class="check">
-  <li>Can write MiniTransformerBlock from scratch in under 5 min</li>
-  <li>Can write MHA from scratch with correct shapes</li>
-  <li>Can write training loop with correct order</li>
-  <li>Know softmax, cross_entropy, MSE from scratch</li>
-  <li>Know LayerNorm vs RMSNorm</li>
-  <li>Can explain GQA vs MHA vs MQA</li>
-  <li>Know AMP workflow (autocast + GradScaler)</li>
-  <li>IDE/editor ready, Python environment working</li>
-  <li>Quiet room, water, webcam tested</li>
-</ul>
-
-<div class="callout ok"><b>You've done the reps. Trust the muscle memory. Go crush it.</b></div>
-
-<div class="footer">Friday Interview Warmup &middot; March 2026</div>
-
-</div>
-</div><!-- /content-wrap -->
+<script id="enc-blob" type="text/plain">
+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
+</script>
 </body>
 </html>
