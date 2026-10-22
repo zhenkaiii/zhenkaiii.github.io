@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LLM Training Memory &amp; Parallelism — ML/AI Fundamentals</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:28px 0 10px;font-size:20px}
+  h3{margin:20px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  .callout.bad{border-left-color:var(--bad)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .diagram{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:20px;margin:14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:14px;line-height:1.6;overflow-x:auto;white-space:pre}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>LLM Training: GPU Memory Math &amp; Parallelism</h1>
+  <span class="badge">Distributed Training</span>
+  <span class="badge">Systems</span>
+</header>
+
+<!-- ====== THE ONE RULE ====== -->
+<section class="panel">
+  <h2>The One Rule</h2>
+  <div class="callout ok">
+    <p><b>BF16 training: ~16 bytes per parameter.</b> FP8 training: ~13 bytes per parameter.<br>
+    Adam optimizer states (8 bytes) dominate and are non-negotiable.</p>
+  </div>
+</section>
+
+<!-- ====== MEMORY BREAKDOWN ====== -->
+<section class="panel">
+  <h2>What Goes on the GPU</h2>
+
+  <h3>Fixed cost (doesn't change with batch/seq)</h3>
+  <table>
+    <tr><th>Component</th><th>BF16</th><th>FP8</th><th>Why</th></tr>
+    <tr><td>Weights</td><td>2B</td><td>1B</td><td>The model parameters</td></tr>
+    <tr><td>Gradients</td><td>2B</td><td>2B</td><td>Grad accumulation needs FP16 precision</td></tr>
+    <tr><td>Adam m (1st moment)</td><td>4B</td><td>4B</td><td>Running mean of gradients, must be FP32</td></tr>
+    <tr><td>Adam v (2nd moment)</td><td>4B</td><td>4B</td><td>Running variance of gradients, must be FP32</td></tr>
+    <tr><th>Fixed total</th><th>12B/param</th><th>11B/param</th><th></th></tr>
+  </table>
+
+  <div class="callout warn">
+    <p><b>Why Adam must be FP32:</b> m and v accumulate tiny gradient updates over thousands of steps.
+    In FP16, small updates round to zero and training stalls or diverges.
+    (8-bit Adam from bitsandbytes brings this to 1+1=2B, but FP32 is the safe default.)</p>
+  </div>
+
+  <h3>Variable cost (scales with batch &times; seq)</h3>
+  <p>Activations are stored during the forward pass so the backward pass can compute gradients.
+  They have <b>nothing to do with parameter count</b> — they scale with batch size, sequence length, hidden dim, and layer count.</p>
+
+<pre>
+Activation per layer ≈ 12 × batch × seq_len × hidden_dim × bytes_per_element
+
+For 8B model (32 layers, hidden=4096), BF16:
+  Per layer ≈ 12 × batch × 4096 × 4096 × 2 bytes
+</pre>
+
+  <table>
+    <tr><th>Batch size</th><th>Seq len</th><th>Activation memory (8B model, BF16)</th></tr>
+    <tr><td>1</td><td>2K</td><td>~6 GB</td></tr>
+    <tr><td>1</td><td>8K</td><td>~24 GB</td></tr>
+    <tr><td>4</td><td>4K</td><td>~48 GB</td></tr>
+    <tr><td>8</td><td>4K</td><td>~100 GB</td></tr>
+  </table>
+
+  <div class="callout">
+    <p><b>Interview framing:</b> "Weights, gradients, and optimizer states are <b>fixed cost</b> — about 12 bytes
+    per parameter regardless of batch size. Activations are <b>variable cost</b> — they scale linearly with
+    batch size and sequence length. That's why long-context training is expensive."</p>
+  </div>
+</section>
+
+<!-- ====== GRADIENT CHECKPOINTING ====== -->
+<section class="panel">
+  <h2>Gradient Checkpointing</h2>
+  <p>Trade compute for memory: don't store activations during forward pass, <b>recompute</b> them during backward.</p>
+  <table>
+    <tr><th></th><th>Activation memory</th><th>Compute cost</th></tr>
+    <tr><td>No checkpointing</td><td>~100 GB (mbs=8, seq=4K)</td><td>1x</td></tr>
+    <tr><td>Gradient checkpointing</td><td>~10-15 GB</td><td>~1.3x</td></tr>
+  </table>
+  <p>Cuts activation memory by ~6-8x at a ~30% compute overhead. Almost always worth it for large models.</p>
+</section>
+
+<!-- ====== NAPKIN MATH ====== -->
+<section class="panel">
+  <h2>Napkin Math: 8B Model</h2>
+
+<pre>
+Fixed cost:  12 bytes × 8B params = 96 GB
+Activations: mbs=8, seq=4K        ≈ 100 GB (without checkpointing)
+                                   ≈ 15 GB  (with checkpointing)
+
+Without checkpointing:  96 + 100 = 196 GB → 3 H100s minimum
+With checkpointing:     96 + 15  = 111 GB → 2 H100s minimum
+</pre>
+
+  <p>Add the "~4 bytes/param" activation ballpark and you get the ~16 bytes/param rule of thumb.
+  But remember: that 4 assumes a specific batch/seq config. Double the batch, double the activations.</p>
+</section>
+
+<!-- ====== PARALLELISM DECISION TREE ====== -->
+<section class="panel">
+  <h2>Parallelism Decision Tree</h2>
+  <p>Start from the <b>innermost</b> and work outward:</p>
+
+  <div class="diagram">
+Step 1: Does the model FIT on one GPU?
+        │
+   Yes ──→ Data Parallelism (DP) only. Done.
+   No  ──→ Step 2.
+
+Step 2: Tensor Parallelism (TP) within one node.
+        Shard weights across GPUs on NVLink.
+        TP = 2, 4, or 8 (stay within one node).
+        │
+   Fits now? ──→ Add DP across nodes for throughput. Done.
+   Still no? ──→ Step 3.
+
+Step 3: Pipeline Parallelism (PP) across nodes.
+        Split layers across nodes.
+        │
+   Combine: TP (intra-node) + PP (inter-node) + DP (replicas).</div>
+
+  <div class="callout ok">
+    <p><b>The rule: chattiest parallelism gets the fastest interconnect.</b><br>
+    TP communicates every layer → needs NVLink (intra-node).<br>
+    PP communicates between stages → tolerates inter-node.<br>
+    DP communicates once per step → goes on the outermost ring.</p>
+  </div>
+
+  <table>
+    <tr><th>Parallelism</th><th>What it does</th><th>Communication</th><th>Needs</th><th>Use when</th></tr>
+    <tr><td><b>TP</b></td><td>Shard weights within a layer</td><td>All-reduce every layer (very chatty)</td><td>NVLink (intra-node)</td><td>Model doesn't fit on 1 GPU</td></tr>
+    <tr><td><b>PP</b></td><td>Split layers across GPUs</td><td>Send activations between stages (less chatty)</td><td>Inter-node OK</td><td>Model doesn't fit on 1 node</td></tr>
+    <tr><td><b>DP</b></td><td>Replicate model, split batches</td><td>All-reduce gradients once per step</td><td>Inter-node OK</td><td>Model fits, want throughput</td></tr>
+  </table>
+</section>
+
+<!-- ====== FITTING + THROUGHPUT ====== -->
+<section class="panel">
+  <h2>Fitting vs. Throughput</h2>
+
+  <div class="callout ok">
+    <p><b>TP and PP solve the fitting problem.</b> DP solves the <b>throughput problem</b>.<br>
+    Once the model fits, every additional DP replica doubles throughput linearly.</p>
+  </div>
+
+  <p>Double the DP nodes → double the global batch size (GBS) → double the throughput.</p>
+  <p>DP scaling is near-linear but not perfect:</p>
+  <table>
+    <tr><th>DP replicas</th><th>Scaling efficiency</th></tr>
+    <tr><td>4</td><td>~95%</td></tr>
+    <tr><td>16</td><td>~90%</td></tr>
+    <tr><td>64</td><td>~80-85%</td></tr>
+    <tr><td>256</td><td>Starts degrading (communication dominates)</td></tr>
+  </table>
+  <p>For typical runs (4-32 replicas), "double nodes = double throughput" holds.</p>
+</section>
+
+<!-- ====== SIZING CHEAT SHEET ====== -->
+<section class="panel">
+  <h2>Sizing Cheat Sheet</h2>
+
+  <h3>Memory per parameter</h3>
+  <table>
+    <tr><th></th><th>Weights</th><th>Gradients</th><th>Adam (m+v)</th><th>Activations</th><th>Total</th></tr>
+    <tr><td><b>BF16</b></td><td>2</td><td>2</td><td>8</td><td>~4 (varies)</td><td><b>~16</b></td></tr>
+    <tr><td><b>FP8</b></td><td>1</td><td>2</td><td>8</td><td>~2 (varies)</td><td><b>~13</b></td></tr>
+  </table>
+
+  <h3>GPU count by model size (H100 80GB, with gradient checkpointing)</h3>
+  <table>
+    <tr><th>Model</th><th>Fixed memory</th><th>TP</th><th>PP</th><th>Min GPUs to fit</th><th>DP for throughput</th></tr>
+    <tr><td>1-3B</td><td>12-36 GB</td><td>1</td><td>1</td><td>1</td><td>As many as you want</td></tr>
+    <tr><td>8B</td><td>96 GB</td><td>2</td><td>1</td><td>2</td><td>Remaining GPUs</td></tr>
+    <tr><td>70B</td><td>840 GB</td><td>8 (full node)</td><td>2-4</td><td>16-32</td><td>Remaining GPUs</td></tr>
+    <tr><td>405B</td><td>4.9 TB</td><td>8</td><td>8-16</td><td>64-128</td><td>Remaining GPUs</td></tr>
+  </table>
+
+  <h3>For an 8B model on P5 (8x H100 per node):</h3>
+  <div class="diagram">
+Fixed:      12 × 8B = 96 GB
+TP=2:       48 GB per GPU → fits on 1 node with room for activations
+
+Training config:
+  1 node  = TP=2, DP=4 (use remaining 6 GPUs for DP? No — TP=2 means 4 DP replicas of 2 GPUs each)
+  4 nodes = TP=2 within each pair, DP=16 → ~16x throughput
+
+Rule: TP handles fitting. Everything else is DP for speed.</div>
+</section>
+
+<!-- ====== INTERVIEW ANSWER ====== -->
+<section class="panel">
+  <h2>The Interview Answer (30 seconds)</h2>
+  <div class="callout ok">
+    <p>"Full-precision BF16 training costs roughly <b>16 bytes per parameter</b> — 2 for weights, 2 for gradients,
+    8 for Adam optimizer states, and ~4 for activations depending on batch and sequence length.
+    An 8B model needs ~96 GB just for the fixed cost, so it doesn't fit on one H100.
+    I'd use <b>TP=2</b> within a node to fit, then <b>data parallelism</b> across remaining GPUs for throughput.
+    Double the DP replicas, roughly double the throughput."</p>
+  </div>
+  <p>If they push on parallelism:</p>
+  <div class="callout">
+    <p>"The rule is: chattiest parallelism gets the fastest interconnect. TP communicates every layer,
+    so it stays within a node on NVLink. PP communicates between stages, tolerates inter-node.
+    DP communicates once per step, goes on the outermost ring. For 70B+ you need all three."</p>
+  </div>
+</section>
+
+<!-- ====== ATTENTION KV CACHE ====== -->
+<section class="panel">
+  <h2>Attention Compute vs. KV Cache</h2>
+
+  <div class="callout warn">
+    <p><b>Training:</b> attention compute is <b>O(seq²)</b> per layer — every token attends to all previous tokens. No shortcut.<br>
+    <b>Inference:</b> each new token computes attention against the cached KV pairs — <b>O(seq)</b> per token, but the <b>KV cache memory</b> grows linearly with context length and is the main bottleneck.</p>
+  </div>
+
+<pre>
+KV cache per layer = 2 × seq_len × head_dim × num_kv_heads × bytes
+Full model         = above × num_layers
+
+Example: Llama 3 70B, seq=8K, BF16, 80 layers, 8 KV heads, head_dim=128
+  Per layer: 2 × 8192 × 128 × 8 × 2 = 32 MB
+  Full model: 32 MB × 80 = 2.5 GB  (per sequence!)
+  Batch of 32: 80 GB — an entire H100.
+</pre>
+
+  <p>For long context (128K+) and deep models, KV cache dominates inference memory.
+  Every technique below exists to compress it — but must be <b>baked in at training</b> so accuracy is preserved.</p>
+</section>
+
+<!-- ====== ATTENTION VARIANTS ====== -->
+<section class="panel">
+  <h2>KV Cache Compression: Attention Variants</h2>
+
+  <table>
+    <tr><th>Method</th><th>KV heads</th><th>KV cache size vs MHA</th><th>Origin</th></tr>
+    <tr><td><b>MHA</b> (Multi-Head)</td><td>= Q heads (e.g. 64)</td><td>1x (baseline)</td><td>Vaswani 2017</td></tr>
+    <tr><td><b>GQA</b> (Grouped Query)</td><td>Q heads / group (e.g. 8)</td><td>~1/8x</td><td>Llama 2/3, Gemma</td></tr>
+    <tr><td><b>MQA</b> (Multi-Query)</td><td>1</td><td>~1/64x</td><td>PaLM, Falcon</td></tr>
+    <tr><td><b>MLA</b> (Multi-head Latent)</td><td>Low-rank latent</td><td>~1/12x or better</td><td>DeepSeek-V2/V3</td></tr>
+  </table>
+
+  <h3>GQA — the current default</h3>
+  <p>Multiple Q heads share one KV head. Llama 3 70B uses 64 Q heads with 8 KV heads → 8x KV cache reduction.
+  Negligible quality loss, huge inference win. This is what everyone ships.</p>
+
+  <h3>MLA — DeepSeek's approach</h3>
+  <p>Instead of storing separate K and V per head, compress them into a single <b>low-rank latent vector</b> per token.
+  At attention time, project the latent back out to K and V.</p>
+<pre>
+Standard: cache K (d_head × n_kv_heads) + V (d_head × n_kv_heads) per token per layer
+MLA:      cache one latent vector (d_latent) per token per layer
+          where d_latent << d_head × n_kv_heads
+
+Compression comes from: d_latent is much smaller than the full KV.
+Even better ratio than GQA for deep models.
+</pre>
+  <p>Tradeoff: extra projection ops at inference, but memory saving dominates for long-context / large-batch serving.</p>
+
+  <h3>Sliding Window Attention (Mistral / Gemma 2)</h3>
+  <p>Each layer only attends to the last <b>W</b> tokens (e.g. W=4096) instead of the full context.
+  KV cache is bounded: only need to store W entries per layer, regardless of total sequence length.</p>
+
+  <div class="callout">
+    <p><b>Key insight:</b> training compute is still O(seq²) for full-attention layers.
+    Sliding window doesn't save training FLOPs much — the win is <b>inference KV cache is bounded</b> to the window size.</p>
+  </div>
+</section>
+
+<!-- ====== QK NORM + HYBRID ATTENTION ====== -->
+<section class="panel">
+  <h2>QK Norm &amp; Hybrid Attention</h2>
+
+  <h3>QK Norm</h3>
+  <p>Apply RMSNorm to Q and K vectors <b>before</b> the dot product in attention.</p>
+
+  <div class="callout warn">
+    <p><b>Problem:</b> Pre-softmax logits = QK<sup>T</sup> / √d. The norms of Q and K can grow unboundedly during training
+    (residual stream accumulates magnitude). When logits get huge → softmax saturates to one-hot →
+    gradients vanish → "attention entropy collapse".<br>
+    <b>Fix:</b> RMSNorm on Q and K bounds their norms → logits stay controlled → stable training.
+    Used in Gemma 2, ViT-22B, Cohere Command R.</p>
+  </div>
+
+  <h3>Hybrid Attention (Sliding Window + Full)</h3>
+  <p>Alternate between sliding-window layers and full-attention layers (e.g. Gemma 2: 5 sliding : 1 full).</p>
+
+  <table>
+    <tr><th></th><th>Training</th><th>Inference</th></tr>
+    <tr><td><b>Compute</b></td><td>Sliding layers slightly cheaper, minor speedup</td><td>Not the main point</td></tr>
+    <tr><td><b>KV cache</b></td><td>N/A</td><td>Sliding layers: bounded cache. Full layers: full cache. <b>Big net saving.</b></td></tr>
+    <tr><td><b>Quality</b></td><td>Full-attention layers propagate long-range info into residual stream</td><td>Preserved</td></tr>
+  </table>
+
+  <div class="callout ok">
+    <p><b>Bottom line:</b> Hybrid attention is an <b>inference optimization</b>. You accept the training cost
+    (slightly less accuracy pressure from fewer full-attention layers) to get dramatically smaller KV caches at serving time.
+    Training time difference is minimal — it's about what you bake into the architecture for deployment.</p>
+  </div>
+</section>
+
+<div class="footer">
+  LLM Training Memory &amp; Parallelism &middot; 2026
+</div>
+
+</div>
+</body>
+</html>

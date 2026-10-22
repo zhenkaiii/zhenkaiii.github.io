@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ASR Landscape 2025-2026</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:14px;margin-bottom:24px;flex-wrap:wrap}
+  header h1{margin:0;font-size:clamp(22px,3.2vw,34px);letter-spacing:.2px}
+  header .tag{
+    background:linear-gradient(90deg,#5a6cff,#9ab3ff);
+    color:#0f1220;padding:6px 14px;border:none;border-radius:20px;
+    font-size:14px;font-weight:700;letter-spacing:0.4px;
+    box-shadow:0 2px 6px rgba(124,156,255,0.4);
+  }
+  h2{margin-top:40px;font-size:22px;color:var(--accent)}
+  h3{margin-top:24px;font-size:18px;color:var(--ok)}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);
+    padding:16px;border-radius:8px;overflow-x:auto;font-size:14px;line-height:1.5}
+  code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+  table{border-collapse:collapse;width:100%;margin:16px 0}
+  th,td{border:1px solid var(--code-border);padding:10px 14px;text-align:left;font-size:14px}
+  th{background:var(--panel);color:var(--accent);font-weight:600}
+  td{color:var(--ink)}
+  tr:nth-child(even) td{background:rgba(23,26,43,0.5)}
+  .paradigm{
+    background:var(--panel);border:1px solid var(--code-border);border-radius:10px;
+    padding:20px 24px;margin:16px 0;
+  }
+  .paradigm h3{margin-top:0;color:var(--warn)}
+  .pipeline{
+    background:var(--code-bg);border-radius:6px;padding:14px 18px;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+    font-size:14px;line-height:1.8;margin:12px 0;color:var(--ok);
+  }
+  .pipeline em{color:var(--muted);font-family:system-ui,-apple-system,sans-serif;font-size:13px}
+  .pro{color:var(--ok)}
+  .con{color:var(--bad)}
+  .note{color:var(--warn);font-style:italic}
+  footer{
+    margin-top:48px;padding-top:20px;border-top:1px solid #262b4a;
+    color:#c7cbf9;font-size:15px;line-height:1.7;text-align:center;
+    letter-spacing:0.2px;opacity:0.9;
+  }
+  footer strong{color:var(--accent);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>ASR Landscape 2025-2026</h1>
+  <span class="tag">Automatic Speech Recognition</span>
+</header>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>Start here: the classic ASR pipeline you already know</h2>
+
+<p>If you worked on Alexa-era ASR (~2020), this is your mental model &mdash; and it's still correct for streaming/on-device systems today:</p>
+
+<pre><code>Audio Waveform
+      │
+      ▼
+Chunked Frames (w, w, w ...)
+      │
+      ▼
+┌──────────────────────────┐
+│  Acoustic Model          │   ← the heavy-duty component
+│  RNN-T / Conformer       │   ~100M parameters
+│  operates per frame/chunk│   generates top-K hypotheses via beam search
+└──────────────────────────┘
+      │
+      ▼
+Top-K Hypothesis Sequences (beam search output)
+      │
+      ▼
+┌──────────────────────────┐
+│  Language Model Rescorer  │   ← lightweight, fast
+│  n-gram / TinyBERT       │   ~5M parameters
+│  operates at sequence     │   ranks hypotheses, picks the best one
+│  level → batchable        │
+└──────────────────────────┘
+      │
+      ▼
+Final Transcript</code></pre>
+
+<table>
+  <tr><th></th><th>Acoustic Model</th><th>LM Rescorer</th></tr>
+  <tr><td>Job</td><td>Map audio frames &rarr; candidate text sequences</td><td>Pick the most linguistically coherent sequence</td></tr>
+  <tr><td>Granularity</td><td>Frame / chunk level (must process every audio frame)</td><td>Sequence level (only sees K complete strings)</td></tr>
+  <tr><td>Size</td><td>~100M params</td><td>~5M params (n-gram LM or TinyBERT)</td></tr>
+  <tr><td>Compute</td><td>Heavy &mdash; runs on every frame, the bottleneck</td><td>Light &mdash; runs once per utterance on K strings, batchable</td></tr>
+  <tr><td>What it knows</td><td>Acoustics: phonemes, prosody, speaker variation</td><td>Language: grammar, common phrases, domain vocab</td></tr>
+</table>
+
+<p>The acoustic model does the hard work. The LM rescorer is cheap insurance &mdash; it catches errors like "recognize speech" vs "wreck a nice beach" by scoring which hypothesis is more likely. Because it only sees K short strings (not raw audio), it's fast even on CPU.</p>
+
+<p><strong>This two-box model is your anchor. Everything below is about what changed inside each box &mdash; and one paradigm that merges them.</strong></p>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>Inside the acoustic model: what "decoder" actually means</h2>
+
+<p>Your acoustic model isn't one monolithic pass. It has <strong>three sub-components</strong>, and the "decoder" people talk about is hiding inside it:</p>
+
+<!-- RNN-T Architecture Diagram -->
+<svg viewBox="0 0 800 680" xmlns="http://www.w3.org/2000/svg" style="max-width:720px;margin:24px auto;display:block;font-family:system-ui,-apple-system,sans-serif">
+  <defs>
+    <marker id="arrow1" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#aab0d5"/></marker>
+    <filter id="shadow1"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/></filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" fill="#7c9cff" font-size="18" font-weight="700">RNN-T (Transducer) — inside your "Acoustic Model" box</text>
+
+  <!-- Outer dashed border -->
+  <rect x="40" y="50" width="720" height="580" rx="12" fill="none" stroke="#252a45" stroke-width="2" stroke-dasharray="8 4"/>
+  <text x="60" y="74" fill="#aab0d5" font-size="12" font-style="italic">your "acoustic model" box</text>
+
+  <!-- ─── Encoder box ─── -->
+  <rect x="420" y="430" width="300" height="110" rx="8" fill="#1e2240" stroke="#7c9cff" stroke-width="2" filter="url(#shadow1)"/>
+  <text x="570" y="465" text-anchor="middle" fill="#7c9cff" font-size="16" font-weight="700">Encoder</text>
+  <text x="570" y="485" text-anchor="middle" fill="#aab0d5" font-size="13">(Conformer / LSTM, ~80M params)</text>
+  <text x="570" y="510" text-anchor="middle" fill="#57d39b" font-size="12">"What sound is happening at time t?"</text>
+  <text x="570" y="528" text-anchor="middle" fill="#aab0d5" font-size="11">Processes audio. Runs independently of text.</text>
+
+  <!-- Encoder input label -->
+  <text x="570" y="590" text-anchor="middle" fill="#e7e9f7" font-size="15" font-weight="600">x&#x209C;</text>
+  <text x="570" y="610" text-anchor="middle" fill="#aab0d5" font-size="12">mel frame (80-dim vector)</text>
+  <text x="570" y="625" text-anchor="middle" fill="#aab0d5" font-size="11" font-style="italic">e.g. one 10ms slice of "the cat sat"</text>
+  <!-- Arrow: input to encoder -->
+  <line x1="570" y1="572" x2="570" y2="544" stroke="#aab0d5" stroke-width="2" marker-end="url(#arrow1)"/>
+
+  <!-- Encoder output label -->
+  <text x="570" y="405" text-anchor="middle" fill="#e7e9f7" font-size="14" font-weight="600">h&#x209C;&#x1D49;&#x207F;&#x1D9C;</text>
+  <text x="570" y="420" text-anchor="middle" fill="#aab0d5" font-size="11">acoustic embedding (512-dim)</text>
+  <!-- Arrow: encoder to joint -->
+  <line x1="570" y1="393" x2="570" y2="330" stroke="#aab0d5" stroke-width="2" marker-end="url(#arrow1)"/>
+
+  <!-- ─── Prediction Network box ─── -->
+  <rect x="80" y="430" width="300" height="110" rx="8" fill="#1e2240" stroke="#ffd166" stroke-width="2" filter="url(#shadow1)"/>
+  <text x="230" y="465" text-anchor="middle" fill="#ffd166" font-size="16" font-weight="700">Prediction Network</text>
+  <text x="230" y="485" text-anchor="middle" fill="#aab0d5" font-size="13">(small RNN, 1-2 layers, ~5M params)</text>
+  <text x="230" y="510" text-anchor="middle" fill="#57d39b" font-size="12">"What's linguistically likely next?"</text>
+  <text x="230" y="528" text-anchor="middle" fill="#ffd166" font-size="11" font-weight="600">This is the mini LM / "decoder"</text>
+
+  <!-- Prediction input label -->
+  <text x="230" y="590" text-anchor="middle" fill="#e7e9f7" font-size="15" font-weight="600">y&#x1D64;&#x208B;&#x2081;</text>
+  <text x="230" y="610" text-anchor="middle" fill="#aab0d5" font-size="12">previous token (integer ID)</text>
+  <text x="230" y="625" text-anchor="middle" fill="#aab0d5" font-size="11" font-style="italic">e.g. "cat" → token ID 4287</text>
+  <!-- Arrow: input to prediction -->
+  <line x1="230" y1="572" x2="230" y2="544" stroke="#aab0d5" stroke-width="2" marker-end="url(#arrow1)"/>
+
+  <!-- Prediction output label -->
+  <text x="230" y="405" text-anchor="middle" fill="#e7e9f7" font-size="14" font-weight="600">h&#x1D64;&#x1D56;&#x02B3;&#x1D49;</text>
+  <text x="230" y="420" text-anchor="middle" fill="#aab0d5" font-size="11">text context embedding (512-dim)</text>
+  <!-- Arrow: prediction to joint -->
+  <line x1="230" y1="393" x2="230" y2="330" stroke="#aab0d5" stroke-width="2" marker-end="url(#arrow1)"/>
+
+  <!-- ─── Joint Network box ─── -->
+  <rect x="160" y="260" width="480" height="68" rx="8" fill="#1e2240" stroke="#57d39b" stroke-width="2" filter="url(#shadow1)"/>
+  <text x="400" y="290" text-anchor="middle" fill="#57d39b" font-size="16" font-weight="700">Joint Network</text>
+  <text x="400" y="310" text-anchor="middle" fill="#aab0d5" font-size="13">(single linear layer: h_enc + h_pre → vocab logits)</text>
+
+  <!-- Joint output label -->
+  <text x="400" y="240" text-anchor="middle" fill="#e7e9f7" font-size="14" font-weight="600">h&#x209C;,&#x1D64;</text>
+  <!-- Arrow: joint to softmax -->
+  <line x1="400" y1="230" x2="400" y2="200" stroke="#aab0d5" stroke-width="2" marker-end="url(#arrow1)"/>
+
+  <!-- ─── Softmax box ─── -->
+  <rect x="260" y="140" width="280" height="58" rx="8" fill="#1e2240" stroke="#e7e9f7" stroke-width="2" filter="url(#shadow1)"/>
+  <text x="400" y="170" text-anchor="middle" fill="#e7e9f7" font-size="16" font-weight="700">Softmax</text>
+  <text x="400" y="186" text-anchor="middle" fill="#aab0d5" font-size="11">over vocab + blank token</text>
+
+  <!-- Final output -->
+  <line x1="400" y1="138" x2="400" y2="105" stroke="#aab0d5" stroke-width="2" marker-end="url(#arrow1)"/>
+  <text x="400" y="95" text-anchor="middle" fill="#e7e9f7" font-size="14" font-weight="600">P(y&#x209C;,&#x1D64; | x&#x2081;:&#x209C; , y&#x2081;:&#x1D64;&#x208B;&#x2081;)</text>
+  <text x="400" y="78" text-anchor="middle" fill="#aab0d5" font-size="11">e.g. {"sat": 0.72, "set": 0.15, "blank": 0.08, ...}</text>
+</svg>
+
+<p><strong>The key insight:</strong> Encoder and prediction network run <strong>independently</strong> &mdash; one processes audio, the other processes text history. The joint network combines them at each step to decide: <em>emit a token</em> or <em>emit "blank" (= advance to next audio frame)</em>. Beam search explores multiple paths through the (time t, text step u) grid to produce top-K hypotheses.</p>
+
+<p>When people say "decoder" in ASR, they mean the prediction network + joint network &mdash; the part that turns encoder representations into text. It was always inside your acoustic model box. You just never needed to name it separately.</p>
+
+<h3>CTC vs Transducer: the clean distinction</h3>
+<p>Both are <strong>loss functions / decoding algorithms, not models.</strong> "Beam search" is also an algorithm, not a model. The model is the encoder (+ optionally the prediction network + joint network). The loss determines how you train it:</p>
+<table>
+  <tr><th></th><th>CTC</th><th>Transducer</th></tr>
+  <tr><td>Architecture</td><td>Encoder only</td><td>Encoder + Prediction Net + Joint Net</td></tr>
+  <tr><td>Loss</td><td>CTC loss</td><td>Transducer (RNN-T) loss</td></tr>
+  <tr><td>Language modeling</td><td>None &mdash; each frame independent</td><td>Yes &mdash; prediction network conditions on previous tokens</td></tr>
+  <tr><td>Needs LM rescorer?</td><td>Yes, essential</td><td>Optional</td></tr>
+</table>
+<p>CTC as a <strong>standalone production system is mostly obsolete</strong> &mdash; transducer does everything CTC does plus output-dependency modeling. But CTC survives as an <strong>auxiliary training loss</strong>: many modern transducer systems add <code>total_loss = transducer_loss + 0.3 * ctc_loss</code> because the CTC term forces the encoder to learn good frame-level alignments on its own, without leaning on the prediction network.</p>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>Whisper (2022): the power shift from acoustic model to language model</h2>
+
+<p>In traditional ASR, <strong>the acoustic model is king</strong>. You spend years engineering better encoders, better frame-level features, better alignment losses. If the acoustic model gets "cat" vs "cut" wrong, the LM can't save you.</p>
+
+<p>Whisper flipped this. The encoder is a <strong>vanilla Transformer</strong> &mdash; nothing fancy, no Conformer, no specialized speech tricks. Instead, all the capacity goes into a <strong>full Transformer decoder</strong> that acts as a powerful language model. The loss is plain <strong>cross-entropy</strong> (predict next text token, same as GPT) &mdash; no CTC loss, no transducer loss, nothing speech-specific. The secret weapon: <strong>680K hours of labeled data</strong>.</p>
+
+<p>Whisper didn't solve acoustic modeling better. It made acoustic modeling <em>less important</em> by giving the decoder enough capacity and data to compensate. If the encoder is uncertain about "cat" vs "cut," the decoder knows "the <strong>cat</strong> sat on the mat" is far more likely. Same pattern as everywhere in AI: specialized architecture replaced by scale + simple architecture + data.</p>
+
+<!-- Whisper Architecture Diagram -->
+<svg viewBox="0 0 800 620" xmlns="http://www.w3.org/2000/svg" style="max-width:720px;margin:24px auto;display:block;font-family:system-ui,-apple-system,sans-serif">
+  <defs>
+    <marker id="arrow2" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#aab0d5"/></marker>
+    <marker id="arrow2g" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#57d39b"/></marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" fill="#7c9cff" font-size="18" font-weight="700">Whisper — both boxes merged into one model</text>
+
+  <!-- Outer border -->
+  <rect x="100" y="50" width="600" height="520" rx="12" fill="none" stroke="#252a45" stroke-width="2" stroke-dasharray="8 4"/>
+  <text x="120" y="74" fill="#aab0d5" font-size="12" font-style="italic">single model — no separate rescorer</text>
+
+  <!-- ─── Encoder box ─── -->
+  <rect x="200" y="380" width="400" height="100" rx="8" fill="#1e2240" stroke="#7c9cff" stroke-width="2"/>
+  <text x="400" y="415" text-anchor="middle" fill="#7c9cff" font-size="16" font-weight="700">Encoder (Transformer)</text>
+  <text x="400" y="438" text-anchor="middle" fill="#57d39b" font-size="12">Same job as your RNN-T encoder</text>
+  <text x="400" y="456" text-anchor="middle" fill="#aab0d5" font-size="12">"What sounds are happening?"</text>
+  <text x="400" y="472" text-anchor="middle" fill="#aab0d5" font-size="11">Conv downsample + N Transformer layers</text>
+
+  <!-- Encoder input -->
+  <text x="400" y="530" text-anchor="middle" fill="#e7e9f7" font-size="14" font-weight="600">Mel spectrogram (80 &times; T)</text>
+  <text x="400" y="548" text-anchor="middle" fill="#aab0d5" font-size="11" font-style="italic">e.g. 3 seconds of "the cat sat" → 80 &times; 300 matrix</text>
+  <line x1="400" y1="515" x2="400" y2="484" stroke="#aab0d5" stroke-width="2" marker-end="url(#arrow2)"/>
+
+  <!-- Encoder output arrow -->
+  <line x1="400" y1="378" x2="400" y2="310" stroke="#7c9cff" stroke-width="2" marker-end="url(#arrow2)"/>
+  <text x="540" y="355" text-anchor="start" fill="#7c9cff" font-size="12" font-weight="600">ALL encoded vectors</text>
+  <text x="540" y="370" text-anchor="start" fill="#aab0d5" font-size="11">(T/2 &times; 512), full sequence at once</text>
+
+  <!-- ─── Decoder box ─── -->
+  <rect x="200" y="170" width="400" height="138" rx="8" fill="#1e2240" stroke="#ffd166" stroke-width="2"/>
+  <text x="400" y="200" text-anchor="middle" fill="#ffd166" font-size="16" font-weight="700">Decoder (Transformer, autoregressive)</text>
+
+  <!-- Cross-attention label -->
+  <text x="400" y="224" text-anchor="middle" fill="#7c9cff" font-size="12" font-weight="600">cross-attention → attends to ALL encoder frames</text>
+  <text x="400" y="240" text-anchor="middle" fill="#aab0d5" font-size="11">replaces: Joint Network + LM Rescorer</text>
+
+  <!-- Self-attention label -->
+  <text x="400" y="262" text-anchor="middle" fill="#ffd166" font-size="12" font-weight="600">self-attention → sees all previous output tokens</text>
+  <text x="400" y="278" text-anchor="middle" fill="#aab0d5" font-size="11">replaces: Prediction Network (mini LM)</text>
+
+  <text x="400" y="300" text-anchor="middle" fill="#57d39b" font-size="12" font-weight="600">= full language model built in, no rescorer needed</text>
+
+  <!-- Previous tokens input (from left) -->
+  <text x="90" y="232" text-anchor="end" fill="#e7e9f7" font-size="12" font-weight="600">prev tokens</text>
+  <text x="90" y="248" text-anchor="end" fill="#aab0d5" font-size="11" font-style="italic">"the" "cat"</text>
+  <line x1="96" y1="240" x2="196" y2="240" stroke="#ffd166" stroke-width="2" marker-end="url(#arrow2)"/>
+
+  <!-- Decoder output -->
+  <line x1="400" y1="168" x2="400" y2="120" stroke="#aab0d5" stroke-width="2" marker-end="url(#arrow2)"/>
+  <text x="400" y="108" text-anchor="middle" fill="#e7e9f7" font-size="14" font-weight="600">P(next token | ALL audio, ALL previous tokens)</text>
+  <text x="400" y="88" text-anchor="middle" fill="#aab0d5" font-size="11">e.g. {"sat": 0.89, "set": 0.06, ...} — no beam search needed, greedy works</text>
+
+  <!-- Final output -->
+  <text x="400" y="68" text-anchor="middle" fill="#57d39b" font-size="13" font-weight="600">→ "the cat sat on the mat" (final transcript)</text>
+</svg>
+
+<h3>Why Whisper can skip the rescorer</h3>
+<table>
+  <tr><th>RNN-T (your Alexa system)</th><th>Whisper</th></tr>
+  <tr><td>Prediction network is a small RNN (~2 layers) &mdash; limited language modeling</td><td>Decoder is a full Transformer (~12-32 layers) &mdash; powerful language model</td></tr>
+  <tr><td>Joint network sees <strong>one</strong> audio frame + one text step at a time</td><td>Decoder cross-attends to <strong>ALL</strong> audio frames at once</td></tr>
+  <tr><td>Needs external LM to catch "wreck a nice beach" errors</td><td>Decoder learned language from 680K hours &mdash; catches these internally</td></tr>
+  <tr><td>Can stream (frame by frame)</td><td>Cannot stream (decoder needs full encoded sequence)</td></tr>
+</table>
+<p class="note">The trade-off: Whisper's decoder is more powerful because it sees everything at once, but that's exactly why it can't stream. RNN-T's predictor is weaker but works frame-by-frame, enabling real-time output.</p>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>What changed since Alexa era: three shifts</h2>
+
+<h3>Shift 1: The encoder got better (RNN/LSTM &rarr; Conformer)</h3>
+<p>In the Alexa era, the acoustic model encoder was typically LSTM layers. Around 2020, Google introduced the <strong>Conformer</strong> &mdash; a hybrid block that sandwiches self-attention between convolutions:</p>
+<pre><code># Conformer block = sandwich of four components:
+x = x + FFN(x)          # feed-forward
+x = x + MHSA(x)         # multi-head self-attention (global context)
+x = x + Conv(x)         # depthwise convolution (local phonetic patterns)
+x = x + FFN(x)          # feed-forward again
+
+# Why this matters:
+#   LSTM only sees the past (unidirectional) or is slow (bidirectional)
+#   Attention captures long-range dependencies efficiently
+#   Convolution captures local structure (formant transitions, phoneme boundaries)
+#   Together → better than either alone for speech</code></pre>
+<p>The Conformer is now the default encoder in nearly every modern ASR system. <strong>Your mental model stays the same</strong> &mdash; just replace "LSTM encoder" with "Conformer encoder" inside the acoustic model box.</p>
+
+<h3>Shift 2: Self-supervised pre-training (wav2vec 2.0, 2020)</h3>
+<p>Before: you needed thousands of hours of <em>labeled</em> audio (transcribed speech) to train an acoustic model. Expensive.</p>
+<p>wav2vec 2.0 (Meta) showed you could <strong>pre-train the encoder on unlabeled audio</strong> (just raw speech, no transcripts) and then fine-tune with a small CTC head on labeled data. This is the "BERT moment" for speech &mdash; same idea as masked language modeling, but masking audio frames instead of words.</p>
+<p class="note">Impact: dramatically reduced the labeled data requirement. Languages with little transcribed data (low-resource) suddenly became feasible.</p>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>The current landscape: three paradigms</h2>
+<p>Now map these shifts back to your two-box model. Today there are three paradigms &mdash; they differ in <strong>how much of the LM rescorer they absorb</strong> and <strong>where the "intelligence" lives</strong>:</p>
+
+<div class="paradigm">
+  <h3>1. CTC &mdash; encoder only, needs your rescorer</h3>
+  <div class="pipeline">Audio &rarr; Conformer encoder <em>&rarr; frame-level logits (T &times; vocab)</em>
+&rarr; CTC decode <em>&rarr; collapse repeats, remove blanks &rarr; text</em></div>
+  <p>Encoder only, trained with CTC loss. Each frame is predicted independently &mdash; no language modeling. Your LM rescorer is essential.</p>
+  <p><strong>As a standalone system, mostly obsolete</strong> &mdash; transducers do everything CTC does plus output-dependency modeling. CTC's modern role is as an <strong>auxiliary training loss</strong> that helps the encoder learn better frame-level alignments, even when the final system uses transducer decoding.</p>
+  <p class="pro"><strong>Pros:</strong> Fastest inference (no decoder at all), simplest to implement.</p>
+  <p class="con"><strong>Cons:</strong> Frame independence &rarr; "recognize speech" vs "wreck a nice beach" errors without external LM.</p>
+</div>
+
+<div class="paradigm">
+  <h3>2. Transducer (RNN-T) &mdash; your Alexa system, evolved</h3>
+  <div class="pipeline">Audio &rarr; Conformer encoder <em>&rarr; encoded frames</em>
++ Prediction network <em>(text history &rarr; embedding, like a mini LM)</em>
+&rarr; Joint network <em>&rarr; next token probability</em></div>
+  <p>This is the direct descendant of Alexa-era ASR. The key evolution: the transducer's <strong>prediction network</strong> is a small built-in LM that conditions each output on the previous tokens. So the acoustic model box now has a <em>mini language model inside it</em>.</p>
+  <p>The external LM rescorer <strong>becomes optional</strong>. The prediction network handles most language-level corrections. You can still add a rescorer for extra accuracy, but many production systems skip it.</p>
+  <table>
+    <tr><th>Model</th><th>Detail</th></tr>
+    <tr><td>Conformer-Transducer</td><td>Google's on-device ASR. Powers Google Assistant, Pixel phones. This is the successor to your Alexa system.</td></tr>
+    <tr><td>Zipformer (k2/icefall)</td><td>Efficient variant with varied attention spans per layer. State-of-the-art open-source streaming.</td></tr>
+    <tr><td>FastConformer (NVIDIA)</td><td>Optimized Conformer with subsampling. NeMo framework.</td></tr>
+  </table>
+  <p class="pro"><strong>Pros:</strong> True streaming (emit tokens as audio arrives), on-device friendly, built-in language modeling.</p>
+  <p class="con"><strong>Cons:</strong> More complex training (RNN-T loss), slightly lower accuracy than Whisper on long-form audio.</p>
+  <p class="note">Relation to your model: the prediction network absorbed some of the rescorer's job. Your two-box diagram is becoming 1.5 boxes.</p>
+</div>
+
+<div class="paradigm">
+  <h3>3. Encoder-Decoder (Whisper) &mdash; the power shifted to the decoder</h3>
+  <div class="pipeline">Audio &rarr; Transformer encoder <em>&rarr; encoded features (T &times; d)</em>
+&rarr; Transformer decoder <em>(autoregressive) &rarr; text tokens one at a time</em></div>
+  <p>Vanilla Transformer encoder (not the star) + full Transformer decoder (the star). Trained with <strong>cross-entropy loss</strong> &mdash; same loss as GPT, nothing speech-specific. No CTC, no transducer loss. The decoder <strong>is</strong> the language model. Your two boxes are now one.</p>
+  <p>The encoder still matters (without it the decoder just hallucinates fluent but wrong text &mdash; a known Whisper failure mode on silence). But the balance of power shifted: the decoder's language model compensates for encoder uncertainty.</p>
+  <table>
+    <tr><th>Model</th><th>Detail</th></tr>
+    <tr><td>Whisper large-v3 (OpenAI)</td><td>680K hours supervised data, 99 languages. The current default for non-streaming ASR.</td></tr>
+    <tr><td>Distil-Whisper</td><td>Distilled &mdash; 2x faster, similar quality. Good for production.</td></tr>
+    <tr><td>Canary (NVIDIA)</td><td>Multilingual encoder-decoder, NeMo framework.</td></tr>
+  </table>
+  <p class="pro"><strong>Pros:</strong> Best accuracy, extremely robust, simple deployment (one model, one loss).</p>
+  <p class="con"><strong>Cons:</strong> Can't stream (decoder needs full utterance), slower (autoregressive), hallucinates on silence/noise.</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>Summary: how your mental model maps to 2025</h2>
+<table>
+  <tr><th>Paradigm</th><th>Architecture</th><th>Loss</th><th>Where the intelligence lives</th><th>LM rescorer</th><th>Streams?</th></tr>
+  <tr><td>CTC</td><td>Encoder only</td><td>CTC loss</td><td>Encoder (acoustic model is king)</td><td><strong>Essential</strong></td><td>Yes</td></tr>
+  <tr><td>Transducer</td><td>Encoder + Pred Net + Joint Net</td><td>Transducer loss</td><td>Encoder + mini LM (prediction net)</td><td><strong>Optional</strong></td><td>Yes</td></tr>
+  <tr><td>Whisper</td><td>Encoder + Transformer Decoder</td><td>Cross-entropy</td><td>Decoder (language model is king)</td><td><strong>Absorbed</strong></td><td>No</td></tr>
+</table>
+<p class="note">The trend: intelligence moved from the acoustic model to the language model. CTC puts all the burden on the encoder. Transducers split it. Whisper shifted the balance of power to the decoder &mdash; same pattern as everywhere in AI (specialized architecture → scale + data + simple loss). For streaming (games, voice assistants), transducers remain the right answer.</p>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>Whisper pseudocode</h2>
+<pre><code># Whisper — trained with cross-entropy loss, same as GPT
+mel = log_mel_spectrogram(audio, n_mels=80, hop=160)  # (80, T)
+
+encoded = transformer_encoder(mel)    # vanilla Transformer, not Conformer
+# encoded: (T/2, d_model)            # /2 from conv downsampling
+
+# Decoder IS the language model — generates text autoregressively
+tokens = []
+for step in range(max_len):
+    logits = transformer_decoder(tokens, encoded)  # cross-attn to audio
+    next_token = argmax(logits[-1])                # + self-attn over text
+    tokens.append(next_token)
+    if next_token == EOT: break
+
+text = tokenizer.decode(tokens)       # BPE → string</code></pre>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>Streaming vs non-streaming</h2>
+<table>
+  <tr><th></th><th>Non-streaming (Whisper)</th><th>Streaming (Transducer)</th></tr>
+  <tr><td>When does text appear?</td><td>After full utterance</td><td>As audio arrives, token by token</td></tr>
+  <tr><td>Latency</td><td>Proportional to utterance length</td><td>~100-200ms per token</td></tr>
+  <tr><td>Accuracy</td><td>Higher (sees full context)</td><td>Slightly lower (limited look-ahead)</td></tr>
+  <tr><td>LM rescorer</td><td>Not needed (decoder is the LM)</td><td>Optional (prediction net handles most of it)</td></tr>
+  <tr><td>Use case</td><td>Transcription, subtitles, offline</td><td>Voice assistants, games, live captioning</td></tr>
+</table>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>Frame size vs chunk size: two different things</h2>
+
+<p>Don't conflate these &mdash; they operate at different levels:</p>
+
+<h3>Mel spectrogram frame = ~10ms (not a design choice)</h3>
+<p>The mel spectrogram is computed with a ~25ms window and ~10ms hop, producing one 80-dim vector every 10ms. This is a universal standard because <strong>speech changes on a 10-50ms timescale</strong> &mdash; a phoneme like "t" can be as short as 20ms. If you made frames 400ms, you'd blur multiple phonemes into one frame and the encoder couldn't distinguish "cat" from "cap."</p>
+
+<h3>Streaming chunk = how many frames to buffer before running the encoder (design choice)</h3>
+<p>In streaming mode, the encoder doesn't run on every single 10ms frame. It waits for a <strong>chunk</strong> of frames, processes them together, then waits for the next chunk. This is a pure <strong>latency vs accuracy tradeoff</strong>:</p>
+
+<table>
+  <tr><th>Chunk size</th><th>Frames buffered</th><th>Latency added</th><th>Encoder context</th><th>Use case</th></tr>
+  <tr><td>40ms</td><td>4 frames</td><td>Very low</td><td>Tiny &mdash; less accurate</td><td>Game voice chat (must feel instant)</td></tr>
+  <tr><td>160ms</td><td>16 frames</td><td>Moderate</td><td>Good tradeoff</td><td>Voice assistants (Alexa, Google)</td></tr>
+  <tr><td>400ms</td><td>40 frames</td><td>0.4s delay</td><td>More context &mdash; more accurate</td><td>Live captions, subtitles</td></tr>
+  <tr><td>Full utterance</td><td>All frames</td><td>Wait until done</td><td>Full context &mdash; best accuracy</td><td>Whisper (offline transcription)</td></tr>
+</table>
+<p class="note">Bigger chunk = encoder sees more context per forward pass = better predictions, but the user waits longer. Whisper is the extreme: chunk size = entire utterance. Best accuracy, worst latency.</p>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>ASR model comparison</h2>
+<table>
+  <tr><th>Model</th><th>Paradigm</th><th>Streaming?</th><th>Latency</th><th>Best for</th></tr>
+  <tr><td>Whisper large-v3</td><td>Encoder-decoder</td><td>No</td><td>~1-3s</td><td>Best accuracy, offline transcription</td></tr>
+  <tr><td>Distil-Whisper</td><td>Encoder-decoder</td><td>No</td><td>~0.5-1s</td><td>Production non-streaming, 2x faster</td></tr>
+  <tr><td>Conformer-Transducer</td><td>Transducer</td><td>Yes</td><td>~80-150ms</td><td>On-device, voice assistants, games</td></tr>
+  <tr><td>Zipformer</td><td>Transducer</td><td>Yes</td><td>~80-150ms</td><td>State-of-the-art streaming, open-source</td></tr>
+  <tr><td>wav2vec 2.0 + CTC</td><td>CTC</td><td>Yes</td><td>~50-100ms</td><td>Fastest, needs external LM for accuracy</td></tr>
+</table>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>Far-field ASR: solved before the acoustic model</h2>
+
+<p>When the speaker is far from the microphone &mdash; think smart speakers, game consoles, conference rooms &mdash; the signal is weak, reverberant (echoes off walls), and mixed with background noise or other speakers. This is <strong>not solved by a better acoustic model</strong>. It's an engineering problem resolved by a <strong>front-end signal processing pipeline</strong> that cleans the audio <em>before</em> it reaches your ASR system.</p>
+
+<p><strong>Critical requirement: multi-channel audio.</strong> You need a microphone array (e.g. Alexa Echo has 7 mics). A single microphone cannot do beamforming &mdash; you need multiple channels to exploit spatial information about where the sound is coming from.</p>
+
+<!-- Far-field pipeline diagram -->
+<svg viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;margin:24px auto;display:block;font-family:system-ui,-apple-system,sans-serif">
+  <defs>
+    <marker id="arrow3" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#aab0d5"/></marker>
+  </defs>
+
+  <text x="400" y="28" text-anchor="middle" fill="#7c9cff" font-size="16" font-weight="700">Far-field front-end pipeline (runs before your acoustic model)</text>
+
+  <!-- Outer dashed border for front-end -->
+  <rect x="100" y="42" width="600" height="340" rx="10" fill="none" stroke="#ffd166" stroke-width="2" stroke-dasharray="8 4"/>
+  <text x="120" y="62" fill="#ffd166" font-size="12" font-weight="600">Front-end (signal processing + small neural nets, on-device)</text>
+
+  <!-- Input -->
+  <text x="400" y="100" text-anchor="middle" fill="#e7e9f7" font-size="13" font-weight="600">Raw multi-channel audio (e.g. 7-mic array)</text>
+  <text x="400" y="116" text-anchor="middle" fill="#aab0d5" font-size="11">noisy, reverberant, multiple speakers</text>
+  <line x1="400" y1="122" x2="400" y2="142" stroke="#aab0d5" stroke-width="2" marker-end="url(#arrow3)"/>
+
+  <!-- Beamforming -->
+  <rect x="180" y="144" width="440" height="48" rx="6" fill="#1e2240" stroke="#7c9cff" stroke-width="1.5"/>
+  <text x="260" y="168" text-anchor="middle" fill="#7c9cff" font-size="14" font-weight="700">1. Beamforming</text>
+  <text x="530" y="168" text-anchor="middle" fill="#aab0d5" font-size="11">spatial filtering &mdash; "point" mics at speaker, suppress other directions</text>
+  <text x="530" y="182" text-anchor="middle" fill="#aab0d5" font-size="10" font-style="italic">requires multi-channel input, pure signal processing (no ML)</text>
+  <line x1="400" y1="192" x2="400" y2="210" stroke="#aab0d5" stroke-width="2" marker-end="url(#arrow3)"/>
+
+  <!-- Speech enhancement -->
+  <rect x="180" y="212" width="440" height="48" rx="6" fill="#1e2240" stroke="#57d39b" stroke-width="1.5"/>
+  <text x="280" y="236" text-anchor="middle" fill="#57d39b" font-size="14" font-weight="700">2. Speech Enhancement</text>
+  <text x="530" y="236" text-anchor="middle" fill="#aab0d5" font-size="11">neural denoising &mdash; remove residual noise, dereverberation</text>
+  <text x="530" y="250" text-anchor="middle" fill="#aab0d5" font-size="10" font-style="italic">small NN on-device (RNNoise, DCCRN), works on single-channel too</text>
+  <line x1="400" y1="260" x2="400" y2="278" stroke="#aab0d5" stroke-width="2" marker-end="url(#arrow3)"/>
+
+  <!-- Speaker targeting -->
+  <rect x="180" y="280" width="440" height="48" rx="6" fill="#1e2240" stroke="#ffd166" stroke-width="1.5"/>
+  <text x="290" y="304" text-anchor="middle" fill="#ffd166" font-size="14" font-weight="700">3. Speaker Targeting</text>
+  <text x="530" y="304" text-anchor="middle" fill="#aab0d5" font-size="11">"who said the wake word?" &mdash; extract that speaker's voice</text>
+  <text x="530" y="318" text-anchor="middle" fill="#aab0d5" font-size="10" font-style="italic">wake-word detection + speaker embedding / diarization</text>
+
+  <!-- Output of front-end -->
+  <line x1="400" y1="328" x2="400" y2="348" stroke="#aab0d5" stroke-width="2"/>
+  <text x="400" y="368" text-anchor="middle" fill="#57d39b" font-size="12" font-weight="600">clean, single-speaker audio</text>
+  <line x1="400" y1="374" x2="400" y2="394" stroke="#aab0d5" stroke-width="2" marker-end="url(#arrow3)"/>
+
+  <!-- Acoustic model box (outside front-end) -->
+  <rect x="220" y="398" width="360" height="50" rx="6" fill="#1e2240" stroke="#7c9cff" stroke-width="2"/>
+  <text x="400" y="422" text-anchor="middle" fill="#7c9cff" font-size="14" font-weight="700">Your acoustic model (Transducer / Whisper)</text>
+  <text x="400" y="438" text-anchor="middle" fill="#aab0d5" font-size="11">same model as before &mdash; the front-end did the hard work</text>
+
+  <!-- Final output -->
+  <line x1="400" y1="448" x2="400" y2="468" stroke="#aab0d5" stroke-width="2" marker-end="url(#arrow3)"/>
+  <text x="400" y="486" text-anchor="middle" fill="#e7e9f7" font-size="13" font-weight="600">Transcript</text>
+</svg>
+
+<p><strong>Key point:</strong> the acoustic model itself doesn't change for far-field. You add a front-end <em>before</em> it. Each stage handles a different problem:</p>
+<table>
+  <tr><th>Stage</th><th>Problem it solves</th><th>Requires multi-channel?</th></tr>
+  <tr><td>Beamforming</td><td>Suppress sound from other directions</td><td><strong>Yes</strong> &mdash; needs mic array for spatial filtering</td></tr>
+  <tr><td>Speech enhancement</td><td>Remove residual noise + reverberation</td><td>No &mdash; works on single-channel too</td></tr>
+  <tr><td>Speaker targeting</td><td>"Which person do I transcribe?"</td><td>No &mdash; uses speaker embeddings, not spatial info</td></tr>
+  <tr><td>Noise-robust training</td><td>Make acoustic model more tolerant</td><td>No &mdash; data augmentation (add noise/reverb to training data)</td></tr>
+</table>
+<p class="note">Whisper is unusually noise-robust without a front-end because it trained on 680K hours of messy real-world audio (YouTube with background music, poor recordings). But it still can't handle multi-speaker far-field without a front-end &mdash; it doesn't know <em>which</em> speaker to transcribe.</p>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>Interview answer: ASR (30 seconds)</h2>
+<div class="paradigm">
+<p>"Classic ASR has two stages: an acoustic model &mdash; the heavy-duty part that maps audio frames to text hypotheses &mdash; and a lightweight LM rescorer that picks the best one. The field evolved by gradually absorbing the LM into the acoustic model. With CTC, it's encoder-only trained with CTC loss &mdash; each frame is independent, so you still need the external rescorer. Transducers added a prediction network inside the acoustic model that acts as a mini LM, making the rescorer optional &mdash; this is today's standard for streaming. Then Whisper flipped the balance of power entirely: vanilla Transformer encoder, full Transformer decoder, trained with plain cross-entropy &mdash; no CTC loss, no transducer loss. The decoder <em>is</em> the language model. It can't stream, but for offline transcription it's the most robust option. For real-time &mdash; games, voice assistants &mdash; you still want a Conformer-Transducer."</p>
+</div>
+
+<footer>
+  <strong>ASR Landscape 2025-2026</strong> &middot; Interview prep reference &middot;
+  Compiled by <strong>Kai Zhen</strong>
+</footer>
+</div>
+</body>
+</html>

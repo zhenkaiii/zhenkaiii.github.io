@@ -1,0 +1,8 @@
+@inproceedings{zhen2021cs,
+  title={A dual-staged context aggregation method towards efficient end-to-end speech enhancement},
+  author={Zhen, Kai and Lee, Mi Suk and Kim, Minje},
+  booktitle={ICASSP 2020-2020 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={366--370},
+  year={2020},
+  organization={IEEE}
+}

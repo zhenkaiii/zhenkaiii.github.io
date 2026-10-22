@@ -1,0 +1,217 @@
+[
+  {
+    "file": "s2s_gru.html",
+    "title": "Seq2Seq with GRU",
+    "tags": [
+      "Seq2Seq",
+      "AI Coding / PyTorch"
+    ]
+  },
+  {
+    "file": "speech_tokenizer.html",
+    "title": "Using Encodec in Seq2Seq",
+    "tags": [
+      "Speech Codec / Tokenization"
+    ]
+  },
+  {
+    "file": "weight_tying.html",
+    "title": "Weight Tying",
+    "tags": [
+      "Seq2Seq"
+    ]
+  },
+  {
+    "file": "pytorch-kmeans.html",
+    "title": "Vectorized K-Means Clustering",
+    "tags": [
+      "AI Coding / PyTorch"
+    ]
+  },
+  {
+    "file": "binary_search.html",
+    "title": "Binary Search: Invariants and Intuition",
+    "tags": [
+      "Core Coding Patterns"
+    ]
+  },
+  {
+    "file": "hashtable_counting.html",
+    "title": "Hash Table & Counting",
+    "tags": [
+      "Core Coding Patterns"
+    ]
+  },
+  {
+    "file": "two_pointer_sliding_window.html",
+    "title": "Two Pointer & Sliding Window",
+    "tags": [
+      "Core Coding Patterns"
+    ]
+  },
+  {
+    "file": "heap.html",
+    "title": "Heap / Priority Queue",
+    "tags": [
+      "Core Coding Patterns"
+    ]
+  },
+  {
+    "file": "sorting_intervals.html",
+    "title": "Sorting, Intervals & Merging",
+    "tags": [
+      "Core Coding Patterns"
+    ]
+  },
+  {
+    "file": "bfs_dfs.html",
+    "title": "BFS & DFS",
+    "tags": [
+      "Core Coding Patterns"
+    ]
+  },
+  {
+    "file": "wrapper.html",
+    "title": "What's PyTorch Wrapper? And Why SmoothQuant Likes It?",
+    "tags": [
+      "AI Coding / PyTorch",
+      "Efficiency / Co-Design"
+    ]
+  },
+  {
+    "file": "sweep.html",
+    "title": "INT8 does not automatically reduce latency - It often gets worse until conditions are right.",
+    "tags": [
+      "AI Coding / PyTorch",
+      "Efficiency / Co-Design"
+    ]
+  },
+  {
+    "file": "tts_landscape.html",
+    "title": "TTS Landscape 2025-2026",
+    "tags": [
+      "Speech & Audio"
+    ]
+  },
+  {
+    "file": "asr_landscape.html",
+    "title": "ASR Landscape 2025-2026",
+    "tags": [
+      "Speech & Audio"
+    ]
+  },
+  {
+    "file": "lora_peft.html",
+    "title": "LoRA / PEFT: Parameter-Efficient Fine-Tuning",
+    "tags": [
+      "Efficiency / Co-Design"
+    ]
+  },
+  {
+    "file": "cosyvoice_inference_walkthrough.ipynb",
+    "title": "CosyVoice Inference Walkthrough: Tensor Shapes at Every Stage",
+    "tags": [
+      "Speech & Audio",
+      "AI Coding / PyTorch"
+    ]
+  },
+  {
+    "file": "local_semantic_search.html",
+    "title": "Local Semantic Search over Browser History",
+    "tags": [
+      "Information Retrieval"
+    ]
+  },
+  {
+    "file": "flow_matching.html",
+    "title": "Flow Matching for TTS — Minimal PyTorch",
+    "tags": [
+      "Speech & Audio",
+      "AI Coding / PyTorch"
+    ]
+  },
+  {
+    "file": "flow_matching_mnist.html",
+    "title": "Flow Matching — Hands-On MNIST with GPU",
+    "tags": [
+      "AI Coding / PyTorch",
+      "Generative Models"
+    ]
+  },
+  {
+    "file": "llm_training_memory.html",
+    "title": "LLM Training: GPU Memory Math & Parallelism",
+    "tags": [
+      "Efficiency / Co-Design"
+    ]
+  },
+  {
+    "file": "modern_llm_architecture.html",
+    "title": "Modern LLM Architecture: Beyond 'It's Just a Transformer'",
+    "tags": [
+      "Efficiency / Co-Design"
+    ]
+  },
+  {
+    "file": "mini_transformer.html",
+    "title": "Mini Transformer Block + Training Loop",
+    "tags": [
+      "AI Coding / PyTorch"
+    ]
+  },
+  {
+    "file": "mini_attention_diy.html",
+    "title": "Multi-Head Attention — DIY from Scratch",
+    "tags": [
+      "AI Coding / PyTorch"
+    ]
+  },
+  {
+    "file": "loss_functions_diy.html",
+    "title": "Primitive Loss Functions + Normalization",
+    "tags": [
+      "AI Coding / PyTorch"
+    ]
+  },
+  {
+    "file": "pytorch_drills_wed.html",
+    "title": "PyTorch Drills: Loss Functions + Norms + Tensor Ops",
+    "tags": [
+      "AI Coding / PyTorch"
+    ],
+    "private": true
+  },
+  {
+    "file": "pytorch_drills_thu.html",
+    "title": "PyTorch Drills: K-Means, Flow Matching",
+    "tags": [
+      "AI Coding / PyTorch"
+    ],
+    "private": true
+  },
+  {
+    "file": "pytorch_drills_fri.html",
+    "title": "PyTorch Drills — Friday: Cold Activation + Interview Warmup",
+    "tags": [
+      "AI Coding / PyTorch"
+    ],
+    "private": true
+  },
+  {
+    "file": "pytorch_drills_all.html",
+    "title": "PyTorch Drills — All Sessions",
+    "tags": [
+      "AI Coding / PyTorch"
+    ],
+    "private": true
+  },
+  {
+    "file": "wild_research_proposals.html",
+    "title": "Wild Research Proposals",
+    "tags": [
+      "Interview Prep",
+      "Research"
+    ],
+    "private": true
+  }
+]

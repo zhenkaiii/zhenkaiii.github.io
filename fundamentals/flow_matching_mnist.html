@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Flow Matching — Hands-On with GPU</title>
+<style>
+  :root{--bg:#0f1220;--panel:#171a2b;--ink:#e7e9f7;--muted:#aab0d5;--accent:#7c9cff;--ok:#57d39b;--warn:#ffd166;--bad:#ff6b6b;--code-bg:#0b0e19;--code-border:#252a45}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0} h2{margin:28px 0 10px;font-size:20px} h3{margin:20px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7} ul{padding-left:20px;margin:10px 0} li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  .k{color:#c792ea} .fn{color:#82aaff} .s{color:#c3e88d} .c{color:#6b708c} .n{color:#f78c6c} .v{color:#ffcb6b}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)} .callout.ok{border-left-color:var(--ok)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .diagram{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:20px;margin:14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:14px;line-height:1.6;overflow-x:auto;white-space:pre}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+  .loss-table td:nth-child(2){font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Flow Matching — Hands-On with GPU</h1>
+  <span class="badge">Flow Matching</span>
+  <span class="badge">MNIST</span>
+  <span class="badge">B200</span>
+</header>
+
+<p style="color:var(--muted)">Built from actually training flow matching on a p6 B200 node, then asking every "but why?" until it clicked.
+This page follows my own path to understanding — so future-me can pick it up fast.</p>
+
+<!-- ====== THE NORTH STAR ====== -->
+<section class="panel">
+  <h2>The North Star</h2>
+  <p>Flow matching is nothing but learning a <b>velocity field</b>.
+  The velocity means the magnitude and direction that brings you from noise to data. That's the entire goal.</p>
+  <div class="diagram">
+noise (出发点)  ──velocity (路)──▶  data (罗马)
+     x0              x1 - x0            x1
+
+The model doesn't learn Rome. It learns the roads.</div>
+  <p>条条大路通罗马 — but reversed. One Rome (the data distribution), infinite roads leading to it.
+  The model learns ALL the roads. Give it any noise, it knows the way home.</p>
+</section>
+
+<!-- ====== THE 5 LINES ====== -->
+<section class="panel">
+  <h2>The Entire Algorithm in 5 Lines</h2>
+<pre>
+<span class="v">x0</span>     = torch.randn_like(<span class="v">x1</span>)                          <span class="c"># x0 = pure noise (出发点)</span>
+<span class="v">t</span>      = torch.rand(<span class="v">b</span>, device=<span class="v">device</span>)                   <span class="c"># random position along the road, 0.0 to 1.0</span>
+<span class="v">x_t</span>    = (<span class="n">1</span> - <span class="v">t</span>) * <span class="v">x0</span> + <span class="v">t</span> * <span class="v">x1</span>                        <span class="c"># where you are at position t</span>
+<span class="v">target</span> = <span class="v">x1</span> - <span class="v">x0</span>                                       <span class="c"># the velocity (the road itself)</span>
+<span class="v">loss</span>   = F.mse_loss(<span class="fn">model</span>(<span class="v">x_t</span>, <span class="v">t</span>), <span class="v">target</span>)              <span class="c"># learn to predict the road from any position</span>
+</pre>
+  <p>No noise schedule, no score function, no reverse SDE. Just regression on velocities.</p>
+  <div class="callout">
+    <p><b>Clarification:</b> <code>b</code> is <b>batch size</b>, not max steps.
+    <code>t = torch.rand(256)</code> gives 256 random floats in [0, 1].
+    Each sample gets its own random position along the road.
+    There is no loop over steps during training — just one random snapshot per sample.</p>
+  </div>
+</section>
+
+<!-- ====== WHAT IS THE TARGET ====== -->
+<section class="panel">
+  <h2>What Exactly Is the Target?</h2>
+  <p>The target is NOT "make x_t close to x1." It's the <b>velocity</b> — the road itself.</p>
+<pre>
+<span class="fn">model</span>(<span class="v">x_t</span>, <span class="v">t</span>)  →  predicted velocity  <span class="c">(what the model thinks the road is)</span>
+<span class="v">x1</span> - <span class="v">x0</span>        →  true velocity       <span class="c">(what the road actually is)</span>
+</pre>
+  <p>MSE measures: "how wrong is the model's road prediction vs the actual road?"</p>
+
+  <h3>The velocity is constant along the path</h3>
+  <p>Because the path is a straight line:</p>
+  <div class="diagram">
+x0 ─────────────────────────── x1
+     velocity = x1 - x0 everywhere
+
+At t=0.1:  near noise,  velocity = x1 - x0
+At t=0.5:  in middle,   velocity = x1 - x0
+At t=0.9:  near data,   velocity = x1 - x0</div>
+
+  <h3>What t changes is the difficulty, not the target</h3>
+  <div class="diagram">
+t≈0:  model sees mostly noise      → predict velocity (hard!)
+t≈0.5: model sees half noise/data  → predict velocity (medium)
+t≈1:  model sees mostly clean data → predict velocity (easy)
+
+Same target every time. Different input difficulty.</div>
+
+  <div class="callout warn">
+    <p><b>Each (noise, data) pair has its own velocity.</b> <code>x1 - x0</code> differs for every pair.
+    The model learns a function: given any blurry input at any t, predict the right velocity
+    for that particular trajectory.</p>
+  </div>
+</section>
+
+<!-- ====== HOW DOES IT KNOW 1 vs 9 ====== -->
+<section class="panel">
+  <h2>How Does It Know If Noise Becomes a 1 or a 9?</h2>
+  <p>It doesn't decide. Nobody decides — not even the model. <b>The digit emerges.</b></p>
+  <p>The model just says "given this input at this timestep, nudge pixels this direction."
+  Purely local, one step at a time, no planning.</p>
+  <div class="diagram">
+Step 0:  sees noise.           No idea it'll be a 9.
+Step 10: sees vague blob.      Still no idea.
+Step 25: sees round thing with tail. Starting to commit.
+Step 40: clearly a 9.          Just refining.
+Step 50: done.</div>
+  <p>Like a ball rolling downhill. The ball doesn't "know" where it ends up.
+  The landscape (velocity field) determines the path.
+  The starting position (noise) determines which valley.</p>
+  <div class="callout">
+    <p>Same noise + same model = <b>exact same digit</b> every time.
+    The outcome is determined the moment you pick the noise.
+    It is what it is.</p>
+  </div>
+</section>
+
+<!-- ====== WHY GENERATIVE ====== -->
+<section class="panel">
+  <h2>Why Is This Generative?</h2>
+  <p>At inference there's no ground truth. You get a random starting point and the learned roadmap
+  leads you somewhere that makes sense — but the output may not exist in any training data.</p>
+  <p>The model never memorized specific digits. It learned the velocity field — the general structure
+  of "how to get from noise to digit-like things." New noise follows the learned roads and arrives
+  at a plausible digit that never existed before.</p>
+  <div class="callout ok">
+    <p><b>The wisdom analogy:</b> Training data = thousands of lived experiences.
+    Velocity field = distilled wisdom — not any specific life, but the patterns.
+    Noise = a new person born into unique circumstances.
+    Output = their life — shaped by the wisdom, but entirely their own.
+    History doesn't repeat itself, but it rhymes.
+    That's literally what a generative model does.</p>
+  </div>
+</section>
+
+<!-- ====== TRAINING vs INFERENCE ====== -->
+<section class="panel">
+  <h2>Training vs Inference</h2>
+  <table>
+    <tr><th></th><th>Training</th><th>Inference</th></tr>
+    <tr><td>x1 (data)</td><td>Given from dataset</td><td>Unknown — generating it</td></tr>
+    <tr><td>t</td><td>One random snapshot</td><td>Sequential walk 0→1</td></tr>
+    <tr><td>Steps</td><td><b>Zero</b> — one forward pass</td><td><b>N steps</b> — Euler integration</td></tr>
+    <tr><td>Model does</td><td>Predict velocity → MSE loss</td><td>Predict velocity → take step → repeat</td></tr>
+  </table>
+<pre>
+<span class="c"># Inference: NOW we loop (only here, never during training)</span>
+<span class="v">x</span> = torch.randn(<span class="v">n</span>, <span class="n">1</span>, <span class="n">28</span>, <span class="n">28</span>)
+<span class="k">for</span> <span class="v">i</span> <span class="k">in</span> range(<span class="v">steps</span>):
+    <span class="v">t</span> = torch.full((<span class="v">n</span>,), <span class="v">i</span> / <span class="v">steps</span>)
+    <span class="v">x</span> = <span class="v">x</span> + <span class="fn">model</span>(<span class="v">x</span>, <span class="v">t</span>) * (<span class="n">1</span> / <span class="v">steps</span>)
+</pre>
+</section>
+
+<!-- ====== DDPM vs FM ====== -->
+<section class="panel">
+  <h2>Flow Matching vs Diffusion (DDPM)</h2>
+  <table>
+    <tr><th></th><th>DDPM</th><th>Flow Matching</th></tr>
+    <tr><td>Predicts</td><td>"What noise is here?"</td><td>"Which direction to move?"</td></tr>
+    <tr><td>Target</td><td>Noise ε</td><td>Velocity x1 - x0</td></tr>
+    <tr><td>Path</td><td>Curved (noise schedule)</td><td>Straight line</td></tr>
+    <tr><td>Steps</td><td>20-1000</td><td>10-50</td></tr>
+  </table>
+  <div class="diagram">
+DDPM:  x_T (noise) ←←← remove noise step by step ←←← x_0 (data)
+Flow:  x_0 (noise) ——→——→ follow velocity field ——→——→ x_1 (data)</div>
+</section>
+
+<!-- ====== CONDITIONING ====== -->
+<section class="panel">
+  <h2>What Makes It Useful: Conditioning</h2>
+  <p>Our MNIST demo is the engine. Conditioning is the steering wheel:</p>
+  <div class="diagram">
+Unconditional:  model(x_t, t)            "go wherever noise takes you"
+Conditional:    model(x_t, t, label=9)   "go toward a 9 specifically"</div>
+  <table>
+    <tr><th>Domain</th><th>Condition</th><th>Examples</th></tr>
+    <tr><td>Image</td><td>Text prompt</td><td>Stable Diffusion, FLUX, DALL-E 3</td></tr>
+    <tr><td>Speech</td><td>Text + voice</td><td>F5-TTS, VoiceBox</td></tr>
+    <tr><td>Video</td><td>Text description</td><td>HunyuanVideo</td></tr>
+    <tr><td>Music</td><td>"jazz, 120 BPM"</td><td>Stable Audio</td></tr>
+  </table>
+</section>
+
+<!-- ====== REAL RUN ====== -->
+<section class="panel">
+  <h2>Real Training Run: MNIST on B200</h2>
+  <p>60K images, 3.6M param U-Net, 100 epochs, single p6 B200 node.</p>
+  <table class="loss-table">
+    <tr><th>Epoch</th><th>Loss</th><th>What you see</th></tr>
+    <tr><td>1</td><td>0.3714</td><td>Noise</td></tr>
+    <tr><td>10</td><td>0.1884</td><td>Blurry blobs</td></tr>
+    <tr><td>30</td><td>0.1755</td><td>Clean digits</td></tr>
+    <tr><td>100</td><td>0.1688</td><td>Crystal clear</td></tr>
+  </table>
+  <div class="callout ok">
+    <p>Loss plateaus by epoch 30-40. Visual quality converges faster than loss —
+    the last 0.01 MSE is sub-pixel refinement you can barely see.</p>
+  </div>
+</section>
+
+<!-- ====== PRACTICAL NOTES ====== -->
+<section class="panel">
+  <h2>Practical Notes (MNIST)</h2>
+  <ul>
+    <li><b>Air-gapped nodes:</b> <code>kubectl cp</code> data to pod. No torchvision on Megatron containers — load MNIST from raw <code>.gz</code>.</li>
+    <li><b>GroupNorm:</b> <code>GroupNorm(8, 3)</code> fails. Fix: <code>GroupNorm(min(8, in_ch), in_ch)</code>.</li>
+    <li><b>Jupyter:</b> Remove <code>argparse</code> — Jupyter passes its own args. Call <code>main()</code> directly.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<!--              PART 2: SINE WAVE FROM SCRATCH                  -->
+<!-- ============================================================ -->
+
+<h2 style="margin-top:48px;padding-top:24px;border-top:1px solid var(--code-border)">
+  Part 2: Build It Yourself — Sine Wave Flow Matching</h2>
+<p style="color:var(--muted)">MNIST was "run someone else's code." This part is "build it from scratch, break it, debug it,
+understand why." Every mistake here taught something real.</p>
+
+<!-- ====== SINE: THE SETUP ====== -->
+<section class="panel">
+  <h2>The Setup</h2>
+  <p>Goal: train flow matching to generate 64-point chunks of a sine wave. Simplest possible 1D signal.
+  No images, no U-Net — just an MLP, a sine function, and the same 5-line algorithm.</p>
+<pre>
+<span class="v">seq_len</span> = <span class="n">64</span>
+<span class="k">def</span> <span class="fn">data_gen</span>(bs=<span class="n">32</span>):
+    x = torch.linspace(<span class="n">0</span>, <span class="n">2</span> * math.pi, <span class="n">200</span>)
+    starts = torch.randint(<span class="n">0</span>, <span class="n">200</span> - seq_len, (bs,))
+    <span class="k">return</span> torch.stack([torch.sin(x[s:s+seq_len]) <span class="k">for</span> s <span class="k">in</span> starts])  <span class="c"># [32, 64]</span>
+</pre>
+  <p>Each sample is a 64-dim vector — a chunk of sine wave at a random phase. The model should learn
+  to generate smooth sinusoidal curves from noise.</p>
+</section>
+
+<!-- ====== SINE: FEEDING TWO INPUTS TO MLP ====== -->
+<section class="panel">
+  <h2>How to Feed (x_t, t) Into an MLP</h2>
+  <p>Flow matching needs both x_t and t as input. An MLP only takes one tensor. Solution: <b>concatenate</b>.</p>
+<pre>
+<span class="c"># x_t: [B, 64]   t: [B, 1]</span>
+<span class="v">inp</span> = torch.cat([<span class="v">x_t</span>, <span class="v">t</span>], dim=-<span class="n">1</span>)   <span class="c"># [B, 65]</span>
+
+<span class="c"># So fc1 must accept 65, not 64:</span>
+self.fc1 = nn.Linear(data_dim + <span class="n">1</span>, hidden)  <span class="c"># +1 for t</span>
+</pre>
+  <div class="callout warn">
+    <p><b>Why does the model need t at all?</b> Because the same x_t can mean different things at different t.
+    A blurry image at t=0.95 means "almost done, nudge gently." The same blur at t=0.05 means
+    "long way to go, push hard." Without t, the model can't tell where it is on the road.</p>
+  </div>
+</section>
+
+<!-- ====== SINE: PYTORCH GOTCHAS ====== -->
+<section class="panel">
+  <h2>PyTorch Syntax Gotchas I Hit</h2>
+
+  <h3>1. F.relu() vs nn.ReLU()</h3>
+<pre>
+<span class="c"># WRONG — F.relu is a function, can't call it in __init__</span>
+self.act = F.relu()   <span class="c"># TypeError!</span>
+
+<span class="c"># RIGHT — use it directly in forward</span>
+<span class="k">return</span> self.fc2(<span class="fn">F.relu</span>(self.fc1(x)))
+
+<span class="c"># OR store as module</span>
+self.act = nn.ReLU()  <span class="c"># this is a module, OK in __init__</span>
+</pre>
+
+  <h3>2. torch.cat dimension mismatch</h3>
+<pre>
+<span class="c"># WRONG — [128] and [128, 64] can't cat</span>
+t = torch.rand(<span class="n">128</span>)                     <span class="c"># shape [128]</span>
+torch.cat([x, t], dim=-<span class="n">1</span>)               <span class="c"># Error!</span>
+
+<span class="c"># RIGHT — make t 2D first</span>
+t = torch.rand(<span class="n">128</span>).unsqueeze(-<span class="n">1</span>)       <span class="c"># shape [128, 1]</span>
+torch.cat([x, t], dim=-<span class="n">1</span>)               <span class="c"># [128, 65] ✓</span>
+</pre>
+
+  <h3>3. Forgetting dim=-1 in torch.cat</h3>
+<pre>
+<span class="c"># Default is dim=0 — concatenates along BATCH, not features</span>
+torch.cat([a, b])        <span class="c"># stacks batches: [256, 64] — wrong!</span>
+torch.cat([a, b], dim=-<span class="n">1</span>) <span class="c"># appends features: [128, 65] — right!</span>
+</pre>
+
+  <h3>4. unsqueeze options</h3>
+<pre>
+t = torch.rand(<span class="n">128</span>)       <span class="c"># [128]</span>
+t.unsqueeze(-<span class="n">1</span>)            <span class="c"># [128, 1] ← want this</span>
+t.unsqueeze(<span class="n">0</span>)             <span class="c"># [1, 128] ← wrong dim</span>
+t[:, None]                 <span class="c"># [128, 1] ← shorthand, same thing</span>
+t.view(-<span class="n">1</span>, <span class="n">1</span>)             <span class="c"># [128, 1] ← also works</span>
+</pre>
+
+  <h3>5. loss.item() not loss.value</h3>
+<pre>
+<span class="c"># WRONG</span>
+<span class="fn">print</span>(loss.value)    <span class="c"># AttributeError: 'Tensor' has no attribute 'value'</span>
+
+<span class="c"># RIGHT</span>
+<span class="fn">print</span>(loss.item())   <span class="c"># extracts Python float from scalar tensor</span>
+</pre>
+
+  <h3>6. fan_in must match the cat'd dimension</h3>
+<pre>
+<span class="c"># After cat([x_t, t], dim=-1), last dim = data_dim + 1</span>
+<span class="c"># fc1's in_features MUST equal data_dim + 1</span>
+self.fc1 = nn.Linear(data_dim + <span class="n">1</span>, hidden)  <span class="c"># not data_dim!</span>
+</pre>
+</section>
+
+<!-- ====== SINE: DATA BUG ====== -->
+<section class="panel">
+  <h2>Bug #1: Data Was Flat</h2>
+  <p>First attempt used <code>linspace(0, 2π, 10000)</code> — 10,000 points over one cycle.
+  Each 64-point chunk covered only 0.04 radians. That's a flat line.</p>
+  <div class="diagram">
+10000 points over 2π:  each chunk = 64/10000 × 2π = 0.04 rad ≈ flat line
+ 200 points over 2π:  each chunk = 64/200  × 2π = 2.0 rad  ≈ 1/3 of wave ✓</div>
+  <p>The model learned perfectly — it generated perfect flat lines. Garbage in, garbage out.
+  <b>Always visualize your training data before blaming the model.</b></p>
+</section>
+
+<!-- ====== SINE: LOSS FLOOR ====== -->
+<section class="panel">
+  <h2>Bug #2: Loss Won't Go to Zero</h2>
+  <p>Loss plateaued around 0.3. Felt wrong — sine is simple, shouldn't the model nail it?</p>
+  <p><b>No.</b> Even a perfect model has nonzero MSE. The target <code>x1 - x0</code> depends on random noise x0.
+  For the same x_t and t, many different (x0, x1) pairs could have produced it.
+  The model can only predict the <b>average</b> velocity. The variance around that average is irreducible.</p>
+  <div class="callout">
+    <p><b>Lesson:</b> Don't judge flow matching by loss value. Judge by generated samples.
+    Loss ~0.3 with beautiful sine waves = success.</p>
+  </div>
+</section>
+
+<!-- ====== SINE: MLP vs CONV ====== -->
+<section class="panel">
+  <h2>The Big Lesson: Architecture Is Everything</h2>
+  <p>Same flow matching, same data, same training. Only the model changed:</p>
+
+  <h3>MLP (4 layers, SiLU, 50K steps)</h3>
+  <p>Jagged, noisy, vaguely downward-trending. Learned the value range [-1, 1] but not the smoothness.
+  MLP treats each of the 64 dimensions independently — it doesn't know position 30 is next to 31.</p>
+
+  <h3>Conv1d (3 layers, kernel=7, 50K steps)</h3>
+  <p>Smooth sinusoidal curves at different phases. Learned the actual wave shape.
+  Conv1d with kernel=7 means each output looks at 7 neighbors — local smoothness is built in.</p>
+
+<pre>
+<span class="k">class</span> <span class="fn">ConvVelocity</span>(nn.Module):
+    <span class="k">def</span> <span class="fn">__init__</span>(self, hidden=<span class="n">128</span>):
+        <span class="fn">super</span>().__init__()
+        self.t_mlp = nn.Sequential(nn.Linear(<span class="n">1</span>, hidden), nn.SiLU(), nn.Linear(hidden, hidden))
+        self.conv1 = nn.Conv1d(<span class="n">1</span>, hidden, <span class="n">7</span>, padding=<span class="n">3</span>)
+        self.conv2 = nn.Conv1d(hidden, hidden, <span class="n">7</span>, padding=<span class="n">3</span>)
+        self.conv3 = nn.Conv1d(hidden, <span class="n">1</span>, <span class="n">7</span>, padding=<span class="n">3</span>)
+
+    <span class="k">def</span> <span class="fn">forward</span>(self, x, t):
+        t_emb = self.t_mlp(t)              <span class="c"># [B, hidden]</span>
+        h = x.unsqueeze(<span class="n">1</span>)                  <span class="c"># [B, 1, 64]</span>
+        h = F.silu(self.conv1(h))           <span class="c"># [B, hidden, 64]</span>
+        h = h + t_emb.unsqueeze(-<span class="n">1</span>)         <span class="c"># inject t into every position</span>
+        h = F.silu(self.conv2(h))           <span class="c"># [B, hidden, 64]</span>
+        h = self.conv3(h)                   <span class="c"># [B, 1, 64]</span>
+        <span class="k">return</span> h.squeeze(<span class="n">1</span>)                 <span class="c"># [B, 64]</span>
+</pre>
+
+  <div class="callout ok">
+    <p><b>The framework is 5 lines. The architecture is everything.</b>
+    This is exactly why real systems use U-Nets, DiTs, and attention — not because flow matching
+    requires it, but because the generated output quality depends entirely on the model's
+    inductive bias. Flow matching doesn't care what's inside <code>model()</code>.</p>
+  </div>
+</section>
+
+<!-- ====== PRACTICAL NOTES SINE ====== -->
+<section class="panel">
+  <h2>Practical Notes (Sine Wave)</h2>
+  <ul>
+    <li><b>Visualize training data first.</b> If your 64-point chunks look flat, the model will generate flat lines perfectly.</li>
+    <li><b>ReLU → SiLU</b> for smooth data. ReLU produces jagged outputs. SiLU is smooth and works better for continuous signals.</li>
+    <li><b>2-layer MLP is too shallow</b> for 64-dim data. 3-4 layers minimum.</li>
+    <li><b>lr=1e-3</b> with Adam worked well. 1e-4 was too slow for 10K iterations.</li>
+    <li><b>50K iterations</b> needed for MLP to show any structure. Conv1d looked good by 10K.</li>
+  </ul>
+</section>
+
+<!-- ====== NEXT ====== -->
+<section class="panel">
+  <h2>What to Try Next</h2>
+  <ul>
+    <li><b>Class-conditional</b> — feed digit label, choose the output digit</li>
+    <li><b>Replace U-Net with DiT</b> — transformer + AdaLN, what real systems use</li>
+    <li><b>Speech:</b> <a href="https://github.com/SWivid/F5-TTS">F5-TTS</a> — one p6 node is enough for a conference paper</li>
+    <li><b>Theory:</b> <a href="https://arxiv.org/abs/2412.06264">Flow Matching Guide</a> (Lipman et al.)</li>
+  </ul>
+  <div class="callout ok">
+    <p><b>The 5 training lines and 4 sampling lines stay identical at any scale.</b>
+    All complexity lives in the model architecture and conditioning.
+    You understand the engine. Everything else is engineering.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<h2>Golden 1 Min</h2>
+<!-- ============================================================ -->
+
+<section class="panel">
+<p>Flow matching is just five lines of training code:</p>
+<pre>
+<span class="v">x0</span>     = torch.randn_like(<span class="v">x1</span>)              <span class="c"># pure noise</span>
+<span class="v">target</span> = <span class="v">x1</span> - <span class="v">x0</span>                           <span class="c"># ground truth velocity</span>
+<span class="v">t</span>      = torch.rand(<span class="v">bs</span>)                    <span class="c"># random snapshot in [0, 1]</span>
+<span class="v">x_t</span>    = (<span class="n">1</span> - <span class="v">t</span>) * <span class="v">x0</span> + <span class="v">t</span> * <span class="v">x1</span>            <span class="c"># linear interpolation</span>
+<span class="v">loss</span>   = F.mse_loss(<span class="fn">model</span>(<span class="v">x_t</span>, <span class="v">t</span>), <span class="v">target</span>)  <span class="c"># predict velocity from any snapshot</span>
+</pre>
+
+<p>You're learning a model to predict the velocity field that approximates the ground truth velocity, which is x1 minus x0. x0 is the noise, x1 is the destination. Assume the shortest path &mdash; the velocity gives you the direction and how fast to move there. During training, at any arbitrary snapshot, the model learns to predict the move that gets you to the North Star.</p>
+
+<p>For flow matching, training and inference behave differently. During training, there's no concept of steps &mdash; it just learns to predict the velocity from any arbitrary snapshot. But during inference, you specify a number of steps first, then use iterative Euler steps to integrate the velocity the model gives you at each step. You always start from pure noise with a predefined number of steps. If the model is well trained, it gives you the velocity to move toward the real data, one step at a time.</p>
+
+<pre>
+<span class="c"># Inference: Euler integration</span>
+<span class="v">x</span> = torch.randn(<span class="v">B</span>, <span class="v">D</span>)
+<span class="v">n_step</span> = <span class="n">20</span>
+<span class="v">dt</span> = <span class="n">1.0</span> / <span class="v">n_step</span>
+<span class="k">for</span> <span class="v">i</span> <span class="k">in</span> range(<span class="v">n_step</span>):
+    <span class="v">t</span> = torch.full((<span class="v">B</span>, <span class="n">1</span>), <span class="v">i</span> * <span class="v">dt</span>)
+    <span class="v">v</span> = <span class="fn">model</span>(<span class="v">x</span>, <span class="v">t</span>)
+    <span class="v">x</span> += <span class="v">dt</span> * <span class="v">v</span>
+</pre>
+</section>
+
+<div class="footer">Flow Matching — Hands-On &middot; p6 B200 + Jupyter &middot; March 2026</div>
+</div>
+</body>
+</html>

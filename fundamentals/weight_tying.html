@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Frontier Note — Weight Tying in Modern LLMs</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+  header h1{margin:0;font-size:clamp(22px,3.2vw,34px);letter-spacing:.2px}
+  header .tag{
+    background:linear-gradient(90deg,#5a6cff,#9ab3ff);
+    color:#0f1220;
+    padding:6px 14px;
+    border:none;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:0.4px;
+    box-shadow:0 2px 6px rgba(124,156,255,0.4);
+  }
+  h2{margin-top:40px;font-size:22px;color:var(--accent)}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);
+    padding:16px;border-radius:8px;overflow-x:auto;font-size:14px;line-height:1.5}
+  code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+  table{width:100%;border-collapse:collapse;margin-top:14px;font-size:15px}
+  th,td{padding:10px 12px;border-bottom:1px solid #252a45;text-align:left}
+  th{color:var(--accent)}
+  footer{
+    margin-top:48px;padding-top:20px;border-top:1px solid #262b4a;
+    color:#c7cbf9;font-size:15px;line-height:1.7;text-align:center;
+    letter-spacing:0.2px;opacity:0.9;
+  }
+  footer strong{color:var(--accent);font-weight:600}
+</style>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Frontier Note — Weight Tying in Modern LLMs</h1>
+  <span class="tag">Model Architecture Insight</span>
+</header>
+
+<h2>1️⃣ What is Weight Tying?</h2>
+<p><strong>Definition:</strong> reuse the same parameter matrix for input embeddings and output projection head.</p>
+<pre><code>\( W_{lm} = W_{embed} \)
+logits = H @ W_{lm}^T</code></pre>
+<p>This reduces parameters and can slightly improve convergence and regularization (Press & Wolf, 2017).</p>
+
+<h2>2️⃣ My Qwen3 Inspection</h2>
+<table>
+<tr><th>Tensor</th><th>Shape</th><th>Dtype</th><th>Std</th><th>Mean Abs Diff</th><th>Status</th></tr>
+<tr><td><code>model.embed_tokens.weight</code></td><td>[151,936 × 2,048]</td><td>bf16</td><td>≈0.026</td><td rowspan="2">0.02443</td><td rowspan="2" style="color:var(--bad)"><strong>Untied</strong></td></tr>
+<tr><td><code>lm_head.weight</code></td><td>[151,936 × 2,048]</td><td>bf16</td><td>≈0.026</td></tr>
+</table>
+<p>Both matrices exist independently and differ by ~0.024 on average → no shared memory or identical initialization. Thus, <strong>weight tying is disabled</strong>.</p>
+
+<h2>3️⃣ Modern Landscape</h2>
+<table>
+<tr><th>Model Family</th><th>Weight Tying</th><th>Comment</th></tr>
+<tr><td>GPT‑2 / OPT / Falcon</td><td style="color:var(--ok)">Yes</td><td>Classic dense decoders; saves ~5‑10% params.</td></tr>
+<tr><td>LLaMA‑2/3 / Qwen‑2/3 / DeepSeek‑v3 / Mixtral</td><td style="color:var(--bad)">No</td><td>Untied for sharding & head specialization.</td></tr>
+<tr><td>Multimodal (Gemma‑2, Gemini, Claude, GPT‑4‑class)</td><td style="color:var(--bad)">No</td><td>Multiple heads → tying impractical.</td></tr>
+</table>
+
+<h2>4️⃣ Verify & Tie Programmatically</h2>
+<pre><code class="language-python"># Verify tying
+same_ptr = model.model.embed_tokens.weight.data_ptr() == model.lm_head.weight.data_ptr()
+print("Tied:", same_ptr)
+
+# Post-hoc tie for finetune
+model.lm_head.weight = model.model.embed_tokens.weight
+model.save_pretrained("./tied_checkpoint")</code></pre>
+
+<h2>5️⃣ Key Takeaway</h2>
+<p>Weight tying started as a best‑practice in 2017 RNN/Transformer models. However, most <strong>frontier‑scale LLMs today disable it</strong> due to MoE, multimodal routing, or distributed‑training constraints. For Qwen3‑Next‑80B‑A3B, both matrices are untied.</p>
+
+<footer>
+  © 2025 Kai Zhen · Frontier Architecture Digest · Weight Tying Analysis
+</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PyTorch Drill — K-Means Clustering (Lloyd's Algorithm)</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:36px 0 10px;font-size:22px;border-bottom:2px solid var(--code-border);padding-bottom:8px}
+  h3{margin:24px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  pre code{background:none;padding:0}
+  .k{color:#c792ea} .fn{color:#82aaff} .s{color:#c3e88d} .c{color:#6b708c} .n{color:#f78c6c} .v{color:#ffcb6b}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  .prompt{background:#1a1a2e;border:2px solid var(--accent);border-radius:14px;padding:20px;margin:16px 0}
+  .prompt-label{color:var(--accent);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+  .prompt-text{font-size:16px;line-height:1.6}
+  .timer{display:inline-block;background:var(--warn);color:#000;font-weight:700;font-size:12px;padding:2px 8px;border-radius:999px;margin-left:8px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>K-Means Clustering (Lloyd's Algorithm)</h1>
+  <span class="badge">PyTorch Drill</span>
+  <span class="badge">~10 min</span>
+</header>
+
+<!-- ============================================================ -->
+<h2>The Algorithm in 30 Seconds</h2>
+<!-- ============================================================ -->
+
+<div class="panel">
+<p>K-means is Lloyd's algorithm: two steps, iterated. That's it.</p>
+<ul>
+  <li><b>Init:</b> Generate N data points in 2D. Pick K prototypes by randomly sampling from the data.</li>
+  <li><b>Step 1 — Assign (O(NK)):</b> For each data point, compute distance to all K prototypes. Take argmin. No sorting &mdash; just one pass over K per point.</li>
+  <li><b>Step 2 — Update (O(N)):</b> For each prototype, recompute its coordinates as the mean of its assigned points. Each point belongs to exactly one cluster, so total work is O(N).</li>
+  <li><b>Iterate</b> 10&ndash;20 times. Total: O(NKI) &mdash; all linear factors.</li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2>Setup</h2>
+<!-- ============================================================ -->
+
+<pre><code>import torch
+
+N = 1000
+K = 8
+data = torch.randn(N, 2)                    <span class="c"># N random 2D points</span>
+prototypes = data[torch.randint(0, N, (K,))] <span class="c"># K randomly sampled from data</span></code></pre>
+
+<div class="callout">
+  <b>Why sample from data?</b> Guarantees each prototype starts near actual data. <code>randperm(N)[:K]</code> avoids duplicates but <code>randint</code> is fine for a drill.
+</div>
+
+<!-- ============================================================ -->
+<h2>Broadcasting Rule (the shared foundation)</h2>
+<!-- ============================================================ -->
+
+<div class="panel">
+<p>Both assign and update rely on broadcasting. One rule:</p>
+<p><b>Compare dims right to left. Each pair must be equal or one must be 1.</b></p>
+<p>Missing dims on the left are auto-padded as 1. Missing dims on the right are <b>not</b> &mdash; you must <code>unsqueeze</code> explicitly.</p>
+<pre><code><span class="c"># Auto-pads left — works:</span>
+(4, 3) + (3,)             <span class="c"># (3,) -> (1,3) -> broadcasts to (4,3)</span>
+
+<span class="c"># Must unsqueeze right — won't auto-pad:</span>
+(K, 2) / (K,)             <span class="c"># FAILS — rightmost 2 vs K, no match</span>
+(K, 2) / (K, 1)           <span class="c"># OK    — unsqueeze(1) fixes it</span></code></pre>
+</div>
+
+<!-- ============================================================ -->
+<h2>Core Loop</h2>
+<!-- ============================================================ -->
+
+<div class="prompt">
+<div class="prompt-label">Prompt <span class="timer">10 min</span></div>
+<div class="prompt-text">
+Implement the full K-means loop from scratch using only <code>torch</code> ops.<br>
+&bull; Broadcasting for pairwise distance &mdash; no Python loops over N<br>
+&bull; No <code>sklearn</code>, no <code>torch.cdist</code>
+</div>
+</div>
+
+<h3>Step 1 &mdash; Assign (O(NK))</h3>
+
+<pre><code><span class="c"># Broadcasting: (N,1,2) - (1,K,2) -> (N,K,2)</span>
+diff = data.unsqueeze(1) - prototypes.unsqueeze(0)
+dist = (diff ** 2).sum(dim=-1)       <span class="c"># (N, K) — no keepdim, not broadcasting back</span>
+assign = dist.argmin(dim=1)          <span class="c"># (N,)</span></code></pre>
+
+<h3>Step 2 &mdash; Update (O(N))</h3>
+
+<p><b>Approach A — Boolean mask</b> (simpler, uses a for-loop over K):</p>
+
+<pre><code>for j in range(K):
+    prototypes[j] = data[assign == j].mean(dim=0)</code></pre>
+
+<p><b>Approach B — One-hot matmul</b> (fully vectorized). The one-hot matrix is the grouping mechanism: matmul does in-group sum in one shot, then divide by group size.</p>
+
+<pre><code>one_hot = torch.zeros(N, K)
+one_hot[torch.arange(N), assign] = 1.0   <span class="c"># (N, K) — row i, col assign[i] = 1</span>
+
+sums   = one_hot.T @ data                <span class="c"># (K,N) @ (N,2) -> (K,2) in-group sum</span>
+counts = one_hot.sum(dim=0)              <span class="c"># (K,)</span>
+prototypes = sums / counts.unsqueeze(1)  <span class="c"># (K,2) / (K,1) — unsqueeze needed on right</span></code></pre>
+
+<!-- ============================================================ -->
+<h2>Concepts Tested</h2>
+<!-- ============================================================ -->
+
+<table>
+  <tr><th>#</th><th>Concept</th><th>Where</th></tr>
+  <tr><td>1</td><td>Broadcasting &mdash; compare right to left, equal or 1, auto-pad left only</td><td>Pairwise distance + counts division</td></tr>
+  <tr><td>2</td><td>Advanced indexing &mdash; <code>tensor[arange, indices]</code></td><td>One-hot construction</td></tr>
+  <tr><td>3</td><td>Matmul as grouped aggregation &mdash; "multiply to select, sum to aggregate"</td><td>Update step (Approach B)</td></tr>
+  <tr><td>4</td><td>keepdim / unsqueeze intuition &mdash; need it when broadcasting back, don't when reducing to final</td><td><code>counts.unsqueeze(1)</code> vs <code>.sum(dim=-1)</code></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>Complexity</h2>
+<!-- ============================================================ -->
+
+<table>
+  <tr><th>Step</th><th>Cost</th><th>Why</th></tr>
+  <tr><td>Assign</td><td>O(NK)</td><td>N points &times; K distances, then argmin over K</td></tr>
+  <tr><td>Update</td><td>O(N)</td><td>Each point visited once across all K clusters</td></tr>
+  <tr><td>Total</td><td>O(NKI)</td><td>I iterations, typically 10&ndash;20</td></tr>
+</table>
+
+<div class="callout ok"><b>This is a 10-minute problem. Don't overthink it.</b> Generate data, sample prototypes, broadcast for distances, argmin for assignment, mean for update. Done.</div>
+
+<!-- ============================================================ -->
+<h2>Golden 1 Min</h2>
+<!-- ============================================================ -->
+
+<div class="panel">
+<p>The reason you'd be tested on implementing K-means in PyTorch is twofold. First, they want to test whether you understand vectorization, which is the whole point of using PyTorch. Instead of writing for loops over indices, you should think dimension-wise.</p>
+
+<p>Second, they want to test your understanding of this classic machine learning algorithm. You should know it's Lloyd's algorithm &mdash; it's iterative, and each iteration has two steps: assign and update. The complexity is mostly from the assign step, which is O(NK). The update step is just O(N).</p>
+
+<p>For the implementation, first you generate the data &mdash; say, 100,000 samples in 2D for easy visualization. The initial prototypes can be randomly selected from the dataset. Say you want K equals 8 &mdash; you just randomly pick 8 data points from your 1,000 samples.</p>
+
+<p>Then you loop over, say, 20 iterations. First you compute the pairwise distance between every data point and every prototype. This is where broadcasting comes in &mdash; you need to expand the dimensions to comply with broadcasting rules to get pairwise distances. You end up with a 3D tensor for 2D data, then reduce along the last dimension to get scalar distances.</p>
+
+<p>Then you argmin over the prototype dimension. Each data point has 8 distances, one per prototype, and you take the argmin to find the closest one.</p>
+
+<p>After that comes the update step. You loop over each of the K clusters, gather all the data points assigned to that prototype, and take the mean along dimension zero to get the new prototype location.</p>
+</div>
+
+<div class="footer">PyTorch K-Means Drill &middot; March 2026</div>
+
+</div>
+</body>
+</html>

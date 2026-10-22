@@ -1,0 +1,7 @@
+@article{zhen2020psychoacoustic,
+  title={Psychoacoustic Calibration of Loss Functions for Efficient End-to-End Neural Audio Coding},
+  author={Zhen, Kai and Lee, Mi Suk and Sung, Jongmo and Beack, Seungkwon and Kim, Minje},
+  journal={IEEE Signal Processing Letters},
+  year={2020},
+  publisher={IEEE}
+}

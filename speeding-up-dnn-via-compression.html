@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="assets/css/fibonacci.css">
+	<link rel="stylesheet"
+	      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+</head>
+<body>
+
+<header class="header">
+	<a href="index.html" class="logo">
+		back
+	</a>
+</header>
+
+	<style>
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 1px;
+}
+
+
+
+tr:nth-child(even) {
+  background-color: #1E1E1E;
+  opacity: 1;
+}
+ 
+
+</style>
+
+<main class="main post-detail">
+	<article>
+		<header>
+			<!--
+			<div class="author">
+				<img src="images/head.jpg" width="80"/>
+				<span>Kai Zhen</span>
+				<span class="role"></span>
+			</div>
+		-->
+
+			<h2>Techniques for DNN Inference Speedup</h2>
+			
+			<h1></h1>
+
+		</header>
+
+
+<h2>
+            <span class="post-meta">
+          Mar 21, 2021
+                  <span>
+              <a class="post-tag" href="/log/tag/edge-computing"><nobr>edge-computing</nobr>&nbsp;</a>
+              <a class="post-tag" href="/log/tag/network-compression"><nobr>network-compression</nobr>&nbsp;</a>
+          </span>
+        </span>
+</h2>
+		<blockquote>
+			It is common to leverage human perception of sound,
+or psychoacoustics, in conventional audio coding technology, to
+reduce the bitrate while preserving the perceptual quality in
+the decoded audio signals. When it comes to using deep neural
+networks for this compression task, however, the objective nature
+of the loss function tends to lead to a suboptimal sound quality
+as well as a high run-time complexity due to the large model
+size. In this work, we present psychoacoustic calibration schemes
+to re-define the loss functions of neural audio coding systems,
+so that the decoded signals are perceptually more similar to
+the original. Moreover, the proposed psychoacoustic optimization
+can also result in a more streamlined system. To this end, we
+derive novel loss functions from the empirically found global
+masking threshold. Experimental results show that the proposed
+psychoacoustic loss functions yield better performances than an
+ordinary autoencoding-based baseline codec, which has up to
+100% more parameters and consumes 36.5% more bits per
+second. The performance is comparable with the commercial
+MPEG-1 Audio Layer III codec in 112 kbps.
+		</blockquote>
+
+<ul class="table-of-content" id="markdown-toc">
+  <li><a href="#fine-grained-or-coarse-grained">Fine-grained or Coarse-grained?</a>
+  </li>
+</ul>
+
+		<h3 id="fine-grained-or-coarse-grained"> Fine-grained or Coarse-grained?</h3>
+
+
+		\[\alpha(x)=\begin{cases} 1 &amp; \text{ if } x\geq 0 \\ e^{\lambda\cdot x} &amp; \text{ otherwise} \end{cases}\]
+
+
+\[\mathbf{f}=\mathbb{f}+\mathcal{F} + \boldsymbol{F}+ \boldsymbol{f}\]
+$$\boldsymbol{a}\\\boldsymbol{b}$$
+		$$\mathcal{F}$$
+		\[\mathcal{F}\]
+
+
+
+\(\newcommand{\ba}{\boldsymbol{a}}
+\newcommand{\bb}{\boldsymbol{b}}
+\newcommand{\bc}{\boldsymbol{c}}
+\newcommand{\bd}{\boldsymbol{d}}
+\newcommand{\be}{\boldsymbol{e}}
+\newcommand{\bf}{\boldsymbol{f}}
+\newcommand{\bg}{\boldsymbol{g}}
+\newcommand{\bh}{\boldsymbol{h}}
+\newcommand{\bi}{\boldsymbol{i}}
+\newcommand{\bj}{\boldsymbol{j}}
+\newcommand{\bk}{\boldsymbol{k}}
+\newcommand{\bl}{\boldsymbol{l}}
+\newcommand{\bm}{\boldsymbol{m}}
+\newcommand{\bn}{\boldsymbol{n}}
+\newcommand{\bo}{\boldsymbol{o}}
+\newcommand{\bp}{\boldsymbol{p}}
+\newcommand{\bq}{\boldsymbol{q}}
+\newcommand{\br}{\boldsymbol{r}}
+\newcommand{\bs}{\boldsymbol{s}}
+\newcommand{\bt}{\boldsymbol{t}}
+\newcommand{\bu}{\boldsymbol{u}}
+\newcommand{\bv}{\boldsymbol{v}}
+\newcommand{\bw}{\boldsymbol{w}}
+\newcommand{\bx}{\boldsymbol{x}}
+\newcommand{\by}{\boldsymbol{y}}
+\newcommand{\bz}{\boldsymbol{z}}
+		\newcommand{\bA}{\boldsymbol{A}}
+\newcommand{\bB}{\boldsymbol{B}}
+\newcommand{\bC}{\boldsymbol{C}}
+\newcommand{\bD}{\boldsymbol{D}}
+\newcommand{\bE}{\boldsymbol{E}}
+\newcommand{\bF}{\boldsymbol{F}}
+\newcommand{\bG}{\boldsymbol{G}}
+\newcommand{\bH}{\boldsymbol{H}}
+\newcommand{\bI}{\boldsymbol{I}}
+\newcommand{\bJ}{\boldsymbol{J}}
+\newcommand{\bK}{\boldsymbol{K}}
+\newcommand{\bL}{\boldsymbol{L}}
+\newcommand{\bM}{\boldsymbol{M}}
+\newcommand{\bN}{\boldsymbol{N}}
+\newcommand{\bO}{\boldsymbol{O}}
+\newcommand{\bP}{\boldsymbol{P}}
+\newcommand{\bQ}{\boldsymbol{Q}}
+\newcommand{\bR}{\boldsymbol{R}}
+\newcommand{\bS}{\boldsymbol{S}}
+\newcommand{\bT}{\boldsymbol{T}}
+\newcommand{\bU}{\boldsymbol{U}}
+\newcommand{\bV}{\boldsymbol{V}}
+\newcommand{\bW}{\boldsymbol{W}}
+\newcommand{\bX}{\boldsymbol{X}}
+\newcommand{\bY}{\boldsymbol{Y}}
+\newcommand{\bZ}{\boldsymbol{Z}}
+\)
+
+		$$\ba\bB\bw$$
+
+
+<p>The major unfinished tasks are what make the research area still active. Among them,
+		<ul>
+		<li>to find a model agnostic pruning schedule that achieves both model accuracy and inference speedup is highly desired; </li>
+		<li>we also expect the sparse model to essentially lead to inference speedup: note that a 2x speed up is usually highly appreciated already.
+			For unstructured pruning, even a 10x pruning with no degradation is not impressive these days.</li>
+	</ul>
+		<p>Quite frankly, I do not adore the philosophy to simply rely on network compression for reducing the latency. That induces laziness. Problem specific simplications are more appealing.</p>
+
+</p>
+
+		<section class="related-posts">
+			<h3>References</h3>
+
+			<p>[15] Mishra et al. <a href="https://arxiv.org/pdf/2104.08378.pdf">"Accelerating Sparse Deep Neural Networks"</a> arXiv:2104.08378 (2021).</p>
+
+			<p>[15] Chen et al. <a href="https://ieeexplore.ieee.org/document/8763885">"Deep Learning With Edge Computing: A Review." </a> Proceedings of the IEEE 107.8 (2019): 1655-1674.</p>
+			<p>https://petewarden.com/2015/04/20/why-gemm-is-at-the-heart-of-deep-learning/</p>
+			<p></p>
+			<p></p>
+			<p></p>
+			<p></p>
+			<p></p>
+			<p></p>
+			<p></p>
+			<p></p>
+
+		</section>
+<hr>
+	</article>
+</main>
+
+<footer class="footer">
+	&copy; Tomorrow &middot; is another day.
+</footer>
+<script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>

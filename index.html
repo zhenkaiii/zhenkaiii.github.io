@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kai Zhen | Sr. Applied Scientist @ Amazon AGI</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #fafafa; color: #333; }
+    header, section, footer { padding: 2rem; }
+    header { background: #fff; border-bottom: 2px solid #eee; }
+    .container { display: flex; max-width: 1100px; margin: auto; gap: 2rem; }
+    .left { flex: 1; padding-right: 2rem; text-align: center; }
+    .left h1 { margin: 0; }
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .name-row {
+  display: flex;
+  align-items: center;   /* vertically center CV with name */
+  gap: 0.6rem;           /* spacing between name and CV */
+  justify-content: center;  /* or 'flex-start' if you want it aligned left */
+}
+    .social-icons img { vertical-align: middle; }
+    .right { flex: 3; }
+    .right p {
+      font-size: 1.0rem;   /* bump from default ~16px → ~17px */
+      line-height: 1.6;     /* more breathing room */
+    }
+    h2 { border-bottom: 2px solid #ddd; padding-bottom: 0.4rem; margin-top: 2rem; }
+    .news-item, .pub-item { margin-bottom: 1rem; }
+    .cv-button {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.15rem 0.5rem;
+      background: #990000;   /* Crimson */
+      color: #EEEDEB;        /* Cream */
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border-radius: 8px;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+    }
+    audio {
+  width: 100%;          /* full width of the column (or set to e.g. 250px for fixed size) */
+  max-width: 280px;     /* keeps it compact */
+  height: 30px;         /* reduces the tall bar */
+  margin: 0.rem 0;     /* spacing above and below */
+  border-radius: 8px;   /* rounded edges */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+    .cv-button:hover {
+      background: #7a0000;   /* Darker crimson for hover */
+      color: #fff;           /* White text on hover for contrast */
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+    footer { background: #222; color: #eee; text-align: center; padding: 1rem; }
+
+    /* Profile photo */
+    .rounded-corners {
+      width: 185px;
+      height: 278px;
+      border-radius: 24px;
+      object-fit: cover;
+      object-position: top center;
+      margin-top: 25px;
+      margin-right: 5px;  
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border: 2px solid #eee;
+    }
+
+    /* Three-column layout */
+    .columns { display: flex; gap: 2rem; max-width: 1100px; margin: auto; }
+    .column { flex: 1; min-width: 250px; }
+    
+    @media (max-width: 900px) {
+      .container, .columns { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <!-- Left column -->
+    <div class="left">
+      <div class="headright">
+        <img src="kaizhen_2026.png" alt="Kai Zhen" class="rounded-corners">
+      </div>
+      <h1>Kai Zhen</h1>
+      <div class="social-icons">
+        <a href="https://scholar.google.com/citations?user=biSonYMAAAAJ&hl=en&oi=ao">
+          <img src="google-scholar-icon.png" alt="Scholar" width="38"> Scholar
+        </a>
+        <a href="https://www.linkedin.com/in/kai-zhen-01b7b5103/">
+          <img src="linkedin-icon.png" alt="LinkedIn" width="38"> LinkedIn
+        </a>                
+        <a href="#cv-request" title="CV available upon request">
+          <img src="bcs-icon.png" alt="CV" width="58"> CV
+        </a>
+      </div>
+    </div>
+
+    <!-- Right column -->
+    <div class="right">
+      <p>I'm a Sr. Applied Scientist at Amazon AGI building efficient AI systems. During my Ph.D. at <a href="https://bloomington.iu.edu/index.html">Indiana University</a>, I focused on neural speech and audio coding, receiving the <a href="https://cogs.indiana.edu/news-events/awards-recipients/graduate-award-recipients.html">Outstanding Research Award in 2021</a> from the Cognitive Science Program at IU. This research has evolved into speech and audio tokenization techniques now used in multi-modal LLMs. At Amazon Alexa, I was a key contributor to on-device ASR models, publishing and deploying advanced <a href="sub8bit-qat-elegant.html">sub-8-bit quantization-aware training</a> and 2:4 sparsity-aware finetuning for low-footprint, low-latency inference. This work echoes my Ph.D. studies: like compressing audio data, compressing models requires reducing bit depth and sample rate to leverage hierarchical GPU memory without sacrificing accuracy. Since Amazon's pivot to AGI, I've worked on LLM pre-training with distributed frameworks (NeMo/Megatron) and post-training inference optimization using TensorRT-LLM, where the same thematic paradigm of "robustness and efficiency" translates to better scaling capabilities. My recent work on LLM pruning (Wanda++) in collaboration with <a href="https://www.ucsb.edu/">University of California, Santa Barbara</a> was <a href="https://www.amazon.science/blog/a-better-path-to-pruning-large-language-models">highlighted by Amazon Science</a>. I've published as first / second author at Interspeech, ICASSP, IEEE SLT, IEEE Signal Processing Letters, IEEE T-ASLP (speech/audio coding and software-hardware co-design for on-device ASR), and at ACL and EMNLP (LLM efficiency).</p>
+    </div>
+  </div>
+</header>
+
+<footer>
+  <p id="cv-request">CV available upon request: myfullname723@gmail.com</p>
+  <p>© 2026 Kai Zhen</p>
+  <script type="text/javascript" id="clustrmaps" src="//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=1&t=n&d=jGdG1k5xplNC_7uIAOKPmrstD74VXasxYxZ3i0GfUlk"></script>
+</footer>
+
+</body>
+</html>

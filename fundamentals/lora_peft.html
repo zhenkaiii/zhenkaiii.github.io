@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>LoRA / PEFT: Parameter-Efficient Fine-Tuning</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:14px;margin-bottom:24px;flex-wrap:wrap}
+  header h1{margin:0;font-size:clamp(22px,3.2vw,34px);letter-spacing:.2px}
+  header .tag{
+    background:linear-gradient(90deg,#5a6cff,#9ab3ff);
+    color:#0f1220;padding:6px 14px;border:none;border-radius:20px;
+    font-size:14px;font-weight:700;letter-spacing:0.4px;
+    box-shadow:0 2px 6px rgba(124,156,255,0.4);
+  }
+  h2{margin-top:40px;font-size:22px;color:var(--accent)}
+  h3{margin-top:24px;font-size:18px;color:var(--ok)}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);
+    padding:16px;border-radius:8px;overflow-x:auto;font-size:14px;line-height:1.5}
+  code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+  table{border-collapse:collapse;width:100%;margin:16px 0}
+  th,td{border:1px solid var(--code-border);padding:10px 14px;text-align:left;font-size:14px}
+  th{background:var(--panel);color:var(--accent);font-weight:600}
+  td{color:var(--ink)}
+  tr:nth-child(even) td{background:rgba(23,26,43,0.5)}
+  .paradigm{
+    background:var(--panel);border:1px solid var(--code-border);border-radius:10px;
+    padding:20px 24px;margin:16px 0;
+  }
+  .paradigm h3{margin-top:0;color:var(--warn)}
+  .note{color:var(--warn);font-style:italic}
+  footer{
+    margin-top:48px;padding-top:20px;border-top:1px solid #262b4a;
+    color:#c7cbf9;font-size:15px;line-height:1.7;text-align:center;
+    letter-spacing:0.2px;opacity:0.9;
+  }
+  footer strong{color:var(--accent);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>LoRA / PEFT</h1>
+  <span class="tag">Parameter-Efficient Fine-Tuning</span>
+</header>
+
+<h2>What LoRA actually does</h2>
+<p>A pre-trained weight matrix W has shape (d_out, d_in) &mdash; e.g. (4096, 4096) = 16.7M parameters for one layer. LoRA freezes W entirely and adds two small matrices:</p>
+<pre><code># Original forward pass:
+y = W @ x                        # W: (4096, 4096)  — 16.7M params, FROZEN
+
+# LoRA forward pass:
+y = W @ x + (B @ A) @ x          # A: (r, 4096), B: (4096, r)
+                                  # r = rank, typically 4-64
+                                  # Trainable params: 2 × r × 4096
+
+# Example with rank 8:
+#   A: (8, 4096)   = 32,768 params
+#   B: (4096, 8)   = 32,768 params
+#   Total: 65,536 params per layer  (vs 16.7M original = 0.4%)</code></pre>
+<p>The key insight: <strong>the weight update &Delta;W = B &times; A is constrained to be low-rank</strong>. This means LoRA can only make changes that lie in an r-dimensional subspace. For adaptation tasks (new speaker, new domain), this is usually enough &mdash; the "direction" of the change is simple even if the original model is huge.</p>
+
+<h2>Which layers get LoRA?</h2>
+<table>
+  <tr><th>Common choice</th><th>Layers adapted</th><th>Why</th></tr>
+  <tr><td>Attention only (most common)</td><td>W<sub>q</sub>, W<sub>v</sub> projections</td><td>These control "what to attend to" and "what to extract" &mdash; most task-specific</td></tr>
+  <tr><td>Attention + FFN</td><td>W<sub>q</sub>, W<sub>v</sub>, W<sub>up</sub>, W<sub>down</sub></td><td>More capacity, sometimes needed for larger domain shifts</td></tr>
+  <tr><td>All linear layers</td><td>Every nn.Linear</td><td>Maximum flexibility, but slower and more parameters</td></tr>
+</table>
+<p class="note">For TTS/ASR voice adaptation, attention-only (q, v) is usually sufficient. The model already knows how to speak &mdash; it just needs to learn a new voice identity, which is a low-rank change.</p>
+
+<h2>LoRA across the speech pipeline</h2>
+<table>
+  <tr><th>Model type</th><th>What LoRA adapts</th><th>Use case</th><th>Typical rank</th></tr>
+  <tr><td>TTS (VALL-E, CosyVoice)</td><td>Speaker voice identity</td><td>When zero-shot cloning isn't consistent enough (e.g., game protagonist with 10K lines)</td><td>8-32</td></tr>
+  <tr><td>TTS (F5-TTS)</td><td>Speaker or language</td><td>Adapt to a new language or accent not well-covered in training</td><td>8-64</td></tr>
+  <tr><td>ASR (Whisper)</td><td>Domain vocabulary, accent</td><td>Medical transcription, accented speech, noisy game audio</td><td>4-16</td></tr>
+  <tr><td>LLM (Qwen, LLaMA)</td><td>Task behavior, personality</td><td>NPC dialogue style, game-specific knowledge</td><td>8-64</td></tr>
+</table>
+
+<h2>LoRA vs full fine-tuning vs zero-shot</h2>
+<table>
+  <tr><th></th><th>Zero-shot</th><th>LoRA</th><th>Full fine-tune</th></tr>
+  <tr><td>Data needed</td><td>3-10 sec clip</td><td>5-30 min recordings</td><td>Hours of data</td></tr>
+  <tr><td>Trainable params</td><td>0</td><td>0.1-1% of model</td><td>100%</td></tr>
+  <tr><td>Training time</td><td>None</td><td>Minutes to hours</td><td>Hours to days</td></tr>
+  <tr><td>Voice consistency</td><td>May drift across utterances</td><td>Locked &mdash; very consistent</td><td>Locked</td></tr>
+  <tr><td>Risk of catastrophic forgetting</td><td>None</td><td>Very low (original weights frozen)</td><td>High without careful LR</td></tr>
+  <tr><td>Storage per speaker</td><td>~0 (just the reference clip)</td><td>~1-10 MB (adapter weights)</td><td>Full model copy</td></tr>
+</table>
+<p class="note">Zero-shot is "buy," LoRA is "customize," full fine-tune is "build from scratch." Most production use cases start with zero-shot and only move to LoRA when consistency requirements demand it.</p>
+
+<h2>Beyond LoRA: the PEFT family</h2>
+<table>
+  <tr><th>Method</th><th>How it works</th><th>When to use</th></tr>
+  <tr><td>LoRA</td><td>Low-rank additive update to weight matrices</td><td>Default choice. Works well almost everywhere.</td></tr>
+  <tr><td>QLoRA</td><td>LoRA on a 4-bit quantized base model</td><td>When GPU memory is tight (e.g., fine-tuning 7B+ models on a single GPU)</td></tr>
+  <tr><td>Adapter layers</td><td>Insert small bottleneck layers between existing layers</td><td>Older approach, largely superseded by LoRA</td></tr>
+  <tr><td>Prefix tuning</td><td>Prepend learnable "virtual tokens" to the input</td><td>When you can't modify model weights at all</td></tr>
+  <tr><td>Pruning + LoRA</td><td>Remove unimportant weights (Wanda/SparseGPT), then recover with LoRA</td><td>When you need both compression AND adaptation</td></tr>
+</table>
+
+<h2>Interview story: Pruning + LoRA recovery</h2>
+<div class="paradigm">
+<p><strong>Your experience:</strong> Wanda pruning on LLaMA-7B &rarr; 50% unstructured sparsity &rarr; performance drops &rarr; LoRA recovery (rank 8, q/v projections only, 0.06% of params) &rarr; recovered most of the original performance.</p>
+<p><strong>Why this matters for the role:</strong> Same principle applies to speech models. A TTS or ASR model needs to be deployed on-device or at scale &mdash; pruning compresses it, LoRA recovers quality and adapts to the target domain. The insight is that pruning removes redundant capacity, and LoRA adds back <em>task-specific</em> capacity in a much smaller subspace.</p>
+<pre><code># Wanda pruning + LoRA recovery pipeline
+model = load("llama-7b")                   # 7B params
+
+# Step 1: Prune — remove 50% of weights by importance
+pruned = wanda_prune(model, sparsity=0.5)  # 3.5B nonzero params
+# Performance drops: perplexity increases ~15-20%
+
+# Step 2: LoRA recovery — add low-rank adapters
+lora = add_lora(pruned, rank=8, targets=["q_proj", "v_proj"])
+# Trainable params: ~4M  (0.06% of 7B)
+
+# Step 3: Fine-tune LoRA on target task
+train(lora, data, epochs=3)
+# Performance recovers to within ~2% of original unpruned model
+
+# Result: 50% smaller model, 0.06% extra params, ~98% original quality</code></pre>
+</div>
+
+<footer>
+  <strong>LoRA / PEFT</strong> &middot; Interview prep reference &middot;
+  Compiled by <strong>Kai Zhen</strong>
+</footer>
+</div>
+</body>
+</html>

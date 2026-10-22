@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sub-8-Bit Quantization for On-Device ASR | Kai Zhen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.8;
+      color: #1a1a1a;
+      background: #ffffff;
+      font-size: 16px;
+      font-weight: 400;
+    }
+    
+    h1, h2, h3, h4 {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-weight: 600;
+    }
+    
+    .hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 80px 20px;
+      text-align: center;
+    }
+    
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto 30px;
+      opacity: 0.95;
+    }
+    
+    .authors {
+      font-size: 1.1rem;
+      margin-top: 20px;
+      opacity: 0.9;
+    }
+    
+    .venue {
+      margin-top: 15px;
+      font-size: 1rem;
+      font-weight: 600;
+      background: rgba(255,255,255,0.2);
+      display: inline-block;
+      padding: 8px 20px;
+      border-radius: 20px;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+    
+    .section {
+      background: white;
+      padding: 40px;
+      margin-bottom: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 25px;
+      color: #667eea;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 10px;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      margin: 30px 0 15px;
+      color: #764ba2;
+    }
+    
+    .highlight-box {
+      background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+      border-left: 4px solid #667eea;
+      padding: 25px;
+      margin: 25px 0;
+      border-radius: 8px;
+    }
+    
+    .highlight-box strong {
+      color: #667eea;
+      font-size: 1.1rem;
+    }
+    
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin: 30px 0;
+    }
+    
+    .comparison-card {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 10px;
+      border: 2px solid #e9ecef;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .comparison-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+    }
+    
+    .comparison-card h4 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+    
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+      padding: 8px 0;
+      border-bottom: 1px solid #dee2e6;
+    }
+    
+    .metric:last-child {
+      border-bottom: none;
+    }
+    
+    .metric-value {
+      font-weight: 700;
+      color: #28a745;
+    }
+    
+    .metric-value.negative {
+      color: #dc3545;
+    }
+    
+    .architecture-diagram {
+      background: white;
+      border: 2px solid #667eea;
+      border-radius: 10px;
+      padding: 30px;
+      margin: 30px 0;
+      text-align: center;
+    }
+    
+    .flow-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .flow-box {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px 30px;
+      border-radius: 10px;
+      font-weight: 600;
+      min-width: 150px;
+      text-align: center;
+    }
+    
+    .flow-arrow {
+      font-size: 2rem;
+      color: #667eea;
+      font-weight: bold;
+    }
+    
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 25px 0;
+      font-size: 0.95rem;
+    }
+    
+    .results-table th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+    }
+    
+    .results-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    .results-table tr:hover {
+      background: #f8f9fa;
+    }
+    
+    .results-table .best {
+      background: #d4edda;
+      font-weight: 700;
+    }
+    
+    .paper-links {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+    
+    .paper-link {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px 30px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: inline-block;
+    }
+    
+    .paper-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .key-innovation {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 8px;
+    }
+    
+    .key-innovation h4 {
+      color: #856404;
+      margin-bottom: 10px;
+    }
+    
+    code {
+      background: #f8f9fa;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      color: #e83e8c;
+    }
+    
+    .visual-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin: 30px 0;
+    }
+    
+    .visual-box {
+      text-align: center;
+    }
+    
+    .visual-box img {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .visual-box p {
+      margin-top: 15px;
+      font-weight: 600;
+      color: #495057;
+    }
+    
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 1.8rem; }
+      .hero p { font-size: 1rem; }
+      .section { padding: 25px; }
+      .visual-comparison { grid-template-columns: 1fr; }
+      .flow-diagram { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); }
+    }
+    
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Sub-8-Bit Quantization for On-Device ASR</h1>
+  <p>Achieving extreme compression for speech recognition models through novel quantization-aware training techniques</p>
+  <div class="authors">
+    Kai Zhen, Martin Radfar, Hieu Duy Nguyen, Grant P. Strimel, Nathan Susanj, Athanasios Mouchtaris
+  </div>
+  <div class="venue">IEEE SLT 2022 & Interspeech 2022</div>
+</div>
+
+<div class="container">
+  <a href="index.html" class="back-link">← Back to Home</a>
+
+  <div class="section">
+    <h2>The Challenge</h2>
+    <p>On-device automatic speech recognition (ASR) requires models that are both accurate and efficient. Traditional quantization methods force you to choose between:</p>
+    
+    <div class="comparison-grid">
+      <div class="comparison-card">
+        <h4>❌ Fixed Centroids</h4>
+        <p>Predetermined quantization levels that can't adapt during training, limiting compression potential.</p>
+      </div>
+      <div class="comparison-card">
+        <h4>❌ Heavy Regularization</h4>
+        <p>Complex training procedures with multiple hyperparameters that are difficult to tune.</p>
+      </div>
+      <div class="comparison-card">
+        <h4>❌ Accuracy Loss</h4>
+        <p>Significant degradation in word error rate (WER) when pushing below 8-bit quantization.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Our Solution: Two Complementary Approaches</h2>
+    
+    <h3>1. S8BQAT: Lloyd-Max Inspired Quantization</h3>
+    <div class="highlight-box">
+      <strong>Key Idea:</strong> Use Lloyd-Max compression theory with a Multi-Regional Absolute Cosine (MRACos) regularizer to push weights toward optimal quantization centroids.
+    </div>
+    
+    <div class="architecture-diagram">
+      <h4>S8BQAT Training Flow</h4>
+      <div class="flow-diagram">
+        <div class="flow-box">32-bit Baseline</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">Compute Centroids<br/>(Lloyd-Max)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">Train with<br/>MRACos Loss</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">Sub-8-bit Model</div>
+      </div>
+    </div>
+    
+    <div class="key-innovation">
+      <h4>💡 Innovation</h4>
+      <p>The MRACos regularizer aggregates weights toward their nearest centroid during training, effectively acting as a pseudo-compressor without requiring complex hyperparameter tuning.</p>
+    </div>
+
+    <h3>2. General Quantizer (GQ): Regularization-Free Approach</h3>
+    <div class="highlight-box">
+      <strong>Key Idea:</strong> "Soft-to-hard" compression with self-adjustable centroids in μ-Law constrained space—no regularization needed.
+    </div>
+    
+    <div class="architecture-diagram">
+      <h4>GQ Training Flow</h4>
+      <div class="flow-diagram">
+        <div class="flow-box">Soft Quantization<br/>(Learnable)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">μ-Law Space<br/>Constraint</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">Gradual Hardening</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">Hard Quantization</div>
+      </div>
+    </div>
+    
+    <div class="key-innovation">
+      <h4>💡 Innovation</h4>
+      <p>Unlike traditional methods, GQ learns the quantization centroids during training. The μ-Law constraint ensures perceptually meaningful compression, inspired by audio coding principles.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Results: Extreme Compression Without Accuracy Loss</h2>
+    
+    <h3>S8BQAT Performance (Interspeech 2022)</h3>
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Configuration</th>
+          <th>Model Size</th>
+          <th>WER Improvement</th>
+          <th>Latency Improvement</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Baseline (8-bit)</td>
+          <td>Standard</td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr class="best">
+          <td><strong>S8BQAT (sub-8-bit)</strong></td>
+          <td><strong>Larger model fits</strong></td>
+          <td><strong>4-16% relative WER reduction</strong></td>
+          <td><strong>5% faster</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div class="highlight-box">
+      <strong>Key Result:</strong> S8BQAT enables larger models within the same memory budget, actually improving accuracy while maintaining efficiency.
+    </div>
+
+    <h3>General Quantizer Performance (IEEE SLT 2022)</h3>
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Architecture</th>
+          <th>Quantization Level</th>
+          <th>Accuracy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>RNN-T</td>
+          <td>Encoder/Decoder</td>
+          <td>Sub-8-bit (some layers to 1-bit)</td>
+          <td>No degradation</td>
+        </tr>
+        <tr>
+          <td>Conformer</td>
+          <td>Attention-based</td>
+          <td>Sub-8-bit</td>
+          <td>No degradation</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div class="comparison-grid">
+      <div class="comparison-card">
+        <h4>📉 Memory Footprint</h4>
+        <div class="metric">
+          <span>Reduction vs 8-bit QAT:</span>
+          <span class="metric-value">30.73%</span>
+        </div>
+      </div>
+      <div class="comparison-card">
+        <h4>⚡ Latency</h4>
+        <div class="metric">
+          <span>User-perceived reduction:</span>
+          <span class="metric-value">31.75%</span>
+        </div>
+      </div>
+      <div class="comparison-card">
+        <h4>🎯 Extreme Compression</h4>
+        <div class="metric">
+          <span>Some RNN-T layers:</span>
+          <span class="metric-value">1-bit</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="highlight-box">
+      <strong>Measured on Physical Devices:</strong> These improvements were validated through actual device benchmarking, not just simulation.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Why This Matters</h2>
+    
+    <div class="comparison-grid">
+      <div class="comparison-card">
+        <h4>🔋 Battery Life</h4>
+        <p>Lower memory footprint and faster inference mean longer battery life for always-on voice assistants.</p>
+      </div>
+      <div class="comparison-card">
+        <h4>📱 Device Accessibility</h4>
+        <p>Smaller models enable ASR on lower-end devices, democratizing voice technology.</p>
+      </div>
+      <div class="comparison-card">
+        <h4>🚀 Better Models</h4>
+        <p>Same memory budget now fits larger, more accurate models—efficiency enables capability.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Technical Deep Dive</h2>
+    
+    <h3>The Connection to Audio Coding</h3>
+    <p>Both approaches draw inspiration from classical signal compression:</p>
+    <ul style="margin: 20px 0 20px 30px;">
+      <li><strong>S8BQAT</strong> uses Lloyd-Max quantization, a foundational technique in lossy compression</li>
+      <li><strong>General Quantizer</strong> leverages μ-Law companding, widely used in telephony and audio codecs</li>
+      <li>Both recognize that <strong>model compression ≈ data compression</strong>: reduce bit depth while preserving perceptual quality</li>
+    </ul>
+    
+    <h3>Hardware-Aware Design</h3>
+    <p>The quantization schemes are designed with hardware accelerators in mind:</p>
+    <ul style="margin: 20px 0 20px 30px;">
+      <li>Sub-8-bit quantization enables efficient use of <strong>hierarchical GPU memory</strong></li>
+      <li>Reduced precision allows more operations per clock cycle</li>
+      <li>Memory bandwidth becomes less of a bottleneck</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Papers & Resources</h2>
+    
+    <div class="paper-links">
+      <a href="https://arxiv.org/abs/2206.15408" class="paper-link" target="_blank">📄 S8BQAT Paper (Interspeech 2022)</a>
+      <a href="https://arxiv.org/abs/2210.09188" class="paper-link" target="_blank">📄 General Quantizer Paper (IEEE SLT 2022)</a>
+      <a href="https://scholar.google.com/citations?user=biSonYMAAAAJ&hl=en" class="paper-link" target="_blank">🎓 Google Scholar</a>
+    </div>
+    
+    <h3 style="margin-top: 40px;">Citation</h3>
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; font-family: monospace; font-size: 0.9rem; overflow-x: auto;">
+<pre>@inproceedings{zhen2022s8bqat,
+  title={Sub-8-Bit Quantization Aware Training for 8-Bit Neural Network Accelerator with On-Device Speech Recognition},
+  author={Zhen, Kai and Radfar, Martin and Mouchtaris, Athanasios},
+  booktitle={Interspeech},
+  year={2022}
+}
+
+@inproceedings{zhen2022gq,
+  title={Sub-8-bit quantization for on-device speech recognition: a regularization-free approach},
+  author={Zhen, Kai and Radfar, Martin and Nguyen, Hieu Duy and Strimel, Grant P. and Susanj, Nathan and Mouchtaris, Athanasios},
+  booktitle={IEEE SLT},
+  year={2022}
+}</pre>
+    </div>
+  </div>
+
+  <div class="section" style="text-align: center; background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);">
+    <h3>Impact</h3>
+    <p style="font-size: 1.2rem; margin: 20px 0;">This work enabled deployment of more accurate ASR models on millions of Amazon Alexa devices, improving user experience while reducing computational costs.</p>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Local Semantic Search — ML/AI Fundamentals</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+    --r:#ff6b6b;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:28px 0 10px;font-size:20px}
+  h3{margin:20px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  .grid{display:grid;gap:16px}
+  @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:14px;overflow:auto;font-size:14px;line-height:1.5}
+  .r{color:var(--r);font-weight:600}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .pill{display:inline-block;padding:2px 8px;border:1px solid var(--code-border);border-radius:999px;color:var(--muted);font-size:12px;margin-right:6px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+  .diagram{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:20px;margin:14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:14px;line-height:1.6;overflow-x:auto;white-space:pre}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Local Semantic Search over Browser History</h1>
+  <span class="badge">Information Retrieval</span>
+  <span class="badge">Privacy-First</span>
+</header>
+
+<!-- ====== SUMMARY ====== -->
+<section class="panel">
+  <h2>Summary</h2>
+  <p>This is a <span class="r">retrieval problem</span>, not a <span class="r">generation problem</span>.
+  We don't need an LLM — we need a lightweight <span class="r">bi-encoder</span> for embedding
+  and a <span class="r">vector index</span> for search. That's what keeps it fast and private on-device.</p>
+  <p>The user types a natural language query (e.g., "dog training") and the system returns
+  all semantically relevant browser history entries — including paraphrases like "puppy obedience school."</p>
+</section>
+
+<!-- ====== PIPELINE ====== -->
+<section class="panel">
+  <h2>The Pipeline</h2>
+  <div class="diagram">
+  Browse-time (background):
+  ┌──────────────┐     ┌──────────────────────┐     ┌──────────────────┐
+  │ Page visited  │ ──▶ │ <span class="r">Sentence Transformer</span>  │ ──▶ │ <span class="r">Local Vector DB</span>  │
+  │ title + URL   │     │ (bi-encoder, ~30M)   │     │ (FAISS / SQLite) │
+  │ + snippet     │     │ encode → 384-d vec   │     │ store embedding  │
+  └──────────────┘     └──────────────────────┘     └──────────────────┘
+
+  Query-time:
+  ┌──────────────┐     ┌──────────────────────┐     ┌──────────────────┐
+  │ User query:   │ ──▶ │ Same encoder          │ ──▶ │ <span class="r">ANN search</span>       │ ──▶ Top-K results
+  │ "dog training"│     │ encode → 384-d vec   │     │ cosine similarity│
+  └──────────────┘     └──────────────────────┘     └──────────────────┘</div>
+</section>
+
+<!-- ====== KEY CONCEPTS ====== -->
+<section class="panel">
+  <h2>Key Concepts</h2>
+
+  <h3>Bi-Encoder</h3>
+  <p>Query and documents are encoded <b>independently</b> by the same model.
+  Documents are pre-encoded at browse time (<span class="r">background indexing</span>);
+  only the query is encoded at search time. This is what makes it fast.</p>
+  <p>Contrast with a <b>cross-encoder</b>, which takes (query, document) pairs jointly — more accurate but
+  O(N) at query time, so impractical for search.</p>
+
+  <h3>Dense Vector Embeddings</h3>
+  <p>Each text is mapped to a fixed-size vector (e.g., <code>384-d float32</code>).
+  Semantically similar texts land close together in this space.
+  "dog training" and "puppy obedience school" will have <span class="r">high cosine similarity</span>
+  even though they share no words.</p>
+
+  <h3>Approximate Nearest-Neighbor (ANN) Search</h3>
+  <p>Brute-force comparison against all vectors is O(N). ANN data structures
+  (e.g., <span class="r">HNSW</span>, <span class="r">IVF</span> in FAISS) trade a tiny accuracy loss for
+  sub-linear query time. For 10K–100K history entries, even brute force is fine.</p>
+
+  <h3>Hybrid Search: Vector + BM25</h3>
+  <p>Pure vector search can miss exact keyword matches; pure keyword search (BM25) misses paraphrases.
+  <span class="r">Hybrid search</span> combines both: run BM25 and vector search in parallel,
+  then fuse the ranked lists (e.g., <span class="r">Reciprocal Rank Fusion</span>).</p>
+</section>
+
+<!-- ====== CHEAT SHEET TABLE ====== -->
+<section class="panel">
+  <h2>Keyword Cheat Sheet</h2>
+  <table>
+    <tr><th>Term</th><th>What it is</th></tr>
+    <tr><td><span class="r">Sentence Transformer</span></td><td>The model family (MiniLM, all-MiniLM-L6-v2, ~30M params)</td></tr>
+    <tr><td><span class="r">Bi-encoder</span></td><td>Query and docs encoded independently — enables pre-computation</td></tr>
+    <tr><td><span class="r">Dense vector embeddings</span></td><td>Text represented as fixed-size float vectors</td></tr>
+    <tr><td><span class="r">FAISS / SQLite-vec</span></td><td>Local vector storage and search libraries</td></tr>
+    <tr><td><span class="r">ANN search</span></td><td>Sub-linear nearest-neighbor lookup (HNSW, IVF)</td></tr>
+    <tr><td><span class="r">BM25</span></td><td>Classic keyword scoring — term frequency / inverse document frequency</td></tr>
+    <tr><td><span class="r">Hybrid search</span></td><td>BM25 + vector search combined for robust retrieval</td></tr>
+    <tr><td><span class="r">ONNX Runtime / Core ML</span></td><td>Run models efficiently on CPU / Apple Silicon</td></tr>
+    <tr><td><span class="r">Background indexing</span></td><td>Embed documents at ingest time, not query time</td></tr>
+    <tr><td><span class="r">Reciprocal Rank Fusion</span></td><td>Merge ranked lists from multiple retrievers</td></tr>
+  </table>
+</section>
+
+<!-- ====== TRADEOFFS ====== -->
+<section class="panel">
+  <h2>Engineering Tradeoffs</h2>
+  <div class="grid">
+    <div class="panel">
+      <h3>Embedding Quality vs. Speed</h3>
+      <p>Smaller model = faster inference but weaker semantic understanding.
+      May miss "puppy obedience school" when searching "dog training."
+      MiniLM-L6 (22M) is the sweet spot for on-device.</p>
+    </div>
+    <div class="panel">
+      <h3>When to Embed</h3>
+      <p><span class="r">Background indexing</span> at browse time.
+      Amortize cost across browsing sessions. First search is instant.
+      Alternative: lazy indexing on first query — bad UX.</p>
+    </div>
+    <div class="panel">
+      <h3>Storage Budget</h3>
+      <p>10K pages &times; 384-dim &times; float32 = <b>~15 MB</b>. Trivial.
+      Even 100K pages = ~150 MB. No concern on any laptop.</p>
+    </div>
+    <div class="panel">
+      <h3>Privacy Guarantee</h3>
+      <p>No API calls, no cloud. Model weights shipped with the browser.
+      All inference via <span class="r">ONNX Runtime</span> or <span class="r">WebAssembly</span> (WASM).
+      Data never leaves the device.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====== CONNECTION TO YOUR SKILLS ====== -->
+<section class="panel">
+  <h2>How This Connects to What You Know</h2>
+  <div class="callout">
+    <p>IR is <b>not</b> an outsider — it's deeply connected to your existing ML knowledge.</p>
+  </div>
+  <table>
+    <tr><th>Your World</th><th>IR World</th><th>Same Idea</th></tr>
+    <tr>
+      <td>Speech embeddings (HuBERT, wav2vec)</td>
+      <td>Text embeddings (sentence transformers)</td>
+      <td>Encode input into a dense vector</td>
+    </tr>
+    <tr>
+      <td>Model compression / quantization</td>
+      <td>Making embedding models run on-device</td>
+      <td>This <i>is</i> your expertise</td>
+    </tr>
+    <tr>
+      <td>Distributed training (DDP)</td>
+      <td>Training bi-encoders on large corpora</td>
+      <td>Same infra</td>
+    </tr>
+    <tr>
+      <td>Audio JEPA (contrastive/predictive)</td>
+      <td>Contrastive learning for retrieval</td>
+      <td>Learn representations by prediction</td>
+    </tr>
+  </table>
+  <div class="callout" style="border-left-color:var(--warn);">
+    <p>The encoder part is identical to what you do. The only new piece is the <span class="r">search index</span> (FAISS, ANN). That's it.</p>
+  </div>
+</section>
+
+<!-- ====== WHERE IR SITS ====== -->
+<section class="panel">
+  <h2>Where IR Sits in CS</h2>
+  <p>IR is the field that produced <b>Google Search</b>, then evolved into:</p>
+  <ul>
+    <li><span class="r">Dense retrieval</span> (2019+) — replaced BM25 with neural embeddings. This is what Mozilla wants.</li>
+    <li><span class="r">RAG</span> (2020+) — retrieve relevant docs, feed to an LLM. Every chatbot with "knowledge" uses this.</li>
+    <li><span class="r">Recommendation systems</span> — a special case of retrieval. Netflix recs = retrieve top-K items for a user embedding.</li>
+  </ul>
+  <p><b>Retrieval is the glue between embedding knowledge and LLM applications.</b></p>
+</section>
+
+<div class="footer">
+  Local Semantic Search &middot; Information Retrieval &middot; 2026
+</div>
+
+</div>
+</body>
+</html>

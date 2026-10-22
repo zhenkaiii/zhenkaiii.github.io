@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Using EnCodec in an Offline Kubernetes Cluster</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+  header h1{margin:0;font-size:clamp(22px,3.2vw,34px);letter-spacing:.2px}
+  header .tag{
+    background:linear-gradient(90deg,#5a6cff,#9ab3ff);
+    color:#0f1220;
+    padding:6px 14px;
+    border:none;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:0.4px;
+    box-shadow:0 2px 6px rgba(124,156,255,0.4);
+  }
+  h2{margin-top:40px;font-size:22px;color:var(--accent)}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);
+    padding:16px;border-radius:8px;overflow-x:auto;font-size:14px;line-height:1.5}
+  code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+  footer{
+    margin-top:48px;padding-top:20px;border-top:1px solid #262b4a;
+    color:#c7cbf9;font-size:15px;line-height:1.7;text-align:center;
+    letter-spacing:0.2px;opacity:0.9;
+  }
+  footer strong{color:var(--accent);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Using EnCodec in an Offline Kubernetes Cluster</h1>
+  <span class="tag">Air-gapped workflow</span>
+</header>
+
+<h2>Overview</h2>
+<p><strong>Why EnCodec?</strong> Acoustic tokenizers blew up along with multimodal language models. They turn waveforms into discrete RVQ tokens, letting you feed audio directly into the same Transformer as text. EnCodec is one of them: a plain CNN-based encoder-decoder with RVQ and multi-scale STFT adversarial loss. It outperforms old-school codecs like MP3 at much lower bitrates. It’s open-sourced, simple, and works out of the box with just a single pip install.</p>
+
+<h2>1️⃣ Download EnCodec and dependencies (local laptop)</h2>
+<pre><code>pip download encodec -d ./encodec_pkg/ --index-url https://pypi.org/simple
+</code></pre>
+
+<h2>2️⃣ Clean up platform-specific wheels</h2>
+<pre><code>rm torch*.whl torchaudio*.whl numpy*.whl
+</code></pre>
+
+<h2>3️⃣ Copy the package folder into the cluster</h2>
+<pre><code>kubectl cp encodec_pkg/ &lt;pod_name&gt;:/path-to-encodec/encodec_pkg/
+</code></pre>
+
+<h2>4️⃣ Install EnCodec offline</h2>
+<pre><code>pip install --user --no-index --find-links /path-to-encodec/encodec_pkg encodec
+</code></pre>
+
+<h2>5️⃣ Manually download pretrained weights</h2>
+<pre><code>wget https://dl.fbaipublicfiles.com/encodec/v0/encodec_24khz-d7cc33bc.th
+kubectl cp encodec_24khz-d7cc33bc.th &lt;pod_name&gt;:/dev/shm/.cache/torch/hub/checkpoints/
+</code></pre>
+
+<h2>6️⃣ AcousticEncoder wrapper</h2>
+<pre><code>import torch
+import torch.nn as nn
+from encodec import EncodecModel
+
+class AcousticEncoder(nn.Module):
+    def __init__(self, mode='encodec', d_model=256):
+        super().__init__()
+        self.model = EncodecModel.encodec_model_24khz()
+        self.model.set_target_bandwidth(6.0)
+        self.proj = nn.Embedding(1024, d_model)
+
+    @torch.no_grad()
+    def encode(self, waveform: torch.Tensor):
+        list_of_code_tensors = self.model.encode(waveform)
+        codes = torch.stack([f[0][0] for f in list_of_code_tensors], dim=0).int()
+        return codes  # (B, 32, T)
+
+    @torch.no_grad()
+    def decode(self, codes: torch.Tensor):
+        list_of_code_tensors = [(codes[b], None) for b in range(codes.size(0))]
+        recovered_waveform = self.model.decode(list_of_code_tensors)
+        return recovered_waveform
+</code></pre>
+
+<h2>7️⃣ Test the full pipeline</h2>
+<pre><code>waveform = torch.randn(1, 1, 24000)
+encoder = AcousticEncoder()
+
+codes = encoder.encode(waveform)
+print("Codes shape:", codes.shape)
+
+decoded = encoder.decode(codes)
+print("Decoded waveform:", decoded.shape)
+</code></pre>
+
+<h3>✅ Example Output</h3>
+<pre><code>Codes shape: torch.Size([1, 32, 150])
+Decoded waveform: torch.Size([1, 1, 24000])
+</code></pre>
+
+<h3>🧠 Token snapshot</h3>
+<pre><code>print(codes[0, :, :5])
+# tensor([
+#   [453, 372, 415, 285, 176],
+#   [ 98, 611, 420, 489, 230],
+#   ...
+#   [642, 853, 731, 702, 401]], dtype=torch.int32)
+</code></pre>
+
+<p>Each row represents one of the 32 codebooks, and each integer is a discrete token ID in the range [0, 1023]. Together, they form your speech/audio tokenizer output — compact, discrete, and ready to feed into a multimodal Transformer.</p>
+
+<footer>
+  Built for <strong>air-gapped Kubernetes clusters</strong> · Works entirely offline ·
+  This tutorial is verbally described by <strong>Kai Zhen</strong>
+</footer>
+</div>
+</body>
+</html>

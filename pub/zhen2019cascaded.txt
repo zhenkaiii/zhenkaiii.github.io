@@ -1,0 +1,9 @@
+@inproceedings{Zhen2019,
+  author={Kai Zhen and Jongmo Sung and Mi Suk Lee and Seungkwon Beack and Minje Kim},
+  title={{Cascaded Cross-Module Residual Learning Towards Lightweight End-to-End Speech Coding}},
+  year=2019,
+  booktitle={Proc. Interspeech 2019},
+  pages={3396--3400},
+  doi={10.21437/Interspeech.2019-1816},
+  url={http://dx.doi.org/10.21437/Interspeech.2019-1816}
+}

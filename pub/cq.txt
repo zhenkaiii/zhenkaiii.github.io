@@ -1,0 +1,6 @@
+@inproceedings{zhen2020cq,
+  author={Kai Zhen and Mi Suk Lee and Jongmo Sung and Seungkwon Beack and Minje Kim},
+  title={{Efficient And Scalable Neural Residual Waveform Coding with Collaborative Quantization}},
+  year=2020,
+  booktitle={Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (ICASSP) 2020}
+}

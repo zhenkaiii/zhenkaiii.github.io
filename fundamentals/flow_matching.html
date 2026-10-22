@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Flow Matching — ML/AI Fundamentals</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --ink:#e7e9f7; --muted:#aab0d5;
+    --accent:#7c9cff; --ok:#57d39b; --warn:#ffd166; --bad:#ff6b6b;
+    --code-bg:#0b0e19; --code-border:#252a45; --kbd:#222742;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+  .badge{font-size:12px;border:1px solid var(--code-border);color:var(--muted);padding:3px 8px;border-radius:999px}
+  h1{font-size:28px;margin:0}
+  h2{margin:28px 0 10px;font-size:20px}
+  h3{margin:20px 0 8px;font-size:17px;color:var(--accent)}
+  p,li{color:var(--ink);opacity:.92;line-height:1.7}
+  ul{padding-left:20px;margin:10px 0}
+  li{margin-bottom:6px}
+  .panel{background:var(--panel);border:1px solid var(--code-border);border-radius:16px;padding:18px;margin:12px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:14px}
+  pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  .k{color:#c792ea} .fn{color:#82aaff} .s{color:#c3e88d} .c{color:#6b708c} .n{color:#f78c6c} .v{color:#ffcb6b}
+  .callout{border-left:4px solid var(--accent);padding:10px 12px;background:rgba(124,156,255,.08);border-radius:8px;margin:14px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--code-border);color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--code-border)}
+  .diagram{background:var(--code-bg);border:1px solid var(--code-border);border-radius:14px;padding:20px;margin:14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:14px;line-height:1.6;overflow-x:auto;white-space:pre}
+  .footer{margin-top:36px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Flow Matching for TTS — Minimal PyTorch</h1>
+  <span class="badge">Flow Matching</span>
+  <span class="badge">Generative Models</span>
+</header>
+
+<!-- ====== CORE IDEA ====== -->
+<section class="panel">
+  <h2>The Entire Idea</h2>
+  <p>Learn a <b>velocity field</b> that transports <b>noise</b> to <b>speech</b> along a straight line.
+  At inference, start from noise and follow the velocity for N steps.</p>
+  <div class="diagram">
+t=0 (noise)                            t=1 (clean mel)
+  ·  ─────── velocity ──────────────▶  ·
+  x₀ = randn        x₁ = mel spectrogram
+
+  Path:   x_t = (1-t) · noise + t · mel        (straight line)
+  Velocity: u = mel - noise                     (constant!)
+  Model learns: v_θ(x_t, t) ≈ u</div>
+</section>
+
+<!-- ====== KEY TERMS DEMYSTIFIED ====== -->
+<section class="panel">
+  <h2>Key Terms Demystified</h2>
+
+  <h3>What is x_t?</h3>
+  <p>The <b>noisy intermediate sample</b> at timestep t — a point along the straight line from noise to speech.</p>
+  <div class="diagram">
+t=0          t=0.3           t=0.7            t=1
+pure noise   mostly noise    mostly speech    clean mel
+x₀           x₀.₃            x₀.₇             x₁
+
+x_t = (1-t) · noise + t · mel
+
+  t=0:    1.0 · noise + 0.0 · mel = pure noise
+  t=0.3:  0.7 · noise + 0.3 · mel = mostly noise, faint speech
+  t=0.7:  0.3 · noise + 0.7 · mel = mostly speech, faint noise
+  t=1:    0.0 · noise + 1.0 · mel = clean mel spectrogram</div>
+  <p>During <b>training</b>: you sample a random t, construct x_t, and ask the model "given this partially noisy mel, predict the velocity toward clean speech." <b>mel is given</b> — it's the ground truth from your dataset.</p>
+  <p>During <b>inference</b>: you don't have mel (that's what you're generating). So you start at x₀ (pure noise) and take small steps following the model's predicted velocity until you arrive at x₁ (clean mel).</p>
+
+  <h3>What is the velocity field?</h3>
+  <p>The <b>direction and magnitude to move x_t toward clean speech</b> at each point. Think of it like wind on a map:</p>
+  <div class="diagram">
+At every point in the space, there's an arrow saying:
+"if you're here, move THIS direction to get closer to speech"
+
+t=0         t=0.5         t=1
+noise  ──→  ──→  ──→  ──→  speech
+       v    v    v    v
+     (all arrows point the same way because the path is straight)</div>
+  <p>For flow matching, the velocity is trivially simple: <code>velocity = mel - noise</code>.
+  It doesn't change with t. The "wind" blows in the same direction the whole time.</p>
+  <p>The <b>model's job</b> is to learn this velocity from data. At inference you don't know <code>mel - noise</code>
+  (you don't have mel), so the model <b>predicts</b> it.</p>
+
+  <h3>What is OT-CFM? (It's just MSE)</h3>
+  <p>The fancy name breaks down as:</p>
+  <table>
+    <tr><th>Word</th><th>What it means</th></tr>
+    <tr><td><b>Optimal Transport</b></td><td>Use straight-line paths (linear interpolation) — the shortest route from noise to speech</td></tr>
+    <tr><td><b>Conditional</b></td><td>The flow is conditioned on a specific data sample (this particular mel)</td></tr>
+    <tr><td><b>Flow Matching</b></td><td>Regress a neural net's velocity prediction toward the true velocity</td></tr>
+  </table>
+  <p>The entire loss: <code>loss = MSE(model(x_t, t, text), mel - noise)</code>. That's it. Standard supervised regression.</p>
+</section>
+
+<!-- ====== TRAINING ====== -->
+<section class="panel">
+  <h2>Training — 5 Lines of Logic (Zero Steps!)</h2>
+  <p>Training uses <b>zero steps</b>. There is no walking, no ODE, no loop. It's <b>one forward pass per sample</b>, like any standard supervised learning.</p>
+<pre>
+<span class="c"># mel: (B, 80, T)  — ground truth mel spectrogram (GIVEN from dataset)</span>
+<span class="c"># text: (B, ...)   — text conditioning (phonemes, characters, etc.)</span>
+
+<span class="v">t</span>     = torch.rand(<span class="v">B</span>, <span class="n">1</span>, <span class="n">1</span>)                <span class="c"># random timestep ~ U(0,1)</span>
+<span class="v">noise</span> = torch.randn_like(<span class="v">mel</span>)               <span class="c"># start point: pure Gaussian noise</span>
+<span class="v">x_t</span>   = (<span class="n">1</span> - <span class="v">t</span>) * <span class="v">noise</span> + <span class="v">t</span> * <span class="v">mel</span>          <span class="c"># interpolate noise → speech</span>
+<span class="v">target</span> = <span class="v">mel</span> - <span class="v">noise</span>                        <span class="c"># ground truth velocity (constant!)</span>
+<span class="v">loss</span>  = F.mse_loss(<span class="fn">model</span>(<span class="v">x_t</span>, <span class="v">t</span>, <span class="v">text</span>), <span class="v">target</span>)  <span class="c"># regress predicted → true velocity</span>
+</pre>
+
+  <div class="callout">
+    <p><b>That's the OT-CFM loss</b> — and it's literally just MSE. The "optimal transport" part
+    means we use straight-line paths. The model sees a random (x_t, t) pair and learns
+    "at this noisiness level, the velocity should be this." Over millions of samples, it sees
+    every t from 0 to 1 and learns the velocity everywhere. But it <b>never sequentially walks</b>
+    from 0 to 1 during training.</p>
+  </div>
+
+  <div class="callout warn">
+    <p><b>Training vs inference:</b></p>
+  </div>
+  <table>
+    <tr><th></th><th>mel</th><th>noise</th><th>x_t</th><th>Steps</th></tr>
+    <tr><td><b>Training</b></td><td>Given (from dataset)</td><td>Sampled (random)</td><td>Constructed from both</td><td><b>Zero</b> — one forward pass</td></tr>
+    <tr><td><b>Inference</b></td><td>Unknown (generating it)</td><td>Sampled (starting point)</td><td>Evolved step by step</td><td><b>N</b> — you choose freely</td></tr>
+  </table>
+</section>
+
+<!-- ====== INFERENCE ====== -->
+<section class="panel">
+  <h2>Inference — 4 Lines of Logic</h2>
+  <p>The number of inference steps is <b>completely independent</b> of training.
+  You choose N_steps freely at deployment based on your latency budget.
+  The same trained model works with any step count:</p>
+<pre>
+<span class="c"># ODE solve: walk from noise to speech in N_steps</span>
+<span class="c"># N_steps = 32 (slow, accurate) or 4 (fast, still decent) or 1 (fastest)</span>
+
+<span class="v">x</span> = torch.randn(<span class="n">1</span>, <span class="n">80</span>, <span class="v">T</span>)                  <span class="c"># start from pure noise</span>
+<span class="k">for</span> <span class="v">i</span> <span class="k">in</span> range(<span class="v">N_steps</span>):
+    <span class="v">t</span> = torch.tensor(<span class="v">i</span> / <span class="v">N_steps</span>)
+    <span class="v">x</span> = <span class="v">x</span> + (<span class="n">1</span> / <span class="v">N_steps</span>) * <span class="fn">model</span>(<span class="v">x</span>, <span class="v">t</span>, <span class="v">text</span>)  <span class="c"># Euler step</span>
+
+<span class="c"># x is now a mel spectrogram → feed to vocoder for waveform</span>
+</pre>
+
+  <div class="callout ok">
+    <p><b>9 total lines.</b> Everything else — DiT architecture, speaker conditioning, text encoder,
+    vocoder — is what goes inside <code>model()</code> and what you do after. The flow matching part is just these 9 lines.</p>
+  </div>
+</section>
+
+<!-- ====== WHAT IS EULER ====== -->
+<section class="panel">
+  <h2>What is an Euler Solver?</h2>
+  <p>The simplest method to solve an ODE — "I know my current position and the direction to move,
+  so I take a small step in that direction."</p>
+<pre>
+<span class="c"># What you have:   position x, velocity v, step size dt</span>
+<span class="c"># What you do:     x_new = x + dt * v</span>
+<span class="c"># That's Euler.</span>
+</pre>
+  <p>Same as walking with a compass:</p>
+  <div class="diagram">
+You're at position A.
+Compass says "go northeast."
+You walk 10 meters northeast. Now you're at B.
+Check compass again. "Go east."
+Walk 10 meters east. Now you're at C.
+...repeat until you arrive.
+
+More steps = more compass checks = more accurate:
+
+10 steps (dt = 0.1):   ·→·→·→·→·→·→·→·→·→·  accurate
+ 4 steps (dt = 0.25):  ·──→·──→·──→·──→·      pretty good
+ 1 step  (dt = 1.0):   ·────────────────→·     rough</div>
+  <p>Fancier solvers (Midpoint, RK4) take <b>multiple compass readings within each step</b>
+  to be more accurate. But Euler is the baseline and what most flow matching TTS uses.</p>
+</section>
+
+<!-- ====== WHY PATH IS STRAIGHT ====== -->
+<section class="panel">
+  <h2>Why is the Path Straight?</h2>
+  <p>Because <b>you defined it that way</b>. It's a design choice, not a consequence of the solver.</p>
+<pre>
+<span class="c"># Straight (flow matching — YOUR design choice):</span>
+<span class="v">x_t</span> = (<span class="n">1</span> - t) * noise + t * mel          <span class="c"># linear interpolation</span>
+
+<span class="c"># Curved (diffusion — their design choice):</span>
+<span class="v">x_t</span> = sqrt(α_t) * mel + sqrt(<span class="n">1</span> - α_t) * noise   <span class="c"># nonlinear in t</span>
+</pre>
+  <p>The curved version needs more steps to follow accurately. The straight version is easy — that's the whole advantage.</p>
+  <p>Euler is <b>how you walk</b> the path at inference. The straightness comes from <b>how you defined</b> the path during training. Two completely separate concepts.</p>
+
+  <h3>Can 1 step work?</h3>
+  <p><b>In theory, yes.</b> If the model perfectly learned the constant velocity <code>mel - noise</code>,
+  one Euler step lands exactly on the target.</p>
+  <p><b>In practice, no.</b> The model's prediction is approximate (finite capacity, finite data).
+  With 1 step, that small error is your final answer. With more steps, each step corrects the drift.</p>
+  <div class="diagram">
+1 step:    ·───────────→ ·     (one shot, small error, no correction)
+                          ↕ small gap from target
+
+4 steps:   ·──→·──→·──→·→·    (re-check direction each step, self-correcting)
+                          ≈ target</div>
+  <p>That's why real TTS uses 4-10 steps — not because the math needs it, but because the <b>model isn't perfect</b>.</p>
+  <div class="callout warn">
+    <p><b>AD-FlowTSE</b> gets away with 1 step because speaker extraction is easier — the answer is already in the input.
+    TTS generates from scratch, so model error is larger and you need more steps to compensate.</p>
+  </div>
+</section>
+
+<!-- ====== WHY IT WORKS ====== -->
+<section class="panel">
+  <h2>Why This Works</h2>
+
+  <h3>The path is a straight line</h3>
+  <p><code>x_t = (1-t) · noise + t · mel</code> is linear interpolation.
+  The velocity along this line is <code>mel - noise</code> — a <b>constant</b> that doesn't depend on t.
+  So in theory, one Euler step would be exact if the model perfectly learned the velocity.</p>
+  <p>In practice, the model's prediction isn't perfect, so you take multiple steps to
+  correct accumulated error. But the straighter the path, the fewer steps you need.</p>
+
+  <h3>Diffusion vs flow matching — the path shapes</h3>
+  <div class="diagram">
+Diffusion (SDE):                  Flow Matching (ODE):
+  noise ·                           noise ·
+        \                                 \
+         \  curved,                        \  straight,
+          \ stochastic                      \ deterministic
+           \                                 \
+            · speech                          · speech
+
+  20-50 steps needed               6-10 steps (1-4 with distillation)</div>
+
+  <table>
+    <tr><th></th><th>Diffusion</th><th>Flow Matching</th></tr>
+    <tr><td>Process</td><td>Stochastic (SDE) — adds/removes Gaussian noise</td><td>Deterministic (ODE) — follows velocity field</td></tr>
+    <tr><td>Path shape</td><td>Curved — noise accumulates</td><td>Straight — optimal transport</td></tr>
+    <tr><td>Steps needed</td><td>20-50</td><td>6-10 (1-4 distilled)</td></tr>
+    <tr><td>Training loss</td><td>Predict noise ε</td><td>Predict velocity u = mel - noise</td></tr>
+    <tr><td>Why fewer steps</td><td>Stochastic noise compounds errors</td><td>ODE integration stays on trajectory</td></tr>
+  </table>
+</section>
+
+<!-- ====== FULL WORKING EXAMPLE ====== -->
+<section class="panel">
+  <h2>Full Working Example — Toy Flow Matching</h2>
+  <p>A complete, runnable script that trains flow matching on random data.
+  Replace the dummy data with real mel spectrograms + text features for actual TTS.</p>
+
+<pre>
+<span class="k">import</span> torch
+<span class="k">import</span> torch.nn <span class="k">as</span> nn
+<span class="k">import</span> torch.nn.functional <span class="k">as</span> F
+
+<span class="c"># ── Minimal velocity network ──────────────────────────────</span>
+<span class="c"># In real TTS: this is a DiT or UNet conditioned on text + speaker.</span>
+<span class="c"># Here: a small MLP that takes (x_t, t) and predicts velocity.</span>
+
+<span class="k">class</span> <span class="fn">VelocityNet</span>(nn.Module):
+    <span class="k">def</span> <span class="fn">__init__</span>(self, dim=<span class="n">80</span>, hidden=<span class="n">256</span>):
+        <span class="fn">super</span>().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(dim + <span class="n">1</span>, hidden),   <span class="c"># +1 for timestep t</span>
+            nn.GELU(),
+            nn.Linear(hidden, hidden),
+            nn.GELU(),
+            nn.Linear(hidden, dim),
+        )
+
+    <span class="k">def</span> <span class="fn">forward</span>(self, x_t, t):
+        <span class="c"># x_t: (B, 80)  t: (B, 1)</span>
+        <span class="k">return</span> self.net(torch.cat([x_t, t], dim=-<span class="n">1</span>))
+
+<span class="c"># ── Training ──────────────────────────────────────────────</span>
+
+model = <span class="fn">VelocityNet</span>()
+opt = torch.optim.Adam(model.parameters(), lr=<span class="n">1e-3</span>)
+
+<span class="k">for</span> step <span class="k">in</span> range(<span class="n">5000</span>):
+    mel = torch.randn(<span class="n">64</span>, <span class="n">80</span>)          <span class="c"># (B, 80) — fake target mel frames</span>
+
+    <span class="c"># === Flow matching core (5 lines) ===</span>
+    t     = torch.rand(<span class="n">64</span>, <span class="n">1</span>)           <span class="c"># (B, 1)</span>
+    noise = torch.randn_like(mel)        <span class="c"># (B, 80)</span>
+    x_t   = (<span class="n">1</span> - t) * noise + t * mel    <span class="c"># interpolate</span>
+    target = mel - noise                  <span class="c"># true velocity</span>
+    loss  = F.mse_loss(model(x_t, t), target)
+
+    opt.zero_grad()
+    loss.backward()
+    opt.step()
+
+    <span class="k">if</span> step % <span class="n">1000</span> == <span class="n">0</span>:
+        <span class="fn">print</span>(f<span class="s">"step {step}  loss {loss.item():.4f}"</span>)
+
+<span class="c"># ── Inference ─────────────────────────────────────────────</span>
+
+model.eval()
+N_steps = <span class="n">10</span>
+
+x = torch.randn(<span class="n">1</span>, <span class="n">80</span>)               <span class="c"># start from noise</span>
+<span class="k">for</span> i <span class="k">in</span> range(N_steps):
+    t = torch.tensor([[i / N_steps]])
+    <span class="k">with</span> torch.no_grad():
+        x = x + (<span class="n">1</span> / N_steps) * model(x, t)
+
+<span class="fn">print</span>(f<span class="s">"Generated shape: {x.shape}"</span>)   <span class="c"># (1, 80) — one mel frame</span>
+<span class="c"># In real TTS: x would be (1, 80, T) — full mel spectrogram</span>
+</pre>
+</section>
+
+<!-- ====== FROM TOY TO REAL TTS ====== -->
+<section class="panel">
+  <h2>From Toy → Real TTS: What Changes</h2>
+  <table>
+    <tr><th>Toy example</th><th>Real TTS (F5-TTS, CosyVoice stage 2)</th></tr>
+    <tr><td>MLP</td><td><b>DiT</b> (Diffusion Transformer) or <b>UNet</b> with attention</td></tr>
+    <tr><td>No conditioning</td><td>Conditioned on <b>text features</b> + <b>speaker embedding</b> + <b>timestep embedding</b></td></tr>
+    <tr><td>Single frame (B, 80)</td><td>Full spectrogram <b>(B, 80, T)</b> — 2D convolutions or sequence of frame vectors</td></tr>
+    <tr><td>Uniform timesteps</td><td><b>Sway Sampling</b> — more steps near t=0 where denoising is hardest</td></tr>
+    <tr><td>Euler solver</td><td><b>Midpoint</b> or <b>RK4</b> solver for better accuracy with fewer steps</td></tr>
+    <tr><td>Random data</td><td>Real (text, mel, speaker) triples from speech datasets</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <p><b>The flow matching logic doesn't change.</b> The 9 lines stay the same.
+    All complexity lives in the model architecture and conditioning — not in the
+    generative framework itself.</p>
+  </div>
+</section>
+
+<!-- ====== AD-FLOWTSE CONNECTION ====== -->
+<section class="panel">
+  <h2>Variant: AD-FlowTSE (Speaker Extraction)</h2>
+  <p>The AD-FlowTSE paper (ICASSP 2026) modifies flow matching for <b>target speaker extraction</b>. The key changes:</p>
+
+<pre>
+<span class="c"># Standard flow matching (TTS): noise → speech</span>
+<span class="v">x_t</span>    = (<span class="n">1</span> - t) * <span class="v">noise</span> + t * <span class="v">mel</span>
+<span class="v">target</span> = <span class="v">mel</span> - <span class="v">noise</span>
+
+<span class="c"># AD-FlowTSE: background → target speech</span>
+<span class="v">x_τ</span>    = (<span class="n">1</span> - τ) * <span class="v">background</span> + τ * <span class="v">target_speech</span>   <span class="c"># τ = mixing ratio, not time</span>
+<span class="v">target</span> = <span class="v">target_speech</span> - <span class="v">background</span>               <span class="c"># still constant!</span>
+</pre>
+
+  <p>The trick: the mixture <code>x = τ·s₁ + (1-τ)·b</code> already sits on the trajectory at position τ.
+  So at inference, estimate τ̂, skip to that point, and integrate only <code>[τ̂, 1]</code>.</p>
+  <p>Result: <b>one step</b> is exact (the path is linear, the velocity is constant).</p>
+
+  <div class="callout warn">
+    <p><b>This trick does NOT transfer to TTS.</b> In TTS, the input is text/noise — it doesn't contain
+    the target speech. There's no mixing ratio to exploit. For TTS, fewer steps come from
+    <b>consistency distillation</b>, not from input-adaptive shortcuts.</p>
+  </div>
+</section>
+
+<!-- ====== PROGRESSIVE DISTILLATION ====== -->
+<section class="panel">
+  <h2>Progressive Distillation — Reducing Inference Steps</h2>
+  <p>The base flow matching model is trained with <b>zero steps</b> (random t snapshots).
+  Distillation is a <b>separate, second training phase</b> that compresses the inference procedure.</p>
+
+  <div class="callout">
+    <p><b>Phase 1:</b> Train base model (no steps, MSE on random t) → works well at 32 inference steps<br>
+    <b>Phase 2:</b> Distillation (separate training run) → train student to do it in fewer steps</p>
+  </div>
+
+  <h3>The idea: teacher takes 2 steps, student matches in 1</h3>
+  <div class="diagram">
+Teacher (32 steps):  ·→·→·→·→·→·→ ... →·  (many small steps)
+                      ╰─╯ ╰─╯
+                     2 steps  2 steps
+
+Student (16 steps):  ·──→·──→· ... ──→·    (fewer, bigger steps)
+                     1 step  1 step
+
+Then repeat:
+  Round 1:  Teacher 32 steps → Student 16 steps
+  Round 2:  Teacher 16 steps → Student 8 steps
+  Round 3:  Teacher 8 steps  → Student 4 steps
+  Round 4:  Teacher 4 steps  → Student 2 steps</div>
+
+  <h3>Minimal code — 6 lines of core logic</h3>
+<pre>
+<span class="c"># teacher: already trained flow matching model (frozen)</span>
+<span class="c"># student: fresh copy (trainable)</span>
+<span class="c"># Goal: student does in 16 steps what teacher does in 32</span>
+
+<span class="v">teacher</span>.eval()
+<span class="v">student</span> = copy.deepcopy(<span class="v">teacher</span>)
+<span class="v">opt</span> = torch.optim.Adam(<span class="v">student</span>.parameters(), lr=<span class="n">1e-4</span>)
+
+<span class="v">N_teacher</span> = <span class="n">32</span>                            <span class="c"># teacher uses 32 steps</span>
+<span class="v">N_student</span> = <span class="n">16</span>                            <span class="c"># student learns to use 16</span>
+<span class="v">dt_teacher</span> = <span class="n">1</span> / <span class="v">N_teacher</span>                <span class="c"># small step size</span>
+<span class="v">dt_student</span> = <span class="n">1</span> / <span class="v">N_student</span>                <span class="c"># big step size (2x)</span>
+
+<span class="k">for</span> step <span class="k">in</span> range(<span class="n">5000</span>):
+    <span class="v">mel</span>   = torch.randn(<span class="n">64</span>, <span class="n">80</span>)          <span class="c"># ground truth from dataset</span>
+    <span class="v">noise</span> = torch.randn_like(<span class="v">mel</span>)
+
+    <span class="c"># Pick random starting point on the student's timestep grid</span>
+    <span class="v">k</span> = torch.randint(<span class="n">0</span>, <span class="v">N_student</span>, (<span class="n">64</span>, <span class="n">1</span>))
+    <span class="v">t</span> = <span class="v">k</span>.float() / <span class="v">N_student</span>
+    <span class="v">x_t</span> = (<span class="n">1</span> - <span class="v">t</span>) * <span class="v">noise</span> + <span class="v">t</span> * <span class="v">mel</span>      <span class="c"># construct x_t</span>
+
+    <span class="c"># === Core: teacher 2 steps, student 1 step ===</span>
+    <span class="k">with</span> torch.no_grad():
+        <span class="v">v1</span> = <span class="v">teacher</span>(<span class="v">x_t</span>, <span class="v">t</span>)
+        <span class="v">x_mid</span> = <span class="v">x_t</span> + <span class="v">dt_teacher</span> * <span class="v">v1</span>       <span class="c"># teacher step 1 → halfway</span>
+        <span class="v">v2</span> = <span class="v">teacher</span>(<span class="v">x_mid</span>, <span class="v">t</span> + <span class="v">dt_teacher</span>)
+        <span class="v">x_target</span> = <span class="v">x_mid</span> + <span class="v">dt_teacher</span> * <span class="v">v2</span>  <span class="c"># teacher step 2 → target</span>
+
+    <span class="v">v_student</span> = <span class="v">student</span>(<span class="v">x_t</span>, <span class="v">t</span>)
+    <span class="v">x_pred</span> = <span class="v">x_t</span> + <span class="v">dt_student</span> * <span class="v">v_student</span>  <span class="c"># student: 1 big step</span>
+
+    <span class="v">loss</span> = F.mse_loss(<span class="v">x_pred</span>, <span class="v">x_target</span>)   <span class="c"># match teacher's 2 steps in 1</span>
+
+    <span class="v">opt</span>.zero_grad()
+    <span class="v">loss</span>.backward()
+    <span class="v">opt</span>.step()
+
+<span class="c"># Now student does in 16 steps what teacher did in 32.</span>
+<span class="c"># Repeat: student becomes new teacher, train 16→8→4→2</span>
+</pre>
+
+  <div class="callout ok">
+    <p>The core is <b>6 lines</b>: teacher takes 2 small steps → x_target. Student takes 1 big step → x_pred.
+    Loss = MSE(x_pred, x_target). The student learns to make one accurate jump wherever teacher needs two compass checks.</p>
+  </div>
+
+  <h3>The cost: 4 total training stages to reach 4 steps</h3>
+  <div class="diagram">
+Stage 1: Base flow matching training     → 32-step model
+Stage 2: Distill 32 → 16                → 16-step model  (student becomes teacher)
+Stage 3: Distill 16 → 8                 → 8-step model   (student becomes teacher)
+Stage 4: Distill 8  → 4                 → 4-step model   (deploy this one)</div>
+  <p>4 separate training runs. Each time the student becomes the next teacher.
+  That's the main downside — it's <b>expensive and tedious</b>.</p>
+
+  <h3>Progressive vs consistency distillation</h3>
+  <table>
+    <tr><th></th><th>Progressive</th><th>Consistency</th></tr>
+    <tr><td>Approach</td><td>Halve steps iteratively (32→16→8→4)</td><td>Enforce same output from any starting t</td></tr>
+    <tr><td>Training runs</td><td><b>4</b> (to get 32→4)</td><td><b>1</b></td></tr>
+    <tr><td>Each run</td><td>Simple (just MSE)</td><td>Complex loss function</td></tr>
+    <tr><td>Total compute</td><td>Higher (4 full training runs)</td><td>Lower (1 training run)</td></tr>
+    <tr><td>Target step count</td><td>2-4 steps</td><td>1-2 steps</td></tr>
+    <tr><td>Quality at 1 step</td><td>Mediocre</td><td>Better</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <p><b>Interview talking point:</b> "Progressive distillation is the safe bet — simple MSE loss, reliable results,
+    but costs 4 separate training runs to get from 32 to 4 steps. Consistency distillation is more aggressive —
+    one training run, can reach single-step, but the loss is harder to tune. Pick based on your engineering budget."</p>
+  </div>
+</section>
+
+<!-- ====== STEP REDUCTION ====== -->
+<section class="panel">
+  <h2>Why Step Reduction > Quantization for Flow Matching</h2>
+  <table>
+    <tr><th>Optimization</th><th>Speedup</th><th>How</th></tr>
+    <tr><td>INT8 quantization</td><td>~1.5-2x</td><td>Cheaper per-step compute</td></tr>
+    <tr><td>Step reduction (32 → 4)</td><td>~8x</td><td>Fewer forward passes</td></tr>
+    <tr><td>Both combined</td><td>~12-16x</td><td>Orthogonal — multiply the gains</td></tr>
+  </table>
+  <p>Each ODE step = one full forward pass through the DiT/UNet. Cutting steps is a <b>linear</b> speedup.
+  No quantization method can match going from 32 to 4 steps.</p>
+  <p>Best strategy: <b>distill steps first</b> (32→4), <b>then</b> quantize the remaining 4 forward passes.</p>
+</section>
+
+<!-- ====== FULL TIMELINE ====== -->
+<section class="panel">
+  <h2>The Full Picture: 3 Phases</h2>
+  <div class="diagram">
+Phase 1: Base training (zero steps)
+  Random t snapshots → learn velocity field → MSE loss
+  Result: model that works at 32 inference steps
+                    ↓
+Phase 2: Progressive distillation (separate training)
+  Teacher 2 steps → Student 1 step → repeat halving
+  Result: model that works at 4 inference steps
+                    ↓
+Phase 3: Quantization (your expertise)
+  INT8 the remaining 4 forward passes → 1.5-2x on top
+  Result: 4 steps × INT8 = ~12-16x total speedup
+
+Each phase is independent. Different training runs. Different optimizations.</div>
+</section>
+
+<div class="footer">
+  Flow Matching for TTS &middot; Minimal PyTorch &middot; 2026
+</div>
+
+</div>
+</body>
+</html>
