@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Journal — Kai Zhen</title>
+<meta name="description" content="Essays and travel notes by Kai Zhen.">
+<link rel="canonical" href="https://kaizhen.us/blogs/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Journal — Kai Zhen">
+<meta property="og:description" content="Essays and travel notes by Kai Zhen.">
+<meta property="og:url" content="https://kaizhen.us/blogs/">
+<meta property="og:image" content="https://kaizhen.us/blogs/gettysburg/img/og-gettysburg.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Source+Sans+3:wght@400;500;600&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4efe4; --paper-2:#ebe4d4; --ink:#2a2420; --ink-2:#5a5048; --rule:#d6ccb8; --accent:#7b2f24;
+  --serif:"EB Garamond",Georgia,"Times New Roman",serif;
+  --sans:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:1.2rem;line-height:1.6}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.wrap{max-width:46rem;margin:0 auto;padding:0 1rem}
+.top{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 0;font-family:var(--sans);font-size:.85rem;letter-spacing:.04em}
+.top a{text-decoration:none;color:var(--ink-2)}
+.top a:hover{color:var(--ink);text-decoration:underline}
+.lang-switch{display:inline-flex;gap:.15rem;border:1px solid var(--rule);border-radius:999px;padding:.1rem}
+.lang-switch button{font:inherit;font-size:.78rem;background:none;border:0;color:var(--ink-2);padding:.15rem .6rem;border-radius:999px;cursor:pointer}
+.lang-switch button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+header.intro{padding:3.5rem 0 2.5rem;border-bottom:1px solid var(--rule)}
+h1{font-weight:500;font-size:clamp(2.6rem,7vw,4rem);line-height:1;margin:0;letter-spacing:-.01em}
+.lede{font-style:italic;color:var(--ink-2);margin:.8rem 0 0;font-size:1.25rem}
+.year{font-family:var(--sans);font-size:.8rem;letter-spacing:.18em;font-weight:600;color:var(--accent);margin:2.75rem 0 .5rem}
+.posts{list-style:none;margin:0;padding:0}
+.post{border-bottom:1px solid var(--rule)}
+.post a{display:grid;grid-template-columns:1fr 11rem;gap:1.5rem;align-items:center;padding:1.4rem 0;text-decoration:none}
+.post a:hover h2{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
+.post .date{font-family:var(--sans);font-size:.82rem;color:var(--ink-2);margin:0 0 .3rem;display:flex;gap:.75rem;flex-wrap:wrap}
+.post .badge{border:1px solid var(--rule);border-radius:2px;padding:0 .35rem;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
+.post h2{font-weight:500;font-size:1.6rem;line-height:1.2;margin:0}
+.post p{margin:.4rem 0 0;color:var(--ink-2);font-size:1.08rem;line-height:1.5}
+.post img{width:100%;height:auto;display:block;aspect-ratio:560/348;object-fit:cover;background:var(--paper-2)}
+footer{margin:4rem 0 0;padding:1.5rem 0 3rem;border-top:1px solid var(--rule);font-family:var(--sans);font-size:.85rem;color:var(--ink-2)}
+html:not(.zh) .zh{display:none!important}
+html.zh .en{display:none!important}
+html.zh body{font-family:"Noto Serif SC","Songti SC",serif;font-size:1.1rem;line-height:1.85}
+html.zh h1,html.zh .post h2{font-family:"Noto Serif SC","Songti SC",serif;font-weight:600;letter-spacing:.03em}
+html.zh h1{font-size:clamp(2.2rem,6vw,3.2rem)}
+html.zh .post h2{font-size:1.35rem}
+html.zh .lede{font-style:normal}
+@media (max-width:560px){
+  .post a{grid-template-columns:1fr;gap:.9rem}
+  .post img{order:-1}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="top" aria-label="Site">
+    <a href="../">Kai Zhen</a>
+    <span class="lang-switch" role="group" aria-label="Language / 语言">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="zh" aria-pressed="false" lang="zh-Hans">中文</button>
+    </span>
+  </nav>
+
+  <header class="intro">
+    <h1><span class="en">Journal</span><span class="zh" lang="zh-Hans">札记</span></h1>
+    <p class="lede"><span class="en">Essays and travel notes.</span><span class="zh" lang="zh-Hans">随笔与旅行札记。</span></p>
+  </header>
+
+  <main>
+    <!--
+      To add an essay: copy one <li class="post"> block into the right year
+      (newest first), or add a new year <section> at the top.
+    -->
+    <section aria-labelledby="y2026">
+      <h2 class="year" id="y2026">2026</h2>
+      <ol class="posts">
+        <li class="post">
+          <a href="gettysburg/">
+            <div>
+              <p class="date">
+                <time datetime="2026-10-24"><span class="en">October 2026</span><span class="zh" lang="zh-Hans">2026 年 10 月</span></time>
+                <span class="badge"><span class="en">Audio</span><span class="zh" lang="zh-Hans">有声</span></span>
+              </p>
+              <h2><span class="en">Gettysburg: A Day Immersed in American History</span><span class="zh" lang="zh-Hans">葛底斯堡：沉浸于美国历史的一天</span></h2>
+              <p><span class="en">An afternoon in the museum and on the battlefield, and what it meant to learn this history in English.</span><span class="zh" lang="zh-Hans">在博物馆和战场上度过的一个下午，以及用英语学习这段历史对我的意义。</span></p>
+            </div>
+            <img src="gettysburg/img/thumb-560.webp" width="560" height="348" alt="" loading="lazy" decoding="async">
+          </a>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>© 2026 Kai Zhen</footer>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const titles = {en: 'Journal — Kai Zhen', zh: '札记 — Kai Zhen'};
+  function setLang(lang, save) {
+    root.classList.toggle('zh', lang === 'zh');
+    root.lang = lang === 'zh' ? 'zh-Hans' : 'en';
+    document.title = titles[lang];
+    document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang));
+    // carry the language choice into essay links
+    document.querySelectorAll('.post a').forEach(a => {
+      const u = new URL(a.getAttribute('href'), location.href);
+      lang === 'zh' ? u.searchParams.set('lang', 'zh') : u.searchParams.delete('lang');
+      a.href = u.pathname + u.search;
+    });
+    if (save) {
+      try { localStorage.setItem('lang', lang); } catch (e) {}
+      const u = new URL(location.href);
+      lang === 'zh' ? u.searchParams.set('lang', 'zh') : u.searchParams.delete('lang');
+      history.replaceState(null, '', u);
+    }
+  }
+  document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang, true)));
+  let initial = new URLSearchParams(location.search).get('lang');
+  if (!initial) { try { initial = localStorage.getItem('lang'); } catch (e) {} }
+  if (initial === 'zh') setLang('zh', false);
+})();
+</script>
+</body>
+</html>

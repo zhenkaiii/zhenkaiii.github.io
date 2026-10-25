@@ -19,7 +19,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@400;500;600&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/hero-2400.webp" imagesrcset="img/hero-1200.webp 1200w, img/hero-2400.webp 2400w" imagesizes="100vw">
 <style>
 :root{
@@ -170,38 +170,54 @@ footer a{color:inherit}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 @media print{.player,.mini,.listen,.find-btn,.topbar{display:none}.hero{min-height:auto;color:var(--ink);background:none}.hero picture,.hero::after{display:none}.hero-text{padding:1rem 0}}
+/* language */
+html:not(.zh) .zh{display:none!important}
+html.zh .en{display:none!important}
+html.zh body{font-family:"Noto Serif SC","Songti SC",serif;font-size:1.12rem;line-height:1.95}
+html.zh .hero h1{font-family:"Noto Serif SC","Songti SC",serif;font-weight:600;font-size:clamp(2.1rem,5.2vw,4rem);line-height:1.2;max-width:12em;letter-spacing:.02em}
+html.zh .hero .sub,html.zh .authors-note{font-style:normal}
+html.zh .chapter-head h2{font-family:"Noto Serif SC","Songti SC",serif;font-weight:600;font-size:clamp(1.5rem,3vw,2rem);letter-spacing:.02em}
+html.zh .dek{font-size:1.22rem;line-height:1.85}
+html.zh .essay > section:first-of-type p:first-of-type::first-letter{float:none;font-size:inherit;padding:0;color:inherit}
+html.zh .kicker{letter-spacing:.08em}
+html.zh .essay p{text-align:justify}
+.lang-switch{display:inline-flex;gap:.15rem;margin-right:1.1rem;border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:.1rem}
+.lang-switch button{font:inherit;font-size:.78rem;letter-spacing:.04em;background:none;border:0;color:#f6f1e7;padding:.15rem .6rem;border-radius:999px;cursor:pointer}
+.lang-switch button[aria-pressed=true]{background:rgba(255,255,255,.88);color:#2a2420}
+.meta .lang-inline button{font:inherit;background:none;border:0;padding:0;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:.18em}
 </style>
 </head>
 <body>
-<a class="skip" href="#essay">Skip to the essay</a>
+<a class="skip" href="#essay"><span class="en">Skip to the essay</span><span class="zh" lang="zh-Hans">跳到正文</span></a>
 
 <header class="hero">
   <nav class="topbar" aria-label="Site">
     <a href="../../">Kai Zhen</a>
-    <a href="#essay">Read</a>
+    <span><span class="lang-switch" role="group" aria-label="Language / 语言"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="zh" aria-pressed="false" lang="zh-Hans">中文</button></span><a href="#essay"><span class="en">Read</span><span class="zh" lang="zh-Hans">阅读</span></a></span>
   </nav>
   <picture>
     <img src="img/hero-2400.webp" srcset="img/hero-1200.webp 1200w, img/hero-2400.webp 2400w" sizes="100vw" width="2400" height="1850"
-      alt="A bronze statue of General Gouverneur K. Warren stands on the rocks of Little Round Top under a deep blue sky, looking out over autumn woods and fields toward distant ridges." fetchpriority="high">
+      data-alt-zh="一尊古弗尼尔·K·沃伦将军的青铜雕像立在小圆顶的岩石上，背后是深蓝色的天空，俯瞰着秋天的树林、田野和远处的山岭。" alt="A bronze statue of General Gouverneur K. Warren stands on the rocks of Little Round Top under a deep blue sky, looking out over autumn woods and fields toward distant ridges." fetchpriority="high">
   </picture>
   <div class="hero-text">
-    <p class="kicker">Travel journal · Gettysburg, Pennsylvania</p>
-    <h1>Gettysburg: A Day Immersed in American History</h1>
-    <p class="sub">A personal journey through history, language, and the landscapes that shaped a nation.</p>
+    <p class="kicker"><span class="en">Travel journal · Gettysburg, Pennsylvania</span><span class="zh" lang="zh-Hans">旅行札记 · 宾夕法尼亚州葛底斯堡</span></p>
+    <h1><span class="en">Gettysburg: A Day Immersed in American History</span><span class="zh" lang="zh-Hans">葛底斯堡：<br>沉浸于美国历史的一天</span></h1>
+    <p class="sub"><span class="en">A personal journey through history, language, and the landscapes that shaped a nation.</span><span class="zh" lang="zh-Hans">关于历史、语言，以及塑造了这个国家的那片土地的一次个人旅程。</span></p>
   </div>
-  <span class="hero-credit">Warren statue, Little Round Top. Carol M. Highsmith, Library of Congress</span>
+  <span class="hero-credit"><span class="en">Warren statue, Little Round Top. Carol M. Highsmith, Library of Congress</span><span class="zh" lang="zh-Hans">小圆顶上的沃伦雕像。Carol M. Highsmith 摄，美国国会图书馆</span></span>
 </header>
 
 <main>
   <div class="col">
     <ul class="meta" aria-label="Article details">
-      <li><time datetime="2026-10-24">Visited October 24, 2026</time></li>
-      <li>Gettysburg, Pennsylvania</li>
-      <li>6 min read</li>
-      <li>8 min listen</li>
+      <li><time datetime="2026-10-24"><span class="en">Visited October 24, 2026</span><span class="zh" lang="zh-Hans">到访于 2026 年 10 月 24 日</span></time></li>
+      <li><span class="en">Gettysburg, Pennsylvania</span><span class="zh" lang="zh-Hans">宾夕法尼亚州葛底斯堡</span></li>
+      <li><span class="en">6 min read</span><span class="zh" lang="zh-Hans">阅读约 6 分钟</span></li>
+      <li><span class="en">8 min listen</span><span class="zh" lang="zh-Hans">收听 8 分钟（英文）</span></li>
+      <li class="lang-inline"><button type="button" data-lang="zh" class="en" lang="zh-Hans">阅读中文版</button><button type="button" data-lang="en" class="zh">Read in English</button></li>
     </ul>
-    <p class="dek">I spent most of an October Saturday at Gettysburg: three hours in the museum, then two on a bus tour across the battlefield. The next day I talked through what I had seen, while it was still fresh. This is that account, as text and in my own voice.</p>
-    <p class="byline">By Kai Zhen</p>
+    <p class="dek"><span class="en">I spent most of an October Saturday at Gettysburg: three hours in the museum, then two on a bus tour across the battlefield. The next day I talked through what I had seen, while it was still fresh. This is that account, as text and in my own voice.</span><span class="zh" lang="zh-Hans">十月的一个星期六，我在葛底斯堡待了大半天：先在博物馆里看了三个小时，再坐大巴绕战场转了两个小时。第二天，趁记忆还新鲜，我把所见所想讲了出来。这就是那段讲述：有文字，也有我自己的声音（英文）。</span></p>
+    <p class="byline"><span class="en">By Kai Zhen</span><span class="zh" lang="zh-Hans">文 / Kai Zhen</span></p>
 
     <section class="player" id="player" aria-label="Audio narration">
       <div class="player-row">
@@ -210,8 +226,8 @@ footer a{color:inherit}
           <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>
         </button>
         <div class="player-body">
-          <p class="player-title">Listen to the essay</p>
-          <p class="player-note">Narrated in the author’s voice</p>
+          <p class="player-title"><span class="en">Listen to the essay</span><span class="zh" lang="zh-Hans">收听原文朗读</span></p>
+          <p class="player-note"><span class="en">Narrated in the author’s voice</span><span class="zh" lang="zh-Hans">英文 · 作者本人的声音</span></p>
           <div class="scrub">
             <span id="cur" aria-hidden="true">0:00</span>
             <input id="seek" type="range" min="0" max="489" step="0.1" value="0" aria-label="Seek" aria-valuetext="0 minutes 0 seconds">
@@ -222,15 +238,15 @@ footer a{color:inherit}
       <div class="player-tools">
         <button class="tool" type="button" id="speed" aria-label="Playback speed: 1 times">1×</button>
         <button class="tool" type="button" id="back15" aria-label="Back 15 seconds">−15s</button>
-        <a href="audio/gettysburg-narration.mp3" download>Download MP3</a>
+        <a href="audio/gettysburg-narration.mp3" download><span class="en">Download MP3</span><span class="zh" lang="zh-Hans">下载 MP3</span></a>
       </div>
       <ol class="chapters" aria-label="Chapters">
-        <li><button type="button" data-seek="0"><span class="t">0:00</span> <span>An Unexpectedly Immersive Afternoon</span></button></li>
-        <li><button type="button" data-seek="82"><span class="t">1:22</span> <span>A Town, a Speech, and a Farm</span></button></li>
-        <li><button type="button" data-seek="206.5"><span class="t">3:26</span> <span>The Battle Through Its Terrain</span></button></li>
-        <li><button type="button" data-seek="309.5"><span class="t">5:10</span> <span>The Human Cost and the Turning Point</span></button></li>
-        <li><button type="button" data-seek="349"><span class="t">5:49</span> <span>History Brought to Life</span></button></li>
-        <li><button type="button" data-seek="410"><span class="t">6:50</span> <span>What I Took Away</span></button></li>
+        <li><button type="button" data-seek="0"><span class="t">0:00</span> <span data-zh="一个意外沉浸的下午" data-en="An Unexpectedly Immersive Afternoon"><span class="en">An Unexpectedly Immersive Afternoon</span><span class="zh" lang="zh-Hans">一个意外沉浸的下午</span></span></button></li>
+        <li><button type="button" data-seek="82"><span class="t">1:22</span> <span data-zh="小镇、演说与农场" data-en="A Town, a Speech, and a Farm"><span class="en">A Town, a Speech, and a Farm</span><span class="zh" lang="zh-Hans">小镇、演说与农场</span></span></button></li>
+        <li><button type="button" data-seek="206.5"><span class="t">3:26</span> <span data-zh="从地形读懂战役" data-en="The Battle Through Its Terrain"><span class="en">The Battle Through Its Terrain</span><span class="zh" lang="zh-Hans">从地形读懂战役</span></span></button></li>
+        <li><button type="button" data-seek="309.5"><span class="t">5:10</span> <span data-zh="人的代价与转折点" data-en="The Human Cost and the Turning Point"><span class="en">The Human Cost and the Turning Point</span><span class="zh" lang="zh-Hans">人的代价与转折点</span></span></button></li>
+        <li><button type="button" data-seek="349"><span class="t">5:49</span> <span data-zh="让历史活起来" data-en="History Brought to Life"><span class="en">History Brought to Life</span><span class="zh" lang="zh-Hans">让历史活起来</span></span></button></li>
+        <li><button type="button" data-seek="410"><span class="t">6:50</span> <span data-zh="我带走了什么" data-en="What I Took Away"><span class="en">What I Took Away</span><span class="zh" lang="zh-Hans">我带走了什么</span></span></button></li>
       </ol>
       <audio id="audio" preload="metadata" src="audio/gettysburg-narration.mp3"></audio>
     </section>
@@ -239,170 +255,194 @@ footer a{color:inherit}
   <article class="essay" id="essay">
     <section class="col" aria-labelledby="ch1">
       <div class="chapter-head">
-        <span class="num">Chapter I</span>
-        <h2 id="ch1">An Unexpectedly Immersive Afternoon</h2>
+        <span class="num"><span class="en">Chapter I</span><span class="zh" lang="zh-Hans">第一章</span></span>
+        <h2 id="ch1"><span class="en">An Unexpectedly Immersive Afternoon</span><span class="zh" lang="zh-Hans">一个意外沉浸的下午</span></h2>
       </div>
-      <p data-t="0">Yesterday, I spent almost an entire afternoon in Gettysburg, Pennsylvania, one of the most historically significant towns in the United States. And honestly, it exceeded my expectations.</p>
-      <p data-t="11.9">I got to the visitor center just before noon. At the ticket counter, I had the feeling the staff expected a quick visit. Maybe, seeing a Chinese visitor, they weren’t sure how much I’d care about Civil War history, or how much I’d get out of exhibits in English. But I had something different in mind. I told them I wanted a good long stretch in the museum before the battlefield bus tour. So we booked the tour for around three, which gave me about three hours inside. And as it turned out, three hours was barely enough.</p>
-      <p data-t="43.9">What made it so rewarding wasn’t just the amount of information. It was the chance to immerse myself in one moment of American history entirely through the English language. I kept noticing how the exhibits were written, how the context was set up, and how those three extraordinary days in July 1863 were woven into one coherent story.</p>
-      <p data-t="66.0">For me, this was more than a history lesson. It connected language, geography, and history in a remarkably vivid setting. And I knew that unless I put my thoughts into words afterward, most of it would fade. So here’s my attempt to hold on to it while it’s still fresh.</p>
+      <p class="en" data-t="0">Yesterday, I spent almost an entire afternoon in Gettysburg, Pennsylvania, one of the most historically significant towns in the United States. And honestly, it exceeded my expectations.</p>
+      <p data-t="0" class="zh" lang="zh-Hans">昨天，我在宾夕法尼亚州的葛底斯堡度过了几乎一整个下午。这是美国历史上最重要的小镇之一。说实话，它远远超出了我的预期。</p>
+      <p class="en" data-t="11.9">I got to the visitor center just before noon. At the ticket counter, I had the feeling the staff expected a quick visit. Maybe, seeing a Chinese visitor, they weren’t sure how much I’d care about Civil War history, or how much I’d get out of exhibits in English. But I had something different in mind. I told them I wanted a good long stretch in the museum before the battlefield bus tour. So we booked the tour for around three, which gave me about three hours inside. And as it turned out, three hours was barely enough.</p>
+      <p data-t="11.9" class="zh" lang="zh-Hans">我到游客中心的时候，刚好快到中午。在售票台，我感觉工作人员以为我只是随便看看。也许，看到一个中国游客，他们拿不准我会对南北战争的历史有多大兴趣，或者能从全英文的展览里看懂多少。但我另有打算。我告诉他们，我想在参观战场的大巴游之前，先在博物馆里好好待上一段时间。于是我们把大巴游订在三点左右，这样我在馆里就有大约三个小时。结果证明，三个小时都还不太够。</p>
+      <p class="en" data-t="43.9">What made it so rewarding wasn’t just the amount of information. It was the chance to immerse myself in one moment of American history entirely through the English language. I kept noticing how the exhibits were written, how the context was set up, and how those three extraordinary days in July 1863 were woven into one coherent story.</p>
+      <p data-t="43.9" class="zh" lang="zh-Hans">让这次参观如此有收获的，不只是信息量。更重要的是，我有机会完全通过英语，沉浸在美国历史的一个瞬间里。我一直在留意展览的文字是怎么写的，背景是怎么铺陈的，以及 1863 年 7 月那非同寻常的三天，是如何被编织成一个连贯的故事的。</p>
+      <p class="en" data-t="66.0">For me, this was more than a history lesson. It connected language, geography, and history in a remarkably vivid setting. And I knew that unless I put my thoughts into words afterward, most of it would fade. So here’s my attempt to hold on to it while it’s still fresh.</p>
+      <p data-t="66.0" class="zh" lang="zh-Hans">对我来说，这不只是一堂历史课。它在一个格外生动的场景里，把语言、地理和历史连在了一起。我也知道，如果事后不把想法说出来、写下来，大部分都会慢慢淡去。所以，趁着记忆还新鲜，这是我想把它留住的一次尝试。</p>
     </section>
 
     <section class="col" aria-labelledby="ch2">
       <div class="chapter-head">
-        <span class="num">Chapter II</span>
-        <h2 id="ch2">A Town, a Speech, and a Farm</h2>
-        <button class="listen" type="button" data-seek="82"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen from 1:22</button>
+        <span class="num"><span class="en">Chapter II</span><span class="zh" lang="zh-Hans">第二章</span></span>
+        <h2 id="ch2"><span class="en">A Town, a Speech, and a Farm</span><span class="zh" lang="zh-Hans">小镇、演说与农场</span></h2>
+        <button class="listen" type="button" data-seek="82"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><span class="en">Listen from 1:22</span><span class="zh" lang="zh-Hans">从 1:22 开始收听</span></button>
       </div>
-      <p data-t="83.0">Let me start with the battlefield tour, because that’s what I remember most vividly. It lasted about two hours. We drove north from the visitor center, through the town itself, and then around the battlefield. One of the first things I learned is that the town sits in a kind of bowl, and that surrounding terrain shaped the fighting.</p>
-      <p data-t="103.1">What surprised me is that despite the scale of the battle, only one civilian is known to have been killed by gunfire. Her name was Jennie Wade.<sup><a href="#n1" id="r1" aria-label="Note 1">1</a></sup> She was staying with her sister, who had just given birth, when a stray bullet hit her. It’s a tragic story. But think about it. Roughly 51,000 military casualties in three days,<sup><a href="#n2" id="r2" aria-label="Note 2">2</a></sup> and only one civilian shot dead. That’s extraordinary.</p>
-      <p data-t="128.4">We also passed the railroad station tied to Abraham Lincoln’s visit in November 1863. A few months after the battle, he came to dedicate the Soldiers’ National Cemetery, and that’s where he delivered the Gettysburg Address. What struck me is how short it was. About two minutes. Two minutes. And yet those few paragraphs became some of the most enduring words in American political history.<sup><a href="#n3" id="r3" aria-label="Note 3">3</a></sup></p>
+      <p class="en" data-t="83.0">Let me start with the battlefield tour, because that’s what I remember most vividly. It lasted about two hours. We drove north from the visitor center, through the town itself, and then around the battlefield. One of the first things I learned is that the town sits in a kind of bowl, and that surrounding terrain shaped the fighting.</p>
+      <p data-t="83.0" class="zh" lang="zh-Hans">先从战场大巴游说起，因为那是我记得最清楚的部分。全程大约两个小时。我们从游客中心往北开，穿过小镇，然后绕着战场转了一圈。我最早学到的一件事是：这个小镇坐落在一个类似盆地的地方，而周围的地形决定了战斗的走向。</p>
+      <p class="en" data-t="103.1">What surprised me is that despite the scale of the battle, only one civilian is known to have been killed by gunfire. Her name was Jennie Wade.<sup><a href="#n1" id="r1" aria-label="Note 1">1</a></sup> She was staying with her sister, who had just given birth, when a stray bullet hit her. It’s a tragic story. But think about it. Roughly 51,000 military casualties in three days,<sup><a href="#n2" id="r2" aria-label="Note 2">2</a></sup> and only one civilian shot dead. That’s extraordinary.</p>
+      <p data-t="103.1" class="zh" lang="zh-Hans">让我惊讶的是，尽管这场战役规模如此之大，已知被枪弹打死的平民却只有一位。她叫珍妮·韦德。<sup><a href="#n1-zh" id="r1-zh" aria-label="注释 1">1</a></sup>当时她住在刚生完孩子的姐姐家里，一颗流弹击中了她。这是个悲剧。但想想看：三天里大约五万一千名军人伤亡，<sup><a href="#n2-zh" id="r2-zh" aria-label="注释 2">2</a></sup>却只有一位平民中弹身亡。这实在非同寻常。</p>
+      <p class="en" data-t="128.4">We also passed the railroad station tied to Abraham Lincoln’s visit in November 1863. A few months after the battle, he came to dedicate the Soldiers’ National Cemetery, and that’s where he delivered the Gettysburg Address. What struck me is how short it was. About two minutes. Two minutes. And yet those few paragraphs became some of the most enduring words in American political history.<sup><a href="#n3" id="r3" aria-label="Note 3">3</a></sup></p>
+      <p data-t="128.4" class="zh" lang="zh-Hans">我们还经过了与亚伯拉罕·林肯 1863 年 11 月来访有关的火车站。战役结束几个月后，他来到这里为士兵国家公墓举行落成典礼，并在那里发表了葛底斯堡演说。让我印象深刻的是它有多短。大约两分钟。两分钟。可就是这短短几段话，成了美国政治史上最经久不衰的文字之一。<sup><a href="#n3-zh" id="r3-zh" aria-label="注释 3">3</a></sup></p>
     </section>
 
     <figure class="wide">
       <div class="find" id="findLincoln">
         <img src="img/lincoln-1600.webp" srcset="img/lincoln-900.webp 900w, img/lincoln-1600.webp 1600w" sizes="(max-width: 960px) 100vw, 960px" width="1600" height="754" loading="lazy" decoding="async"
-          alt="A black-and-white photograph of a dense crowd of men in top hats and soldiers gathered around a speakers’ platform on an overcast day.">
+          data-alt-zh="一张黑白照片：阴天里，戴高礼帽的男人和士兵密密麻麻地聚集在演讲台周围。" alt="A black-and-white photograph of a dense crowd of men in top hats and soldiers gathered around a speakers’ platform on an overcast day.">
         <span class="ring" aria-hidden="true"></span>
       </div>
       <figcaption>
-        <span class="tag">Archival · 1863</span>The crowd at the dedication of the Soldiers’ National Cemetery, November 19, 1863 (detail). Lincoln, hatless and looking down, is seated near the center of the platform.
+        <span class="tag"><span class="en">Archival · 1863</span><span class="zh" lang="zh-Hans">档案照片 · 1863</span></span><span class="en">The crowd at the dedication of the Soldiers’ National Cemetery, November 19, 1863 (detail). Lincoln, hatless and looking down, is seated near the center of the platform.</span><span class="zh" lang="zh-Hans">1863 年 11 月 19 日，士兵国家公墓落成典礼上的人群（局部）。林肯没戴帽子，低着头，坐在讲台中央附近。</span>
         <br><button class="find-btn" type="button" aria-pressed="false" aria-controls="findLincoln">Show Lincoln</button>
-        <span class="credit">Photographer uncertain (attributed variously to David Bachrach and others). National Archives / Library of Congress. Public domain. <a href="https://commons.wikimedia.org/wiki/File:Lincolnatgettysburg.jpg">Source</a></span>
+        <span class="credit"><span class="en">Photographer uncertain (attributed variously to David Bachrach and others). National Archives / Library of Congress. Public domain.</span><span class="zh" lang="zh-Hans">摄影者不详（有说法认为是 David Bachrach 等人）。美国国家档案馆 / 美国国会图书馆。公有领域。</span> <a href="https://commons.wikimedia.org/wiki/File:Lincolnatgettysburg.jpg"><span class="en">Source</span><span class="zh" lang="zh-Hans">来源</span></a></span>
       </figcaption>
     </figure>
 
     <section class="col" aria-label="A Town, a Speech, and a Farm, continued">
-      <p data-t="153.2">I even remembered an interview decades later with Mike Wallace, where a Chinese leader recited lines from that speech.<sup><a href="#n4" id="r4" aria-label="Note 4">4</a></sup> I love moments like that, when events that felt isolated in my memory suddenly become part of a much bigger landscape.</p>
-      <p data-t="167.8">We passed Culp’s Hill, Cemetery Hill, and the long line along Cemetery Ridge. I knew the outline of the battle before I came, but seeing the terrain, I finally understood why those hills mattered so much.</p>
-      <p data-t="180.7">We also passed Lee’s Headquarters and the farm once owned by Dwight Eisenhower, another unexpected connection. He commanded a tank training camp here in the First World War, and decades later, after leading the Allies in Europe and becoming president, he came back and made Gettysburg his retirement home. Which left me with an amusing question: if he already had such a beautiful farm here, why did he need another retreat in the mountains?<sup><a href="#n5" id="r5" aria-label="Note 5">5</a></sup></p>
+      <p class="en" data-t="153.2">I even remembered an interview decades later with Mike Wallace, where a Chinese leader recited lines from that speech.<sup><a href="#n4" id="r4" aria-label="Note 4">4</a></sup> I love moments like that, when events that felt isolated in my memory suddenly become part of a much bigger landscape.</p>
+      <p data-t="153.2" class="zh" lang="zh-Hans">我甚至想起几十年后迈克·华莱士的一次采访，一位中国领导人在采访中背诵了这篇演说里的句子。<sup><a href="#n4-zh" id="r4-zh" aria-label="注释 4">4</a></sup>我很喜欢这样的时刻：那些在记忆里原本孤立的事件，忽然成了一幅更大图景的一部分。</p>
+      <p class="en" data-t="167.8">We passed Culp’s Hill, Cemetery Hill, and the long line along Cemetery Ridge. I knew the outline of the battle before I came, but seeing the terrain, I finally understood why those hills mattered so much.</p>
+      <p data-t="167.8" class="zh" lang="zh-Hans">我们经过了卡尔普山、墓园山，以及沿着墓园岭延伸的那条长长的防线。来之前我大致知道这场战役的轮廓，但亲眼看到地形之后，我才终于明白这些山丘为什么如此重要。</p>
+      <p class="en" data-t="180.7">We also passed Lee’s Headquarters and the farm once owned by Dwight Eisenhower, another unexpected connection. He commanded a tank training camp here in the First World War, and decades later, after leading the Allies in Europe and becoming president, he came back and made Gettysburg his retirement home. Which left me with an amusing question: if he already had such a beautiful farm here, why did he need another retreat in the mountains?<sup><a href="#n5" id="r5" aria-label="Note 5">5</a></sup></p>
+      <p data-t="180.7" class="zh" lang="zh-Hans">我们还经过了李将军的指挥部，以及德怀特·艾森豪威尔曾经拥有的农场——又一个意想不到的联系。第一次世界大战时，他在这里指挥过一个坦克训练营；几十年后，在率领盟军征战欧洲、又当上总统之后，他回到这里，把葛底斯堡当作自己的退休之地。这让我冒出一个有趣的问题：既然他在这里已经有这么漂亮的农场，为什么还需要山里的另一处度假地呢？<sup><a href="#n5-zh" id="r5-zh" aria-label="注释 5">5</a></sup></p>
     </section>
 
     <figure class="wide">
       <img src="img/eisenhower-1600.webp" srcset="img/eisenhower-900.webp 900w, img/eisenhower-1600.webp 1600w" sizes="(max-width: 960px) 100vw, 960px" width="1600" height="1128" loading="lazy" decoding="async"
-        alt="A large white two-story farmhouse with green shutters, a curving driveway, and patches of snow on a winter lawn.">
+        data-alt-zh="一座带绿色百叶窗的白色两层农舍，前面是弯曲的车道，冬天的草坪上残留着积雪。" alt="A large white two-story farmhouse with green shutters, a curving driveway, and patches of snow on a winter lawn.">
       <figcaption>
-        <span class="tag">Modern photograph</span>The main house of the Eisenhower farm on the southwestern edge of Gettysburg, now the Eisenhower National Historic Site, photographed for the Historic American Buildings Survey.
-        <span class="credit">Jack E. Boucher, HABS, Library of Congress. Public domain. <a href="https://commons.wikimedia.org/wiki/File:HABS_Eisenhower_Farm.jpg">Source</a></span>
+        <span class="tag"><span class="en">Modern photograph</span><span class="zh" lang="zh-Hans">现代照片</span></span><span class="en">The main house of the Eisenhower farm on the southwestern edge of Gettysburg, now the Eisenhower National Historic Site, photographed for the Historic American Buildings Survey.</span><span class="zh" lang="zh-Hans">葛底斯堡西南边缘的艾森豪威尔农场主屋，现为艾森豪威尔国家历史遗址；照片为“美国历史建筑调查”（HABS）项目所摄。</span>
+        <span class="credit"><span class="en">Jack E. Boucher, HABS, Library of Congress. Public domain.</span><span class="zh" lang="zh-Hans">Jack E. Boucher，HABS，美国国会图书馆。公有领域。</span> <a href="https://commons.wikimedia.org/wiki/File:HABS_Eisenhower_Farm.jpg"><span class="en">Source</span><span class="zh" lang="zh-Hans">来源</span></a></span>
       </figcaption>
     </figure>
 
     <section class="col" aria-labelledby="ch3">
       <div class="chapter-head">
-        <span class="num">Chapter III</span>
-        <h2 id="ch3">Understanding the Battle Through Its Terrain</h2>
-        <button class="listen" type="button" data-seek="206.5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen from 3:26</button>
+        <span class="num"><span class="en">Chapter III</span><span class="zh" lang="zh-Hans">第三章</span></span>
+        <h2 id="ch3"><span class="en">Understanding the Battle Through Its Terrain</span><span class="zh" lang="zh-Hans">从地形读懂战役</span></h2>
+        <button class="listen" type="button" data-seek="206.5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><span class="en">Listen from 3:26</span><span class="zh" lang="zh-Hans">从 3:26 开始收听</span></button>
       </div>
-      <p data-t="206.3">Then we turned to the battle itself. On July 1st, Confederate forces gained the upper hand and drove the Union troops back through the town, but they regrouped on the high ground to the south, and those positions shaped the next two days. And this is where geography becomes everything.</p>
+      <p class="en" data-t="206.3">Then we turned to the battle itself. On July 1st, Confederate forces gained the upper hand and drove the Union troops back through the town, but they regrouped on the high ground to the south, and those positions shaped the next two days. And this is where geography becomes everything.</p>
+      <p data-t="206.3" class="zh" lang="zh-Hans">接着，我们讲到了战役本身。7 月 1 日，南方邦联军占了上风，把北方联邦军一路击退，穿过了小镇。但联邦军在南边的高地上重新集结，而这些阵地决定了接下来两天的战局。也正是在这里，地理成了决定一切的因素。</p>
     </section>
 
     <figure class="tall">
       <a href="img/map-july2-1100.webp" aria-label="Open the July 2 map at full size">
         <img src="img/map-july2-1100.webp" srcset="img/map-july2-700.webp 700w, img/map-july2-1100.webp 1100w" sizes="(max-width: 520px) 100vw, 480px" width="1100" height="1684" loading="lazy" decoding="async"
-          alt="Map of Gettysburg on July 2, 1863. Union lines, in blue, form a fishhook from Culp’s Hill and Cemetery Hill down Cemetery Ridge toward Little Round Top, with Sickles’ corps pushed forward to the Peach Orchard and Wheatfield. Confederate lines, in red, run along Seminary Ridge and wrap around the town to the north and east, with Longstreet’s attack coming from the southwest.">
+          data-alt-zh="1863 年 7 月 2 日的葛底斯堡地图。蓝色的联邦军防线从卡尔普山、墓园山沿墓园岭延伸到小圆顶，形似鱼钩，西克尔斯的军前出到桃园和麦田；红色的邦联军防线沿神学院岭展开，并绕到小镇北面和东面，朗斯特里特从西南方向发起进攻。" alt="Map of Gettysburg on July 2, 1863. Union lines, in blue, form a fishhook from Culp’s Hill and Cemetery Hill down Cemetery Ridge toward Little Round Top, with Sickles’ corps pushed forward to the Peach Orchard and Wheatfield. Confederate lines, in red, run along Seminary Ridge and wrap around the town to the north and east, with Longstreet’s attack coming from the southwest.">
       </a>
       <figcaption>
-        <span class="tag">Modern map</span>July 2, 1863. The Union army (blue) holds the high ground south of town in a “fishhook” from Culp’s Hill to the Round Tops; Longstreet’s Confederates (red) strike the southern end near the Peach Orchard, the Wheatfield, and Devil’s Den.
-        <span class="credit">Hal Jespersen. Public domain. <a href="https://commons.wikimedia.org/wiki/File:Gettysburg_Battle_Map_Day2.jpg">Source</a></span>
+        <span class="tag"><span class="en">Modern map</span><span class="zh" lang="zh-Hans">现代地图</span></span><span class="en">July 2, 1863. The Union army (blue) holds the high ground south of town in a “fishhook” from Culp’s Hill to the Round Tops; Longstreet’s Confederates (red) strike the southern end near the Peach Orchard, the Wheatfield, and Devil’s Den.</span><span class="zh" lang="zh-Hans">1863 年 7 月 2 日。联邦军（蓝色）占据小镇以南的高地，从卡尔普山到圆顶山形成“鱼钩”形防线；朗斯特里特率领的邦联军（红色）攻击防线南端的桃园、麦田和魔鬼穴一带。</span>
+        <span class="credit"><span class="en">Hal Jespersen. Public domain.</span><span class="zh" lang="zh-Hans">Hal Jespersen 绘。公有领域。</span> <a href="https://commons.wikimedia.org/wiki/File:Gettysburg_Battle_Map_Day2.jpg"><span class="en">Source</span><span class="zh" lang="zh-Hans">来源</span></a></span>
       </figcaption>
     </figure>
 
     <section class="col" aria-label="Understanding the Battle Through Its Terrain, continued">
-      <p data-t="224.1">On the second day, Lee tried to hit the Union flank at the southern end of the line. Confederate troops had to move through fields and woods, trying to hide their approach. Our guide told us that even the dust from marching soldiers could give them away.</p>
-      <p data-t="238.1">One of our stops was the Peach Orchard. Standing there, I found it hard to imagine what that ground looked like during the fighting. Thousands of men became casualties around the orchard, the Wheatfield, and Devil’s Den. When you hear “thousands of casualties,” it sounds almost abstract. But when you actually see the size of a field and imagine all that suffering packed into such a small space, it becomes immediate. It’s deeply unsettling.</p>
+      <p class="en" data-t="224.1">On the second day, Lee tried to hit the Union flank at the southern end of the line. Confederate troops had to move through fields and woods, trying to hide their approach. Our guide told us that even the dust from marching soldiers could give them away.</p>
+      <p data-t="224.1" class="zh" lang="zh-Hans">第二天，李将军试图攻击联邦军防线南端的侧翼。邦联军必须穿过田野和树林，设法隐蔽行军。导游告诉我们，就连行军扬起的尘土都可能暴露他们的行踪。</p>
+      <p class="en" data-t="238.1">One of our stops was the Peach Orchard. Standing there, I found it hard to imagine what that ground looked like during the fighting. Thousands of men became casualties around the orchard, the Wheatfield, and Devil’s Den. When you hear “thousands of casualties,” it sounds almost abstract. But when you actually see the size of a field and imagine all that suffering packed into such a small space, it becomes immediate. It’s deeply unsettling.</p>
+      <p data-t="238.1" class="zh" lang="zh-Hans">我们停靠的一站是桃园。站在那里，我很难想象战斗时这片土地是什么样子。在桃园、麦田和魔鬼穴一带，成千上万的人伤亡。听到“数千人伤亡”，这听起来几乎是抽象的。但当你亲眼看到一片田地有多大，再想象所有那些苦难都挤在这么小的地方，它就变得真切起来。这让人深感不安。</p>
     </section>
 
     <figure class="wide">
       <img src="img/peach-orchard-1446.webp" srcset="img/peach-orchard-900.webp 900w, img/peach-orchard-1446.webp 1446w" sizes="(max-width: 960px) 100vw, 960px" width="1446" height="694" loading="lazy" decoding="async"
-        alt="A painting of open farmland with a barn at left. Lines of infantry stretch across the field while a group of mounted officers rides forward at right beneath clouds of artillery smoke.">
+        data-alt-zh="一幅描绘开阔农田的画，左边有一座谷仓。步兵队列横贯田野，右边一群骑马的军官在炮火硝烟下策马向前。" alt="A painting of open farmland with a barn at left. Lines of infantry stretch across the field while a group of mounted officers rides forward at right beneath clouds of artillery smoke.">
       <figcaption>
-        <span class="tag">Painting · after 1865</span>Edwin Forbes, who sketched the Army of the Potomac in the field, painted this view of the Peach Orchard on the afternoon of July 2. It has been interpreted as General Daniel Sickles riding forward to inspect his exposed lines.
-        <span class="credit">Edwin Forbes. Library of Congress. Public domain. <a href="https://commons.wikimedia.org/wiki/File:Gettysburg_Peach_Orchard_Edwin_Forbes.jpg">Source</a></span>
+        <span class="tag"><span class="en">Painting · after 1865</span><span class="zh" lang="zh-Hans">绘画 · 1865 年后</span></span><span class="en">Edwin Forbes, who sketched the Army of the Potomac in the field, painted this view of the Peach Orchard on the afternoon of July 2. It has been interpreted as General Daniel Sickles riding forward to inspect his exposed lines.</span><span class="zh" lang="zh-Hans">曾随波托马克军团在战地写生的画家埃德温·福布斯，描绘了 7 月 2 日下午的桃园。画面一般被解读为丹尼尔·西克尔斯将军策马向前，察看他暴露在外的防线。</span>
+        <span class="credit"><span class="en">Edwin Forbes. Library of Congress. Public domain.</span><span class="zh" lang="zh-Hans">Edwin Forbes。美国国会图书馆。公有领域。</span> <a href="https://commons.wikimedia.org/wiki/File:Gettysburg_Peach_Orchard_Edwin_Forbes.jpg"><span class="en">Source</span><span class="zh" lang="zh-Hans">来源</span></a></span>
       </figcaption>
     </figure>
 
     <section class="col" aria-label="Little Round Top">
-      <p data-t="265.7">The next big stop was Little Round Top, probably the most memorable place of the whole tour. On July 2nd, Union General Gouverneur Warren, the army’s chief engineer, climbed the hill and realized that this key position was barely defended. Worse, he saw Confederate troops moving toward the exposed left flank. He called for reinforcements right away. Union troops rushed in, including the famous 20th Maine, and the defenders held.<sup><a href="#n6" id="r6" aria-label="Note 6">6</a></sup></p>
+      <p class="en" data-t="265.7">The next big stop was Little Round Top, probably the most memorable place of the whole tour. On July 2nd, Union General Gouverneur Warren, the army’s chief engineer, climbed the hill and realized that this key position was barely defended. Worse, he saw Confederate troops moving toward the exposed left flank. He called for reinforcements right away. Union troops rushed in, including the famous 20th Maine, and the defenders held.<sup><a href="#n6" id="r6" aria-label="Note 6">6</a></sup></p>
+      <p data-t="265.7" class="zh" lang="zh-Hans">下一个重要的停靠点是小圆顶，这大概是整趟行程中最难忘的地方。7 月 2 日，联邦军的古弗尼尔·沃伦将军——当时他是陆军的总工程师——登上这座山丘，发现这个关键阵地几乎无人防守。更糟的是，他看到邦联军正朝着暴露的左翼移动。他立即请求增援。联邦军迅速赶到，其中包括著名的缅因第 20 步兵团，守军最终守住了阵地。<sup><a href="#n6-zh" id="r6-zh" aria-label="注释 6">6</a></sup></p>
     </section>
 
     <figure class="full">
       <img src="img/devils-den-1600.webp" srcset="img/devils-den-900.webp 900w, img/devils-den-1600.webp 1600w" sizes="100vw" width="1600" height="1066" loading="lazy" decoding="async"
-        alt="Looking down from a hilltop onto a jumble of huge gray boulders among green fields and trees, with a winding road and a few parked cars.">
+        data-alt-zh="从山顶俯瞰：绿色田野和树木之间散落着巨大的灰色岩石，一条蜿蜒的道路边停着几辆车。" alt="Looking down from a hilltop onto a jumble of huge gray boulders among green fields and trees, with a winding road and a few parked cars.">
       <figcaption>
-        <span class="tag">Modern photograph · 2020</span>Devil’s Den seen from Little Round Top: the view down toward the ground Confederate troops crossed on July 2.
-        <span class="credit">Northern-Virginia-Photographer, Wikimedia Commons. CC0. <a href="https://commons.wikimedia.org/wiki/File:View_of_Devil%27s_Den_at_Gettysburg_from_Little_Round_Top.jpg">Source</a></span>
+        <span class="tag"><span class="en">Modern photograph · 2020</span><span class="zh" lang="zh-Hans">现代照片 · 2020</span></span><span class="en">Devil’s Den seen from Little Round Top: the view down toward the ground Confederate troops crossed on July 2.</span><span class="zh" lang="zh-Hans">从小圆顶俯瞰魔鬼穴：7 月 2 日邦联军穿越的那片土地。</span>
+        <span class="credit"><span class="en">Northern-Virginia-Photographer, Wikimedia Commons. CC0.</span><span class="zh" lang="zh-Hans">Northern-Virginia-Photographer 摄，维基共享资源。CC0。</span> <a href="https://commons.wikimedia.org/wiki/File:View_of_Devil%27s_Den_at_Gettysburg_from_Little_Round_Top.jpg"><span class="en">Source</span><span class="zh" lang="zh-Hans">来源</span></a></span>
       </figcaption>
     </figure>
 
     <section class="col" aria-label="Little Round Top, continued">
-      <p data-t="291.9">What impressed me was how much depended on one moment of observation and judgment. A general climbed a hill, saw a weakness, and acted before the enemy could. In a battle of nearly 170,000 soldiers,<sup><a href="#n7" id="r7" aria-label="Note 7">7</a></sup> the quick decisions of a few people could echo far beyond where they stood.</p>
+      <p class="en" data-t="291.9">What impressed me was how much depended on one moment of observation and judgment. A general climbed a hill, saw a weakness, and acted before the enemy could. In a battle of nearly 170,000 soldiers,<sup><a href="#n7" id="r7" aria-label="Note 7">7</a></sup> the quick decisions of a few people could echo far beyond where they stood.</p>
+      <p data-t="291.9" class="zh" lang="zh-Hans">让我印象深刻的是，有多少东西取决于那一刻的观察和判断。一位将军登上山丘，看到了一个弱点，并抢在敌人之前采取了行动。在一场近十七万士兵参与的战役中，<sup><a href="#n7-zh" id="r7-zh" aria-label="注释 7">7</a></sup>少数几个人的果断决定，影响可以远远超出他们所站的地方。</p>
     </section>
 
     <section class="col" aria-labelledby="ch4">
       <div class="chapter-head">
-        <span class="num">Chapter IV</span>
-        <h2 id="ch4">The Human Cost and the Turning Point</h2>
-        <button class="listen" type="button" data-seek="309.5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen from 5:10</button>
+        <span class="num"><span class="en">Chapter IV</span><span class="zh" lang="zh-Hans">第四章</span></span>
+        <h2 id="ch4"><span class="en">The Human Cost and the Turning Point</span><span class="zh" lang="zh-Hans">人的代价与转折点</span></h2>
+        <button class="listen" type="button" data-seek="309.5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><span class="en">Listen from 5:10</span><span class="zh" lang="zh-Hans">从 5:10 开始收听</span></button>
       </div>
-      <p data-t="309.8">On the third day, Lee couldn’t break the flanks, so he turned to the center. That was Pickett’s Charge, the great Confederate assault across open ground toward Cemetery Ridge. It ended disastrously.</p>
-      <p data-t="321.7">Still, I resisted seeing Gettysburg as one side simply crushing the other. It was a Union victory, yes, but the Confederate army wasn’t destroyed. Both sides took staggering losses, and the war went on for almost two more years.</p>
+      <p class="en" data-t="309.8">On the third day, Lee couldn’t break the flanks, so he turned to the center. That was Pickett’s Charge, the great Confederate assault across open ground toward Cemetery Ridge. It ended disastrously.</p>
+      <p data-t="309.8" class="zh" lang="zh-Hans">第三天，李将军无法突破两翼，于是转向中路。这就是皮克特冲锋——邦联军跨越开阔地、向墓园岭发起的大规模进攻。结果是一场灾难。</p>
+      <p class="en" data-t="321.7">Still, I resisted seeing Gettysburg as one side simply crushing the other. It was a Union victory, yes, but the Confederate army wasn’t destroyed. Both sides took staggering losses, and the war went on for almost two more years.</p>
+      <p data-t="321.7" class="zh" lang="zh-Hans">不过，我不愿把葛底斯堡看成一方单纯碾压另一方。这是联邦军的胜利，没错，但邦联军并没有被消灭。双方都损失惨重，而战争又持续了将近两年。</p>
     </section>
 
     <figure class="tall">
       <img src="img/harvest-1400.webp" srcset="img/harvest-900.webp 900w, img/harvest-1400.webp 1400w" sizes="(max-width: 520px) 100vw, 480px" width="1400" height="1170" loading="lazy" decoding="async"
-        alt="A sepia photograph mounted on card: the bodies of dead soldiers lie scattered across a flat field, with a lone horseman faint in the misty background.">
+        data-alt-zh="一张裱在卡纸上的棕褐色照片：阵亡士兵的遗体散落在平坦的田野上，远处薄雾中隐约可见一名骑马的人。" alt="A sepia photograph mounted on card: the bodies of dead soldiers lie scattered across a flat field, with a lone horseman faint in the misty background.">
       <figcaption>
-        <span class="tag">Archival photograph · July 1863</span>“A Harvest of Death.” Dead soldiers awaiting burial on the Gettysburg battlefield in the days after the fighting, published in Gardner’s <i>Photographic Sketch Book of the War</i> (1866).
-        <span class="credit">Negative by Timothy H. O’Sullivan, print by Alexander Gardner. The Metropolitan Museum of Art. CC0. <a href="https://commons.wikimedia.org/wiki/File:A_Harvest_of_Death,_Gettysburg,_Pennsylvania_MET_DP274823.jpg">Source</a></span>
+        <span class="tag"><span class="en">Archival photograph · July 1863</span><span class="zh" lang="zh-Hans">档案照片 · 1863 年 7 月</span></span><span class="en">“A Harvest of Death.” Dead soldiers awaiting burial on the Gettysburg battlefield in the days after the fighting, published in Gardner’s <i>Photographic Sketch Book of the War</i> (1866).</span><span class="zh" lang="zh-Hans">《死亡的收割》（A Harvest of Death）。战斗结束后的几天里，葛底斯堡战场上等待掩埋的阵亡士兵；收录于加德纳的《战争摄影写生集》（1866）。</span>
+        <span class="credit"><span class="en">Negative by Timothy H. O’Sullivan, print by Alexander Gardner. The Metropolitan Museum of Art. CC0.</span><span class="zh" lang="zh-Hans">底片：Timothy H. O’Sullivan；印片：Alexander Gardner。大都会艺术博物馆。CC0。</span> <a href="https://commons.wikimedia.org/wiki/File:A_Harvest_of_Death,_Gettysburg,_Pennsylvania_MET_DP274823.jpg"><span class="en">Source</span><span class="zh" lang="zh-Hans">来源</span></a></span>
       </figcaption>
     </figure>
 
     <section class="col" aria-label="The Human Cost and the Turning Point, continued">
-      <p data-t="336.3">To me, Gettysburg feels like an enormous struggle over a small piece of strategic ground. And that’s what makes it so haunting. A huge consequence, built from countless local fights, many at terrible human cost.</p>
+      <p class="en" data-t="336.3">To me, Gettysburg feels like an enormous struggle over a small piece of strategic ground. And that’s what makes it so haunting. A huge consequence, built from countless local fights, many at terrible human cost.</p>
+      <p data-t="336.3" class="zh" lang="zh-Hans">在我看来，葛底斯堡更像是一场围绕一小块战略要地展开的巨大争夺。这也是它让人久久难以释怀的原因：一个巨大的结果，由无数局部战斗累积而成，其中许多都付出了可怕的生命代价。</p>
     </section>
 
     <section class="col" aria-labelledby="ch5">
       <div class="chapter-head">
-        <span class="num">Chapter V</span>
-        <h2 id="ch5">History Brought to Life</h2>
-        <button class="listen" type="button" data-seek="349"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen from 5:49</button>
+        <span class="num"><span class="en">Chapter V</span><span class="zh" lang="zh-Hans">第五章</span></span>
+        <h2 id="ch5"><span class="en">History Brought to Life</span><span class="zh" lang="zh-Hans">让历史活起来</span></h2>
+        <button class="listen" type="button" data-seek="349"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><span class="en">Listen from 5:49</span><span class="zh" lang="zh-Hans">从 5:49 开始收听</span></button>
       </div>
-      <p data-t="349.8">Back at the museum, another highlight was the Gettysburg Cyclorama. I’d never even heard the word before. It turned out the idea is much older than I imagined. It’s an enormous panoramic painting by the French artist Paul Philippoteaux, first shown in Boston in 1884.<sup><a href="#n8" id="r8" aria-label="Note 8">8</a></sup> It surrounds you, so you feel like you’re standing in the middle of the battlefield. Today, the museum adds careful lighting, narration, and sound effects to make it even more immersive.</p>
-      <p data-t="379.6">What fascinated me is that this wasn’t just a modern technological spectacle. People were paying for immersive storytelling like this more than 140 years ago.</p>
+      <p class="en" data-t="349.8">Back at the museum, another highlight was the Gettysburg Cyclorama. I’d never even heard the word before. It turned out the idea is much older than I imagined. It’s an enormous panoramic painting by the French artist Paul Philippoteaux, first shown in Boston in 1884.<sup><a href="#n8" id="r8" aria-label="Note 8">8</a></sup> It surrounds you, so you feel like you’re standing in the middle of the battlefield. Today, the museum adds careful lighting, narration, and sound effects to make it even more immersive.</p>
+      <p data-t="349.8" class="zh" lang="zh-Hans">回到博物馆，另一个亮点是葛底斯堡环形全景画。在这之前，我甚至从没听说过 cyclorama 这个词。原来这个想法比我想象的要古老得多。它是法国画家保罗·菲利波托创作的一幅巨型全景画，1884 年在波士顿首次展出。<sup><a href="#n8-zh" id="r8-zh" aria-label="注释 8">8</a></sup>画作环绕着你，让你感觉仿佛就站在战场中央。如今，博物馆又加上了精心设计的灯光、解说和音效，让它更加身临其境。</p>
+      <p class="en" data-t="379.6">What fascinated me is that this wasn’t just a modern technological spectacle. People were paying for immersive storytelling like this more than 140 years ago.</p>
+      <p data-t="379.6" class="zh" lang="zh-Hans">让我着迷的是，这并不只是一场现代科技的视觉奇观。早在 140 多年前，人们就已经愿意花钱去体验这样的沉浸式叙事了。</p>
     </section>
 
     <figure class="full">
       <img src="img/cyclorama-armistead-2000.webp" srcset="img/cyclorama-armistead-1000.webp 1000w, img/cyclorama-armistead-2000.webp 2000w" sizes="100vw" width="2000" height="1150" loading="lazy" decoding="async"
-        alt="Section of a vast painted panorama: a mass of Confederate and Union soldiers clash in smoke around a stone wall and a clump of trees, with wrecked cannon, fallen horses, and wounded men in the foreground.">
+        data-alt-zh="巨幅全景画的一部分：在石墙和一小片树林周围，邦联军和联邦军士兵在硝烟中厮杀，前景是损毁的大炮、倒下的战马和伤员。" alt="Section of a vast painted panorama: a mass of Confederate and Union soldiers clash in smoke around a stone wall and a clump of trees, with wrecked cannon, fallen horses, and wounded men in the foreground.">
       <figcaption>
-        <span class="tag">Painting · 1883–84</span>A section of the Gettysburg Cyclorama showing the fighting at the Angle on July 3. The label identifying Armistead was added by the photographer.
-        <span class="credit">Painting by Paul Philippoteaux. Photograph © Ron Cogswell, 2012, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>. <a href="https://commons.wikimedia.org/wiki/File:%27Confederate_General_Lewis_Armistead_at_The_Angle%27_--_Gettysburg_(PA)_Cyclorama_2012.jpg">Source</a></span>
+        <span class="tag"><span class="en">Painting · 1883–84</span><span class="zh" lang="zh-Hans">绘画 · 1883–84</span></span><span class="en">A section of the Gettysburg Cyclorama showing the fighting at the Angle on July 3. The label identifying Armistead was added by the photographer.</span><span class="zh" lang="zh-Hans">葛底斯堡环形全景画的局部，描绘 7 月 3 日“角地”的战斗。画面中标注阿米斯特德的文字为摄影者所加。</span>
+        <span class="credit"><span class="en">Painting by Paul Philippoteaux. Photograph © Ron Cogswell, 2012,</span><span class="zh" lang="zh-Hans">画作：Paul Philippoteaux。摄影 © Ron Cogswell，2012，</span> <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>. <a href="https://commons.wikimedia.org/wiki/File:%27Confederate_General_Lewis_Armistead_at_The_Angle%27_--_Gettysburg_(PA)_Cyclorama_2012.jpg"><span class="en">Source</span><span class="zh" lang="zh-Hans">来源</span></a></span>
       </figcaption>
     </figure>
 
     <section class="col" aria-label="History Brought to Life, continued">
-      <p data-t="389.7">The painting shows the climax of Pickett’s Charge, including the Confederate breakthrough at the Angle, where General Lewis Armistead was mortally wounded after reaching the Union line.<sup><a href="#n9" id="r9" aria-label="Note 9">9</a></sup> Violence, courage, desperation, collapse, all in one moment. Standing inside it, I could see why it was such a sensation.</p>
+      <p class="en" data-t="389.7">The painting shows the climax of Pickett’s Charge, including the Confederate breakthrough at the Angle, where General Lewis Armistead was mortally wounded after reaching the Union line.<sup><a href="#n9" id="r9" aria-label="Note 9">9</a></sup> Violence, courage, desperation, collapse, all in one moment. Standing inside it, I could see why it was such a sensation.</p>
+      <p data-t="389.7" class="zh" lang="zh-Hans">这幅画描绘的是皮克特冲锋的高潮，包括邦联军在“角地”的突破——刘易斯·阿米斯特德将军正是在那里冲到联邦军防线后受了致命伤。<sup><a href="#n9-zh" id="r9-zh" aria-label="注释 9">9</a></sup>暴力、勇气、绝望、崩溃，全都凝固在同一个瞬间。站在画中，我能理解它当年为什么会引起轰动。</p>
     </section>
 
     <section class="col" aria-labelledby="ch6">
       <hr class="divider">
       <div class="chapter-head">
-        <span class="num">Closing</span>
-        <h2 id="ch6">What I Took Away</h2>
-        <button class="listen" type="button" data-seek="410"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen from 6:50</button>
+        <span class="num"><span class="en">Closing</span><span class="zh" lang="zh-Hans">结语</span></span>
+        <h2 id="ch6"><span class="en">What I Took Away</span><span class="zh" lang="zh-Hans">我带走了什么</span></h2>
+        <button class="listen" type="button" data-seek="410"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><span class="en">Listen from 6:50</span><span class="zh" lang="zh-Hans">从 6:50 开始收听</span></button>
       </div>
-      <p data-t="410.2">And that brings me back to why this whole experience meant so much. I came expecting to learn about the American Civil War. I left with a deeper appreciation of how geography, leadership, communication, and timing can shape events that touch hundreds of thousands of lives.</p>
-      <p data-t="428.3">But I also took away something more personal. As someone who is still developing his English, I found Gettysburg to be an unusually rewarding place to learn. The language wasn’t floating in isolation. It was attached to real places, historical figures, strategic decisions, and human suffering. I wasn’t merely reading English. I was using English to reconstruct a complex historical event, to question the choices of the people in it, and to form my own interpretation. And somehow, that made the language feel more alive.</p>
-      <p data-t="462.5">Looking back, I’m glad I didn’t rush through the museum or settle for a quick bus tour. I gave Gettysburg an entire afternoon, and it gave me far more than I expected. It was a journey through American history, certainly, but it was also a reminder of how rewarding it can be to approach an unfamiliar subject with real curiosity, enough patience to explore it properly, and the willingness to think beyond what’s written on the museum walls.</p>
+      <p class="en" data-t="410.2">And that brings me back to why this whole experience meant so much. I came expecting to learn about the American Civil War. I left with a deeper appreciation of how geography, leadership, communication, and timing can shape events that touch hundreds of thousands of lives.</p>
+      <p data-t="410.2" class="zh" lang="zh-Hans">这又让我回到了整段经历为什么对我意义如此之大。我来的时候，期待的是了解美国南北战争。离开的时候，我对地理、领导力、沟通和时机如何塑造那些影响数十万人生命的事件，有了更深的体会。</p>
+      <p class="en" data-t="428.3">But I also took away something more personal. As someone who is still developing his English, I found Gettysburg to be an unusually rewarding place to learn. The language wasn’t floating in isolation. It was attached to real places, historical figures, strategic decisions, and human suffering. I wasn’t merely reading English. I was using English to reconstruct a complex historical event, to question the choices of the people in it, and to form my own interpretation. And somehow, that made the language feel more alive.</p>
+      <p data-t="428.3" class="zh" lang="zh-Hans">但我也带走了一些更个人的东西。作为一个仍在提高英语的人，我发现葛底斯堡是一个格外值得学习的地方。这里的语言不是孤立漂浮的，而是附着在真实的地点、历史人物、战略决策和人的苦难之上。我不只是在读英语，而是在用英语重建一段复杂的历史事件，去质疑其中人物的选择，并形成我自己的理解。不知怎么的，这让语言变得更有生命力了。</p>
+      <p class="en" data-t="462.5">Looking back, I’m glad I didn’t rush through the museum or settle for a quick bus tour. I gave Gettysburg an entire afternoon, and it gave me far more than I expected. It was a journey through American history, certainly, but it was also a reminder of how rewarding it can be to approach an unfamiliar subject with real curiosity, enough patience to explore it properly, and the willingness to think beyond what’s written on the museum walls.</p>
+      <p data-t="462.5" class="zh" lang="zh-Hans">回头看，我很庆幸自己没有匆匆逛完博物馆，也没有只满足于一趟走马观花的大巴游。我给了葛底斯堡整整一个下午，而它给我的，远远超出了我的预期。这当然是一段穿越美国历史的旅程，但它也提醒了我：带着真正的好奇心，有足够的耐心去好好探索，并愿意跳出博物馆墙上写的内容去思考——这样去接触一个陌生的领域，会是多么有收获的一件事。</p>
     </section>
 
     <aside class="col endmatter" aria-label="Notes and credits">
-      <h2>Author’s note</h2>
-      <p class="authors-note">I recorded these reflections the day after my visit, speaking freely in English. I then used AI to polish the language while keeping my ideas, and produced the narration with a clone of my own voice. The text above follows that narration.</p>
+      <h2><span class="en">Author’s note</span><span class="zh" lang="zh-Hans">作者附记</span></h2>
+      <p class="authors-note"><span class="en">I recorded these reflections the day after my visit, speaking freely in English. I then used AI to polish the language while keeping my ideas, and produced the narration with a clone of my own voice. The text above follows that narration.</span><span class="zh" lang="zh-Hans">参观后的第二天，我用英语随口录下了这些感想。之后我借助 AI 润色了语言，同时保留了我自己的想法，并用我本人声音的克隆版本制作了这段朗读。英文正文即依照这段朗读整理；中文版译自英文原文（AI 辅助翻译），录音仅有英文。</span></p>
 
-      <h2>Notes on the history</h2>
-      <p class="src">These notes are editorial additions. They check and add context to factual statements in the narration; the narration itself is unchanged, apart from the spelling of names.</p>
-      <ol class="notes">
+      <h2><span class="en">Notes on the history</span><span class="zh" lang="zh-Hans">历史注释</span></h2>
+      <p class="src"><span class="en">These notes are editorial additions. They check and add context to factual statements in the narration; the narration itself is unchanged, apart from the spelling of names.</span><span class="zh" lang="zh-Hans">以下注释为编辑补充，用于核对朗读中提到的史实并补充背景；朗读内容本身未作改动，仅规范了人名拼写。</span></p>
+      <ol class="notes en">
         <li id="n1">Mary Virginia “Jennie” Wade, 20, was killed by a stray bullet on July 3, 1863, at her sister Georgia McClellan’s house on Baltimore Street, where she had come to help with her sister’s newborn. She is generally described as the only civilian killed directly in the battle. <span class="src">Sources: <a href="https://www.nps.gov/people/jennie-wade.htm">NPS</a>; <a href="https://www.battlefields.org/learn/biographies/mary-virginia-jennie-wade">American Battlefield Trust</a>.</span> <a class="back" href="#r1" aria-label="Back to text">↩</a></li>
         <li id="n2">“Casualties” counts the killed, wounded, captured, and missing, not only deaths. The American Battlefield Trust gives 51,112 (23,049 Union, 28,063 Confederate), including about 7,000 killed; other estimates start around 46,000. <span class="src">Source: <a href="https://www.battlefields.org/learn/civil-war/battles/gettysburg">American Battlefield Trust</a>.</span> <a class="back" href="#r2" aria-label="Back to text">↩</a></li>
         <li id="n3">Lincoln arrived by train on the evening of November 18, 1863, and spoke the next afternoon at the dedication of the Soldiers’ National Cemetery. The main oration, by Edward Everett, lasted about two hours. Lincoln spoke for less than three minutes. <span class="src">Source: <a href="https://www.nps.gov/parkhistory/online_books/hh/9/hh9g1.htm">NPS historical handbook</a>.</span> <a class="back" href="#r3" aria-label="Back to text">↩</a></li>
@@ -413,8 +453,19 @@ footer a{color:inherit}
         <li id="n8">Philippoteaux painted more than one Gettysburg cyclorama. The first opened in Chicago in October 1883. The painting now at Gettysburg is the Boston version, which opened there on December 22, 1884, and was acquired by the National Park Service in 1942. <span class="src">Source: <a href="https://www.nps.gov/gett/learn/historyculture/cyclorama.htm">NPS, Cyclorama Painting</a>.</span> <a class="back" href="#r8" aria-label="Back to text">↩</a></li>
         <li id="n9">Brig. Gen. Lewis Armistead fell a short distance inside the Union line at the Angle on July 3. He died on the morning of July 5 at the Union field hospital on the Spangler farm. <span class="src">Source: <a href="https://www.nps.gov/places/the-angle.htm">NPS, The Angle</a>.</span> <a class="back" href="#r9" aria-label="Back to text">↩</a></li>
       </ol>
+      <ol class="notes zh" lang="zh-Hans">
+        <li id="n1-zh">玛丽·弗吉尼亚·“珍妮”·韦德，时年 20 岁，1863 年 7 月 3 日在姐姐乔治亚·麦克莱伦位于巴尔的摩街的家中被流弹击中身亡；她是去帮忙照顾姐姐刚出生的孩子的。她通常被认为是这场战役中唯一直接死于战斗的平民。 <span class="src">来源：<a href="https://www.nps.gov/people/jennie-wade.htm">NPS</a>；<a href="https://www.battlefields.org/learn/biographies/mary-virginia-jennie-wade">American Battlefield Trust</a>。</span> <a class="back" href="#r1-zh" aria-label="返回正文">↩</a></li>
+        <li id="n2-zh">“伤亡”包括阵亡、受伤、被俘和失踪，而不仅仅是死亡。美国战场信托（American Battlefield Trust）给出的数字是 51,112 人（联邦军 23,049 人，邦联军 28,063 人），其中阵亡约 7,000 人；其他估计最低约 46,000 人。 <span class="src">来源：<a href="https://www.battlefields.org/learn/civil-war/battles/gettysburg">American Battlefield Trust</a>。</span> <a class="back" href="#r2-zh" aria-label="返回正文">↩</a></li>
+        <li id="n3-zh">林肯于 1863 年 11 月 18 日傍晚乘火车抵达，次日下午在士兵国家公墓落成典礼上讲话。当天的主要演讲由爱德华·埃弗里特发表，持续约两个小时；林肯的讲话不到三分钟。 <span class="src">来源：<a href="https://www.nps.gov/parkhistory/online_books/hh/9/hh9g1.htm">NPS 历史手册</a>。</span> <a class="back" href="#r3-zh" aria-label="返回正文">↩</a></li>
+        <li id="n4-zh">这位领导人是江泽民。2000 年 8 月，他在北戴河接受了 CBS《60 分钟》节目主持人迈克·华莱士的采访。 <span class="src">来源：<a href="https://www.cbsnews.com/news/chinas-leader-talks-to-60-minutes">CBS News</a>。</span> <a class="back" href="#r4-zh" aria-label="返回正文">↩</a></li>
+        <li id="n5-zh">1918 年，艾森豪威尔上尉指挥了陆军的坦克训练中心科尔特营（Camp Colt），营地位于镇南的田野上，其中包括皮克特冲锋经过的土地。1950 年，他和妻子玛米买下了葛底斯堡的农场；总统任内，这里是他的周末休憩之所，1961 年后成为他们的家。文中提到的山中度假地，是位于马里兰州卡托克廷山区的总统休养地，富兰克林·罗斯福时期设立，最初名为“香格里拉”；艾森豪威尔以他父亲和孙子的名字将其改名为戴维营。 <span class="src">来源：<a href="https://www.nps.gov/articles/000/camp-colt.htm">NPS, Camp Colt</a>；<a href="https://www.nps.gov/eise/learn/historyculture/eisenhower-at-gettysburg.htm">NPS, Eisenhower at Gettysburg</a>；<a href="https://www.eisenhowerlibrary.gov/research/online-documents/camp-david">艾森豪威尔总统图书馆</a>。</span> <a class="back" href="#r5-zh" aria-label="返回正文">↩</a></li>
+        <li id="n6-zh">古弗尼尔·K·沃伦准将是波托马克军团的总工程师。他受米德将军派遣去察看全军左翼，7 月 2 日下午在小圆顶上只发现了通信兵。赶来增援的部队包括斯特朗·文森特上校的旅，缅因第 20 团位于防线的最左端。 <span class="src">来源：<a href="https://www.nps.gov/gett/learn/photosmultimedia/little-round-top-tour.htm">NPS, Little Round Top tour</a>；<a href="https://www.battlefields.org/learn/articles/defense-little-round-top">American Battlefield Trust</a>。</span> <a class="back" href="#r6-zh" aria-label="返回正文">↩</a></li>
+        <li id="n7-zh">参战士兵人数的估计不一。美国战场信托给出的数字约为 157,000 人；也有一些统计更高。 <span class="src">来源：<a href="https://www.battlefields.org/learn/civil-war/battles/gettysburg">American Battlefield Trust</a>。</span> <a class="back" href="#r7-zh" aria-label="返回正文">↩</a></li>
+        <li id="n8-zh">菲利波托画过不止一幅葛底斯堡全景画。第一幅于 1883 年 10 月在芝加哥展出。现在陈列于葛底斯堡的是波士顿版本，1884 年 12 月 22 日在波士顿开展，1942 年由美国国家公园管理局购得。 <span class="src">来源：<a href="https://www.nps.gov/gett/learn/historyculture/cyclorama.htm">NPS, Cyclorama Painting</a>。</span> <a class="back" href="#r8-zh" aria-label="返回正文">↩</a></li>
+        <li id="n9-zh">刘易斯·阿米斯特德准将于 7 月 3 日在“角地”冲入联邦军防线后不远处倒下，7 月 5 日上午在斯潘格勒农场的联邦军野战医院去世。 <span class="src">来源：<a href="https://www.nps.gov/places/the-angle.htm">NPS, The Angle</a>。</span> <a class="back" href="#r9-zh" aria-label="返回正文">↩</a></li>
+      </ol>
 
-      <h2>Image credits</h2>
+      <h2><span class="en">Image credits</span><span class="zh" lang="zh-Hans">图片来源</span></h2>
       <ul class="credits">
         <li>Opening: General Warren statue, Little Round Top. Carol M. Highsmith, Carol M. Highsmith Archive, Library of Congress. Public domain. <a href="https://commons.wikimedia.org/wiki/File:General_Warren_statue,_Little_Round_Top,_Gettysburg,_Pennsylvania_LCCN2011630682.tif">Source</a></li>
         <li>Dedication of the Soldiers’ National Cemetery, November 19, 1863. Photographer uncertain. Public domain. <a href="https://commons.wikimedia.org/wiki/File:Lincolnatgettysburg.jpg">Source</a></li>
@@ -430,8 +481,8 @@ footer a{color:inherit}
 </main>
 
 <footer>
+  <a href="../"><span class="en">← All essays</span><span class="zh" lang="zh-Hans">← 全部文章</span></a>
   <span>© 2026 Kai Zhen</span>
-  <a href="../../">kaizhen.us</a>
 </footer>
 
 <div class="mini" id="mini" role="region" aria-label="Narration mini player">
@@ -461,7 +512,8 @@ footer a{color:inherit}
   const miniTitle = document.getElementById('miniTitle');
   const playBtns = document.querySelectorAll('[data-play]');
   const paras = [...document.querySelectorAll('.essay p[data-t]')].map(p => ({el: p, t: parseFloat(p.dataset.t)})).filter(p => !isNaN(p.t));
-  const chapters = [...document.querySelectorAll('.chapters [data-seek]')].map(b => ({t: parseFloat(b.dataset.seek), name: b.lastElementChild.textContent}));
+  const chapters = [...document.querySelectorAll('.chapters [data-seek]')].map(b => ({t: parseFloat(b.dataset.seek), en: b.lastElementChild.dataset.en, zh: b.lastElementChild.dataset.zh}));
+  const L = () => root.classList.contains('zh') ? 'zh' : 'en';
   const speeds = [1, 1.25, 1.5, 0.75];
   let speedIdx = 0, miniDismissed = false, playerVisible = true, current = null, dragging = false;
 
@@ -512,10 +564,10 @@ footer a{color:inherit}
     miniTime.textContent = fmt(t);
     let ch = chapters[0];
     for (const c of chapters) if (t >= c.t) ch = c;
-    miniTitle.textContent = ch.name;
+    miniTitle.textContent = ch[L()];
     if (!audio.paused || t > 0) {
       let hit = null;
-      for (const p of paras) if (t + 0.3 >= p.t) hit = p.el;
+      for (const p of paras) if (t + 0.3 >= p.t && p.el.classList.contains(L())) hit = p.el;
       mark(hit);
     }
   });
@@ -539,11 +591,37 @@ footer a{color:inherit}
   // "Show Lincoln"
   const find = document.getElementById('findLincoln');
   const findBtn = document.querySelector('.find-btn');
+  const findLabel = on => L() === 'zh' ? (on ? '隐藏标记' : '标出林肯') : (on ? 'Hide marker' : 'Show Lincoln');
   findBtn.addEventListener('click', () => {
     const on = find.classList.toggle('on');
     findBtn.setAttribute('aria-pressed', on);
-    findBtn.textContent = on ? 'Hide marker' : 'Show Lincoln';
+    findBtn.textContent = findLabel(on);
   });
+
+  // language
+  const titles = {en: document.title, zh: '葛底斯堡：沉浸于美国历史的一天 — Kai Zhen'};
+  const imgs = [...document.querySelectorAll('img[data-alt-zh]')].map(i => ({i, en: i.alt, zh: i.dataset.altZh}));
+  function setLang(lang, save) {
+    root.classList.toggle('zh', lang === 'zh');
+    root.lang = lang === 'zh' ? 'zh-Hans' : 'en';
+    document.title = titles[lang];
+    imgs.forEach(x => { x.i.alt = x[lang]; });
+    document.querySelectorAll('.lang-switch [data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang));
+    findBtn.textContent = findLabel(find.classList.contains('on'));
+    const ch = [...chapters].reverse().find(c => audio.currentTime >= c.t) || chapters[0];
+    miniTitle.textContent = ch[lang];
+    mark(null); audio.dispatchEvent(new Event('timeupdate'));
+    if (save) {
+      try { localStorage.setItem('lang', lang); } catch (e) {}
+      const u = new URL(location.href);
+      lang === 'zh' ? u.searchParams.set('lang', 'zh') : u.searchParams.delete('lang');
+      history.replaceState(null, '', u);
+    }
+  }
+  document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang, true)));
+  let initial = new URLSearchParams(location.search).get('lang');
+  if (!initial) { try { initial = localStorage.getItem('lang'); } catch (e) {} }
+  if (initial === 'zh') setLang('zh', false);
 })();
 </script>
 </body>
