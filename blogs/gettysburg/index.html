@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gettysburg: A Day Immersed in American History — Kai Zhen</title>
+<meta name="description" content="A personal essay and narration: an afternoon at Gettysburg National Military Park, the museum, the battlefield tour, and what it meant to learn this history in English.">
+<meta name="author" content="Kai Zhen">
+<link rel="canonical" href="https://kaizhen.us/blogs/gettysburg/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gettysburg: A Day Immersed in American History">
+<meta property="og:description" content="A personal journey through history, language, and the landscapes that shaped a nation.">
+<meta property="og:url" content="https://kaizhen.us/blogs/gettysburg/">
+<meta property="og:image" content="https://kaizhen.us/blogs/gettysburg/img/og-gettysburg.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Statue of General Gouverneur K. Warren on Little Round Top overlooking the Gettysburg battlefield in autumn">
+<meta property="article:published_time" content="2026-10-25">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/hero-2400.webp" imagesrcset="img/hero-1200.webp 1200w, img/hero-2400.webp 2400w" imagesizes="100vw">
+<style>
+:root{
+  --paper:#f4efe4; --paper-2:#ebe4d4; --ink:#2a2420; --ink-2:#5a5048; --rule:#d6ccb8;
+  --accent:#7b2f24; --accent-ink:#fff8ef; --union:#34506b;
+  --serif:"EB Garamond",Georgia,"Times New Roman",serif;
+  --sans:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --measure:36rem;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:1.25rem;line-height:1.65;text-rendering:optimizeLegibility}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:.18em}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.skip{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--paper);padding:.5rem 1rem;font-family:var(--sans);z-index:50}
+.skip:focus{left:1rem;top:1rem}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* top bar */
+.topbar{position:absolute;inset:0 0 auto 0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:1rem clamp(1rem,4vw,2.5rem);font-family:var(--sans);font-size:.85rem;letter-spacing:.04em}
+.topbar a{color:#f6f1e7;text-decoration:none;opacity:.9}
+.topbar a:hover{opacity:1;text-decoration:underline}
+
+/* hero */
+.hero{position:relative;min-height:min(92vh,56rem);display:flex;align-items:flex-end;color:#f8f3ea;background:#1d2c45;overflow:hidden}
+.hero picture,.hero img{position:absolute;inset:0;width:100%;height:100%}
+.hero img{object-fit:cover;object-position:62% 40%}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,16,28,.15) 0%,rgba(10,16,28,0) 35%,rgba(10,12,16,.55) 100%)}
+.hero-text{position:relative;z-index:2;width:100%;max-width:72rem;margin:0 auto;padding:0 clamp(1rem,5vw,3rem) clamp(2.5rem,7vh,4.5rem)}
+.kicker{font-family:var(--sans);font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 1rem;opacity:.92}
+.hero h1{font-weight:500;font-size:clamp(2.5rem,6.4vw,5rem);line-height:1.02;letter-spacing:-.01em;margin:0;max-width:13ch;text-wrap:balance}
+.hero .sub{font-style:italic;font-size:clamp(1.15rem,2.2vw,1.5rem);line-height:1.4;margin:1.1rem 0 0;max-width:32ch;opacity:.95}
+.hero-credit{position:absolute;right:1rem;bottom:.6rem;z-index:2;font-family:var(--sans);font-size:.7rem;color:#e9e2d6;opacity:.8}
+
+/* article frame */
+main{padding:0 1rem}
+.col{max-width:var(--measure);margin:0 auto}
+.meta{font-family:var(--sans);font-size:.9rem;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:.35rem 1.25rem;justify-content:flex-start;padding:2.25rem 0 0;margin:0;list-style:none}
+.meta li{white-space:nowrap}
+.dek{font-size:1.4rem;line-height:1.5;margin:1.4rem 0 0;color:var(--ink)}
+.byline{font-family:var(--sans);font-size:.9rem;color:var(--ink-2);margin:1rem 0 0}
+
+/* player */
+.player{margin:2rem 0 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:1.25rem 0 1.1rem}
+.player-row{display:flex;align-items:center;gap:1rem}
+.play{flex:none;width:3.5rem;height:3.5rem;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;cursor:pointer;transition:transform .15s ease,background .15s}
+.play:hover{background:#68261d}
+.play:active{transform:scale(.96)}
+.play svg{width:1.35rem;height:1.35rem;fill:currentColor}
+.play .i-pause,.is-playing .play .i-play{display:none}
+.is-playing .play .i-pause{display:block}
+.player-body{flex:1;min-width:0}
+.player-title{font-family:var(--sans);font-weight:600;font-size:.95rem;margin:0;color:var(--ink)}
+.player-note{font-family:var(--sans);font-size:.82rem;color:var(--ink-2);margin:.1rem 0 .5rem}
+.scrub{display:flex;align-items:center;gap:.75rem;font-family:var(--sans);font-size:.8rem;color:var(--ink-2);font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:1.5rem;background:transparent;margin:0;cursor:pointer;--p:0%}
+input[type=range]::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:linear-gradient(to right,var(--accent) var(--p),var(--rule) var(--p))}
+input[type=range]::-moz-range-track{height:3px;border-radius:2px;background:var(--rule)}
+input[type=range]::-moz-range-progress{height:3px;background:var(--accent)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--accent);margin-top:-5px;border:0}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--accent);border:0}
+.player-tools{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.25rem;margin:.85rem 0 0 4.5rem;font-family:var(--sans);font-size:.82rem}
+.tool{font:inherit;background:none;border:1px solid var(--rule);border-radius:999px;padding:.2rem .7rem;color:var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.tool:hover{border-color:var(--ink-2)}
+.player-tools a{color:var(--ink-2)}
+.chapters{margin:1rem 0 0 4.5rem;padding:0;list-style:none;font-family:var(--sans);font-size:.85rem}
+.chapters li{margin:0 0 .25rem}
+.chapters button{font:inherit;background:none;border:0;padding:0;color:var(--ink);cursor:pointer;text-align:left}
+.chapters button:hover span:last-child{text-decoration:underline}
+.chapters .t{color:var(--ink-2);font-variant-numeric:tabular-nums;display:inline-block;min-width:2.7rem}
+
+/* body text */
+.essay{padding:1rem 0 0}
+.essay p{margin:0 0 1.15em;transition:background-color .4s ease, box-shadow .4s ease}
+.essay p.now{background:rgba(123,47,36,.06);box-shadow:-0.75rem 0 0 rgba(123,47,36,.06), 0.75rem 0 0 rgba(123,47,36,.06), -0.75rem 0 0 -0.6rem var(--accent)}
+.essay > section:first-of-type p:first-of-type::first-letter{float:left;font-size:4.1em;line-height:.8;padding:.08em .08em 0 0;color:var(--accent);font-weight:500}
+.chapter-head{margin:3.5rem 0 1.4rem;text-align:left}
+.chapter-head .num{display:block;font-family:var(--sans);font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:.35rem}
+.chapter-head h2{font-weight:500;font-size:clamp(1.75rem,3.6vw,2.3rem);line-height:1.15;margin:0;text-wrap:balance}
+.listen{margin:.6rem 0 0;font-family:var(--sans);font-size:.82rem;background:none;border:0;padding:0;color:var(--ink-2);cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
+.listen svg{width:.7rem;height:.7rem;fill:currentColor}
+.listen:hover{color:var(--accent)}
+sup{line-height:0;font-size:.62em}
+sup a{font-family:var(--sans);text-decoration:none;padding:0 .1em;font-weight:600}
+.divider{border:0;text-align:center;margin:3rem 0}
+.divider::before{content:"⁂";color:var(--ink-2);font-size:1.2rem;letter-spacing:.3em}
+
+/* figures */
+figure{margin:2.5rem auto}
+figure.wide{max-width:60rem}
+figure.full{max-width:none;margin-left:-1rem;margin-right:-1rem}
+figure.tall{max-width:30rem}
+figure img{width:100%;background:var(--paper-2)}
+figure.full img{max-height:85vh;object-fit:cover}
+figcaption{max-width:var(--measure);margin:.75rem auto 0;font-family:var(--sans);font-size:.88rem;line-height:1.5;color:var(--ink-2)}
+figure.full figcaption{padding:0 1rem}
+.tag{display:inline-block;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--ink);border:1px solid var(--rule);border-radius:2px;padding:.05rem .4rem;margin-right:.45rem;vertical-align:.1em}
+.credit{display:block;margin-top:.3rem;font-size:.78rem;opacity:.9}
+.credit a{color:inherit}
+.find{position:relative;overflow:hidden}
+.find .ring{position:absolute;left:38.7%;top:58.5%;width:9.5%;aspect-ratio:1;transform:translate(-50%,-50%) scale(.6);border:2px solid #f1d18a;border-radius:50%;box-shadow:0 0 0 9999px rgba(0,0,0,.35);opacity:0;transition:opacity .35s ease,transform .35s ease;pointer-events:none}
+.find.on .ring{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.find-btn{font:inherit;font-family:var(--sans);font-size:.82rem;margin-top:.5rem;background:none;border:1px solid var(--rule);border-radius:999px;padding:.2rem .75rem;cursor:pointer;color:var(--ink)}
+.find-btn:hover{border-color:var(--ink-2)}
+
+/* notes & endmatter */
+.endmatter{margin:4rem auto 0;border-top:1px solid var(--rule);padding-top:2rem}
+.endmatter h2{font-family:var(--sans);font-size:.85rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--ink-2);margin:2.5rem 0 1rem}
+.endmatter h2:first-child{margin-top:0}
+.endmatter p,.endmatter li{font-size:1.05rem;line-height:1.6}
+.notes{padding-left:1.4rem;margin:0}
+.notes li{margin:0 0 .9rem;padding-left:.2rem}
+.notes li:target{background:rgba(123,47,36,.07)}
+.notes .back{font-family:var(--sans);font-size:.8rem;text-decoration:none;margin-left:.3rem}
+.src{font-family:var(--sans);font-size:.8rem;color:var(--ink-2)}
+.src a{color:inherit}
+.authors-note{font-style:italic}
+.credits{list-style:none;padding:0;margin:0;font-family:var(--sans);font-size:.85rem;line-height:1.5;color:var(--ink-2)}
+.credits li{margin:0 0 .6rem}
+.credits a{color:inherit}
+footer{max-width:var(--measure);margin:3rem auto 0;padding:1.5rem 1rem 7rem;border-top:1px solid var(--rule);font-family:var(--sans);font-size:.85rem;color:var(--ink-2);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+footer a{color:inherit}
+
+/* mini player */
+.mini{position:fixed;left:50%;bottom:1rem;z-index:20;transform:translate(-50%,150%);width:min(34rem,calc(100% - 2rem));background:#2a2420;color:#f4efe4;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);display:flex;align-items:center;gap:.8rem;padding:.55rem .9rem .55rem .55rem;font-family:var(--sans);font-size:.85rem;transition:transform .35s cubic-bezier(.2,.8,.2,1);visibility:hidden}
+.mini.show{transform:translate(-50%,0);visibility:visible}
+.mini .play{width:2.5rem;height:2.5rem}
+.mini .play svg{width:1rem;height:1rem}
+.mini-body{flex:1;min-width:0}
+.mini-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0 0 .3rem}
+.mini-bar{height:3px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden}
+.mini-bar i{display:block;height:100%;width:0;background:#e9b9a6}
+.mini-time{font-variant-numeric:tabular-nums;opacity:.8;flex:none}
+.mini-close{flex:none;background:none;border:0;color:inherit;opacity:.7;font-size:1.2rem;cursor:pointer;padding:.2rem .3rem;line-height:1}
+.mini-close:hover{opacity:1}
+
+@media (max-width:640px){
+  body{font-size:1.15rem}
+  .hero{min-height:88vh}
+  .hero img{object-position:78% 40%}
+  .dek{font-size:1.25rem}
+  .player-tools,.chapters{margin-left:0}
+  figure.wide{margin-left:-1rem;margin-right:-1rem}
+  figure.wide figcaption{padding:0 1rem}
+  .endmatter p,.endmatter li{font-size:1rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media print{.player,.mini,.listen,.find-btn,.topbar{display:none}.hero{min-height:auto;color:var(--ink);background:none}.hero picture,.hero::after{display:none}.hero-text{padding:1rem 0}}
+</style>
+</head>
+<body>
+<a class="skip" href="#essay">Skip to the essay</a>
+
+<header class="hero">
+  <nav class="topbar" aria-label="Site">
+    <a href="../../">Kai Zhen</a>
+    <a href="#essay">Read</a>
+  </nav>
+  <picture>
+    <img src="img/hero-2400.webp" srcset="img/hero-1200.webp 1200w, img/hero-2400.webp 2400w" sizes="100vw" width="2400" height="1850"
+      alt="A bronze statue of General Gouverneur K. Warren stands on the rocks of Little Round Top under a deep blue sky, looking out over autumn woods and fields toward distant ridges." fetchpriority="high">
+  </picture>
+  <div class="hero-text">
+    <p class="kicker">Travel journal · Gettysburg, Pennsylvania</p>
+    <h1>Gettysburg: A Day Immersed in American History</h1>
+    <p class="sub">A personal journey through history, language, and the landscapes that shaped a nation.</p>
+  </div>
+  <span class="hero-credit">Warren statue, Little Round Top. Carol M. Highsmith, Library of Congress</span>
+</header>
+
+<main>
+  <div class="col">
+    <ul class="meta" aria-label="Article details">
+      <li><time datetime="2026-10-24">Visited October 24, 2026</time></li>
+      <li>Gettysburg, Pennsylvania</li>
+      <li>6 min read</li>
+      <li>8 min listen</li>
+    </ul>
+    <p class="dek">I spent most of an October Saturday at Gettysburg: three hours in the museum, then two on a bus tour across the battlefield. The next day I talked through what I had seen, while it was still fresh. This is that account, as text and in my own voice.</p>
+    <p class="byline">By Kai Zhen</p>
+
+    <section class="player" id="player" aria-label="Audio narration">
+      <div class="player-row">
+        <button class="play" type="button" aria-label="Play narration" data-play>
+          <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+          <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>
+        </button>
+        <div class="player-body">
+          <p class="player-title">Listen to the essay</p>
+          <p class="player-note">Narrated in the author’s voice</p>
+          <div class="scrub">
+            <span id="cur" aria-hidden="true">0:00</span>
+            <input id="seek" type="range" min="0" max="489" step="0.1" value="0" aria-label="Seek" aria-valuetext="0 minutes 0 seconds">
+            <span id="dur" aria-hidden="true">8:09</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-tools">
+        <button class="tool" type="button" id="speed" aria-label="Playback speed: 1 times">1×</button>
+        <button class="tool" type="button" id="back15" aria-label="Back 15 seconds">−15s</button>
+        <a href="audio/gettysburg-narration.mp3" download>Download MP3</a>
+      </div>
+      <ol class="chapters" aria-label="Chapters">
+        <li><button type="button" data-seek="0"><span class="t">0:00</span> <span>An Unexpectedly Immersive Afternoon</span></button></li>
+        <li><button type="button" data-seek="82"><span class="t">1:22</span> <span>A Town, a Speech, and a Farm</span></button></li>
+        <li><button type="button" data-seek="206.5"><span class="t">3:26</span> <span>The Battle Through Its Terrain</span></button></li>
+        <li><button type="button" data-seek="309.5"><span class="t">5:10</span> <span>The Human Cost and the Turning Point</span></button></li>
+        <li><button type="button" data-seek="349"><span class="t">5:49</span> <span>History Brought to Life</span></button></li>
+        <li><button type="button" data-seek="410"><span class="t">6:50</span> <span>What I Took Away</span></button></li>
+      </ol>
+      <audio id="audio" preload="metadata" src="audio/gettysburg-narration.mp3"></audio>
+    </section>
+  </div>
+
+  <article class="essay" id="essay">
+    <section class="col" aria-labelledby="ch1">
+      <div class="chapter-head">
+        <span class="num">Chapter I</span>
+        <h2 id="ch1">An Unexpectedly Immersive Afternoon</h2>
+      </div>
+      <p data-t="0">Yesterday, I spent almost an entire afternoon in Gettysburg, Pennsylvania, one of the most historically significant towns in the United States. And honestly, it exceeded my expectations.</p>
+      <p data-t="11.9">I got to the visitor center just before noon. At the ticket counter, I had the feeling the staff expected a quick visit. Maybe, seeing a Chinese visitor, they weren’t sure how much I’d care about Civil War history, or how much I’d get out of exhibits in English. But I had something different in mind. I told them I wanted a good long stretch in the museum before the battlefield bus tour. So we booked the tour for around three, which gave me about three hours inside. And as it turned out, three hours was barely enough.</p>
+      <p data-t="43.9">What made it so rewarding wasn’t just the amount of information. It was the chance to immerse myself in one moment of American history entirely through the English language. I kept noticing how the exhibits were written, how the context was set up, and how those three extraordinary days in July 1863 were woven into one coherent story.</p>
+      <p data-t="66.0">For me, this was more than a history lesson. It connected language, geography, and history in a remarkably vivid setting. And I knew that unless I put my thoughts into words afterward, most of it would fade. So here’s my attempt to hold on to it while it’s still fresh.</p>
+    </section>
+
+    <section class="col" aria-labelledby="ch2">
+      <div class="chapter-head">
+        <span class="num">Chapter II</span>
+        <h2 id="ch2">A Town, a Speech, and a Farm</h2>
+        <button class="listen" type="button" data-seek="82"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen from 1:22</button>
+      </div>
+      <p data-t="83.0">Let me start with the battlefield tour, because that’s what I remember most vividly. It lasted about two hours. We drove north from the visitor center, through the town itself, and then around the battlefield. One of the first things I learned is that the town sits in a kind of bowl, and that surrounding terrain shaped the fighting.</p>
+      <p data-t="103.1">What surprised me is that despite the scale of the battle, only one civilian is known to have been killed by gunfire. Her name was Jennie Wade.<sup><a href="#n1" id="r1" aria-label="Note 1">1</a></sup> She was staying with her sister, who had just given birth, when a stray bullet hit her. It’s a tragic story. But think about it. Roughly 51,000 military casualties in three days,<sup><a href="#n2" id="r2" aria-label="Note 2">2</a></sup> and only one civilian shot dead. That’s extraordinary.</p>
+      <p data-t="128.4">We also passed the railroad station tied to Abraham Lincoln’s visit in November 1863. A few months after the battle, he came to dedicate the Soldiers’ National Cemetery, and that’s where he delivered the Gettysburg Address. What struck me is how short it was. About two minutes. Two minutes. And yet those few paragraphs became some of the most enduring words in American political history.<sup><a href="#n3" id="r3" aria-label="Note 3">3</a></sup></p>
+    </section>
+
+    <figure class="wide">
+      <div class="find" id="findLincoln">
+        <img src="img/lincoln-1600.webp" srcset="img/lincoln-900.webp 900w, img/lincoln-1600.webp 1600w" sizes="(max-width: 960px) 100vw, 960px" width="1600" height="754" loading="lazy" decoding="async"
+          alt="A black-and-white photograph of a dense crowd of men in top hats and soldiers gathered around a speakers’ platform on an overcast day.">
+        <span class="ring" aria-hidden="true"></span>
+      </div>
+      <figcaption>
+        <span class="tag">Archival · 1863</span>The crowd at the dedication of the Soldiers’ National Cemetery, November 19, 1863 (detail). Lincoln, hatless and looking down, is seated near the center of the platform.
+        <br><button class="find-btn" type="button" aria-pressed="false" aria-controls="findLincoln">Show Lincoln</button>
+        <span class="credit">Photographer uncertain (attributed variously to David Bachrach and others). National Archives / Library of Congress. Public domain. <a href="https://commons.wikimedia.org/wiki/File:Lincolnatgettysburg.jpg">Source</a></span>
+      </figcaption>
+    </figure>
+
+    <section class="col" aria-label="A Town, a Speech, and a Farm, continued">
+      <p data-t="153.2">I even remembered an interview decades later with Mike Wallace, where a Chinese leader recited lines from that speech.<sup><a href="#n4" id="r4" aria-label="Note 4">4</a></sup> I love moments like that, when events that felt isolated in my memory suddenly become part of a much bigger landscape.</p>
+      <p data-t="167.8">We passed Culp’s Hill, Cemetery Hill, and the long line along Cemetery Ridge. I knew the outline of the battle before I came, but seeing the terrain, I finally understood why those hills mattered so much.</p>
+      <p data-t="180.7">We also passed Lee’s Headquarters and the farm once owned by Dwight Eisenhower, another unexpected connection. He commanded a tank training camp here in the First World War, and decades later, after leading the Allies in Europe and becoming president, he came back and made Gettysburg his retirement home. Which left me with an amusing question: if he already had such a beautiful farm here, why did he need another retreat in the mountains?<sup><a href="#n5" id="r5" aria-label="Note 5">5</a></sup></p>
+    </section>
+
+    <figure class="wide">
+      <img src="img/eisenhower-1600.webp" srcset="img/eisenhower-900.webp 900w, img/eisenhower-1600.webp 1600w" sizes="(max-width: 960px) 100vw, 960px" width="1600" height="1128" loading="lazy" decoding="async"
+        alt="A large white two-story farmhouse with green shutters, a curving driveway, and patches of snow on a winter lawn.">
+      <figcaption>
+        <span class="tag">Modern photograph</span>The main house of the Eisenhower farm on the southwestern edge of Gettysburg, now the Eisenhower National Historic Site, photographed for the Historic American Buildings Survey.
+        <span class="credit">Jack E. Boucher, HABS, Library of Congress. Public domain. <a href="https://commons.wikimedia.org/wiki/File:HABS_Eisenhower_Farm.jpg">Source</a></span>
+      </figcaption>
+    </figure>
+
+    <section class="col" aria-labelledby="ch3">
+      <div class="chapter-head">
+        <span class="num">Chapter III</span>
+        <h2 id="ch3">Understanding the Battle Through Its Terrain</h2>
+        <button class="listen" type="button" data-seek="206.5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen from 3:26</button>
+      </div>
+      <p data-t="206.3">Then we turned to the battle itself. On July 1st, Confederate forces gained the upper hand and drove the Union troops back through the town, but they regrouped on the high ground to the south, and those positions shaped the next two days. And this is where geography becomes everything.</p>
+    </section>
+
+    <figure class="tall">
+      <a href="img/map-july2-1100.webp" aria-label="Open the July 2 map at full size">
+        <img src="img/map-july2-1100.webp" srcset="img/map-july2-700.webp 700w, img/map-july2-1100.webp 1100w" sizes="(max-width: 520px) 100vw, 480px" width="1100" height="1684" loading="lazy" decoding="async"
+          alt="Map of Gettysburg on July 2, 1863. Union lines, in blue, form a fishhook from Culp’s Hill and Cemetery Hill down Cemetery Ridge toward Little Round Top, with Sickles’ corps pushed forward to the Peach Orchard and Wheatfield. Confederate lines, in red, run along Seminary Ridge and wrap around the town to the north and east, with Longstreet’s attack coming from the southwest.">
+      </a>
+      <figcaption>
+        <span class="tag">Modern map</span>July 2, 1863. The Union army (blue) holds the high ground south of town in a “fishhook” from Culp’s Hill to the Round Tops; Longstreet’s Confederates (red) strike the southern end near the Peach Orchard, the Wheatfield, and Devil’s Den.
+        <span class="credit">Hal Jespersen. Public domain. <a href="https://commons.wikimedia.org/wiki/File:Gettysburg_Battle_Map_Day2.jpg">Source</a></span>
+      </figcaption>
+    </figure>
+
+    <section class="col" aria-label="Understanding the Battle Through Its Terrain, continued">
+      <p data-t="224.1">On the second day, Lee tried to hit the Union flank at the southern end of the line. Confederate troops had to move through fields and woods, trying to hide their approach. Our guide told us that even the dust from marching soldiers could give them away.</p>
+      <p data-t="238.1">One of our stops was the Peach Orchard. Standing there, I found it hard to imagine what that ground looked like during the fighting. Thousands of men became casualties around the orchard, the Wheatfield, and Devil’s Den. When you hear “thousands of casualties,” it sounds almost abstract. But when you actually see the size of a field and imagine all that suffering packed into such a small space, it becomes immediate. It’s deeply unsettling.</p>
+    </section>
+
+    <figure class="wide">
+      <img src="img/peach-orchard-1446.webp" srcset="img/peach-orchard-900.webp 900w, img/peach-orchard-1446.webp 1446w" sizes="(max-width: 960px) 100vw, 960px" width="1446" height="694" loading="lazy" decoding="async"
+        alt="A painting of open farmland with a barn at left. Lines of infantry stretch across the field while a group of mounted officers rides forward at right beneath clouds of artillery smoke.">
+      <figcaption>
+        <span class="tag">Painting · after 1865</span>Edwin Forbes, who sketched the Army of the Potomac in the field, painted this view of the Peach Orchard on the afternoon of July 2. It has been interpreted as General Daniel Sickles riding forward to inspect his exposed lines.
+        <span class="credit">Edwin Forbes. Library of Congress. Public domain. <a href="https://commons.wikimedia.org/wiki/File:Gettysburg_Peach_Orchard_Edwin_Forbes.jpg">Source</a></span>
+      </figcaption>
+    </figure>
+
+    <section class="col" aria-label="Little Round Top">
+      <p data-t="265.7">The next big stop was Little Round Top, probably the most memorable place of the whole tour. On July 2nd, Union General Gouverneur Warren, the army’s chief engineer, climbed the hill and realized that this key position was barely defended. Worse, he saw Confederate troops moving toward the exposed left flank. He called for reinforcements right away. Union troops rushed in, including the famous 20th Maine, and the defenders held.<sup><a href="#n6" id="r6" aria-label="Note 6">6</a></sup></p>
+    </section>
+
+    <figure class="full">
+      <img src="img/devils-den-1600.webp" srcset="img/devils-den-900.webp 900w, img/devils-den-1600.webp 1600w" sizes="100vw" width="1600" height="1066" loading="lazy" decoding="async"
+        alt="Looking down from a hilltop onto a jumble of huge gray boulders among green fields and trees, with a winding road and a few parked cars.">
+      <figcaption>
+        <span class="tag">Modern photograph · 2020</span>Devil’s Den seen from Little Round Top: the view down toward the ground Confederate troops crossed on July 2.
+        <span class="credit">Northern-Virginia-Photographer, Wikimedia Commons. CC0. <a href="https://commons.wikimedia.org/wiki/File:View_of_Devil%27s_Den_at_Gettysburg_from_Little_Round_Top.jpg">Source</a></span>
+      </figcaption>
+    </figure>
+
+    <section class="col" aria-label="Little Round Top, continued">
+      <p data-t="291.9">What impressed me was how much depended on one moment of observation and judgment. A general climbed a hill, saw a weakness, and acted before the enemy could. In a battle of nearly 170,000 soldiers,<sup><a href="#n7" id="r7" aria-label="Note 7">7</a></sup> the quick decisions of a few people could echo far beyond where they stood.</p>
+    </section>
+
+    <section class="col" aria-labelledby="ch4">
+      <div class="chapter-head">
+        <span class="num">Chapter IV</span>
+        <h2 id="ch4">The Human Cost and the Turning Point</h2>
+        <button class="listen" type="button" data-seek="309.5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen from 5:10</button>
+      </div>
+      <p data-t="309.8">On the third day, Lee couldn’t break the flanks, so he turned to the center. That was Pickett’s Charge, the great Confederate assault across open ground toward Cemetery Ridge. It ended disastrously.</p>
+      <p data-t="321.7">Still, I resisted seeing Gettysburg as one side simply crushing the other. It was a Union victory, yes, but the Confederate army wasn’t destroyed. Both sides took staggering losses, and the war went on for almost two more years.</p>
+    </section>
+
+    <figure class="tall">
+      <img src="img/harvest-1400.webp" srcset="img/harvest-900.webp 900w, img/harvest-1400.webp 1400w" sizes="(max-width: 520px) 100vw, 480px" width="1400" height="1170" loading="lazy" decoding="async"
+        alt="A sepia photograph mounted on card: the bodies of dead soldiers lie scattered across a flat field, with a lone horseman faint in the misty background.">
+      <figcaption>
+        <span class="tag">Archival photograph · July 1863</span>“A Harvest of Death.” Dead soldiers awaiting burial on the Gettysburg battlefield in the days after the fighting, published in Gardner’s <i>Photographic Sketch Book of the War</i> (1866).
+        <span class="credit">Negative by Timothy H. O’Sullivan, print by Alexander Gardner. The Metropolitan Museum of Art. CC0. <a href="https://commons.wikimedia.org/wiki/File:A_Harvest_of_Death,_Gettysburg,_Pennsylvania_MET_DP274823.jpg">Source</a></span>
+      </figcaption>
+    </figure>
+
+    <section class="col" aria-label="The Human Cost and the Turning Point, continued">
+      <p data-t="336.3">To me, Gettysburg feels like an enormous struggle over a small piece of strategic ground. And that’s what makes it so haunting. A huge consequence, built from countless local fights, many at terrible human cost.</p>
+    </section>
+
+    <section class="col" aria-labelledby="ch5">
+      <div class="chapter-head">
+        <span class="num">Chapter V</span>
+        <h2 id="ch5">History Brought to Life</h2>
+        <button class="listen" type="button" data-seek="349"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen from 5:49</button>
+      </div>
+      <p data-t="349.8">Back at the museum, another highlight was the Gettysburg Cyclorama. I’d never even heard the word before. It turned out the idea is much older than I imagined. It’s an enormous panoramic painting by the French artist Paul Philippoteaux, first shown in Boston in 1884.<sup><a href="#n8" id="r8" aria-label="Note 8">8</a></sup> It surrounds you, so you feel like you’re standing in the middle of the battlefield. Today, the museum adds careful lighting, narration, and sound effects to make it even more immersive.</p>
+      <p data-t="379.6">What fascinated me is that this wasn’t just a modern technological spectacle. People were paying for immersive storytelling like this more than 140 years ago.</p>
+    </section>
+
+    <figure class="full">
+      <img src="img/cyclorama-armistead-2000.webp" srcset="img/cyclorama-armistead-1000.webp 1000w, img/cyclorama-armistead-2000.webp 2000w" sizes="100vw" width="2000" height="1150" loading="lazy" decoding="async"
+        alt="Section of a vast painted panorama: a mass of Confederate and Union soldiers clash in smoke around a stone wall and a clump of trees, with wrecked cannon, fallen horses, and wounded men in the foreground.">
+      <figcaption>
+        <span class="tag">Painting · 1883–84</span>A section of the Gettysburg Cyclorama showing the fighting at the Angle on July 3. The label identifying Armistead was added by the photographer.
+        <span class="credit">Painting by Paul Philippoteaux. Photograph © Ron Cogswell, 2012, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>. <a href="https://commons.wikimedia.org/wiki/File:%27Confederate_General_Lewis_Armistead_at_The_Angle%27_--_Gettysburg_(PA)_Cyclorama_2012.jpg">Source</a></span>
+      </figcaption>
+    </figure>
+
+    <section class="col" aria-label="History Brought to Life, continued">
+      <p data-t="389.7">The painting shows the climax of Pickett’s Charge, including the Confederate breakthrough at the Angle, where General Lewis Armistead was mortally wounded after reaching the Union line.<sup><a href="#n9" id="r9" aria-label="Note 9">9</a></sup> Violence, courage, desperation, collapse, all in one moment. Standing inside it, I could see why it was such a sensation.</p>
+    </section>
+
+    <section class="col" aria-labelledby="ch6">
+      <hr class="divider">
+      <div class="chapter-head">
+        <span class="num">Closing</span>
+        <h2 id="ch6">What I Took Away</h2>
+        <button class="listen" type="button" data-seek="410"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen from 6:50</button>
+      </div>
+      <p data-t="410.2">And that brings me back to why this whole experience meant so much. I came expecting to learn about the American Civil War. I left with a deeper appreciation of how geography, leadership, communication, and timing can shape events that touch hundreds of thousands of lives.</p>
+      <p data-t="428.3">But I also took away something more personal. As someone who is still developing his English, I found Gettysburg to be an unusually rewarding place to learn. The language wasn’t floating in isolation. It was attached to real places, historical figures, strategic decisions, and human suffering. I wasn’t merely reading English. I was using English to reconstruct a complex historical event, to question the choices of the people in it, and to form my own interpretation. And somehow, that made the language feel more alive.</p>
+      <p data-t="462.5">Looking back, I’m glad I didn’t rush through the museum or settle for a quick bus tour. I gave Gettysburg an entire afternoon, and it gave me far more than I expected. It was a journey through American history, certainly, but it was also a reminder of how rewarding it can be to approach an unfamiliar subject with real curiosity, enough patience to explore it properly, and the willingness to think beyond what’s written on the museum walls.</p>
+    </section>
+
+    <aside class="col endmatter" aria-label="Notes and credits">
+      <h2>Author’s note</h2>
+      <p class="authors-note">I recorded these reflections the day after my visit, speaking freely in English. I then used AI to polish the language while keeping my ideas, and produced the narration with a clone of my own voice. The text above follows that narration.</p>
+
+      <h2>Notes on the history</h2>
+      <p class="src">These notes are editorial additions. They check and add context to factual statements in the narration; the narration itself is unchanged, apart from the spelling of names.</p>
+      <ol class="notes">
+        <li id="n1">Mary Virginia “Jennie” Wade, 20, was killed by a stray bullet on July 3, 1863, at her sister Georgia McClellan’s house on Baltimore Street, where she had come to help with her sister’s newborn. She is generally described as the only civilian killed directly in the battle. <span class="src">Sources: <a href="https://www.nps.gov/people/jennie-wade.htm">NPS</a>; <a href="https://www.battlefields.org/learn/biographies/mary-virginia-jennie-wade">American Battlefield Trust</a>.</span> <a class="back" href="#r1" aria-label="Back to text">↩</a></li>
+        <li id="n2">“Casualties” counts the killed, wounded, captured, and missing, not only deaths. The American Battlefield Trust gives 51,112 (23,049 Union, 28,063 Confederate), including about 7,000 killed; other estimates start around 46,000. <span class="src">Source: <a href="https://www.battlefields.org/learn/civil-war/battles/gettysburg">American Battlefield Trust</a>.</span> <a class="back" href="#r2" aria-label="Back to text">↩</a></li>
+        <li id="n3">Lincoln arrived by train on the evening of November 18, 1863, and spoke the next afternoon at the dedication of the Soldiers’ National Cemetery. The main oration, by Edward Everett, lasted about two hours. Lincoln spoke for less than three minutes. <span class="src">Source: <a href="https://www.nps.gov/parkhistory/online_books/hh/9/hh9g1.htm">NPS historical handbook</a>.</span> <a class="back" href="#r3" aria-label="Back to text">↩</a></li>
+        <li id="n4">The leader was Jiang Zemin, interviewed by Mike Wallace for CBS’s <i>60 Minutes</i> at Beidaihe in August 2000. <span class="src">Source: <a href="https://www.cbsnews.com/news/chinas-leader-talks-to-60-minutes">CBS News</a>.</span> <a class="back" href="#r4" aria-label="Back to text">↩</a></li>
+        <li id="n5">In 1918 Captain Eisenhower commanded Camp Colt, the Army’s tank training center, on fields south of town that included ground crossed in Pickett’s Charge. He and Mamie Eisenhower bought their Gettysburg farm in 1950. It served as a weekend retreat during his presidency and became their home after 1961. The mountain retreat is the presidential camp in Maryland’s Catoctin Mountains, established under Franklin Roosevelt as “Shangri-La.” Eisenhower renamed it Camp David after his father and his grandson. <span class="src">Sources: <a href="https://www.nps.gov/articles/000/camp-colt.htm">NPS, Camp Colt</a>; <a href="https://www.nps.gov/eise/learn/historyculture/eisenhower-at-gettysburg.htm">NPS, Eisenhower at Gettysburg</a>; <a href="https://www.eisenhowerlibrary.gov/research/online-documents/camp-david">Eisenhower Presidential Library</a>.</span> <a class="back" href="#r5" aria-label="Back to text">↩</a></li>
+        <li id="n6">Brig. Gen. Gouverneur K. Warren was the Army of the Potomac’s chief engineer. Sent by General Meade to check the army’s left, he found only Signal Corps men on Little Round Top on the afternoon of July 2. The troops who arrived included Col. Strong Vincent’s brigade, with the 20th Maine at the far left of the line. <span class="src">Sources: <a href="https://www.nps.gov/gett/learn/photosmultimedia/little-round-top-tour.htm">NPS, Little Round Top tour</a>; <a href="https://www.battlefields.org/learn/articles/defense-little-round-top">American Battlefield Trust</a>.</span> <a class="back" href="#r6" aria-label="Back to text">↩</a></li>
+        <li id="n7">Estimates of the number of soldiers engaged vary. The American Battlefield Trust puts it at about 157,000; some other counts are higher. <span class="src">Source: <a href="https://www.battlefields.org/learn/civil-war/battles/gettysburg">American Battlefield Trust</a>.</span> <a class="back" href="#r7" aria-label="Back to text">↩</a></li>
+        <li id="n8">Philippoteaux painted more than one Gettysburg cyclorama. The first opened in Chicago in October 1883. The painting now at Gettysburg is the Boston version, which opened there on December 22, 1884, and was acquired by the National Park Service in 1942. <span class="src">Source: <a href="https://www.nps.gov/gett/learn/historyculture/cyclorama.htm">NPS, Cyclorama Painting</a>.</span> <a class="back" href="#r8" aria-label="Back to text">↩</a></li>
+        <li id="n9">Brig. Gen. Lewis Armistead fell a short distance inside the Union line at the Angle on July 3. He died on the morning of July 5 at the Union field hospital on the Spangler farm. <span class="src">Source: <a href="https://www.nps.gov/places/the-angle.htm">NPS, The Angle</a>.</span> <a class="back" href="#r9" aria-label="Back to text">↩</a></li>
+      </ol>
+
+      <h2>Image credits</h2>
+      <ul class="credits">
+        <li>Opening: General Warren statue, Little Round Top. Carol M. Highsmith, Carol M. Highsmith Archive, Library of Congress. Public domain. <a href="https://commons.wikimedia.org/wiki/File:General_Warren_statue,_Little_Round_Top,_Gettysburg,_Pennsylvania_LCCN2011630682.tif">Source</a></li>
+        <li>Dedication of the Soldiers’ National Cemetery, November 19, 1863. Photographer uncertain. Public domain. <a href="https://commons.wikimedia.org/wiki/File:Lincolnatgettysburg.jpg">Source</a></li>
+        <li>Eisenhower farm. Jack E. Boucher, Historic American Buildings Survey, Library of Congress. Public domain. <a href="https://commons.wikimedia.org/wiki/File:HABS_Eisenhower_Farm.jpg">Source</a></li>
+        <li>Gettysburg Overview, July 2, 1863. Hal Jespersen. Public domain. <a href="https://commons.wikimedia.org/wiki/File:Gettysburg_Battle_Map_Day2.jpg">Source</a></li>
+        <li>The Peach Orchard. Edwin Forbes, Library of Congress. Public domain. <a href="https://commons.wikimedia.org/wiki/File:Gettysburg_Peach_Orchard_Edwin_Forbes.jpg">Source</a></li>
+        <li>Devil’s Den from Little Round Top, 2020. Northern-Virginia-Photographer. CC0. <a href="https://commons.wikimedia.org/wiki/File:View_of_Devil%27s_Den_at_Gettysburg_from_Little_Round_Top.jpg">Source</a></li>
+        <li>A Harvest of Death. Timothy H. O’Sullivan and Alexander Gardner, The Metropolitan Museum of Art. CC0. <a href="https://commons.wikimedia.org/wiki/File:A_Harvest_of_Death,_Gettysburg,_Pennsylvania_MET_DP274823.jpg">Source</a></li>
+        <li>Gettysburg Cyclorama, detail at the Angle. Painting by Paul Philippoteaux; photograph by Ron Cogswell, 2012, licensed <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>. Resized. <a href="https://commons.wikimedia.org/wiki/File:%27Confederate_General_Lewis_Armistead_at_The_Angle%27_--_Gettysburg_(PA)_Cyclorama_2012.jpg">Source</a></li>
+      </ul>
+    </aside>
+  </article>
+</main>
+
+<footer>
+  <span>© 2026 Kai Zhen</span>
+  <a href="../../">kaizhen.us</a>
+</footer>
+
+<div class="mini" id="mini" role="region" aria-label="Narration mini player">
+  <button class="play" type="button" aria-label="Play narration" data-play>
+    <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+    <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>
+  </button>
+  <div class="mini-body">
+    <p class="mini-title" id="miniTitle">An Unexpectedly Immersive Afternoon</p>
+    <div class="mini-bar"><i id="miniBar"></i></div>
+  </div>
+  <span class="mini-time" id="miniTime">0:00</span>
+  <button class="mini-close" type="button" aria-label="Hide mini player" id="miniClose">×</button>
+</div>
+
+<script>
+(() => {
+  const audio = document.getElementById('audio');
+  const root = document.documentElement;
+  const seek = document.getElementById('seek');
+  const cur = document.getElementById('cur');
+  const dur = document.getElementById('dur');
+  const speedBtn = document.getElementById('speed');
+  const mini = document.getElementById('mini');
+  const miniBar = document.getElementById('miniBar');
+  const miniTime = document.getElementById('miniTime');
+  const miniTitle = document.getElementById('miniTitle');
+  const playBtns = document.querySelectorAll('[data-play]');
+  const paras = [...document.querySelectorAll('.essay p[data-t]')].map(p => ({el: p, t: parseFloat(p.dataset.t)})).filter(p => !isNaN(p.t));
+  const chapters = [...document.querySelectorAll('.chapters [data-seek]')].map(b => ({t: parseFloat(b.dataset.seek), name: b.lastElementChild.textContent}));
+  const speeds = [1, 1.25, 1.5, 0.75];
+  let speedIdx = 0, miniDismissed = false, playerVisible = true, current = null, dragging = false;
+
+  const fmt = s => { s = Math.max(0, Math.floor(s || 0)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+  const spoken = s => { s = Math.floor(s || 0); return Math.floor(s / 60) + ' minutes ' + (s % 60) + ' seconds'; };
+
+  function setPlaying(on) {
+    document.body.classList.toggle('is-playing', on);
+    playBtns.forEach(b => b.setAttribute('aria-label', on ? 'Pause narration' : 'Play narration'));
+    updateMini();
+  }
+  function toggle() { audio.paused ? audio.play() : audio.pause(); }
+  function jump(t) { audio.currentTime = t; if (audio.paused) audio.play(); }
+
+  playBtns.forEach(b => b.addEventListener('click', toggle));
+  document.querySelectorAll('[data-seek]').forEach(b => b.addEventListener('click', () => jump(parseFloat(b.dataset.seek))));
+  document.getElementById('back15').addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 15); });
+  speedBtn.addEventListener('click', () => {
+    speedIdx = (speedIdx + 1) % speeds.length;
+    audio.playbackRate = speeds[speedIdx];
+    speedBtn.textContent = speeds[speedIdx] + '×';
+    speedBtn.setAttribute('aria-label', 'Playback speed: ' + speeds[speedIdx] + ' times');
+  });
+
+  audio.addEventListener('play', () => setPlaying(true));
+  audio.addEventListener('pause', () => setPlaying(false));
+  audio.addEventListener('ended', () => { setPlaying(false); mark(null); });
+  audio.addEventListener('loadedmetadata', () => { seek.max = audio.duration; dur.textContent = fmt(audio.duration); });
+
+  seek.addEventListener('input', () => { dragging = true; cur.textContent = fmt(seek.value); paint(); });
+  seek.addEventListener('change', () => { audio.currentTime = parseFloat(seek.value); dragging = false; });
+
+  function paint() {
+    const p = (seek.value / (seek.max || 1)) * 100;
+    seek.style.setProperty('--p', p + '%');
+    seek.setAttribute('aria-valuetext', spoken(seek.value));
+    miniBar.style.width = p + '%';
+  }
+  function mark(el) {
+    if (current === el) return;
+    if (current) current.classList.remove('now');
+    current = el;
+    if (current) current.classList.add('now');
+  }
+  audio.addEventListener('timeupdate', () => {
+    const t = audio.currentTime;
+    if (!dragging) { seek.value = t; cur.textContent = fmt(t); paint(); }
+    miniTime.textContent = fmt(t);
+    let ch = chapters[0];
+    for (const c of chapters) if (t >= c.t) ch = c;
+    miniTitle.textContent = ch.name;
+    if (!audio.paused || t > 0) {
+      let hit = null;
+      for (const p of paras) if (t + 0.3 >= p.t) hit = p.el;
+      mark(hit);
+    }
+  });
+
+  // mini player: visible once listening has started and the main player is off screen
+  function updateMini() {
+    const started = audio.currentTime > 0 || !audio.paused;
+    mini.classList.toggle('show', started && !playerVisible && !miniDismissed);
+  }
+  new IntersectionObserver(([e]) => { playerVisible = e.isIntersecting; updateMini(); }, {threshold: 0})
+    .observe(document.getElementById('player'));
+  document.getElementById('miniClose').addEventListener('click', () => { miniDismissed = true; updateMini(); });
+  audio.addEventListener('play', () => { miniDismissed = false; });
+
+  // keyboard: space toggles when focus is not on a control
+  document.addEventListener('keydown', e => {
+    if (e.code !== 'Space' || e.target.closest('button, input, a, textarea')) return;
+    if (audio.currentTime > 0 || !audio.paused) { e.preventDefault(); toggle(); }
+  });
+
+  // "Show Lincoln"
+  const find = document.getElementById('findLincoln');
+  const findBtn = document.querySelector('.find-btn');
+  findBtn.addEventListener('click', () => {
+    const on = find.classList.toggle('on');
+    findBtn.setAttribute('aria-pressed', on);
+    findBtn.textContent = on ? 'Hide marker' : 'Show Lincoln';
+  });
+})();
+</script>
+</body>
+</html>
